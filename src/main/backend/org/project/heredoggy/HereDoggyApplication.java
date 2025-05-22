@@ -9,5 +9,4 @@ public class HereDoggyApplication {
     public static void main(String[] args) {
         SpringApplication.run(HereDoggyApplication.class, args);
     }
-
 }
