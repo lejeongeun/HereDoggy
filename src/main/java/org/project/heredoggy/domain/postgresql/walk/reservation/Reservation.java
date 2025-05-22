@@ -1,4 +1,4 @@
-package org.project.heredoggy.domain.postgresql.dog;
+package org.project.heredoggy.domain.postgresql.walk.reservation;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,9 +12,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Dog {
+public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 }
