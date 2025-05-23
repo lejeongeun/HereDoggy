@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.member.RoleType;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.user.member.dto.LoginRequestDTO;
+import org.project.heredoggy.user.member.dto.request.LoginRequestDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

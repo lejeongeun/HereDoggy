@@ -1,4 +1,4 @@
-package org.project.heredoggy.user.member.dto;
+package org.project.heredoggy.user.member.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
