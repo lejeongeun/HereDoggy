@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.project.heredoggy.domain.postgresql.dog.DogStatus;
 import org.project.heredoggy.domain.postgresql.dog.Gender;
 
 import java.util.List;
@@ -30,6 +31,8 @@ public class DogRequestDTO {
     private Boolean isNeutered;
 
     private String foundLocation;
+
+    private DogStatus status;
 
     @Size(min = 1, max = 5, message = "이미지는 1장 이상 5장 이하로 등록해 주세요.")
     private List<String> imagesUrls;

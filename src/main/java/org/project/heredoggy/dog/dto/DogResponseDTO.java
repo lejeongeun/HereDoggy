@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class DogResponseDTO {
     private String name;
     private int age;
@@ -17,7 +18,7 @@ public class DogResponseDTO {
     private Double weight;
     private Boolean isNeutered;
     private String foundLocation;
-    private List<DogImage> imagesUrls;
+    private List<String> imagesUrls;
 
 
 }
