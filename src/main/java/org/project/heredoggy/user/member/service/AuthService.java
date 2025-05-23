@@ -1,10 +1,10 @@
-package org.project.heredoggy.member.service;
+package org.project.heredoggy.user.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.member.MemberRepository;
 import org.project.heredoggy.domain.postgresql.member.RoleType;
-import org.project.heredoggy.member.dto.MemberSignUpRequestDTO;
+import org.project.heredoggy.user.member.dto.MemberSignUpRequestDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

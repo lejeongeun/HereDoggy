@@ -1,12 +1,11 @@
-package org.project.heredoggy.member.controller;
+package org.project.heredoggy.user.member.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.member.Member;
-import org.project.heredoggy.domain.postgresql.member.MemberRepository;
-import org.project.heredoggy.member.dto.*;
-import org.project.heredoggy.member.service.AuthService;
-import org.project.heredoggy.member.service.RedisService;
+import org.project.heredoggy.user.member.dto.*;
+import org.project.heredoggy.user.member.service.AuthService;
+import org.project.heredoggy.user.member.service.RedisService;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.security.JwtTokenProvider;
 import org.springframework.http.ResponseEntity;

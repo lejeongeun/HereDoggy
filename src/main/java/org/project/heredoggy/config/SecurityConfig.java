@@ -43,13 +43,16 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/shelter/**").hasRole("SHELTER")
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/shelter/login").permitAll()
+                        .requestMatchers("/api/admin/login").permitAll()
+
                         .requestMatchers("/member/**").hasRole("USER")
-                        .requestMatchers("/api/auth/signup", "/api/auth/login", "/api/auth/reissue").permitAll()
+                        .requestMatchers("/shelter/**").hasRole("SHELTER_ADMIN")
+                        .requestMatchers("/admin/**").hasRole("SYSTEM_ADMIN")
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // ✅ 필터 등록
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

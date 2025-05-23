@@ -1,4 +1,4 @@
-package org.project.heredoggy.member.service;
+package org.project.heredoggy.user.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;

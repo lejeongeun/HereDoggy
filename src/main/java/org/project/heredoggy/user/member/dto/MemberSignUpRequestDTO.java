@@ -1,4 +1,4 @@
-package org.project.heredoggy.member.dto;
+package org.project.heredoggy.user.member.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
