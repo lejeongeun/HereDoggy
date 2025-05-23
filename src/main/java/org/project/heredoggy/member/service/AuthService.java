@@ -3,6 +3,7 @@ package org.project.heredoggy.member.service;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.member.MemberRepository;
+import org.project.heredoggy.domain.postgresql.member.RoleType;
 import org.project.heredoggy.member.dto.MemberSignUpRequestDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,7 @@ public class AuthService {
                 .address(fullAddress)
                 .isNotificationEnabled(true)
                 .isActive(true)
+                .role(RoleType.USER)
                 .totalWalkDistance(0.0)
                 .totalWalkDuration(0L)
                 .profileImageUrl("default_Image")
