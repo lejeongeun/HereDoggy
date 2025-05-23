@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
     private final MemberService memberService;
 
-    @GetMapping("/me")
+    @GetMapping("/profile")
     public ResponseEntity<?> getMyDetail(@AuthenticationPrincipal CustomUserDetails userDetails) {
         if(userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증되지 않았습니다.");

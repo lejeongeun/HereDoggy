@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
-    private final MemberRepository memberRepository;
     public MemberDetailResponseDTO getMemberDetails(CustomUserDetails userDetails) {
         Member member = AuthUtils.getValidMember(userDetails);
 
