@@ -2,12 +2,9 @@ package org.project.heredoggy.member.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @AllArgsConstructor
-public class LoginResponseDTO {
+public class ReissueResponseDTO {
     private String accessToken;
-    private String refreshToken;
 }
