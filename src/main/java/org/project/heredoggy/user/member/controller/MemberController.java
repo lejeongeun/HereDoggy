@@ -30,4 +30,10 @@ public class MemberController {
         memberService.edit(request, userDetails);
         return ResponseEntity.ok(Map.of("message","회원 수정 성공"));
     }
+
+    @DeleteMapping("/removal")
+    public ResponseEntity<?> withdraw(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        memberService.remove(userDetails);
+        return ResponseEntity.ok(Map.of("message", "회원 탈퇴 성공"));
+    }
 }

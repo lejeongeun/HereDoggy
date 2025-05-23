@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final RedisService redisService;
     public MemberDetailResponseDTO getMemberDetails(CustomUserDetails userDetails) {
         Long memberId = AuthUtils.getValidMember(userDetails).getId();
         Member member = memberRepository.findById(memberId)
@@ -53,5 +54,12 @@ public class MemberService {
         member.setPhone(request.getPhone());
         member.setAddress(fullAddress);
         memberRepository.save(member);
+    }
+
+    public void remove(CustomUserDetails userDetails) {
+        Long memberId = AuthUtils.getValidMember(userDetails).getId();
+
+        redisService.deleteRefreshToken(memberId);
+        memberRepository.deleteById(memberId);
     }
 }
