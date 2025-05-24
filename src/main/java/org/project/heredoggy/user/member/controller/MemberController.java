@@ -8,6 +8,7 @@ import org.project.heredoggy.user.member.dto.response.MemberDetailResponseDTO;
 import org.project.heredoggy.user.member.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/members")
+@RequestMapping("/api/member")
 public class MemberController {
     private final MemberService memberService;
 
@@ -32,7 +33,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/removal")
-    public ResponseEntity<?> withdraw(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<Map<String, String>> remove(@AuthenticationPrincipal CustomUserDetails userDetails) {
         memberService.remove(userDetails);
         return ResponseEntity.ok(Map.of("message", "회원 탈퇴 성공"));
     }

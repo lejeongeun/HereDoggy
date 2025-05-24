@@ -47,9 +47,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/shelter/login").permitAll()
                         .requestMatchers("/api/admin/login").permitAll()
 
-                        .requestMatchers("/member/**").hasRole("USER")
-                        .requestMatchers("/shelter/**").hasRole("SHELTER_ADMIN")
-                        .requestMatchers("/admin/**").hasRole("SYSTEM_ADMIN")
+                        .requestMatchers("api/member/**").hasRole("USER")
+                        .requestMatchers("api/shelter/**").hasRole("SHELTER_ADMIN")
+                        .requestMatchers("api/admin/**").hasRole("SYSTEM_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

@@ -24,6 +24,10 @@ public class AuthService {
             throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
         }
 
+        if(!request.getPassword().equals(request.getPasswordCheck())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
         String fullAddress = String.format("(%s) %s %s",
                 request.getZipcode(),
                 request.getAddress1(),

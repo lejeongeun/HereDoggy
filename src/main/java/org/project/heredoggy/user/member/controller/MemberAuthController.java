@@ -6,13 +6,14 @@ import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.user.member.dto.request.LoginRequestDTO;
 import org.project.heredoggy.user.member.dto.request.MemberSignUpRequestDTO;
 import org.project.heredoggy.user.member.dto.request.ReissueRequestDTO;
-import org.project.heredoggy.user.member.dto.response.LoginResponseDTO;
+import org.project.heredoggy.user.member.dto.response.TokenResponseDTO;
 import org.project.heredoggy.user.member.dto.response.ReissueResponseDTO;
 import org.project.heredoggy.user.member.service.AuthService;
 import org.project.heredoggy.user.member.service.RedisService;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.security.JwtTokenProvider;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,7 +28,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-public class AuthController {
+public class MemberAuthController {
     private final AuthService authService;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
@@ -37,8 +38,8 @@ public class AuthController {
         authService.signUp(request);
         return ResponseEntity.ok(Map.of("message", "회원가입 성공"));
     }
-
     @PostMapping("/login")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
@@ -50,11 +51,11 @@ public class AuthController {
         String refreshToken = jwtTokenProvider.generateRefreshToken(member.getId());
         redisService.saveRefreshToken(member.getId(), refreshToken, jwtTokenProvider.getRefreshTokenExpiration());
 
-        return ResponseEntity.ok(new LoginResponseDTO(accessToken, refreshToken));
+        return ResponseEntity.ok(new TokenResponseDTO(accessToken, refreshToken));
 
     }
-
     @PostMapping("/reissue")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> reissue(@RequestBody ReissueRequestDTO request) {
         Long memberId = jwtTokenProvider.getMemberIdFromToken(request.getRefreshToken());
 
@@ -69,6 +70,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> logout(@AuthenticationPrincipal CustomUserDetails userDetails) {
         redisService.deleteRefreshToken(userDetails.getMember().getId());
         return ResponseEntity.ok("로그아웃 완료");
