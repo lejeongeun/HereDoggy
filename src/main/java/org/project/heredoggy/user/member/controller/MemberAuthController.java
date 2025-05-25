@@ -39,7 +39,6 @@ public class MemberAuthController {
         return ResponseEntity.ok(Map.of("message", "회원가입 성공"));
     }
     @PostMapping("/login")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
