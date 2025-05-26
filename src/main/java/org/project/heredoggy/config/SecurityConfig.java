@@ -44,11 +44,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/shelter/login").permitAll()
+                        .requestMatchers("/api/shelters/login").permitAll()
                         .requestMatchers("/api/admin/login").permitAll()
 
-                        .requestMatchers("api/member/**").hasRole("USER")
-                        .requestMatchers("api/shelter/**").hasRole("SHELTER_ADMIN")
+                        .requestMatchers("api/members/**").hasRole("USER")
+                        .requestMatchers("api/shelters/**").hasRole("SHELTER_ADMIN")
                         .requestMatchers("api/admin/**").hasRole("SYSTEM_ADMIN")
                         .anyRequest().authenticated()
                 )
