@@ -1,7 +1,7 @@
-package global.util;
+package org.project.heredoggy.global.util;
 
-import global.exception.InactiveAccountException;
-import global.exception.UnauthorizedException;
+import org.project.heredoggy.global.exception.InactiveAccountException;
+import org.project.heredoggy.global.exception.UnauthorizedException;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.security.CustomUserDetails;
 
