@@ -6,9 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.systemAdmin.dto.AdminEditRequestDTO;
 import org.project.heredoggy.systemAdmin.dto.AdminProfileResponseDTO;
-import org.project.heredoggy.systemAdmin.service.SystemAdminService;
+import org.project.heredoggy.systemAdmin.service.AdminService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +17,8 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin")
-public class SystemAdminController {
-    private final SystemAdminService systemAdminService;
+public class AdminController {
+    private final AdminService systemAdminService;
 
     @GetMapping("/profile")
     public ResponseEntity<AdminProfileResponseDTO> getSystemAdminProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
