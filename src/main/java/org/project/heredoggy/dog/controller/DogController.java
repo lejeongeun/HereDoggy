@@ -3,7 +3,6 @@ package org.project.heredoggy.dog.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.project.heredoggy.dog.dto.DogRequestDTO;
 import org.project.heredoggy.dog.dto.DogResponseDTO;
 import org.project.heredoggy.dog.service.DogService;
