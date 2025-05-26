@@ -34,7 +34,7 @@ public class DogRequestDTO {
 
     private DogStatus status;
 
-    @Size(min = 1, max = 5, message = "이미지는 1장 이상 5장 이하로 등록해 주세요.")
+//    @Size(min = 1, max = 5, message = "이미지는 1장 이상 5장 이하로 등록해 주세요.")
     private List<String> imagesUrls;
 
 }
