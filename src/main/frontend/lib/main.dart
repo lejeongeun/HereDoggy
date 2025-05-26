@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'pages/home/home_page.dart';
-import 'pages/auth/login_page.dart';
-import 'pages/auth/register_page.dart';
 import 'pages/shelter/shelter_list_page.dart';
 import 'pages/walk/walk_reservation_page.dart';
 import 'pages/community/community_page.dart';
@@ -37,8 +35,6 @@ class MyApp extends StatelessWidget {
       initialRoute: AppConstants.homeRoute,
       routes: {
         AppConstants.homeRoute: (context) => const HomePage(),
-        AppConstants.loginRoute: (context) => const LoginPage(),
-        AppConstants.registerRoute: (context) => const RegisterPage(),
         AppConstants.shelterListRoute: (context) => const ShelterListPage(),
         AppConstants.walkReservationRoute: (context) => const WalkReservationPage(),
         AppConstants.communityRoute: (context) => const CommunityPage(),

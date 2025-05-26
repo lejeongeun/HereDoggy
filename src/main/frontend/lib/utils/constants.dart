@@ -4,8 +4,6 @@ class AppConstants {
   
   // 라우트 이름
   static const String homeRoute = '/';
-  static const String loginRoute = '/login';
-  static const String registerRoute = '/register';
   static const String mypageRoute = '/mypage';
   static const String walkRoute = '/walk';
   static const String shelterRoute = '/shelter';
