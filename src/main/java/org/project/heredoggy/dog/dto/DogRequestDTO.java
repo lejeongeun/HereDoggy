@@ -11,6 +11,8 @@ import org.project.heredoggy.domain.postgresql.dog.Gender;
 import java.util.List;
 
 @Getter
+@Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class DogRequestDTO {
     @NotBlank(message = "이름을 입력해 주세요.")
