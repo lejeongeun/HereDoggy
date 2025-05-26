@@ -47,6 +47,10 @@ public class Member {
 
     private Boolean isActive = true;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RoleType role;
+
     private Double totalWalkDistance = 0.0;
 
     private Long totalWalkDuration = 0L;
