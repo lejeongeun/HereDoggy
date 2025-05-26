@@ -2,6 +2,7 @@ package org.project.heredoggy.domain.postgresql.member;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -63,4 +64,6 @@ public class Member {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @OneToOne(mappedBy = "shelterAdmin")
+    private Shelter shelter;
 }
