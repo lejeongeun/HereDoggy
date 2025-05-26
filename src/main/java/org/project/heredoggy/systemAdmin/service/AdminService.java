@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class SystemAdminService {
+public class AdminService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     public AdminProfileResponseDTO getProfile(CustomUserDetails userDetails) {

@@ -23,7 +23,7 @@ public class ShelterRequest {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member requester;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String shelterName;
 
     @Column(nullable = false)
