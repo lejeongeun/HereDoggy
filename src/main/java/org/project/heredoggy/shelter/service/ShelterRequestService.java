@@ -1,6 +1,6 @@
 package org.project.heredoggy.shelter.service;
 
-import global.util.AuthUtils;
+import org.project.heredoggy.global.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.member.RoleType;

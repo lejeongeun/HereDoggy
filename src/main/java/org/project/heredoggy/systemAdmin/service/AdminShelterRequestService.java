@@ -1,8 +1,7 @@
 package org.project.heredoggy.systemAdmin.service;
 
-import global.exception.NotFoundException;
-import global.util.AdminAuthUtils;
-import global.util.AuthUtils;
+import org.project.heredoggy.global.exception.NotFoundException;
+import org.project.heredoggy.global.util.AdminAuthUtils;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.member.RoleType;
