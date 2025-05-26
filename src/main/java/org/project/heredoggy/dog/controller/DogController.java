@@ -32,7 +32,6 @@ public class DogController {
             @RequestPart("dog") String dogJson,
             @RequestPart(name = "images", required = false) List<MultipartFile> images
     ) throws IOException {
-
         ObjectMapper objectMapper = new ObjectMapper();
         DogRequestDTO request = objectMapper.readValue(dogJson, DogRequestDTO.class);
 
@@ -71,8 +70,10 @@ public class DogController {
     public ResponseEntity<Map<String, String>> edit (@AuthenticationPrincipal CustomUserDetails userDetails,
                                                      @PathVariable("shelters_id") Long sheltersId,
                                                      @PathVariable("dogs_id") Long dogsId,
-                                                     @RequestPart("dog") DogEditRequestDTO request,
+                                                     @RequestPart("dog") String dogJson,
                                                      @RequestPart(name = "newImages", required = false) List<MultipartFile> newImages) throws IOException{
+        ObjectMapper objectMapper = new ObjectMapper();
+        DogEditRequestDTO request = objectMapper.readValue(dogJson, DogEditRequestDTO.class);
 
         dogService.edit(sheltersId, userDetails, dogsId, request, newImages);
         return ResponseEntity.ok(Map.of("message", "강아지 정보가 수정되었습니다."));

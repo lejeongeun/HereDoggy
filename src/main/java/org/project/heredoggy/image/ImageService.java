@@ -15,58 +15,28 @@ import java.util.UUID;
 public class ImageService {
 
     @Value("${file.upload-dir}")
-    private String uploadPath;
+    private String uploadDir; // upload
 
-    public String saveImage(MultipartFile file) throws IOException {
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-
-        File dir = new File(uploadPath);
-        if (!dir.exists()) {
-            dir.mkdirs(); // 디렉토리가 없으면 생성
+    // 절대 경로로 반환
+    private String getAbsoluteUploadDir(){
+        File folder = new File(uploadDir);
+        if (!folder.isAbsolute()){
+            folder = new File(System.getProperty("user.dir"), uploadDir);
         }
-
-        File destination = new File(dir, fileName);
-        file.transferTo(destination);
-
-        // 저장된 파일의 URL 반환
+        if (!folder.exists()){
+            folder.mkdir();
+        }
+        return folder.getAbsolutePath();
+    }
+    public String saveImage(MultipartFile file) throws IOException{
+        String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
+        File savePath = new File(getAbsoluteUploadDir(), fileName);
+        file.transferTo(savePath);
         return "/uploads/" + fileName;
     }
-
-    public void deleteImage(String imageUrl) {
-        String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
-        File file = new File(uploadPath + fileName);
-        if (file.exists()) {
-            file.delete();
-        }
+    public void deleteImage(String imageUrl){
+        String relativeFile = imageUrl.replaceFirst("^/uploads/", "");
+        File file = new File(getAbsoluteUploadDir(), relativeFile);
+        if (file.exists()) file.delete();
     }
 }
-//@Service
-//@RequiredArgsConstructor
-//public class ImageService {
-//
-//    @Value("${file.upload-dir}")
-//    private String uploadDir;  // "uploads"
-//
-//    // 이미지 생성
-//    public String saveImage(MultipartFile file) throws IOException {
-//        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-//
-//        File dir = new File(uploadDir);
-//        if (!dir.exists()) dir.mkdir();
-//
-//
-//        String filePath = uploadDir + "/" + fileName;
-//        file.transferTo(new File(filePath));
-//        return "/uploads/" + fileName;
-//    }
-//    // 이미지 삭제
-//    public void deleteImage(String imageUrl){
-//        String fileName = Paths.get(imageUrl).getFileName().toString();
-//        File file = new File(uploadDir + "/" + fileName);
-//        if (file.exists()){
-//            file.delete();
-//        }
-//
-//    }
-//
-//}
