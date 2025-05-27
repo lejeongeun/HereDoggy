@@ -3,6 +3,8 @@ import '../../components/common/inputs/text_field.dart';
 import 'auth_button.dart';
 import '../../services/auth_service.dart';
 import 'register_form.dart';
+import 'package:provider/provider.dart';
+import '../../providers/user_provider.dart';
 
 class LoginForm extends StatefulWidget {
   final VoidCallback? onLoginSuccess;
@@ -61,8 +63,14 @@ class _LoginFormState extends State<LoginForm> {
         if (!result['success']) {
           _showErrorDialog(result['message']);
         } else {
-          // 로그인 성공 시 콜백 호출
-          widget.onLoginSuccess?.call();
+          // 로그인 성공 시 토큰 저장 후 프로필 정보 받아오기
+          final profile = await _authService.getProfile();
+          if (profile != null && mounted) {
+            Provider.of<UserProvider>(context, listen: false).login(profile);
+            Navigator.pushReplacementNamed(context, '/mypage');
+          } else {
+            _showErrorDialog('회원 정보를 불러오지 못했습니다.');
+          }
         }
       } finally {
         if (mounted) {
@@ -127,7 +135,7 @@ class LoginFullScreenPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFD9D9D9),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),

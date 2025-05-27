@@ -117,4 +117,22 @@ class AuthService {
       };
     }
   }
+
+  // 회원 프로필 정보 가져오기
+  Future<Map<String, dynamic>?> getProfile() async {
+    final accessToken = await getAccessToken();
+    if (accessToken == null) return null;
+    final response = await http.get(
+      Uri.parse('$_baseUrl/members/profile'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      return null;
+    }
+  }
 } 

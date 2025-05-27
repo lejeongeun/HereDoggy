@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:daum_postcode_search/daum_postcode_search.dart';
+import 'package:daum_postcode_search/daum_postcode_search.dart';
 import '../../services/auth_service.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -38,16 +38,6 @@ class _RegisterFormState extends State<RegisterForm> {
     _addressDetailController.dispose();
     super.dispose();
   }
-
-  // Future<void> _searchAddress() async {
-  //   final result = await DaumPostcodeSearch.searchAddress(context);
-  //   if (result != null) {
-  //     setState(() {
-  //       _addressController.text = result.address;
-  //       _zipcodeController.text = result.zonecode;
-  //     });
-  //   }
-  // }
 
   void _showErrorDialog(String message) {
     showDialog(
@@ -167,6 +157,28 @@ class _RegisterFormState extends State<RegisterForm> {
                       child: _buildTextField(_zipcodeController, '우편번호', validator: (v) => (v == null || v.isEmpty) ? '우편번호를 입력해주세요' : null),
                     ),
                     const SizedBox(width: 8),
+                    SizedBox(
+                      height: 48,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey[300],
+                          foregroundColor: Colors.black,
+                          elevation: 0,
+                        ),
+                        onPressed: () async {
+                          final result = await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => DaumPostcodeSearch(),
+                            ),
+                          );
+                          if (result != null) {
+                            _zipcodeController.text = result.zonecode ?? '';
+                            _addressController.text = result.address ?? '';
+                          }
+                        },
+                        child: const Text('주소찾기'),
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 8),
