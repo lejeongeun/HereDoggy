@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import axios from 'axios';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from './components/Login';
+import Home from './pages/Home';
+import SignUp from './pages/SignUp';
+
 
 function App() {
-  const [message, setMessage] = useState('');
-
-  useEffect(() => {
-    axios
-      .get('http://localhost:8080/api/hello')
-      .then((res) => setMessage(res.data))
-      .catch((err) => console.error(err));
-  }, []);
-
   return (
-    <div>
-      <h1>🛠️ 보호소 관리자 페이지</h1>
-      <p>{message}</p>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/admin/login" element={<Login />}/>
+        <Route path="/admin/home" element={<Home />}/>
+        <Route path="/admin/signup" element={<SignUp />}/>
+      </Routes>
+    </Router>
   );
 }
 

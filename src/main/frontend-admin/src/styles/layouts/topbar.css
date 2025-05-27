@@ -1,0 +1,19 @@
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;  /* 양쪽 끝 정렬! */
+  height: 64px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  padding: 0 28px;
+}
+
+.topbar-left {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+}
