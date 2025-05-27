@@ -84,6 +84,7 @@ public class FreePostService {
                 .orElseThrow(() -> new NotFoundException("찾을 수 없는 게시물입니다."));
 
         post.setViewCount(post.getViewCount() + 1);
+        freePostRepository.save(post);
 
         return convertToDTO(post);
     }
