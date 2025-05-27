@@ -2,6 +2,7 @@ package org.project.heredoggy.domain.postgresql.member;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.project.heredoggy.domain.postgresql.post.free.FreePost;
 import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -9,6 +10,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -66,4 +69,7 @@ public class Member {
 
     @OneToOne(mappedBy = "shelterAdmin")
     private Shelter shelter;
+
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FreePost> freePosts = new ArrayList<>();
 }
