@@ -1,15 +1,17 @@
-package org.project.heredoggy.user.posts.freePost.service;
+package org.project.heredoggy.user.posts.reveiwPost.service;
 
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.post.free.FreePost;
 import org.project.heredoggy.domain.postgresql.post.free.FreePostRepository;
+import org.project.heredoggy.domain.postgresql.post.review.ReviewPost;
+import org.project.heredoggy.domain.postgresql.post.review.ReviewPostRepository;
 import org.project.heredoggy.global.exception.ConflictException;
 import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.util.AuthUtils;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.user.posts.freePost.dto.FreePostRequestDTO;
-import org.project.heredoggy.user.posts.freePost.dto.FreePostResponseDTO;
+import org.project.heredoggy.user.posts.reveiwPost.dto.ReviewPostRequestDTO;
+import org.project.heredoggy.user.posts.reveiwPost.dto.ReviewPostResponseDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,28 +20,30 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class FreePostService {
-    private final FreePostRepository freePostRepository;
+public class ReviewPostService {
+    private final ReviewPostRepository reviewPostRepository;
 
     @Transactional
-    public void createFreePost(FreePostRequestDTO request, CustomUserDetails userDetails) {
+    public void createReviewPost(ReviewPostRequestDTO request, CustomUserDetails userDetails) {
         Member member = AuthUtils.getValidMember(userDetails);
 
-        FreePost post = FreePost.builder()
+        ReviewPost post = ReviewPost.builder()
                 .title(request.getTitle())
+                .type(request.getType())
+                .rank(request.getRank())
                 .content(request.getContent())
                 .writer(member)
                 .viewCount(0L)
                 .build();
 
-        freePostRepository.save(post);
+        reviewPostRepository.save(post);
     }
 
     @Transactional
-    public void editFreePost(Long postId, FreePostRequestDTO request, CustomUserDetails userDetails) {
+    public void editReviewPost(Long postId, ReviewPostRequestDTO request, CustomUserDetails userDetails) {
         AuthUtils.getValidMember(userDetails);
 
-        FreePost post = freePostRepository.findById(postId)
+        ReviewPost post = reviewPostRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 게시물입니다."));
 
         if(!post.getWriter().getEmail().equals(userDetails.getMember().getEmail())) {
@@ -48,57 +52,61 @@ public class FreePostService {
 
         post.setTitle(request.getTitle());
         post.setContent(request.getContent());
+        post.setType(request.getType());
+        post.setRank(request.getRank());
 
-        freePostRepository.save(post);
+        reviewPostRepository.save(post);
     }
 
 
     @Transactional
-    public void removeFreePost(Long postId, CustomUserDetails userDetails) {
+    public void removeReviewPost(Long postId, CustomUserDetails userDetails) {
         String email = AuthUtils.getValidMember(userDetails).getEmail();
 
-        FreePost post = freePostRepository.findById(postId)
+        ReviewPost post = reviewPostRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 게시물입니다."));
 
         if(!post.getWriter().getEmail().equals(email)) {
             throw new ConflictException("본인 글만 삭제할 수 있습니다.");
         }
 
-        freePostRepository.deleteById(postId);
+        reviewPostRepository.deleteById(postId);
     }
 
 
-    public List<FreePostResponseDTO> getAllFreePosts(CustomUserDetails userDetails) {
+    public List<ReviewPostResponseDTO> getAllReviewPosts(CustomUserDetails userDetails) {
         AuthUtils.getValidMember(userDetails);
 
-        List<FreePost> lists = freePostRepository.findAllOrderByCreatedAtDesc();
+        List<ReviewPost> lists = reviewPostRepository.findAllOrderByCreatedAtDesc();
 
         return convertToDTOList(lists);
     }
 
 
-    public FreePostResponseDTO getDetailFreePosts(Long postId, CustomUserDetails userDetails) {
+    public ReviewPostResponseDTO getDetailReviewPosts(Long postId, CustomUserDetails userDetails) {
         AuthUtils.getValidMember(userDetails);
 
-        FreePost post = freePostRepository.findById(postId)
+        ReviewPost post = reviewPostRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException("찾을 수 없는 게시물입니다."));
 
         post.setViewCount(post.getViewCount() + 1);
-        freePostRepository.save(post);
+        reviewPostRepository.save(post);
 
         return convertToDTO(post);
     }
 
-    private List<FreePostResponseDTO> convertToDTOList(List<FreePost> lists) {
+    private List<ReviewPostResponseDTO> convertToDTOList(List<ReviewPost> lists) {
         return lists.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
-    private FreePostResponseDTO convertToDTO(FreePost post) {
-        return FreePostResponseDTO.builder()
+    private ReviewPostResponseDTO convertToDTO(ReviewPost post) {
+        return ReviewPostResponseDTO.builder()
                 .id(post.getId())
                 .title(post.getTitle())
+                .type(post.getType())
                 .content(post.getContent())
+                .rank(post.getRank())
                 .viewCount(post.getViewCount())
                 .email(post.getWriter().getEmail())
                 .nickname(post.getWriter().getNickname())

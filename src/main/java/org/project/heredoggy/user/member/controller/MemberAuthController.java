@@ -48,10 +48,9 @@ public class MemberAuthController {
         String accessToken = jwtTokenProvider.generateAccessToken(member.getId());
 
         String refreshToken = jwtTokenProvider.generateRefreshToken(member.getId());
-        redisService.saveRefreshToken(member.getId(), refreshToken, jwtTokenProvider.getRefreshTokenExpiration());
+            redisService.saveRefreshToken(member.getId(), refreshToken, jwtTokenProvider.getRefreshTokenExpiration());
 
         return ResponseEntity.ok(new TokenResponseDTO(accessToken, refreshToken));
-
     }
     @PostMapping("/reissue")
     @PreAuthorize("hasRole('USER')")
