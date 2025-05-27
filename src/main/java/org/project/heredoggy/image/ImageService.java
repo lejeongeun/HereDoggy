@@ -31,7 +31,13 @@ public class ImageService {
     public String saveImage(MultipartFile file, Long shelterId, Long dogId) throws IOException{
         String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
 
-        File folder = Paths.get(getAbsoluteUploadDir(), "shelters", String.valueOf(shelterId), String.valueOf(shelterId), "dogs", String.valueOf(dogId)).toFile();
+        File folder = Paths.get(
+                getAbsoluteUploadDir(),
+                "shelters",
+                String.valueOf(shelterId),
+                "dogs",
+                String.valueOf(dogId)
+        ).toFile();
         if (!folder.exists()){
             folder.mkdirs(); // 디렉토리 없으면 생성
         }
