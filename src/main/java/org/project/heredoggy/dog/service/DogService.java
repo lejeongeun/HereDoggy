@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.dog.dto.DogEditRequestDTO;
 import org.project.heredoggy.dog.dto.DogRequestDTO;
 import org.project.heredoggy.dog.dto.DogResponseDTO;
+import org.project.heredoggy.dog.dto.MainDogResponseDTO;
 import org.project.heredoggy.dog.exception.ErrorMessages;
 import org.project.heredoggy.domain.postgresql.dog.Dog;
 import org.project.heredoggy.domain.postgresql.dog.DogImage;
@@ -59,10 +60,7 @@ public class DogService {
                 dog.addImage(image);
             }
         }
-
-
     }
-
 
     public List<DogResponseDTO> getDogsByShelter(Long sheltersId) {
         return dogRepository.findByShelterId(sheltersId).stream()
@@ -70,38 +68,11 @@ public class DogService {
                 .collect(Collectors.toList());
     }
 
-    private DogResponseDTO toDto(Dog dog) {
-        return DogResponseDTO.builder()
-                .name(dog.getName())
-                .age(dog.getAge())
-                .gender(dog.getGender())
-                .personality(dog.getPersonality())
-                .weight(dog.getWeight())
-                .isNeutered(dog.getIsNeutered())
-                .foundLocation(dog.getFoundLocation())
-                .imagesUrls(dog.getImages().stream()
-                        .map(DogImage::getImageUrl)
-                        .collect(Collectors.toList()))
-                .build();
-    }
-
-
     public DogResponseDTO getDetailsDog(Long dogsId) {
         Dog dog = dogRepository.findById(dogsId).orElseThrow(
                 ()-> new NotFoundException(ErrorMessages.DOG_NOT_FOUND)
         );
-        return DogResponseDTO.builder()
-                .name(dog.getName())
-                .age(dog.getAge())
-                .gender(dog.getGender())
-                .personality(dog.getPersonality())
-                .weight(dog.getWeight())
-                .isNeutered(dog.getIsNeutered())
-                .foundLocation(dog.getFoundLocation())
-                .imagesUrls(dog.getImages().stream()
-                        .map(DogImage::getImageUrl)
-                        .collect(Collectors.toList()))
-                .build();
+        return toDto(dog);
     }
     @Transactional
     public void edit(Long sheltersId, CustomUserDetails userDetails,Long dogsId, DogEditRequestDTO request, List<MultipartFile> newImages, List<Long> deleteImageIds) throws IOException{
@@ -169,5 +140,49 @@ public class DogService {
         }
 
         dogRepository.delete(dog);
+    }
+
+    public List<MainDogResponseDTO> getAllDogs() {
+        return dogRepository.findAll().stream()
+                .map(this::toMainDog)
+                .collect(Collectors.toList());
+    }
+
+    public MainDogResponseDTO getDetailsDogMain(Long dogsId) {
+        Dog dog = dogRepository.findById(dogsId)
+                .orElseThrow(()-> new NotFoundException(ErrorMessages.DOG_NOT_FOUND)
+                );
+        return toMainDog(dog);
+    }
+
+    // 빌더 메소드 분리
+    private DogResponseDTO toDto(Dog dog) {
+        return DogResponseDTO.builder()
+                .name(dog.getName())
+                .age(dog.getAge())
+                .gender(dog.getGender())
+                .personality(dog.getPersonality())
+                .weight(dog.getWeight())
+                .isNeutered(dog.getIsNeutered())
+                .foundLocation(dog.getFoundLocation())
+                .imagesUrls(dog.getImages().stream()
+                        .map(DogImage::getImageUrl)
+                        .collect(Collectors.toList()))
+                .build();
+    }
+
+    public MainDogResponseDTO toMainDog(Dog dog){
+        return MainDogResponseDTO.builder()
+                .name(dog.getName())
+                .age(dog.getAge())
+                .gender(dog.getGender())
+                .weight(dog.getWeight())
+                .isNeutered(dog.getIsNeutered())
+                .foundLocation(dog.getFoundLocation())
+                .imagesUrls(dog.getImages().stream()
+                        .map(DogImage::getImageUrl)
+                        .collect(Collectors.toList()))
+                .shelterName(dog.getShelter().getName())
+                .build();
     }
 }

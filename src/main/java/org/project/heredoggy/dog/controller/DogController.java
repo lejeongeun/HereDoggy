@@ -1,7 +1,6 @@
 package org.project.heredoggy.dog.controller;
 
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.dog.dto.DogEditRequestDTO;
@@ -24,6 +23,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/api/shelters/{shelters_id}/dogs")
 public class DogController {
+
     private final DogService dogService;
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, String>> create(@PathVariable("shelters_id") Long sheltersId,

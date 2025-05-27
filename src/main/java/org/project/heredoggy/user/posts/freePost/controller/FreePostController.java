@@ -15,7 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/members/freePosts")
+@RequestMapping("/api/members/free-posts")
 public class FreePostController {
     private final FreePostService freePostService;
 
