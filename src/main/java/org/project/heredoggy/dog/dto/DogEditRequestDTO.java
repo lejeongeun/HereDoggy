@@ -1,16 +1,20 @@
 package org.project.heredoggy.dog.dto;
 
-import lombok.*;
-import org.project.heredoggy.domain.postgresql.dog.DogImage;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.project.heredoggy.domain.postgresql.dog.DogStatus;
 import org.project.heredoggy.domain.postgresql.dog.Gender;
+import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
 
 import java.util.List;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class DogResponseDTO {
+public class DogEditRequestDTO {
     private String name;
     private int age;
     private Gender gender;
@@ -18,7 +22,6 @@ public class DogResponseDTO {
     private Double weight;
     private Boolean isNeutered;
     private String foundLocation;
-    private List<String> imagesUrls;
-
+    private DogStatus status;
 
 }

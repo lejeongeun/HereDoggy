@@ -46,6 +46,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/shelters/login").permitAll()
                         .requestMatchers("/api/admin/login").permitAll()
+                        .requestMatchers("/api/dogs/**").permitAll()
+                        .requestMatchers("/error").permitAll()
 
                         .requestMatchers("/api/members/**").hasRole("USER")
                         .requestMatchers("/api/shelters/**").hasRole("SHELTER_ADMIN")
