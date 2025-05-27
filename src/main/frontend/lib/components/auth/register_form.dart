@@ -167,21 +167,6 @@ class _RegisterFormState extends State<RegisterForm> {
                       child: _buildTextField(_zipcodeController, '우편번호', validator: (v) => (v == null || v.isEmpty) ? '우편번호를 입력해주세요' : null),
                     ),
                     const SizedBox(width: 8),
-                    // Expanded(
-                    //   flex: 3,
-                    //   child: SizedBox(
-                    //     height: 48,
-                    //     child: ElevatedButton(
-                    //       style: ElevatedButton.styleFrom(
-                    //         backgroundColor: Colors.grey[400],
-                    //         foregroundColor: Colors.black,
-                    //         elevation: 0,
-                    //       ),
-                    //       onPressed: _searchAddress,
-                    //       child: const Text('주소찾기'),
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -251,7 +236,7 @@ class RegisterSuccessPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('축하합니다.', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+            const Text('어서오개의 회원이 되신걸 축하해요! 🐶', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 32),
             ElevatedButton(
               style: ElevatedButton.styleFrom(

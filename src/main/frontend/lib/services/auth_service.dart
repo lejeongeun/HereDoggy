@@ -10,7 +10,6 @@ class AuthService {
   // 토큰 저장
   Future<void> saveTokens(String accessToken, String refreshToken) async {
     await _storage.write(key: 'access_token', value: accessToken);
-    await _storage.write(key: 'refresh_token', value: refreshToken);
   }
 
   // 토큰 가져오기
@@ -18,14 +17,9 @@ class AuthService {
     return await _storage.read(key: 'access_token');
   }
 
-  Future<String?> getRefreshToken() async {
-    return await _storage.read(key: 'refresh_token');
-  }
-
   // 토큰 삭제 (로그아웃)
   Future<void> deleteTokens() async {
     await _storage.delete(key: 'access_token');
-    await _storage.delete(key: 'refresh_token');
   }
 
   // 로그인
@@ -42,7 +36,7 @@ class AuthService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        await saveTokens(data['accessToken'], data['refreshToken']);
+        await saveTokens(data['accessToken'], '');
         return {'success': true};
       } else {
         return {
