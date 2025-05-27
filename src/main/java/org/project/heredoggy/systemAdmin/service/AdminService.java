@@ -1,8 +1,8 @@
 package org.project.heredoggy.systemAdmin.service;
 
-import global.exception.ConflictException;
-import global.exception.NotFoundException;
-import global.util.AuthUtils;
+import org.project.heredoggy.global.exception.ConflictException;
+import org.project.heredoggy.global.exception.NotFoundException;
+import org.project.heredoggy.global.util.AuthUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.member.Member;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class SystemAdminService {
+public class AdminService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     public AdminProfileResponseDTO getProfile(CustomUserDetails userDetails) {

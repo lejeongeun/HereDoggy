@@ -1,4 +1,4 @@
-package global.exception;
+package org.project.heredoggy.global.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
