@@ -35,15 +35,6 @@ public class DogService {
     public void create(Long sheltersId, CustomUserDetails userDetails, DogRequestDTO request, List<MultipartFile> imageFiles) throws IOException {
         // 보호소 인증 처리
         Shelter shelter = SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
-        List<DogImage> dogImages = imageFiles.stream()
-                .map(file -> {
-                    try{
-                        String url = imageService.saveImage(file);
-                        return DogImage.builder().imageUrl(url).build();
-                    }catch (IOException e){
-                        throw new RuntimeException("이미지 저장 실패", e);
-                    }
-                }).collect(Collectors.toList());
 
         Dog dog = Dog.builder()
                 .name(request.getName())
@@ -54,11 +45,22 @@ public class DogService {
                 .isNeutered(request.getIsNeutered())
                 .foundLocation(request.getFoundLocation())
                 .status(request.getStatus())
-                .images(dogImages)
                 .shelter(shelter)
                 .build();
+        dog = dogRepository.save(dog);
 
-        dogRepository.save(dog);
+        // 이미지 파일이 존재할 경우 -> dogImage 생성 + 연관관계 설정
+        if (imageFiles != null && !imageFiles.isEmpty()){
+            for (MultipartFile file : imageFiles){
+                String imageUrl = imageService.saveImage(file, shelter.getId(), dog.getId()); // 이미지 저장 후 url 반환
+                DogImage image = DogImage.builder()
+                        .imageUrl(imageUrl)
+                        .build();
+                dog.addImage(image);
+            }
+        }
+
+
     }
 
 
@@ -102,7 +104,7 @@ public class DogService {
                 .build();
     }
     @Transactional
-    public void edit(Long sheltersId, CustomUserDetails userDetails,Long dogsId, DogEditRequestDTO request, List<MultipartFile> newImagesFiles) throws IOException{
+    public void edit(Long sheltersId, CustomUserDetails userDetails,Long dogsId, DogEditRequestDTO request, List<MultipartFile> newImages, List<Long> deleteImageIds) throws IOException{
         // shelterId 검증
         Shelter shelter = SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
 
@@ -115,34 +117,7 @@ public class DogService {
             throw new ForbiddenException(ErrorMessages.NOT_YOUR_DOG);
         }
 
-        // 삭제 요청한 이미지의 url 목록 생성, 없을 경우 빈 리스트로 초기화
-        List<String> toDelete = request.getImagesToDelete() != null ? request.getImagesToDelete() : List.of();
-
-        // 삭제 대상이 아닌 이미지들만 필터링 하여 넘김
-        List<DogImage> filteredImages = dog.getImages().stream()
-                        .filter(image -> {
-                            // 삭제 대상인지 확인
-                            boolean shouldDelete = toDelete.contains(image.getImageUrl());
-                            if (shouldDelete){
-                                imageService.deleteImage(image.getImageUrl());
-                            }
-                            return !shouldDelete;
-                        }).collect(Collectors.toList());
-        // 새로 업로드할 파일이 있는 경우
-        if (newImagesFiles != null && !newImagesFiles.isEmpty()){
-            // MultipartFile 리스트를 DogImage 객체로 변환
-            List<DogImage> newImages = newImagesFiles.stream()
-                    .map(file -> {
-                        try{
-                            String url = imageService.saveImage(file);
-                            return DogImage.builder().imageUrl(url).build();
-                        }catch (IOException e){
-                            throw new ImageUploadException("이미지 저장 실패", e);
-                        }
-                    }).collect(Collectors.toList());
-            filteredImages.addAll(newImages);
-        }
-
+        // Dog 정보 수정
         dog.setName(request.getName());
         dog.setAge(request.getAge());
         dog.setGender(request.getGender());
@@ -151,7 +126,30 @@ public class DogService {
         dog.setIsNeutered(request.getIsNeutered());
         dog.setFoundLocation(request.getFoundLocation());
         dog.setStatus(request.getStatus());
-        dog.setImages(filteredImages);
+
+        // 기존 이미지 삭제
+        if (deleteImageIds != null && !deleteImageIds.isEmpty()){
+            List<DogImage> imagesToRemove = dog.getImages().stream()
+                    .filter(img -> deleteImageIds.contains(img.getId()))
+                    .collect(Collectors.toList());
+
+            for (DogImage image : imagesToRemove){
+                imageService.deleteImage(image.getImageUrl()); // 실제 파일 삭제
+                image.setDog(null);
+            }
+            dog.getImages().removeAll(imagesToRemove);
+        }
+        // 새 이미지 생성
+        if (newImages != null && !newImages.isEmpty()){
+            for (MultipartFile file : newImages) {
+                String imageUrl = imageService.saveImage(file, shelter.getId(), dog.getId());
+                DogImage newImage = DogImage.builder()
+                        .imageUrl(imageUrl)
+                        .build();
+                dog.addImage(newImage);
+            }
+        }
+
 
         dogRepository.save(dog);
 

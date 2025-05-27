@@ -28,11 +28,18 @@ public class ImageService {
         }
         return folder.getAbsolutePath();
     }
-    public String saveImage(MultipartFile file) throws IOException{
+    public String saveImage(MultipartFile file, Long shelterId, Long dogId) throws IOException{
         String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
-        File savePath = new File(getAbsoluteUploadDir(), fileName);
+
+        File folder = Paths.get(getAbsoluteUploadDir(), "shelters", String.valueOf(shelterId), String.valueOf(shelterId), "dogs", String.valueOf(dogId)).toFile();
+        if (!folder.exists()){
+            folder.mkdirs(); // 디렉토리 없으면 생성
+        }
+
+        File savePath = new File(folder, fileName);
         file.transferTo(savePath);
-        return "/uploads/" + fileName;
+
+        return "/uploads/shelters/" + shelterId + "/dogs/" + dogId + "/" + fileName;
     }
     public void deleteImage(String imageUrl){
         String relativeFile = imageUrl.replaceFirst("^/uploads/", "");

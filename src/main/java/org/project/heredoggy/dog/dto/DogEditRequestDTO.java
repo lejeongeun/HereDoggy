@@ -24,7 +24,4 @@ public class DogEditRequestDTO {
     private String foundLocation;
     private DogStatus status;
 
-
-    // 삭제할 이미지(기존 이미지 목록)
-    private List<String> imagesToDelete;
 }

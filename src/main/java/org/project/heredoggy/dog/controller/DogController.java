@@ -1,8 +1,8 @@
 package org.project.heredoggy.dog.controller;
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.dog.dto.DogEditRequestDTO;
 import org.project.heredoggy.dog.dto.DogRequestDTO;
@@ -26,28 +26,17 @@ import java.util.Map;
 public class DogController {
     private final DogService dogService;
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, String>> create(
-            @PathVariable("shelters_id") Long sheltersId,
-            @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestPart("dog") String dogJson,
-            @RequestPart(name = "images", required = false) List<MultipartFile> images
-    ) throws IOException {
+    public ResponseEntity<Map<String, String>> create(@PathVariable("shelters_id") Long sheltersId,
+                                                      @AuthenticationPrincipal CustomUserDetails userDetails,
+                                                      @RequestPart("dog") String dogJson,
+                                                      @RequestPart(name = "images", required = false) List<MultipartFile> images) throws IOException {
+        // 역직렬화 json -> 객체로
         ObjectMapper objectMapper = new ObjectMapper();
         DogRequestDTO request = objectMapper.readValue(dogJson, DogRequestDTO.class);
 
         dogService.create(sheltersId, userDetails, request, images);
         return ResponseEntity.ok(Map.of("message", "강아지가 등록되었습니다."));
     }
-//    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ResponseEntity<Map<String, String>> create(
-//            @PathVariable("shelters_id") Long sheltersId,
-//            @AuthenticationPrincipal CustomUserDetails userDetails,
-//            @RequestPart("dog") @Valid DogRequestDTO request,
-//            @RequestPart(value = "images", required = false) List<MultipartFile> images) throws IOException {
-//
-//        dogService.create(sheltersId,userDetails, request, images);
-//        return ResponseEntity.ok(Map.of("message", "강아지가 등록되었습니다."));
-//    }
 
     @GetMapping
     public ResponseEntity<List<DogResponseDTO>> getDogsByShelter(@PathVariable("shelters_id") Long sheltersId,
@@ -71,11 +60,13 @@ public class DogController {
                                                      @PathVariable("shelters_id") Long sheltersId,
                                                      @PathVariable("dogs_id") Long dogsId,
                                                      @RequestPart("dog") String dogJson,
-                                                     @RequestPart(name = "newImages", required = false) List<MultipartFile> newImages) throws IOException{
+                                                     @RequestPart(value = "newImages", required = false) List<MultipartFile> newImages,
+                                                     @RequestParam(value = "deleteImageIds", required = false) List<Long> deleteImageIds) throws IOException{
+
         ObjectMapper objectMapper = new ObjectMapper();
         DogEditRequestDTO request = objectMapper.readValue(dogJson, DogEditRequestDTO.class);
 
-        dogService.edit(sheltersId, userDetails, dogsId, request, newImages);
+        dogService.edit(sheltersId, userDetails, dogsId, request, newImages, deleteImageIds);
         return ResponseEntity.ok(Map.of("message", "강아지 정보가 수정되었습니다."));
 
     }

@@ -28,6 +28,8 @@ out/
 
 /src/main/resources/application.yml
 
+/uploads
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
