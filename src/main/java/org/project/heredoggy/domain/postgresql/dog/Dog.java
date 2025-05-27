@@ -60,7 +60,6 @@ public class Dog {
     @JoinColumn(name = "shelter_id", nullable = false)
     private Shelter shelter;
 
-
     public void addImage(DogImage image){
         images.add(image); // dog + dogImage 연관관계 설정
         image.setDog(this); // dogimage + dog 연관 설정 (양방향 설정)
