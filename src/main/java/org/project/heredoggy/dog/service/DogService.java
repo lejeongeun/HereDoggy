@@ -150,8 +150,7 @@ public class DogService {
 
     public MainDogResponseDTO getDetailsDogMain(Long dogsId) {
         Dog dog = dogRepository.findById(dogsId)
-                .orElseThrow(()-> new NotFoundException(ErrorMessages.DOG_NOT_FOUND)
-                );
+                .orElseThrow(()-> new NotFoundException(ErrorMessages.DOG_NOT_FOUND));
         return toMainDog(dog);
     }
 

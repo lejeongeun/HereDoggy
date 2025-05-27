@@ -38,6 +38,7 @@ public class ImageService {
                 "dogs",
                 String.valueOf(dogId)
         ).toFile();
+
         if (!folder.exists()){
             folder.mkdirs(); // 디렉토리 없으면 생성
         }
