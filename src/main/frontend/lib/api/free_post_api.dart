@@ -1,0 +1,141 @@
+import 'package:dio/dio.dart';
+import '../models/free_post.dart';
+import '../utils/constants.dart';
+import '../services/auth_service.dart';
+
+class FreePostApi {
+  static final Dio _dio = Dio(
+    BaseOptions(
+      baseUrl: AppConstants.baseUrl,
+      connectTimeout: const Duration(seconds: 5),
+      receiveTimeout: const Duration(seconds: 5),
+    ),
+  );
+
+  static Future<List<FreePost>> fetchFreePosts() async {
+    try {
+      final authService = AuthService();
+      final token = await authService.getAccessToken();
+
+      final response = await _dio.get(
+        '/members/free-posts',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      print('서버 응답 데이터: \\${response.data}');
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+        return data.map((json) => FreePost.fromJson(json)).toList();
+      } else {
+        throw Exception('서버 오류: \\${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('게시글 목록을 불러오지 못했습니다: \\${e}');
+    }
+  }
+
+  static Future<void> createFreePost({
+    required String title,
+    required String content,
+  }) async {
+    try {
+      final authService = AuthService();
+      final token = await authService.getAccessToken();
+
+      print('글 작성 요청 시작: title=$title, content=$content');
+      final response = await _dio.post(
+        '/members/free-posts',
+        data: {
+          'title': title,
+          'content': content,
+        },
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      print('글 작성 응답: ${response.statusCode}');
+      
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        throw Exception('글 작성 실패: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('글 작성 에러: $e');
+      throw Exception('글 작성 중 오류가 발생했습니다: $e');
+    }
+  }
+
+  static Future<FreePost> fetchFreePostDetail(int postId) async {
+    try {
+      final authService = AuthService();
+      final token = await authService.getAccessToken();
+      final response = await _dio.get(
+        '/members/free-posts/$postId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      if (response.statusCode == 200) {
+        return FreePost.fromJson(response.data);
+      } else {
+        throw Exception('서버 오류: $response.statusCode');
+      }
+    } catch (e) {
+      throw Exception('게시글 상세 정보를 불러오지 못했습니다: $e');
+    }
+  }
+
+  static Future<void> deleteFreePost(int postId) async {
+    try {
+      final authService = AuthService();
+      final token = await authService.getAccessToken();
+      final response = await _dio.delete(
+        '/members/free-posts/$postId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      if (response.statusCode != 200) {
+        throw Exception('글 삭제 실패: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('글 삭제 중 오류가 발생했습니다: $e');
+    }
+  }
+
+  static Future<void> editFreePost({
+    required int postId,
+    required String title,
+    required String content,
+  }) async {
+    try {
+      final authService = AuthService();
+      final token = await authService.getAccessToken();
+      final response = await _dio.put(
+        '/members/free-posts/$postId',
+        data: {
+          'title': title,
+          'content': content,
+        },
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      if (response.statusCode != 200) {
+        throw Exception('글 수정 실패: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('글 수정 중 오류가 발생했습니다: $e');
+    }
+  }
+} 

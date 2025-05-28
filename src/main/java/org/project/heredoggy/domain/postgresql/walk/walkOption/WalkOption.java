@@ -3,6 +3,7 @@ package org.project.heredoggy.domain.postgresql.walk.walkOption;
 import jakarta.persistence.*;
 import lombok.*;
 import org.project.heredoggy.domain.postgresql.dog.Dog;
+import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
 import org.project.heredoggy.domain.postgresql.walk.reservation.Reservation;
 
 import java.time.LocalDate;
@@ -35,5 +36,9 @@ public class WalkOption {
 
     @OneToMany(mappedBy = "walkOption", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservation = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "shelter_id", nullable = false)
+    private Shelter shelter;
 
 }

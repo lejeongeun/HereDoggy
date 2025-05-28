@@ -8,6 +8,9 @@ import 'pages/community/community_page.dart';
 import 'pages/mypage/mypage.dart';
 import 'pages/adoption/adoption_page.dart';
 import 'pages/notification/notification_page.dart';
+import 'pages/community/free_post_write_page.dart';
+import 'pages/community/free_post_detail_page.dart';
+import 'pages/community/free_post_edit_page.dart';
 import 'utils/theme.dart';
 import 'utils/constants.dart';
 import 'providers/user_provider.dart';
@@ -37,6 +40,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'HereDoggy',
       theme: AppTheme.lightTheme,
       initialRoute: AppConstants.homeRoute,
@@ -48,6 +52,35 @@ class MyApp extends StatelessWidget {
         AppConstants.myPageRoute: (context) => const MyPage(),
         AppConstants.adoptionRoute: (context) => const AdoptionPage(),
         AppConstants.notificationRoute: (context) => const NotificationPage(),
+        '/free-post-write': (context) => const FreePostWritePage(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name != null && settings.name!.startsWith('/free-post-detail/')) {
+          final idStr = settings.name!.split('/').last;
+          final postId = int.tryParse(idStr);
+          if (postId != null) {
+            return MaterialPageRoute(
+              builder: (context) => FreePostDetailPage(postId: postId),
+            );
+          }
+        }
+        if (settings.name != null && settings.name!.startsWith('/free-post-edit/')) {
+          final idStr = settings.name!.split('/').last;
+          final postId = int.tryParse(idStr);
+          if (postId != null) {
+            final args = settings.arguments as Map<String, dynamic>?;
+            final title = args?['title'] as String? ?? '';
+            final content = args?['content'] as String? ?? '';
+            return MaterialPageRoute(
+              builder: (context) => FreePostEditPage(
+                postId: postId,
+                initialTitle: title,
+                initialContent: content,
+              ),
+            );
+          }
+        }
+        return null;
       },
       // API 테스트용 홈 화면
       /*
