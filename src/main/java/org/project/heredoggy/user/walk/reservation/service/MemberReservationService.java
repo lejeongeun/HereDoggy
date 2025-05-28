@@ -104,7 +104,7 @@ public class MemberReservationService {
         reservationRepository.save(reservation);
     }
     public void validateDuplicateReservation(Member member, WalkOption walkOption){
-        boolean exists = reservationRepository.existsByMemberAndWalkOptionAndStatueIn(
+        boolean exists = reservationRepository.existsByMemberAndWalkOptionAndStatusIn(
                 member, walkOption, List.of(WalkReservationStatus.PENDING, WalkReservationStatus.APPROVED));
 
         if (exists){

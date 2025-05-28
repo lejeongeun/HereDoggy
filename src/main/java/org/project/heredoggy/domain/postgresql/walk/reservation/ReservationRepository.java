@@ -13,5 +13,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findByShelterId(Long sheltersId);
 
-    boolean existsByMemberAndWalkOptionAndStatueIn(Member member, WalkOption walkOption, List<WalkReservationStatus> pending);
+    boolean existsByMemberAndWalkOptionAndStatusIn(Member member, WalkOption walkOption, List<WalkReservationStatus> pending);
 }
