@@ -1,7 +1,7 @@
 .topbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;  /* 양쪽 끝 정렬! */
+  justify-content: space-between;
   height: 64px;
   background: #fff;
   border-bottom: 1px solid #eee;
