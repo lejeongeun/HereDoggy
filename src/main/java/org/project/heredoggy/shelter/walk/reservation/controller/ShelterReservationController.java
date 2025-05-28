@@ -1,4 +1,5 @@
 package org.project.heredoggy.shelter.walk.reservation.controller;
 
-public class ReservationController {
+
+public class ShelterReservationController {
 }

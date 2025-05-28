@@ -1,10 +1,12 @@
 package org.project.heredoggy.shelter.walk.walkOption.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.dog.exception.ErrorMessages;
 import org.project.heredoggy.domain.postgresql.dog.Dog;
 import org.project.heredoggy.domain.postgresql.dog.DogRepository;
 import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
+import org.project.heredoggy.domain.postgresql.shelter.shelter.ShelterRepository;
 import org.project.heredoggy.domain.postgresql.walk.walkOption.WalkOption;
 import org.project.heredoggy.domain.postgresql.walk.walkOption.WalkOptionRepository;
 import org.project.heredoggy.global.exception.ForbiddenException;
@@ -22,10 +24,14 @@ public class WalkOptionService {
     private final WalkOptionRepository walkOptionRepository;
     private final DogRepository dogRepository;
     private final ErrorMessages errorMessages;
+    private final ShelterRepository shelterRepository;
 
     @Transactional
     public void create(CustomUserDetails userDetails, Long sheltersId, Long dogsId, WalkOptionRequestDTO request) {
         Shelter shelter = SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
+        if (!shelterRepository.findById(sheltersId).isPresent()){
+            throw new EntityNotFoundException("해당 보호소가 존재하지 않습니다.");
+        }
         
         Dog dog = dogRepository.findById(dogsId)
                 .orElseThrow(() -> new NotFoundException(errorMessages.DOG_NOT_FOUND));
@@ -39,6 +45,7 @@ public class WalkOptionService {
                 .startTime(request.getStartTime())
                 .endTime(request.getEndTime())
                 .dog(dog)
+                .shelter(shelter)
                 .build();
 
         walkOptionRepository.save(walkOption);
