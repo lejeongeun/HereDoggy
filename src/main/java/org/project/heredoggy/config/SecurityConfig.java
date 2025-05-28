@@ -55,6 +55,7 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
 
                         .requestMatchers("/api/members/**").hasRole("USER")
+                        .requestMatchers("/api/comments/**").hasRole("USER")
                         .requestMatchers("/api/shelters/**").hasRole("SHELTER_ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("SYSTEM_ADMIN")
                         .anyRequest().authenticated()

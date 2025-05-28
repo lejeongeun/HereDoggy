@@ -2,7 +2,10 @@ package org.project.heredoggy.domain.postgresql.member;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.project.heredoggy.domain.postgresql.notice.NoticePost;
 import org.project.heredoggy.domain.postgresql.post.free.FreePost;
+import org.project.heredoggy.domain.postgresql.post.missing.MissingPost;
+import org.project.heredoggy.domain.postgresql.post.review.ReviewPost;
 import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -72,4 +75,13 @@ public class Member {
 
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FreePost> freePosts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReviewPost> reviewPosts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MissingPost> missingPosts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<NoticePost> noticePosts = new ArrayList<>();
 }

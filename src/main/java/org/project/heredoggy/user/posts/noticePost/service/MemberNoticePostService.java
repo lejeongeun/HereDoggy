@@ -1,17 +1,13 @@
 package org.project.heredoggy.user.posts.noticePost.service;
 
 import lombok.RequiredArgsConstructor;
-import org.project.heredoggy.domain.postgresql.member.Member;
-import org.project.heredoggy.domain.postgresql.post.notice.NoticePost;
-import org.project.heredoggy.domain.postgresql.post.notice.NoticePostRepository;
-import org.project.heredoggy.global.exception.ConflictException;
+import org.project.heredoggy.domain.postgresql.notice.NoticePost;
+import org.project.heredoggy.domain.postgresql.notice.NoticePostRepository;
 import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.util.AuthUtils;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.shelter.noticePost.dto.ShelterNoticePostRequestDTO;
 import org.project.heredoggy.shelter.noticePost.dto.ShelterNoticePostResponseDTO;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;

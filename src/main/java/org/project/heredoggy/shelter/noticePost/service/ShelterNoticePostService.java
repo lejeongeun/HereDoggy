@@ -2,8 +2,8 @@ package org.project.heredoggy.shelter.noticePost.service;
 
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.member.Member;
-import org.project.heredoggy.domain.postgresql.post.notice.NoticePost;
-import org.project.heredoggy.domain.postgresql.post.notice.NoticePostRepository;
+import org.project.heredoggy.domain.postgresql.notice.NoticePost;
+import org.project.heredoggy.domain.postgresql.notice.NoticePostRepository;
 import org.project.heredoggy.global.exception.ConflictException;
 import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.util.AuthUtils;
