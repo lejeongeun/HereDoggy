@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'pages/home/home_page.dart';
 import 'pages/shelter/shelter_list_page.dart';
 import 'pages/walk/walk_reservation_page.dart';
@@ -9,9 +10,15 @@ import 'pages/adoption/adoption_page.dart';
 import 'pages/notification/notification_page.dart';
 import 'utils/theme.dart';
 import 'utils/constants.dart';
+import 'providers/user_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => UserProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

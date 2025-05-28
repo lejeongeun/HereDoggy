@@ -19,6 +19,4 @@ public class DogResponseDTO {
     private Boolean isNeutered;
     private String foundLocation;
     private List<String> imagesUrls;
-
-
 }
