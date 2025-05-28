@@ -2,6 +2,7 @@ package org.project.heredoggy.user.comment.service;
 
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.member.Member;
+import org.project.heredoggy.domain.postgresql.notice.NoticePostRepository;
 import org.project.heredoggy.domain.postgresql.post.comment.Comment;
 import org.project.heredoggy.domain.postgresql.post.comment.CommentRepository;
 import org.project.heredoggy.domain.postgresql.post.comment.PostType;
@@ -24,6 +25,7 @@ public class CommentService {
     private final FreePostRepository freePostRepository;
     private final ReviewPostRepository reviewPostRepository;
     private final MissingPostRepository missingPostRepository;
+    private final NoticePostRepository noticePostRepository;
 
     @Transactional
     public void createComment(PostType postType, Long postId, String content, Member writer) {
@@ -89,6 +91,7 @@ public class CommentService {
             case FREE -> freePostRepository.existsById(postId);
             case REVIEW -> reviewPostRepository.existsById(postId);
             case MISSING -> missingPostRepository.existsById(postId);
+            case NOTICE -> noticePostRepository.existsById(postId);
         };
 
         if (!exists) {
