@@ -21,7 +21,5 @@ public class MemberReservationController {
                                                                   @Valid @RequestBody MemberReservationRequestDTO requestDTO){
         memberReservationService.requestReservation(userDetails, requestDTO);
         return ResponseEntity.ok(Map.of("message", "산책 예약이 신청되었습니다."));
-
     }
-
 }

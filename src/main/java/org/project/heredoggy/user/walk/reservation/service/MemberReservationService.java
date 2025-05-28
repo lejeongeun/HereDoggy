@@ -2,11 +2,13 @@ package org.project.heredoggy.user.walk.reservation.service;
 
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.member.Member;
+import org.project.heredoggy.domain.postgresql.member.MemberRepository;
 import org.project.heredoggy.domain.postgresql.walk.reservation.Reservation;
 import org.project.heredoggy.domain.postgresql.walk.reservation.ReservationRepository;
 import org.project.heredoggy.domain.postgresql.walk.reservation.WalkReservationStatus;
 import org.project.heredoggy.domain.postgresql.walk.walkOption.WalkOption;
 import org.project.heredoggy.domain.postgresql.walk.walkOption.WalkOptionRepository;
+import org.project.heredoggy.global.error.ErrorMessages;
 import org.project.heredoggy.global.exception.BadRequestException;
 import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.security.CustomUserDetails;
@@ -34,7 +36,9 @@ public class MemberReservationService {
             throw new IllegalArgumentException("walkOption의 id 번호를 입력해주세요");
         }
         WalkOption walkOption = walkOptionRepository.findById(requestDTO.getWalkOptionId())
-                .orElseThrow(()-> new NotFoundException("선택한 산책 옵션이 존재하지 않습니다."));
+                .orElseThrow(()-> new NotFoundException(ErrorMessages.OPTIONS_INFO_NOT_FOUND));
+        // 중복 예약 체크
+        validateDuplicateReservation(member, walkOption);
 
         Reservation reservation = Reservation.builder()
                 .date(walkOption.getDate())
@@ -61,9 +65,13 @@ public class MemberReservationService {
                 .collect(Collectors.toList());
     }
 
-    public MemberReservationResponseDTO getDetailsReservation(Long reservationsId) {
+    public MemberReservationResponseDTO getDetailsReservation(CustomUserDetails userDetails, Long reservationsId) {
+        Member member = userDetails.getMember();
         Reservation reservation = reservationRepository.findById(reservationsId)
-                .orElseThrow(() -> new BadRequestException("예약 내역이 존재하지 않습니다."));
+                .orElseThrow(() -> new BadRequestException(ErrorMessages.RESERVATION_NOT_FOUND));
+        if (!reservation.getMember().getId().equals(member.getId())){
+            throw new BadRequestException(ErrorMessages.UNAUTHORIZED_ACCESS);
+        }
 
         return toDto(reservation);
     }
@@ -84,6 +92,23 @@ public class MemberReservationService {
     }
 
 
+    public void cancelRequestReservation(CustomUserDetails userDetails, Long reservationsId) {
+        Member member = userDetails.getMember();
+        Reservation reservation = reservationRepository.findById(reservationsId)
+                .orElseThrow(()-> new NotFoundException(ErrorMessages.RESERVATION_NOT_FOUND));
+        if (!reservation.getMember().getId().equals(member.getId())){
+            throw new BadRequestException(ErrorMessages.UNAUTHORIZED_ACCESS);
+        }
 
+        reservation.setStatus(WalkReservationStatus.CANCELED_REQUEST);
+        reservationRepository.save(reservation);
+    }
+    public void validateDuplicateReservation(Member member, WalkOption walkOption){
+        boolean exists = reservationRepository.existsByMemberAndWalkOptionAndStatueIn(
+                member, walkOption, List.of(WalkReservationStatus.PENDING, WalkReservationStatus.APPROVED));
 
+        if (exists){
+            throw new BadRequestException("이미 해당 시간에 예약이 존재합니다.");
+        }
+    }
 }
