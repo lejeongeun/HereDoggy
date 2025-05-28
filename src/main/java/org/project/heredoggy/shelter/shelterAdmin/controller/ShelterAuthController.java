@@ -1,4 +1,4 @@
-package org.project.heredoggy.shelter.controller;
+package org.project.heredoggy.shelter.shelterAdmin.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;

@@ -1,4 +1,4 @@
-package org.project.heredoggy.shelter.service;
+package org.project.heredoggy.shelter.shelterAdmin.service;
 
 import org.project.heredoggy.global.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +8,7 @@ import org.project.heredoggy.domain.postgresql.shelter.shelterRequest.RequestSta
 import org.project.heredoggy.domain.postgresql.shelter.shelterRequest.ShelterRequest;
 import org.project.heredoggy.domain.postgresql.shelter.shelterRequest.ShelterRequestRepository;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.shelter.dto.ShelterCreateRequestDTO;
+import org.project.heredoggy.shelter.shelterAdmin.dto.ShelterCreateRequestDTO;
 import org.springframework.stereotype.Service;
 
 @Service

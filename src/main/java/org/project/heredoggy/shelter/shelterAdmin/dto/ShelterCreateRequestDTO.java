@@ -1,4 +1,4 @@
-package org.project.heredoggy.shelter.dto;
+package org.project.heredoggy.shelter.shelterAdmin.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
