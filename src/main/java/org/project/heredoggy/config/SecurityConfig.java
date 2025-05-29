@@ -6,6 +6,7 @@ import org.project.heredoggy.config.oauth.OAuth2SuccessHandler;
 import org.project.heredoggy.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -54,6 +55,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/dogs/**").permitAll()
                         .requestMatchers("/error").permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/api/shelters").permitAll() //보호소리스트 조회
                         .requestMatchers("/api/members/**").hasRole("USER")
                         .requestMatchers("/api/shelters/**").hasRole("SHELTER_ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("SYSTEM_ADMIN")
