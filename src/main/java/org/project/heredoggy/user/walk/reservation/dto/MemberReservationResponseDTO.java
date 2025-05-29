@@ -13,6 +13,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Builder
 public class MemberReservationResponseDTO {
+    private Long id;
     private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;

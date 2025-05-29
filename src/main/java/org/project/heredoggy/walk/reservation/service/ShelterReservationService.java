@@ -1,4 +1,4 @@
-package org.project.heredoggy.shelter.walk.reservation.service;
+package org.project.heredoggy.walk.reservation.service;
 
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.walk.reservation.Reservation;
@@ -8,7 +8,7 @@ import org.project.heredoggy.global.error.ErrorMessages;
 import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.util.SheltersAuthUtils;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.shelter.walk.reservation.dto.ShelterReservationResponseDto;
+import org.project.heredoggy.walk.reservation.dto.ShelterReservationResponseDto;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -73,7 +73,7 @@ public class ShelterReservationService {
 
     public ShelterReservationResponseDto toDto(Reservation reservation){
         return ShelterReservationResponseDto.builder()
-                .reservationId(reservation.getId())
+                .id(reservation.getId())
                 .memberName(reservation.getMember().getName())
                 .memberEmail(reservation.getMember().getEmail())
                 .memberPhone(reservation.getMember().getPhone())

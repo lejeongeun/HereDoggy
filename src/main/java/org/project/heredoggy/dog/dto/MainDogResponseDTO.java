@@ -10,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class MainDogResponseDTO {
+    private Long id;
     private String name;
     private int age;
     private Gender gender;

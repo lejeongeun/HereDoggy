@@ -155,6 +155,7 @@ public class DogService {
     // 빌더 메소드 분리
     private DogResponseDTO toDto(Dog dog) {
         return DogResponseDTO.builder()
+                .id(dog.getId())
                 .name(dog.getName())
                 .age(dog.getAge())
                 .gender(dog.getGender())
@@ -170,6 +171,7 @@ public class DogService {
 
     public MainDogResponseDTO toMainDog(Dog dog){
         return MainDogResponseDTO.builder()
+                .id(dog.getId())
                 .name(dog.getName())
                 .age(dog.getAge())
                 .gender(dog.getGender())

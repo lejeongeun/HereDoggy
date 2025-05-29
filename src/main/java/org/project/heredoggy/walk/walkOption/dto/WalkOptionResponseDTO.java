@@ -1,6 +1,7 @@
-package org.project.heredoggy.shelter.walk.walkOption.dto;
+package org.project.heredoggy.walk.walkOption.dto;
 
 import lombok.*;
+import org.project.heredoggy.domain.postgresql.dog.Dog;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -10,12 +11,13 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class WalkOptionRequestDTO {
-
+public class WalkOptionResponseDTO {
+    private Long id;
     private LocalDate date;
 
     private LocalTime startTime;
 
     private LocalTime endTime;
 
+    private Long dogsId;
 }

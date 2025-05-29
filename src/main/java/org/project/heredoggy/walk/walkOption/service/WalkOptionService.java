@@ -1,4 +1,4 @@
-package org.project.heredoggy.shelter.walk.walkOption.service;
+package org.project.heredoggy.walk.walkOption.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import org.project.heredoggy.global.exception.ForbiddenException;
 import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.util.SheltersAuthUtils;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.shelter.walk.walkOption.dto.WalkOptionRequestDTO;
+import org.project.heredoggy.walk.walkOption.dto.WalkOptionRequestDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

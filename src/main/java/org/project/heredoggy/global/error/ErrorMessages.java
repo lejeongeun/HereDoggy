@@ -8,4 +8,6 @@ public class ErrorMessages {
     public static final String UNAUTHORIZED_ACCESS = "접근 권한이 없습니다.";
     public static final String SHELTER_MISMATCH = "해당 보호소의 예약이 아닙니다.";
     public static final String OPTIONS_INFO_NOT_FOUND = "해당 옵션 정보가 존재하지 않습니다.";
+    public static final String WALK_ROUTE_NOT_FOUND = "해당 정보가 존재하지 않습니다.";
+    public static final String WALK_ROUTE_LIMIT = "기본 산책경로는 보호소당 최대 3개까지만 등록할 수 있습니다.";
 }

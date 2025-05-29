@@ -39,12 +39,14 @@ public class MemberController {
         memberService.remove(userDetails);
         return ResponseEntity.ok(Map.of("message", "회원 탈퇴 성공"));
     }
+
     // 산책 에약
     @GetMapping("/reservations")
     public ResponseEntity<List<MemberReservationResponseDTO>> getAllReservation(@AuthenticationPrincipal CustomUserDetails userDetails){
         List<MemberReservationResponseDTO> reservationList = memberReservationService.getAllReservation(userDetails);
         return ResponseEntity.ok(reservationList);
     }
+
     @GetMapping("/reservations/{reservations_id}")
     public ResponseEntity<MemberReservationResponseDTO> getDetailsReservation(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                               @PathVariable("reservations_id") Long reservationsId){
@@ -52,11 +54,11 @@ public class MemberController {
         return ResponseEntity.ok(reservationDetails);
 
     }
+
     @PutMapping("/reservations/{reservations_id}/cancel-request")
     public ResponseEntity<Map<String,String>> cancelRequestReservation(@PathVariable("reservations_id") Long reservationsId,
                                                                        @AuthenticationPrincipal CustomUserDetails userDetails){
         memberReservationService.cancelRequestReservation(userDetails, reservationsId);
         return ResponseEntity.ok(Map.of("message", "예약 취소 요청이 전송되었습니다."));
     }
-
 }

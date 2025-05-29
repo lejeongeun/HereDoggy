@@ -1,9 +1,9 @@
-package org.project.heredoggy.shelter.walk.reservation.controller;
+package org.project.heredoggy.walk.reservation.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.shelter.walk.reservation.dto.ShelterReservationResponseDto;
-import org.project.heredoggy.shelter.walk.reservation.service.ShelterReservationService;
+import org.project.heredoggy.walk.reservation.dto.ShelterReservationResponseDto;
+import org.project.heredoggy.walk.reservation.service.ShelterReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +29,8 @@ public class ShelterReservationController {
     // 상세 조회
     @GetMapping("/{reservations_id}")
     public ResponseEntity<ShelterReservationResponseDto> getDetailsReservations(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                                               @PathVariable("shelters_id") Long sheltersId,
-                                                                               @PathVariable("reservations_id") Long reservationsId){
+                                                                                @PathVariable("shelters_id") Long sheltersId,
+                                                                                @PathVariable("reservations_id") Long reservationsId){
         ShelterReservationResponseDto reservationsList = shelterReservationService.getDetailsReservations(userDetails, sheltersId, reservationsId);
         return ResponseEntity.ok(reservationsList);
     }
