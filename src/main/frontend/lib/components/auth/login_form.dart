@@ -67,7 +67,11 @@ class _LoginFormState extends State<LoginForm> {
           final profile = await _authService.getProfile();
           if (profile != null && mounted) {
             Provider.of<UserProvider>(context, listen: false).login(profile);
-            Navigator.pushReplacementNamed(context, '/mypage');
+            if (widget.onLoginSuccess != null) {
+              widget.onLoginSuccess!();
+            } else {
+              Navigator.of(context, rootNavigator: true).pop();
+            }
           } else {
             _showErrorDialog('회원 정보를 불러오지 못했습니다.');
           }

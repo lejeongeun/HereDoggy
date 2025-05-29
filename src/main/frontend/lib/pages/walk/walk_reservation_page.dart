@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../services/auth_service.dart';
+import 'package:provider/provider.dart';
+import '../../providers/user_provider.dart';
 import '../../components/auth/login_form.dart';
+import '../../utils/constants.dart';
 
 class WalkReservationPage extends StatefulWidget {
   const WalkReservationPage({Key? key}) : super(key: key);
@@ -10,94 +12,119 @@ class WalkReservationPage extends StatefulWidget {
 }
 
 class _WalkReservationPageState extends State<WalkReservationPage> {
-  final _authService = AuthService();
-  bool _isLoading = true;
-  bool _isLoggedIn = false;
-  bool _dialogShown = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _checkLoginStatus();
-  }
+  bool _loginPagePushed = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (!_isLoading && !_isLoggedIn && !_dialogShown) {
-      _dialogShown = true;
+    final isLoggedIn = Provider.of<UserProvider>(context, listen: false).isLoggedIn;
+    if (!isLoggedIn && !_loginPagePushed) {
+      _loginPagePushed = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _showLoginDialog();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => LoginFullScreenPage(
+              onLoginSuccess: () {
+                Navigator.pushReplacementNamed(context, AppConstants.walkReservationRoute);
+              },
+            ),
+          ),
+        );
       });
     }
   }
 
-  Future<void> _checkLoginStatus() async {
-    final token = await _authService.getAccessToken();
-    setState(() {
-      _isLoggedIn = token != null;
-      _isLoading = false;
-    });
-  }
-
-  void _showLoginDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Dialog(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                '로그인이 필요합니다',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              LoginForm(
-                onLoginSuccess: () {
-                  Navigator.of(context).pop(); // 다이얼로그 닫기
-                  _checkLoginStatus(); // 로그인 상태 새로고침
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
+  @override
+  Widget build(BuildContext context) {
+    final isLoggedIn = Provider.of<UserProvider>(context).isLoggedIn;
+    if (!isLoggedIn) {
+      // 로그인 페이지로 이동 중이므로 빈 컨테이너 반환
+      return const SizedBox.shrink();
+    }
+    return Scaffold(
+      appBar: AppBar(title: const Text('산책 예약')),
+      body: const Center(child: Text('산책 예약 페이지입니다')),
     );
   }
+}
+
+class LoginFullScreenPage extends StatelessWidget {
+  final VoidCallback? onLoginSuccess;
+  const LoginFullScreenPage({Key? key, this.onLoginSuccess}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
-    if (!_isLoggedIn) {
-      return const Scaffold(
-        body: Center(
-          child: Text('로그인이 필요합니다'),
-        ),
-      );
-    }
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('산책 예약'),
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
-      body: const Center(
-        child: Text(
-          '산책 예약 페이지입니다',
-          style: TextStyle(fontSize: 20),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+              IconButton(
+                icon: const Icon(Icons.arrow_back, size: 32),
+                onPressed: () => Navigator.pop(context),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                '로그인',
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 32),
+              LoginForm(
+                onLoginSuccess: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  Navigator.pushNamed(context, AppConstants.walkReservationRoute);
+                },
+              ),
+              const SizedBox(height: 32),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 28,
+                    child: const Text('Google', style: TextStyle(color: Colors.black)),
+                  ),
+                  const SizedBox(width: 32),
+                  CircleAvatar(
+                    backgroundColor: Color(0xFFFFEB3B),
+                    radius: 28,
+                    child: const Text('Kakao', style: TextStyle(color: Colors.black)),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 8,
+                    children: [
+                      TextButton(
+                        onPressed: () {},
+                        child: const Text('회원가입', style: TextStyle(color: Colors.black54)),
+                      ),
+                      const Text('|', style: TextStyle(color: Colors.black54)),
+                      TextButton(
+                        onPressed: () {},
+                        child: const Text('아이디 찾기', style: TextStyle(color: Colors.black54)),
+                      ),
+                      const Text('|', style: TextStyle(color: Colors.black54)),
+                      TextButton(
+                        onPressed: () {},
+                        child: const Text('비밀번호 재설정', style: TextStyle(color: Colors.black54)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

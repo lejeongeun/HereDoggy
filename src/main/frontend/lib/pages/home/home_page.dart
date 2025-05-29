@@ -309,7 +309,7 @@ class _HomeBottomNavBar extends StatelessWidget {
             Navigator.pushReplacementNamed(context, AppConstants.homeRoute);
             break;
           case 1:
-            Navigator.pushReplacementNamed(context, AppConstants.walkReservationRoute);
+            Navigator.pushNamed(context, AppConstants.walkReservationRoute);
             break;
           case 2:
             Navigator.pushReplacementNamed(context, AppConstants.communityRoute);
