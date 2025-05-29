@@ -60,6 +60,7 @@ public class AdminShelterRequestService {
                 .name(request.getShelterName())
                 .phone(request.getPhone())
                 .address(request.getAddress())
+                .region(extractRegion(request.getAddress()))
                 .description(request.getDescription())
                 .shelterCode(UUID.randomUUID().toString())
                 .build();
@@ -86,9 +87,21 @@ public class AdminShelterRequestService {
                         .phone(req.getPhone())
                         .description(req.getDescription())
                         .address(req.getAddress())
+                        .region(extractRegion(req.getAddress()))
                         .email(req.getRequester().getEmail())
                         .status(req.getStatus().name())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    private String extractRegion(String address) {
+        if (address == null || address.isBlank()) return null;
+
+        String trimmed = address.replaceAll("\\(\\d{5}\\)\\s*", "");
+        String[] parts = trimmed.split(" ");
+        if (parts.length >= 2) {
+            return parts[0] + " " + parts[1];
+        }
+        return null;
     }
 }

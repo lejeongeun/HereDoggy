@@ -37,6 +37,9 @@ public class Shelter {
     @Column(nullable = false)
     private String address;
 
+    @Column(nullable = false)
+    private String region;
+
     @Column(length = 1000)
     private String description;
 
