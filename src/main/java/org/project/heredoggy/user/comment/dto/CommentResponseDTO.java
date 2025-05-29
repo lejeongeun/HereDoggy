@@ -1,7 +1,7 @@
 package org.project.heredoggy.user.comment.dto;
 
 import lombok.*;
-import org.project.heredoggy.domain.postgresql.post.comment.PostType;
+import org.project.heredoggy.domain.postgresql.comment.PostType;
 
 @Getter
 @Setter

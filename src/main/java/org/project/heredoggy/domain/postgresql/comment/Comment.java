@@ -1,4 +1,4 @@
-package org.project.heredoggy.domain.postgresql.post.comment;
+package org.project.heredoggy.domain.postgresql.comment;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -3,7 +3,7 @@ package org.project.heredoggy.user.comment.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.member.Member;
-import org.project.heredoggy.domain.postgresql.post.comment.PostType;
+import org.project.heredoggy.domain.postgresql.comment.PostType;
 import org.project.heredoggy.global.util.AuthUtils;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.user.comment.dto.CommentRequestDTO;
