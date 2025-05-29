@@ -4,7 +4,7 @@ import '../../../styles/shelter/layouts/sidebar.css';
 const menuList = [
  { name: '대시보드', path: '/shelter/dashboard' },
  { name: '공지사항', path: '/shelter/noticeboardlist' },
- { name: '동물 등록 및 관리', path: '/shelter/animalmanager' },
+ { name: '동물 관리 및 등록', path: '/shelter/doglist' },
  { name: '산책예약 관리', path: '/shelter/walkreservationmanager' },
  { name: '산책로 관리', path: '/shelter/routemanager' },
  { name: '입양 관리', path: '/shelter/adoptionmanager' },

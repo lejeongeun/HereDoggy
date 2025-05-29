@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import { Link } from 'react-router-dom';
 
 function NoticeBoardList() {
   const notices = [
@@ -16,7 +16,12 @@ function NoticeBoardList() {
 
   return (
     <div className="container mt-4">
-      <h2>공지사항</h2>
+      <div className="d-flex justify-content-between align-items-center mb-2">
+    <h2 className="mb-0">공지사항</h2>
+      <Link to="/notice/write" className="btn btn-primary">
+        작성하기
+      </Link>
+  </div>
       <table className="table table-hover">
         <thead>
           <tr>
@@ -28,9 +33,13 @@ function NoticeBoardList() {
         </thead>
         <tbody>
           {notices.map((notice, i) => (
-            <tr key={notice.id}>
+            <tr key={notice.id}> {/* key가 없어도 동일하게 작동하지만 react렌더링 효율을 위해 */}
               <td>{notice.id}</td>
-              <td>{notice.title}</td>
+              <td>
+              <Link to={`/NoticeBoardDetail/${notice.id}`} className="text-decoration-none text-dark">
+                {notice.title}
+              </Link>
+            </td>
               <td>{notice.content}</td>
               <td>{notice.date}</td>
             </tr>

@@ -1,0 +1,90 @@
+/* src/styles/user/shelterRequest.css */
+
+form {
+  max-width: 480px;
+  margin: 50px auto;
+  padding: 32px 28px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #2f4f4f; /* 짙은 청록색 */
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 28px;
+  font-weight: 700;
+  font-size: 2rem;
+  color: #317a47; /* 중간 톤 초록 */
+}
+
+label {
+  display: block;
+  margin-bottom: 16px;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #3c6e47; /* 은은한 초록 */
+}
+
+input[type="text"],
+input[type="email"],
+textarea {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1.5px solid #c6dec6;
+  background-color: #f6fbf6; /* 아주 연한 연두 */
+  color: #2a4d2a;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #94b394;
+  font-style: italic;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #4caf50; /* 진한 초록 */
+  outline: none;
+  box-shadow: 0 0 6px #a3d9a5cc;
+  background-color: #e9f3e9;
+  color: #2f4f2f;
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: 14px 0;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 8px #3a8d3a80;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+  background-color: #388e3c;
+  box-shadow: 0 5px 12px #317534cc;
+}
+
+button[type="submit"]:disabled {
+  background-color: #b7d0b7;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+@media (max-width: 600px) {
+  form {
+    margin: 20px 16px;
+    padding: 24px 20px;
+  }
+}

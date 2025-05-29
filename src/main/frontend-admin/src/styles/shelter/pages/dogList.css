@@ -1,0 +1,68 @@
+.doglist-container {
+  max-width: 900px;
+  margin: 32px auto;
+  background: #f8f8f8;
+  padding: 24px 18px 32px 18px;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px #0001;
+}
+
+.doglist-header {
+  text-align: right;
+  margin-bottom: 14px;
+}
+
+.doglist-register-btn {
+  background: #4f6854;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 22px;
+  font-size: 1rem;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+.doglist-register-btn:hover {
+  background: #3d5142;
+}
+
+.doglist-table {
+  width: 100%;
+  background: #fff;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+  font-size: 1.02rem;
+  box-shadow: 0 2px 8px #0001;
+}
+
+.doglist-table th,
+.doglist-table td {
+  padding: 14px 10px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+.doglist-table th {
+  background: #f6f6f6;
+  font-weight: bold;
+  font-size: 1.07rem;
+}
+
+.doglist-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #eee;
+  display: inline-block;
+}
+
+.doglist-img-placeholder {
+  background: #ccc;
+}
+
+.doglist-table tbody tr:last-child td {
+  border-bottom: none;
+}
