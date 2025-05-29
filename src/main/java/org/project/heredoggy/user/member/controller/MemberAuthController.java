@@ -3,9 +3,7 @@ package org.project.heredoggy.user.member.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.member.Member;
-import org.project.heredoggy.user.member.dto.request.LoginRequestDTO;
-import org.project.heredoggy.user.member.dto.request.MemberSignUpRequestDTO;
-import org.project.heredoggy.user.member.dto.request.ReissueRequestDTO;
+import org.project.heredoggy.user.member.dto.request.*;
 import org.project.heredoggy.user.member.dto.response.TokenResponseDTO;
 import org.project.heredoggy.user.member.dto.response.ReissueResponseDTO;
 import org.project.heredoggy.user.member.service.AuthService;
@@ -72,5 +70,17 @@ public class MemberAuthController {
     public ResponseEntity<?> logout(@AuthenticationPrincipal CustomUserDetails userDetails) {
         redisService.deleteRefreshToken(userDetails.getMember().getId());
         return ResponseEntity.ok("로그아웃 완료");
+    }
+
+    @PostMapping("/password-reset-reqeust")
+    public ResponseEntity<?> requestPasswordReset(@RequestBody PasswordResetRequestDTO request) {
+        authService.sendPasswordResetEmail(request.getEmail());
+        return ResponseEntity.ok("비밀번호 재설정 링크가 이메일로 전송되었습니다.");
+    }
+
+    @PostMapping("/password-reset")
+    public ResponseEntity<?> resetPassword(@RequestBody PasswordResetConfirmDTO dto) {
+        authService.resetPassword(dto.getToken(), dto.getNewPassword());
+        return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
     }
 }

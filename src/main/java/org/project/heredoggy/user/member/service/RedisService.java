@@ -26,4 +26,18 @@ public class RedisService {
     public void deleteRefreshToken(Long memberId) {
         redisTemplate.delete(PREFIX + memberId);
     }
+
+
+    //비밀번호 재설정
+    public void savePasswordResetToken(String email, String token) {
+        redisTemplate.opsForValue().set("reset:" + token, email, Duration.ofMinutes(30));
+    }
+
+    public String getEmailByResetToken(String token) {
+        return redisTemplate.opsForValue().get("reset:" + token);
+    }
+
+    public void deletePasswordResetToken(String token) {
+        redisTemplate.delete("reset:" + token);
+    }
 }
