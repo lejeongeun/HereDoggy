@@ -1,4 +1,4 @@
-package org.project.heredoggy.domain.postgresql.post.comment;
+package org.project.heredoggy.domain.postgresql.comment;
 
 public enum PostType {
     FREE,

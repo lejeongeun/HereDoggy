@@ -1,4 +1,4 @@
-package org.project.heredoggy.domain.postgresql.post.comment;
+package org.project.heredoggy.domain.postgresql.comment;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
