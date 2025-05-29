@@ -1,0 +1,90 @@
+body {
+  background: #f5f7fa;
+  margin: 0;
+  padding: 0;
+}
+
+/* 회원가입 전체 감싸는 박스 중앙 정렬 */
+.signup-wrapper {
+  min-height: 100vh;       /* 화면 전체 높이, 고정 height 절대 X */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f5f7fa;
+}
+
+/* 카드형 폼 */
+.signup-form {
+  background: #fff;
+  padding: 32px 22px 26px 22px;
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(44, 190, 120, 0.13), 0 2px 8px rgba(44,62,80,0.06);
+  width: 100%;
+  max-width: 370px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 타이틀 */
+.signup-title {
+  text-align: center;
+  margin-bottom: 18px;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #26a869;
+  letter-spacing: 0.5px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-group label {
+  color: #38443c;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.form-group input {
+  padding: 9px 10px;
+  border: 1px solid #c0ecd5;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #f8fefb;
+  transition: border 0.14s;
+}
+.form-group input:focus {
+  border: 1.5px solid #26a869;
+  outline: none;
+  background: #f2fff6;
+}
+
+.signupbtn {
+  background: #26a869;
+  color: #fff;
+  font-weight: 600;
+  padding: 10px 0;
+  border: none;
+  border-radius: 7px;
+  margin-top: 8px;
+  font-size: 1.03rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.signupbtn:hover {
+  background: #17854f;
+}
+
+@media (max-width: 600px) {
+  .signup-form {
+    padding: 14px 4vw 8px 4vw;
+    max-width: 98vw;
+  }
+  .signup-title {
+    font-size: 1.1rem;
+  }
+}

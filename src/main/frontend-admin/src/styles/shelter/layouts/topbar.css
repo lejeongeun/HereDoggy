@@ -1,0 +1,41 @@
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  background: #ededed;
+  border-bottom: 1.5px solid #d3d3d3;
+  padding: 0 24px;
+  font-size: 1.1rem;
+}
+
+.topbar-left .logo {
+  font-weight: bold;
+  color: #3ec081;
+  font-size: 1.3rem;
+  letter-spacing: 2px;
+}
+
+.mypage-btn {
+  display: inline-block;
+  background-color: #4CAF50; 
+  color: white !important;
+  text-decoration: none !important;
+  border: none; /* bootstrap으로 인해 보더 생김*/
+  padding: 5px 16px;
+  font-size: 1rem;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mypage-btn:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+.mypage-btn:active {
+  background-color: #3e8e41;
+  transform: translateY(0);
+}
+

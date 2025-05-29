@@ -1,0 +1,102 @@
+/* LoginPage.css */
+body {
+  background: #f5f7fa;
+}
+
+/* 중앙정렬 */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 카드형 폼 */
+.login-form {
+  background: #fff;
+  padding: 32px 24px;
+  border-radius: 16px;
+   box-shadow:
+    0 10px 32px rgba(80, 210, 160, 0.12), /* 초록 계열 부드러운 그림자 */
+    0 2px 8px rgba(44, 62, 80, 0.08);     
+  width: 100%;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.login-title {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #26a869;   /* 초록 포인트 */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-group label {
+  color: #485c52;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.form-group input {
+  padding: 10px 12px;
+  border: 1px solid #c0ecd5;
+  border-radius: 7px;
+  font-size: 1rem;
+  background: #f8fefb;
+  transition: border 0.15s;
+}
+.form-group input:focus {
+  border: 1.5px solid #36d484;
+  outline: none;
+}
+
+.login-btn {
+  background: #26a869;
+  color: #fff;
+  font-weight: 600;
+  padding: 11px 0;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  margin-top: 6px;
+  font-size: 1.05rem;
+  transition: background 0.18s;
+}
+.login-btn:hover {
+  background: #17854f;
+}
+
+.signup-btn {
+  background: none;
+  color: #26a869;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  padding: 7px 0 0 0;
+  font-size: 1rem;
+  text-decoration: underline;
+  transition: color 0.16s;
+}
+.signup-btn:hover {
+  color: #17854f;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 500px) {
+  .login-form {
+    padding: 20px 4vw;
+    max-width: 97vw;
+  }
+  .login-title {
+    font-size: 1.15rem;
+  }
+}

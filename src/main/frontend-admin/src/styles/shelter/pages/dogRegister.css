@@ -1,0 +1,131 @@
+.dog-detail-card {
+  max-width: 1000px;
+  height: 700px;
+  margin: 34px auto 48px auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px #e5ebf4cc;
+  padding: 32px 34px 24px 34px;
+  border: 1.5px solid #ecf1f5;
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+}
+
+.dog-img-row {
+  display: flex;
+  gap: 54px;
+  margin-bottom: 36px;
+}
+
+.dog-img-thumb {
+  width: 230px;
+  height: 175px;
+  border-radius: 13px;
+  background: #e3e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1.7px solid #dbe6f2;
+}
+.dog-img-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dog-info-grid {
+  display: flex;
+  gap: 44px;
+  justify-content: flex-start;
+  margin-bottom: 8px;
+}
+
+.dog-info-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.label {
+  display: inline-block;
+  width: 92px;
+  color: #39415a;
+  font-weight: 600;
+  font-size: 1.03rem;
+  letter-spacing: 0.01em;
+}
+
+.value-input {
+  flex: 1;
+  background: #f8fafb;
+  border-radius: 6px;
+  padding: 8px 11px;
+  color: #384055;
+  font-size: 1rem;
+  border: 1px solid #d3dae6;
+  transition: border 0.15s, background 0.14s;
+}
+.value-input:focus {
+  border: 1.4px solid #4ab071;
+  background: #fff;
+}
+
+.dog-btn-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.update-btn {
+  min-width: 84px;
+  padding: 10px 26px;
+  border-radius: 7px;
+  border: none;
+  font-weight: 700;
+  font-size: 1.08rem;
+  cursor: pointer;
+  background: #4ab071;
+  color: #fff;
+  box-shadow: 0 2px 8px #e5f4ec;
+  transition: background 0.13s;
+}
+
+.update-btn:hover {
+  background: #357c4c;
+}
+
+input[type="file"] {
+  font-size: 0.98rem;
+  padding: 8px 0;
+  margin-bottom: 2px;
+}
+
+/* 모바일/작은 화면 대응 */
+@media (max-width: 950px) {
+  .dog-detail-card {
+    max-width: 98vw;
+    padding: 16px 2vw 18px 2vw;
+  }
+  .dog-img-row {
+    gap: 12px;
+  }
+  .dog-info-grid {
+    flex-direction: column;
+    gap: 18px;
+  }
+  .label {
+    width: 76px;
+  }
+  .dog-img-thumb {
+    width: 120px;
+    height: 85px;
+  }
+}
