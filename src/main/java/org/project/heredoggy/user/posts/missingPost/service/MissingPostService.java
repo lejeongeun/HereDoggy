@@ -88,8 +88,7 @@ public class MissingPostService {
     }
 
 
-    public List<MissingPostResponseDTO> getAllMissingPosts(CustomUserDetails userDetails) {
-        AuthUtils.getValidMember(userDetails);
+    public List<MissingPostResponseDTO> getAllMissingPosts() {
 
         List<MissingPost> lists = missingPostRepository.findAllOrderByCreatedAtDesc();
 
@@ -97,8 +96,7 @@ public class MissingPostService {
     }
 
 
-    public MissingPostResponseDTO getDetailMissingPosts(Long postId, CustomUserDetails userDetails) {
-        AuthUtils.getValidMember(userDetails);
+    public MissingPostResponseDTO getDetailMissingPosts(Long postId) {
 
         MissingPost post = missingPostRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException("찾을 수 없는 게시물입니다."));

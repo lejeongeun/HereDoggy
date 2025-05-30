@@ -1,7 +1,6 @@
 package org.project.heredoggy.dog.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.project.heredoggy.dog.dto.DogResponseDTO;
 import org.project.heredoggy.dog.dto.MainDogResponseDTO;
 import org.project.heredoggy.dog.service.DogService;
 import org.springframework.http.ResponseEntity;

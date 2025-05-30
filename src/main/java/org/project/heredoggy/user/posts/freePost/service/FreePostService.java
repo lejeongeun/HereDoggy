@@ -68,8 +68,7 @@ public class FreePostService {
     }
 
 
-    public List<FreePostResponseDTO> getAllFreePosts(CustomUserDetails userDetails) {
-        AuthUtils.getValidMember(userDetails);
+    public List<FreePostResponseDTO> getAllFreePosts() {
 
         List<FreePost> lists = freePostRepository.findAllOrderByCreatedAtDesc();
 
@@ -77,9 +76,7 @@ public class FreePostService {
     }
 
 
-    public FreePostResponseDTO getDetailFreePosts(Long postId, CustomUserDetails userDetails) {
-        AuthUtils.getValidMember(userDetails);
-
+    public FreePostResponseDTO getDetailFreePosts(Long postId) {
         FreePost post = freePostRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException("찾을 수 없는 게시물입니다."));
 

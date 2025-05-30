@@ -42,15 +42,14 @@ public class ReviewPostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReviewPostResponseDTO>> getReviewPostsByCreatedAt(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        List<ReviewPostResponseDTO> res = reviewPostService.getAllReviewPosts(userDetails);
+    public ResponseEntity<List<ReviewPostResponseDTO>> getReviewPostsByCreatedAt() {
+        List<ReviewPostResponseDTO> res = reviewPostService.getAllReviewPosts();
         return ResponseEntity.ok(res);
     }
 
     @GetMapping("/{post_id}")
-    public ResponseEntity<ReviewPostResponseDTO> getDetailReviewPosts(@PathVariable("post_id") Long postId,
-                                                                    @AuthenticationPrincipal CustomUserDetails userDetails) {
-        ReviewPostResponseDTO res = reviewPostService.getDetailReviewPosts(postId, userDetails);
+    public ResponseEntity<ReviewPostResponseDTO> getDetailReviewPosts(@PathVariable("post_id") Long postId) {
+        ReviewPostResponseDTO res = reviewPostService.getDetailReviewPosts(postId);
         return ResponseEntity.ok(res);
     }
 }

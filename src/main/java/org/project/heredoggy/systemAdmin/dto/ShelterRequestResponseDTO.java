@@ -13,6 +13,7 @@ public class ShelterRequestResponseDTO {
     private String phone;
     private String address;
     private String description;
+    private String region;
     private String email;
     private String shelterCode;
     private String shelterAdmin;

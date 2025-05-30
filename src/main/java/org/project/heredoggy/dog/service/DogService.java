@@ -155,12 +155,14 @@ public class DogService {
     // 빌더 메소드 분리
     private DogResponseDTO toDto(Dog dog) {
         return DogResponseDTO.builder()
+                .id(dog.getId())
                 .name(dog.getName())
                 .age(dog.getAge())
                 .gender(dog.getGender())
                 .personality(dog.getPersonality())
                 .weight(dog.getWeight())
                 .isNeutered(dog.getIsNeutered())
+                .status(dog.getStatus())
                 .foundLocation(dog.getFoundLocation())
                 .imagesUrls(dog.getImages().stream()
                         .map(DogImage::getImageUrl)
@@ -170,12 +172,14 @@ public class DogService {
 
     public MainDogResponseDTO toMainDog(Dog dog){
         return MainDogResponseDTO.builder()
+                .id(dog.getId())
                 .name(dog.getName())
                 .age(dog.getAge())
                 .gender(dog.getGender())
                 .weight(dog.getWeight())
                 .isNeutered(dog.getIsNeutered())
                 .foundLocation(dog.getFoundLocation())
+                .status(dog.getStatus())
                 .imagesUrls(dog.getImages().stream()
                         .map(DogImage::getImageUrl)
                         .collect(Collectors.toList()))

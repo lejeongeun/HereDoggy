@@ -17,8 +17,7 @@ import java.util.stream.Collectors;
 public class MemberNoticePostService {
     private final NoticePostRepository noticePostRepository;
 
-    public List<ShelterNoticePostResponseDTO> getAllNoticePost(CustomUserDetails userDetails) {
-        AuthUtils.getValidMember(userDetails);
+    public List<ShelterNoticePostResponseDTO> getAllNoticePost() {
 
         List<NoticePost> lists = noticePostRepository.findAllOrderByCreatedAtDesc();
 
@@ -26,8 +25,7 @@ public class MemberNoticePostService {
     }
 
 
-    public ShelterNoticePostResponseDTO getDetailNoticePost(Long postId, CustomUserDetails userDetails) {
-        AuthUtils.getValidMember(userDetails);
+    public ShelterNoticePostResponseDTO getDetailNoticePost(Long postId) {
 
         NoticePost post = noticePostRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException("찾을 수 없는 게시물입니다."));
