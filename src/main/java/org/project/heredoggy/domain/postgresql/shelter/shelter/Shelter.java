@@ -62,5 +62,8 @@ public class Shelter {
     private List<Dog> dogs = new ArrayList<>();
 
     @OneToMany(mappedBy = "shelter", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ShelterImage> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "shelter", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WalkOption> walkOptions = new ArrayList<>();
 }
