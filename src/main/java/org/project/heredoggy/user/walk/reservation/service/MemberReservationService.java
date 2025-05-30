@@ -16,6 +16,7 @@ import org.project.heredoggy.global.error.ErrorMessages;
 import org.project.heredoggy.global.exception.BadRequestException;
 import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.util.AuthUtils;
+import org.project.heredoggy.global.util.TimeUtil;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationRequestDTO;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationResponseDTO;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,6 +64,7 @@ public class MemberReservationService {
         }
         // 중복 예약 체크
         validateDuplicateReservation(member, walkOption);
+        validateTimeConflict(walkOption);
 
         Reservation reservation = Reservation.builder()
                 .date(walkOption.getDate()) // walkOption 선택한 날짜
@@ -151,5 +154,29 @@ public class MemberReservationService {
                         .map(DogImage::getImageUrl)
                         .collect(Collectors.toList()))
                 .build();
+    }
+
+    private void validateTimeConflict(WalkOption newOptions){
+        List<Reservation> existingReservations = reservationRepository.findByDogIdAndDateAndStatusIn(
+                newOptions.getDog().getId(),
+                newOptions.getDate(),
+                List.of(WalkReservationStatus.PENDING, WalkReservationStatus.APPROVED)
+        );
+
+        boolean hasMorning = false;
+        boolean hasAfternoon = false;
+
+        for (Reservation reservation : existingReservations){
+            LocalTime start = reservation.getStartTime();
+            if (TimeUtil.isMorning(start)) hasMorning = true;
+            if (TimeUtil.isAfternoon(start)) hasAfternoon = true;
+        }
+        if (TimeUtil.isMorning(newOptions.getStartTime()) && hasMorning){
+            throw new BadRequestException(" 해당 강아지는 오전 예약이 이미 존재합니다.");
+        }
+
+        if (TimeUtil.isAfternoon(newOptions.getStartTime()) && hasAfternoon){
+            throw new BadRequestException("해당 강아지는 오후 예약이 이미 존재합니다.");
+        }
     }
 }

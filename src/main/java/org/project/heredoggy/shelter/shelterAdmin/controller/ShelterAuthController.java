@@ -31,7 +31,44 @@ public class ShelterAuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO request, HttpServletRequest httpRequest) {
-        return handleLogin(request, httpRequest, RoleType.SHELTER_ADMIN);
+        try {
+            // 1. 인증 시도
+            Authentication auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
+
+            // 2. 사용자 정보 추출
+            CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+            RoleType userRole = userDetails.getMember().getRole();
+
+            // 3. 무조건 세션 생성 (세션 로그인 유지)
+            SecurityContext context = SecurityContextHolder.createEmptyContext();
+            context.setAuthentication(auth);
+            HttpSession session = httpRequest.getSession(true);
+            session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
+
+            // 4. 역할에 따라 프론트 분기 유도
+            if (userRole.equals(RoleType.SHELTER_ADMIN)) {
+                return ResponseEntity.ok(
+                        Map.of(
+                                "message", "보호소 관리자 로그인 성공",
+                                "role", userRole.name()
+                        )
+                );
+            } else {
+                return ResponseEntity.ok(
+                        Map.of(
+                                "message", "권한이 없으니 보호소 신청 페이지로 이동)",
+                                "role", userRole.name(),
+                                "nextAction", "/shelter-request"
+                        )
+                );
+            }
+
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "로그인 실패: " + e.getMessage()));
+        }
     }
 
     @PostMapping("/logout")
@@ -43,43 +80,5 @@ public class ShelterAuthController {
         SecurityContextHolder.clearContext(); // 인증 정보 초기화
 
         return ResponseEntity.ok("로그아웃 완료");
-    }
-
-    private ResponseEntity<?> handleLogin(LoginRequestDTO request, HttpServletRequest httpRequest, RoleType requiredRole) {
-        try {
-            Authentication auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-            );
-
-            CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
-            RoleType userRole = userDetails.getMember().getRole();
-
-            if (!userRole.equals(requiredRole)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-                        Map.of(
-                                "message", "보호소 관리자가 아닙니다.",
-                                "role", userRole.name(),
-                                "nextAction", "/shelter-request"
-                        )
-                );
-            }
-
-            // SecurityContext 생성 + 인증 설정
-            SecurityContext context = SecurityContextHolder.createEmptyContext();
-            context.setAuthentication(auth);
-
-            //  세션에 SecurityContext 저장
-            HttpSession session = httpRequest.getSession(true);
-            session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
-
-            return ResponseEntity.ok(
-                    Map.of(
-                            "message", "로그인 성공",
-                            "role", userRole.name()
-                    )
-            );
-        } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패: " + e.getMessage());
-        }
     }
 }

@@ -1,6 +1,9 @@
 package org.project.heredoggy.shelter.shelter.dto;
 
 import lombok.*;
+import org.project.heredoggy.domain.postgresql.shelter.shelter.ShelterImage;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,4 +16,5 @@ public class SheltersDetailResponseDTO {
     private String description;
     private String phone;
     private String address;
+    private List<String> imagesUrls;
 }

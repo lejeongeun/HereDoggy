@@ -7,6 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
@@ -28,6 +30,8 @@ public class ImageService {
         }
         return folder.getAbsolutePath();
     }
+
+    // 개 이미지 저장
     public String saveImage(MultipartFile file, Long shelterId, Long dogId) throws IOException{
         String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
 
@@ -48,9 +52,45 @@ public class ImageService {
 
         return "/uploads/shelters/" + shelterId + "/dogs/" + dogId + "/" + fileName;
     }
-    public void deleteImage(String imageUrl){
-        String relativeFile = imageUrl.replaceFirst("^/uploads/", "");
-        File file = new File(getAbsoluteUploadDir(), relativeFile);
-        if (file.exists()) file.delete();
+
+
+    //보호소 사진 저장
+    public String saveShelterImage(MultipartFile file, Long shelterId) throws IOException {
+        String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
+        File folder = Paths.get(
+                getAbsoluteUploadDir(),
+                "shelters",
+                String.valueOf(shelterId),
+                "shelter-images"
+        ).toFile();
+
+        if (!folder.exists()) folder.mkdirs();
+
+        File savePath = new File(folder, fileName);
+        file.transferTo(savePath);
+
+        return "/uploads/shelters/" + shelterId + "/shelter-images/" + fileName;
     }
+
+
+
+    public void deleteImage(String imageUrl) {
+        if (imageUrl == null || imageUrl.isBlank()) {
+            return;
+        }
+
+        try {
+            String relativePath = imageUrl.replaceFirst("^/uploads/", "");
+
+            // OS에 맞는 경로 조합
+            Path path = Paths.get(uploadDir, relativePath);
+            Files.deleteIfExists(path);
+
+            System.out.println("✅ 이미지 삭제 완료: " + path.toAbsolutePath());
+        } catch (IOException e) {
+            System.err.println("❌ 이미지 삭제 실패: " + e.getMessage());
+        }
+    }
+
+
 }

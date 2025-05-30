@@ -1,9 +1,12 @@
 package org.project.heredoggy.domain.postgresql.shelter.shelter;
 
+import org.project.heredoggy.domain.postgresql.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ShelterRepository extends JpaRepository<Shelter, Long> {
     List<Shelter> findByRegionContaining(String region);
+    Optional<Shelter> findByShelterAdmin(Member member);
 }

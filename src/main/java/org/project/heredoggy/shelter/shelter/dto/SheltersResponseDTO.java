@@ -2,6 +2,8 @@ package org.project.heredoggy.shelter.shelter.dto;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
