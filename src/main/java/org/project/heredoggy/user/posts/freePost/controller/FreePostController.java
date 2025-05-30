@@ -42,15 +42,14 @@ public class FreePostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FreePostResponseDTO>> getFreePostsByCreatedAt(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        List<FreePostResponseDTO> res = freePostService.getAllFreePosts(userDetails);
+    public ResponseEntity<List<FreePostResponseDTO>> getFreePostsByCreatedAt() {
+        List<FreePostResponseDTO> res = freePostService.getAllFreePosts();
         return ResponseEntity.ok(res);
     }
 
     @GetMapping("/{post_id}")
-    public ResponseEntity<FreePostResponseDTO> getDetailFreePosts(@PathVariable("post_id") Long postId,
-                                                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
-        FreePostResponseDTO res = freePostService.getDetailFreePosts(postId, userDetails);
+    public ResponseEntity<FreePostResponseDTO> getDetailFreePosts(@PathVariable("post_id") Long postId) {
+        FreePostResponseDTO res = freePostService.getDetailFreePosts(postId);
         return ResponseEntity.ok(res);
     }
 }
