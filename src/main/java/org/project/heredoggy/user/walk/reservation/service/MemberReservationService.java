@@ -1,6 +1,11 @@
 package org.project.heredoggy.user.walk.reservation.service;
 
+import com.sun.jdi.request.InvalidRequestStateException;
 import lombok.RequiredArgsConstructor;
+import org.project.heredoggy.dog.dto.DogResponseDTO;
+import org.project.heredoggy.domain.postgresql.dog.Dog;
+import org.project.heredoggy.domain.postgresql.dog.DogImage;
+import org.project.heredoggy.domain.postgresql.dog.DogRepository;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.walk.reservation.Reservation;
 import org.project.heredoggy.domain.postgresql.walk.reservation.ReservationRepository;
@@ -10,9 +15,12 @@ import org.project.heredoggy.domain.postgresql.walk.walkOption.WalkOptionReposit
 import org.project.heredoggy.global.error.ErrorMessages;
 import org.project.heredoggy.global.exception.BadRequestException;
 import org.project.heredoggy.global.exception.NotFoundException;
+import org.project.heredoggy.global.util.AuthUtils;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationRequestDTO;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationResponseDTO;
+import org.project.heredoggy.walk.walkOption.dto.WalkOptionRequestDTO;
+import org.project.heredoggy.walk.walkOption.dto.WalkOptionResponseDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,17 +33,33 @@ import java.util.stream.Collectors;
 public class MemberReservationService {
     private final ReservationRepository reservationRepository;
     private final WalkOptionRepository walkOptionRepository;
+    private final DogRepository dogRepository;
+
+    public List<DogResponseDTO> getAllReservationDog() {
+        return dogRepository.findAll().stream()
+                .map(this::toDogDto)
+                .collect(Collectors.toList());
+    }
+
+    public DogResponseDTO getDetailsReservationsDog(Long dogsId) {
+
+        Dog dog = dogRepository.findById(dogsId)
+                .orElseThrow(()-> new BadRequestException(ErrorMessages.DOG_NOT_FOUND));
+
+        return toDogDto(dog);
+    }
 
     // 예약 신청
     @Transactional
-    public void requestReservation(CustomUserDetails userDetails, MemberReservationRequestDTO requestDTO) {
+    public void requestReservation(CustomUserDetails userDetails, Long dogsId, Long walkOptionsId, MemberReservationRequestDTO requestDTO) {
         Member member = userDetails.getMember();
-        Long optionsId = requestDTO.getWalkOptionId();
-        if (optionsId == null){
-            throw new IllegalArgumentException("walkOption의 id 번호를 입력해주세요");
-        }
-        WalkOption walkOption = walkOptionRepository.findById(requestDTO.getWalkOptionId())
+
+        WalkOption walkOption = walkOptionRepository.findById(walkOptionsId)
                 .orElseThrow(()-> new NotFoundException(ErrorMessages.OPTIONS_INFO_NOT_FOUND));
+
+        if (!walkOption.getDog().getId().equals(dogsId)){
+            throw new InvalidRequestStateException("해당 강아지에 대한 산책 옵션이 아닙니다.");
+        }
         // 중복 예약 체크
         validateDuplicateReservation(member, walkOption);
 
@@ -78,6 +102,7 @@ public class MemberReservationService {
     public MemberReservationResponseDTO toDto(Reservation reservation){
         return MemberReservationResponseDTO.builder()
                 .id(reservation.getId())
+                .walkOptionsId(reservation.getWalkOption().getId())
                 .date(reservation.getDate())
                 .startTime(reservation.getStartTime())
                 .endTime(reservation.getEndTime())
@@ -110,5 +135,21 @@ public class MemberReservationService {
         if (exists){
             throw new BadRequestException("이미 해당 시간에 예약이 존재합니다.");
         }
+    }
+
+    public DogResponseDTO toDogDto(Dog dog){
+        return DogResponseDTO.builder()
+                .id(dog.getId())
+                .name(dog.getName())
+                .age(dog.getAge())
+                .gender(dog.getGender())
+                .weight(dog.getWeight())
+                .isNeutered(dog.getIsNeutered())
+                .status(dog.getStatus())
+                .foundLocation(dog.getFoundLocation())
+                .imagesUrls(dog.getImages().stream()
+                        .map(DogImage::getImageUrl)
+                        .collect(Collectors.toList()))
+                .build();
     }
 }

@@ -31,6 +31,7 @@ public class SheltersAuthUtils {
         if (!shelter.getId().equals(sheltersId)){
             throw new NotFoundException("보호소 정보를 찾을 수 없습니다.");
         }
+
         return shelter;
     }
 }

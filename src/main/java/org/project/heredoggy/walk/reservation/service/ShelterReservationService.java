@@ -44,6 +44,7 @@ public class ShelterReservationService {
 
         reservation.setStatus(WalkReservationStatus.APPROVED);
         reservation.setDecisionAt(LocalDateTime.now()); // 관리자 승인 시간
+
         reservationRepository.save(reservation);
     }
 
@@ -54,6 +55,7 @@ public class ShelterReservationService {
 
         reservation.setStatus(WalkReservationStatus.REJECTED);
         reservation.setDecisionAt(LocalDateTime.now());
+
         reservationRepository.save(reservation);
     }
 
@@ -64,6 +66,7 @@ public class ShelterReservationService {
 
         reservation.setStatus(WalkReservationStatus.CANCELED);
         reservation.setDecisionAt(LocalDateTime.now());
+
         reservationRepository.save(reservation);
     }
 
@@ -81,7 +84,9 @@ public class ShelterReservationService {
                 .startTime(reservation.getStartTime())
                 .endTime(reservation.getEndTime())
                 .note(reservation.getNote())
+                .dogId(reservation.getId())
                 .dogName(reservation.getDog().getName())
+                .dogStatus(reservation.getDog().getStatus())
                 .walkReservationStatus(reservation.getStatus())
                 .createAt(reservation.getCreatedAt())
                 .decisionAt(reservation.getDecisionAt())

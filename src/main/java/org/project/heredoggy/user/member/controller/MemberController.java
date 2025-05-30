@@ -19,6 +19,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
 public class MemberController {
+
     private final MemberService memberService;
     private final MemberReservationService memberReservationService;
 
