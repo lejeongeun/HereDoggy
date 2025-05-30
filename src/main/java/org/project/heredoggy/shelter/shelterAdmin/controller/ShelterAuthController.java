@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/shelters")
 @RequiredArgsConstructor
@@ -50,8 +52,16 @@ public class ShelterAuthController {
             );
 
             CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
-            if (!userDetails.getMember().getRole().equals(requiredRole)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
+            RoleType userRole = userDetails.getMember().getRole();
+
+            if (!userRole.equals(requiredRole)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                        Map.of(
+                                "message", "보호소 관리자가 아닙니다.",
+                                "role", userRole.name(),
+                                "nextAction", "/shelter-request"
+                        )
+                );
             }
 
             // SecurityContext 생성 + 인증 설정
@@ -62,7 +72,12 @@ public class ShelterAuthController {
             HttpSession session = httpRequest.getSession(true);
             session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
 
-            return ResponseEntity.ok("로그인 성공");
+            return ResponseEntity.ok(
+                    Map.of(
+                            "message", "로그인 성공",
+                            "role", userRole.name()
+                    )
+            );
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패: " + e.getMessage());
         }
