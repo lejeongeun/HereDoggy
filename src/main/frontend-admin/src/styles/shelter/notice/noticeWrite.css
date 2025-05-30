@@ -1,0 +1,115 @@
+.nw-wrap {
+  min-height: 100vh;
+  background: #fff;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 60px 0 80px 0;
+}
+
+.nw-box {
+  width: 100%;
+  max-width: 600px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px 0 rgba(40,70,60,0.06);
+  padding: 36px 28px 28px 28px;
+  margin: 0 auto;
+  border: 1.5px solid #f4f4f4;
+}
+
+.nw-title {
+  font-size: 1.32rem;
+  font-weight: 700;
+  color: #21764c;
+  text-align: center;
+  margin-bottom: 27px;
+  letter-spacing: -0.5px;
+}
+
+.nw-form {
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+}
+
+.nw-label {
+  font-size: 1.07rem;
+  color: #27392a;
+  font-weight: 500;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.nw-input,
+.nw-textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 10px;
+  border: 1.2px solid #dbeadc;
+  background: #f8fbfa;
+  margin-top: 7px;
+  font-size: 1.06rem;
+  transition: border 0.18s, box-shadow 0.18s;
+  outline: none;
+  box-sizing: border-box;
+}
+.nw-input:focus,
+.nw-textarea:focus {
+  border-color: #21764c;
+  background: #f4faf5;
+}
+
+.nw-textarea {
+  min-height: 160px;
+  resize: vertical;
+}
+
+.nw-error {
+  color: #d03232;
+  text-align: center;
+  font-size: 1.04rem;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.nw-btns {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.nw-btn {
+  font-size: 1.07rem;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 9px 22px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.13s;
+}
+
+.nw-btn-main {
+  background: #21764c;
+  color: #fff;
+}
+.nw-btn-main:hover {
+  background: #17583c;
+}
+
+.nw-btn-cancel {
+  background: #f8f9fa;
+  color: #21764c;
+  border: 1px solid #d7e7db;
+}
+.nw-btn-cancel:hover {
+  background: #eaf3ee;
+  color: #194b33;
+}
+
+/* 모바일 대응 */
+@media (max-width: 600px) {
+  .nw-box { max-width: 98vw; padding: 16px 4vw 14px 4vw; }
+  .nw-title { font-size: 1.07rem; }
+}

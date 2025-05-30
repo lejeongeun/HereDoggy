@@ -1,22 +1,38 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-// npm install bootstrap
+import { getNotices } from '../../../api/shelter/notice';
+
 
 function NoticeBoard() {
-  const notices = [
-    { id: 1, title: "공지 제목 1", content: "내용 1", date: "2024-05-27" },
-    { id: 2, title: "공지 제목 2", content: "내용 2", date: "2024-05-26" },
-    { id: 3, title: "공지 제목 3", content: "내용 3", date: "2024-05-25" },
-    
-  ];
+  const [notices, setNotices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchNotices = async () => {
+      try {
+        const res = await getNotices();
+        setNotices(Array.isArray(res.data) ? res.data : []);
+      } catch (err) {
+        setError("공지사항 목록을 불러오는 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchNotices();
+  }, []);
+
+  if (loading) return <div className="container mt-4">로딩 중...</div>;
+  if (error) return <div className="container mt-4 text-danger">{error}</div>;
 
   return (
     <div className="container mt-4">
       <h2>
-        <Link to={"/shelter/noticeboardlist"} className="text-decoration-none fw-bold text-dark">
-        공지사항
+        <Link to={"/shelter/noticelist"} className="text-decoration-none fw-bold text-dark">
+          공지사항
         </Link>
-        </h2>
+      </h2>
       <table className="table table-hover">
         <thead>
           <tr>
@@ -27,21 +43,29 @@ function NoticeBoard() {
           </tr>
         </thead>
         <tbody>
-          {notices.map((notice, i) => (
-          <tr key={notice.id}>
-            <td>{notice.id}</td>
-            <td>
-              <Link to={`/notice/${notice.id}`} className="text-decoration-none text-dark">
-                {notice.title}
-              </Link>
-            </td>
-            <td>{notice.content}</td>
-            <td>{notice.date}</td>
-          </tr>
-        ))}
+          {/* 대시보드 공지사항 4개 제한*/}
+          {notices.slice(0, 4).map((notice, i) => (
+            <tr key={notice.id || i}>
+              <td>{notice.id}</td>
+              <td>
+                <Link to={`/shelter/notice/detail/${notice.id}`} className="text-decoration-none text-dark">
+                  {notice.title}
+                </Link>
+              </td>
+              <td>{notice.content}</td>
+              <td>
+                {notice.createdAt
+                  ? notice.createdAt.slice(0, 10)
+                  : notice.date
+                    ? notice.date.slice(0, 10)
+                    : ""}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
   );
 }
+
 export default NoticeBoard;

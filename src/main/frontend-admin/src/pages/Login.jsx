@@ -9,28 +9,34 @@ function Login() {
   const [useremail, setUseremail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      const response = await shelterLogin(useremail, password);
+  try {
+    const response = await shelterLogin(useremail, password);
 
-      console.log("로그인 응답:", response.data);
+    console.log("로그인 응답:", response.data);
 
-      // 백엔드가 세션 기반이므로 별도의 토큰 저장 X
-      alert(response.data || "로그인 성공");
+    // role 정보가 응답에 있는지 확인
+    const role = response.data.role || "USER"; // role이 없으면 USER로 기본값
 
-      // 역할에 따라 라우팅 예시 (response.data에 role 정보가 없으면 직접 API 호출 필요)
-      // 여기서는 일단 쉘터 관리자 페이지로 이동
-      navigate("/shelter/dashboard");
-    } catch (error) {
-      if (error.response) {
-        alert("로그인 실패: " + (error.response.data || error.message));
-      } else {
-        alert("서버 연결 실패");
-      }
+    alert(response.data.message || "로그인 성공");
+    navigate("/shelter/dashboard");
+    // 권한(role)에 따라 분기
+    // if (role === "SHELTER_ADMIN") {
+    //   navigate("/shelter/dashboard");
+    // } else {
+    //   navigate("/shelter/register");
+    // }
+  } catch (error) {
+    if (error.response) {
+      alert("로그인 실패: " + (error.response.data.message || error.response.data || error.message));
+    } else {
+      alert("서버 연결 실패");
     }
-  };
+  }
+};
+
 
   return (
     <div className="login-container">

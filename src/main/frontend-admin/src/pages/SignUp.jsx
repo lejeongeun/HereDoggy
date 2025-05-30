@@ -33,7 +33,7 @@ function SignUp() {
   try {
     const response = await axios.post(
       "http://localhost:8080/api/auth/signup",
-      form  // form 전체를 그대로 보냄
+      form  
     );
     alert(response.data.message || "회원가입 성공!");
   } catch (error) {

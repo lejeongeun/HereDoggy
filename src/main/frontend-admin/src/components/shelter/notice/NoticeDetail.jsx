@@ -1,16 +1,16 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getNoticeDetail } from "../../../api/shelter/notice"; // 경로는 상황에 맞게
+import { getNoticeDetail } from "../../../api/shelter/notice";
+import "../../../styles/shelter/notice/noticeDetail.css";
 
 function NoticeDetail() {
-  const { id } = useParams(); // /notice/detail/:id 라우트의 id 파라미터 가져오기
+  const { id } = useParams();
   const [notice, setNotice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 상세 데이터 불러오기
     const fetchDetail = async () => {
       try {
         const res = await getNoticeDetail(id);
@@ -24,22 +24,31 @@ function NoticeDetail() {
     fetchDetail();
   }, [id]);
 
-  if (loading) return <div className="container mt-4">로딩 중...</div>;
-  if (error) return <div className="container mt-4 text-danger">{error}</div>;
-  if (!notice) return <div className="container mt-4">데이터가 없습니다.</div>;
+  if (loading) return <div className="notice-detail-wrap">로딩 중...</div>;
+  if (error) return <div className="notice-detail-wrap notice-detail-error">{error}</div>;
+  if (!notice) return <div className="notice-detail-wrap">데이터가 없습니다.</div>;
 
   return (
-    <div className="container mt-4">
-      <h4>{notice.title}</h4>
-      <div className="mb-2">{notice.content}</div>
-      <div>작성일:  {notice.createdAt
-                  ? notice.createdAt.slice(0, 10)
-                  : notice.date
-                    ? notice.date.slice(0, 10)
-                    : ""}</div>
-      <button className="btn btn-secondary mt-3" onClick={() => navigate(-1)}>
-        목록으로
-      </button>
+    <div className="notice-detail-wrap">
+      <div className="notice-detail-box">
+        <div className="notice-detail-meta">
+          <div className="notice-detail-title">{notice.title}</div>
+          <div className="notice-detail-date">
+            {notice.createdAt
+              ? notice.createdAt.slice(0, 10)
+              : notice.date
+                ? notice.date.slice(0, 10)
+                : ""}
+          </div>
+        </div>
+        <div className="notice-detail-content">
+          <pre>{notice.content}</pre>
+        </div>
+        <div className="notice-detail-btns">
+          <button className="nd-btn" onClick={() => navigate(-1)}>목록으로</button>
+          <button className="nd-btn nd-btn-edit" onClick={() => navigate(`/shelter/notice/update/${id}`)}>수정</button>
+        </div>
+      </div>
     </div>
   );
 }

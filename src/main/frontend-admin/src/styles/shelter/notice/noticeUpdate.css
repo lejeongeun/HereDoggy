@@ -1,0 +1,104 @@
+.notice-edit-wrap {
+  min-height: 100vh;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 60px 0 80px 0;
+}
+
+.notice-edit-box {
+  width: 100%;
+  max-width: 630px;
+  background: #fff;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 34px 0 0 0;
+  margin: 0 auto;
+}
+
+.notice-edit-header {
+  padding: 0 14px 20px 14px;
+}
+.notice-edit-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1d232a;
+  letter-spacing: -0.5px;
+}
+
+.notice-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 14px;
+}
+
+.notice-edit-input,
+.notice-edit-textarea {
+  width: 100%;
+  padding: 12px 13px;
+  border-radius: 8px;
+  border: 1.2px solid #e5eaea;
+  background: #fafbfa;
+  font-size: 1.06rem;
+  transition: border 0.16s, box-shadow 0.16s;
+  outline: none;
+  box-sizing: border-box;
+}
+.notice-edit-input:focus,
+.notice-edit-textarea:focus {
+  border-color: #21764c;
+  background: #f4faf5;
+}
+.notice-edit-textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.notice-edit-error {
+  color: #d03232;
+  text-align: center;
+  font-size: 1.01rem;
+  font-weight: 500;
+}
+
+.notice-edit-btns {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 7px;
+}
+.ne-btn {
+  font-size: 1.01rem;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 8px 20px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.13s;
+}
+.ne-btn-main {
+  background: #21764c;
+  color: #fff;
+}
+.ne-btn-main:hover {
+  background: #1b5c3c;
+}
+.ne-btn-cancel {
+  background: #f8f9fa;
+  color: #21764c;
+  border: 1px solid #d7e7db;
+}
+.ne-btn-cancel:hover {
+  background: #eaf3ee;
+  color: #194b33;
+}
+
+/* 모바일 대응 */
+@media (max-width: 600px) {
+  .notice-edit-box { max-width: 99vw; }
+  .notice-edit-header,
+  .notice-edit-form { padding-left: 7px; padding-right: 7px; }
+  .notice-edit-title { font-size: 1rem; }
+}

@@ -1,0 +1,123 @@
+.notice-acco-wrap {
+  max-width: 900px;
+  margin: 48px auto 0 auto;
+  padding: 0 14px 56px 14px;
+  background: #fff;
+}
+
+.notice-acco-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2e5c3e;
+  margin-bottom: 7px;
+  letter-spacing: -0.5px;
+}
+
+.notice-acco-list {
+  border-top: 1.5px solid #e4ebe5;
+}
+
+.notice-acco-item {
+  border-bottom: 1px solid #f0f3f3;
+  background: #fff;
+  transition: background 0.19s;
+}
+
+.notice-acco-head {
+  display: flex;
+  align-items: center;
+  padding: 18px 14px;
+  cursor: pointer;
+  position: relative;
+  border-radius: 0;
+  user-select: none;
+  background: #fff;
+  transition: background 0.15s;
+}
+
+.notice-acco-head.open,
+.notice-acco-head:hover {
+  background: #f7faf8;
+}
+
+.notice-acco-subject {
+  flex: 1;
+  font-size: 1.11rem;
+  font-weight: 500;
+  color: #2a2a2a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 17px;
+}
+
+.notice-acco-date {
+  color: #97a3a0;
+  font-size: 1.01rem;
+  font-weight: 400;
+  margin-right: 19px;
+  min-width: 84px;
+  text-align: right;
+}
+
+.notice-acco-icon {
+  width: 28px;
+  text-align: center;
+  font-size: 1.3rem;
+  color: #47b373;
+  font-weight: 900;
+  transition: color 0.13s;
+}
+.notice-acco-head.open .notice-acco-icon {
+  color: #226943;
+}
+.notice-acco-subject-link:hover {
+  text-decoration: underline;
+  color: #27774b;
+}
+
+.notice-acco-icon {
+  width: 28px;
+  text-align: center;
+  font-size: 1.35rem;
+  color: #47b373;
+  font-weight: 900;
+  transition: color 0.13s;
+}
+.notice-acco-icon:hover,
+.notice-acco-icon:focus {
+  color: #1c5e3d;
+  outline: none;
+}
+
+.notice-acco-detail {
+  background: #fafdfe;
+  padding: 22px 22px 20px 26px;
+  font-size: 1.01rem;
+  color: #2e4936;
+  border-top: 1px solid #f2f3f5;
+  border-radius: 0 0 12px 12px;
+  animation: fadeInAcco 0.24s;
+  line-height: 1.6;
+}
+@keyframes fadeInAcco {
+  from { opacity: 0; transform: translateY(-13px);}
+  to   { opacity: 1; transform: none;}
+}
+
+/* 빈 리스트 메시지 */
+.notice-acco-item.text-center {
+  color: #9daca0;
+  font-size: 1.08rem;
+  padding: 38px 0 30px 0 !important;
+}
+
+/* 반응형 */
+@media (max-width: 700px) {
+  .notice-acco-wrap { max-width: 99vw; }
+}
+@media (max-width: 540px) {
+  .notice-acco-head,
+  .notice-acco-detail { padding-left: 9px; padding-right: 9px; }
+  .notice-acco-title { font-size: 1.1rem; }
+}
