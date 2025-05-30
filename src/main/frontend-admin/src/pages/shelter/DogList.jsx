@@ -3,10 +3,10 @@ import { getDogs } from "../../api/shelter/dog";
 import '../../styles/shelter/pages/dogList.css';
 import { Link } from "react-router-dom";
 
-const sheltersId = 1; // 보호소가 등록한 유기견리스트 직접 지정 -> api필요함
-const BACKEND_URL = "http://localhost:8080"; // 현재는 이미지 경로에 추가해야 이미지 뜸
-function DogList() { // {sheltersId}
-  
+const sheltersId = 1; // 실제 shelterId로 교체 필요
+const BACKEND_URL = "http://localhost:8080";
+
+function DogList() {
   const [dogs, setDogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -16,27 +16,39 @@ function DogList() { // {sheltersId}
       setError("보호소 정보가 없습니다.");
       return;
     }
-
     const fetchDogs = async () => {
       setLoading(true);
       try {
         const response = await getDogs(sheltersId);
         setDogs(response.data);
       } catch (err) {
-        setError("유기견 목록을 불러오는 중 오류가 발생했습니다.");
+        setError("유기견을 등록해주세요!");
       } finally {
         setLoading(false);
       }
     };
-
     fetchDogs();
-  }, []); 
+  }, []);
 
   if (loading) return <p>로딩 중...</p>;
-  if (error) return <p>{error}</p>;
-  if (dogs.length === 0) return <p>등록된 유기견이 없습니다.</p>;
+  if (error) return (
+    <div className="doglist-empty">
+      <p>{error}</p>
+      <Link to="/shelter/dogregister" className="doglist-register-btn big">
+        유기견 등록하기
+      </Link>
+    </div>
+  );
+  if (dogs.length === 0) return (
+    <div className="doglist-empty">
+      <p>등록된 유기견이 없습니다.</p>
+      <Link to="/shelter/dogregister" className="doglist-register-btn big">
+        유기견 등록하기
+      </Link>
+    </div>
+  );
 
-    return (
+  return (
     <div className="doglist-container">
       <div className="doglist-header">
         <Link to="/shelter/dogregister" className="doglist-register-btn">
@@ -67,7 +79,6 @@ function DogList() { // {sheltersId}
                   <div className="doglist-img doglist-img-placeholder" />
                 )}
               </td>
-
               <td>{dog.name}</td>
               <td>{dog.gender}</td>
               <td>{dog.age}살</td>
@@ -79,6 +90,5 @@ function DogList() { // {sheltersId}
     </div>
   );
 }
-
 
 export default DogList;

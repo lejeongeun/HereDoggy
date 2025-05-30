@@ -3,17 +3,46 @@ import Topbar from "./Topbar";
 import { Outlet } from 'react-router-dom';
 
 function Layouts() {
-    return(
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
-      <Sidebar />  {/* 좌측 고정 */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <Topbar />  {/* 상단 고정 */}
-        <main style={{ flex: 1, background: '#fafafa', padding: '24px' }}>
-          <Outlet />  {/* 메인 컨텐츠 */}
+  const sidebarWidth = 220;
+  return (
+    <div style={{ display: 'flex' }}>
+      {/* 고정 sidebar */}
+      <div style={{
+        width: sidebarWidth,
+        position: 'fixed',
+        height: '100vh',
+      }}>
+        <Sidebar />
+      </div>
+      {/* 오른쪽 메인 */}
+      <div style={{
+        marginLeft: sidebarWidth,
+        flex: 1,
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column'
+      }}>
+        {/* 고정 탑바 */}
+        <div style={{
+          position: 'sticky',
+          top: 0,
+          background: '#fff',
+          zIndex: 1
+        }}>
+          <Topbar />
+        </div>
+        {/* 본문 스크롤 */}
+        <main style={{
+          flex: 1,
+          overflowY: 'auto',
+          padding: 24,
+          background: '#fafbfa'
+        }}>
+          <Outlet />
         </main>
       </div>
     </div>
-    );
+  );
 }
 
 export default Layouts;

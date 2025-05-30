@@ -1,0 +1,85 @@
+.noticeboard-container {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(24, 76, 36, 0.09);
+  padding: 28px 32px 20px 32px;
+  margin-bottom: 0;
+  /* 반응형 고려 시 min-width/max-width 가능 */
+}
+
+.noticeboard-title-link {
+  font-size: 1.18rem;
+  font-weight: 700;
+  color: #184c24;
+  text-decoration: none;
+  letter-spacing: -0.5px;
+  transition: color 0.18s;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.noticeboard-title-link:hover {
+  color: #249860;
+  text-decoration: underline;
+}
+
+.noticeboard-table {
+  width: 100%;
+  margin-top: 8px;
+  border-collapse: separate;      /* ← 둥근 테이블에 더 자연스러움 */
+  border-spacing: 0;
+  background: #f7fbf9;
+  font-size: 1rem;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 5px rgba(24, 76, 36, 0.05);
+}
+
+.noticeboard-table th,
+.noticeboard-table td {
+  padding: 13px 8px;
+  text-align: center;
+}
+
+.noticeboard-table th {
+  background: #e7f8ef;
+  color: #184c24;
+  font-weight: 600;
+  font-size: 1.05rem;
+  border-bottom: 2px solid #e2efe5;
+  letter-spacing: -0.5px;
+}
+
+.noticeboard-table td {
+  border-bottom: 1px solid #ebf3ef;
+  color: #385647;
+  background: #fff;
+  font-size: 0.99rem;
+  word-break: keep-all;
+}
+
+.noticeboard-table tr:last-child td {
+  border-bottom: none;
+}
+
+.noticeboard-link {
+  color: #1a5c38;
+  font-weight: 500;
+  transition: color 0.16s;
+  text-decoration: none;
+}
+.noticeboard-link:hover {
+  color: #27a371;
+  text-decoration: underline;
+}
+
+.error {
+  color: #d33636;
+  font-weight: 600;
+  margin-top: 12px;
+  letter-spacing: -0.5px;
+  text-align: center;
+  background: #ffefef;
+  border-radius: 8px;
+  padding: 10px 0;
+}

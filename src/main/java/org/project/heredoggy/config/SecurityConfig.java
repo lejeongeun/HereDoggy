@@ -52,7 +52,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/members/free-posts/**", "/api/members/review-posts/**", "/api/members/missing-posts/**",  "/api/*-posts/*/comments", "/api/*-posts/*/likes/count").permitAll() // 게시물 조회, 댓글 조회, 좋아요 갯수는 비회원도 가능
-                        .requestMatchers(HttpMethod.POST,"/api/shelters/login", "/api/admin/login", "/oauth2/authorization/**", "/login/oauth2/code/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/shelters/login", "/api/admin/login", "/oauth2/authorization/**", "/login/oauth2/code/**", "/api/shelter-request").permitAll()
                         .requestMatchers("/api/dogs/**").permitAll()
                         .requestMatchers("/error").permitAll()
 

@@ -1,8 +1,8 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';   // 삭제!
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getNotices } from '../../../api/shelter/notice';
-
+import '../../../styles/shelter/notice/noticeBoard.css';
 
 function NoticeBoard() {
   const [notices, setNotices] = useState([]);
@@ -23,17 +23,17 @@ function NoticeBoard() {
     fetchNotices();
   }, []);
 
-  if (loading) return <div className="container mt-4">로딩 중...</div>;
-  if (error) return <div className="container mt-4 text-danger">{error}</div>;
+  if (loading) return <div className="noticeboard-container">로딩 중...</div>;
+  if (error) return <div className="noticeboard-container error">{error}</div>;
 
   return (
-    <div className="container mt-4">
+    <div className="noticeboard-container">
       <h2>
-        <Link to={"/shelter/noticelist"} className="text-decoration-none fw-bold text-dark">
+        <Link to={"/shelter/noticelist"} className="noticeboard-title-link">
           공지사항
         </Link>
       </h2>
-      <table className="table table-hover">
+      <table className="noticeboard-table">
         <thead>
           <tr>
             <th>번호</th>
@@ -43,12 +43,11 @@ function NoticeBoard() {
           </tr>
         </thead>
         <tbody>
-          {/* 대시보드 공지사항 4개 제한*/}
           {notices.slice(0, 4).map((notice, i) => (
             <tr key={notice.id || i}>
               <td>{notice.id}</td>
               <td>
-                <Link to={`/shelter/notice/detail/${notice.id}`} className="text-decoration-none text-dark">
+                <Link to={`/shelter/notice/detail/${notice.id}`} className="noticeboard-link">
                   {notice.title}
                 </Link>
               </td>

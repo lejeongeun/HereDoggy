@@ -1,26 +1,28 @@
 .notice-acco-wrap {
-  max-width: 900px;
-  margin: 48px auto 0 auto;
-  padding: 0 14px 56px 14px;
+  max-width: 880px;
+  margin: 44px auto 0 auto;
+  padding: 0 18px 56px 18px;
   background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(24,76,36,0.08);
 }
 
 .notice-acco-title {
-  font-size: 1.25rem;
+  font-size: 1.23rem;
   font-weight: 700;
-  color: #2e5c3e;
-  margin-bottom: 7px;
+  color: #21573d;
+  margin-bottom: 10px;
   letter-spacing: -0.5px;
 }
 
 .notice-acco-list {
-  border-top: 1.5px solid #e4ebe5;
+  border-top: 1.5px solid #e3ede5;
 }
 
 .notice-acco-item {
   border-bottom: 1px solid #f0f3f3;
   background: #fff;
-  transition: background 0.19s;
+  transition: background 0.18s;
 }
 
 .notice-acco-head {
@@ -30,85 +32,80 @@
   cursor: pointer;
   position: relative;
   border-radius: 0;
-  user-select: none;
   background: #fff;
-  transition: background 0.15s;
+  transition: background 0.16s;
 }
 
 .notice-acco-head.open,
 .notice-acco-head:hover {
-  background: #f7faf8;
+  background: #f4faf6;
 }
 
 .notice-acco-subject {
   flex: 1;
-  font-size: 1.11rem;
+  font-size: 1.13rem;
   font-weight: 500;
-  color: #2a2a2a;
+  color: #233523;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin-right: 17px;
+  letter-spacing: -0.5px;
+  transition: color 0.18s;
 }
 
 .notice-acco-date {
-  color: #97a3a0;
+  color: #99a7a2;
   font-size: 1.01rem;
   font-weight: 400;
-  margin-right: 19px;
-  min-width: 84px;
+  margin-right: 16px;
+  min-width: 86px;
   text-align: right;
+  letter-spacing: 0;
 }
 
 .notice-acco-icon {
-  width: 28px;
+  width: 30px;
   text-align: center;
-  font-size: 1.3rem;
-  color: #47b373;
+  font-size: 1.35rem;
+  color: #3fc382;
   font-weight: 900;
-  transition: color 0.13s;
+  transition: color 0.14s;
+  margin-left: 3px;
 }
 .notice-acco-head.open .notice-acco-icon {
   color: #226943;
 }
 .notice-acco-subject-link:hover {
   text-decoration: underline;
-  color: #27774b;
+  color: #238f64;
 }
 
-.notice-acco-icon {
-  width: 28px;
-  text-align: center;
-  font-size: 1.35rem;
-  color: #47b373;
-  font-weight: 900;
-  transition: color 0.13s;
-}
 .notice-acco-icon:hover,
 .notice-acco-icon:focus {
-  color: #1c5e3d;
+  color: #176140;
   outline: none;
 }
 
 .notice-acco-detail {
   background: #fafdfe;
-  padding: 22px 22px 20px 26px;
-  font-size: 1.01rem;
-  color: #2e4936;
-  border-top: 1px solid #f2f3f5;
-  border-radius: 0 0 12px 12px;
-  animation: fadeInAcco 0.24s;
-  line-height: 1.6;
+  padding: 23px 22px 20px 28px;
+  font-size: 1.04rem;
+  color: #255838;
+  border-top: 1px solid #f1f2f6;
+  border-radius: 0 0 14px 14px;
+  animation: fadeInAcco 0.21s;
+  line-height: 1.65;
 }
 @keyframes fadeInAcco {
-  from { opacity: 0; transform: translateY(-13px);}
+  from { opacity: 0; transform: translateY(-12px);}
   to   { opacity: 1; transform: none;}
 }
 
 /* 빈 리스트 메시지 */
 .notice-acco-item.text-center {
-  color: #9daca0;
-  font-size: 1.08rem;
+  color: #a2b2a7;
+  font-size: 1.09rem;
   padding: 38px 0 30px 0 !important;
 }
 
@@ -118,6 +115,6 @@
 }
 @media (max-width: 540px) {
   .notice-acco-head,
-  .notice-acco-detail { padding-left: 9px; padding-right: 9px; }
-  .notice-acco-title { font-size: 1.1rem; }
+  .notice-acco-detail { padding-left: 7px; padding-right: 7px; }
+  .notice-acco-title { font-size: 1.08rem; }
 }
