@@ -5,8 +5,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class PasswordResetConfirmDTO {
-    private String token;
-    private String newPassword;
-    private String newPasswordChk;
+public class EmailVerificationRequestDTO {
+    private String email;
 }

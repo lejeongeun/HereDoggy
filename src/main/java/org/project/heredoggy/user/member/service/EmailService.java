@@ -30,4 +30,30 @@ public class EmailService {
         );
         send(to, subject, body);
     }
+
+    public void sendEmailFindResult(String to) {
+        String subject = "[여기보개] 아이디(이메일) 찾기 결과 안내 🐶";
+        String body = String.format(
+                "안녕하세요, 여기보개입니다! 🐾\n\n" +
+                        "요청하신 아이디(이메일)는 아래와 같습니다:\n\n" +
+                        "📧 %s\n\n" +
+                        "※ 본인이 요청하지 않은 경우, 이 이메일은 무시하셔도 됩니다.\n\n" +
+                        "감사합니다.\n여기보개 팀 드림 🐶", to
+        );
+
+        send(to, subject, body);
+    }
+
+    public void sendEmailVerificationCode(String to, String code) {
+        String subject = "[여기보개] 이메일 인증 코드 안내 🐶";
+        String body = String.format(
+                "안녕하세요, 여기보개입니다! 🐾\n\n" +
+                        "아래 인증코드를 입력해주세요:\n\n" +
+                        "🔑 인증코드: %s\n\n" +
+                        "해당 코드는 5분간 유효합니다.\n\n" +
+                        "감사합니다.\n여기보개 팀 드림 🐶", code
+        );
+        send(to, subject, body);
+    }
+
 }
