@@ -64,16 +64,16 @@ public class MemberReservationService {
         validateDuplicateReservation(member, walkOption);
 
         Reservation reservation = Reservation.builder()
-                .date(walkOption.getDate())
-                .startTime(walkOption.getStartTime())
+                .date(walkOption.getDate()) // walkOption 선택한 날짜
+                .startTime(walkOption.getStartTime()) //walkOption 선택한 시간
                 .endTime(walkOption.getEndTime())
-                .note(requestDTO.getNote())
+                .note(requestDTO.getNote()) // 사용자가 예약보낼때 작성한 메모
                 .member(member)
                 .dog(walkOption.getDog())
                 .shelter(walkOption.getShelter())
                 .walkOption(walkOption)
-                .status(WalkReservationStatus.PENDING)
-                .createdAt(LocalDateTime.now())
+                .status(WalkReservationStatus.PENDING) // 예약 상태 (기본값:대기중)
+                .createdAt(LocalDateTime.now()) // 예약 요청 시간
                 .build();
 
         reservationRepository.save(reservation);

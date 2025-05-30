@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../../providers/user_provider.dart';
 import '../../components/auth/login_form.dart';
 import '../../utils/constants.dart';
+import '../../providers/dog_provider.dart';
+import '../../components/common/cards/dog_card.dart';
 
 class WalkReservationPage extends StatefulWidget {
   const WalkReservationPage({Key? key}) : super(key: key);
@@ -13,6 +15,15 @@ class WalkReservationPage extends StatefulWidget {
 
 class _WalkReservationPageState extends State<WalkReservationPage> {
   bool _loginPagePushed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // 강아지 목록 불러오기
+    Future.microtask(() {
+      Provider.of<DogProvider>(context, listen: false).fetchDogs();
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -44,7 +55,39 @@ class _WalkReservationPageState extends State<WalkReservationPage> {
     }
     return Scaffold(
       appBar: AppBar(title: const Text('산책 예약')),
-      body: const Center(child: Text('산책 예약 페이지입니다')),
+      body: Consumer<DogProvider>(
+        builder: (context, dogProvider, _) {
+          if (dogProvider.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (dogProvider.error != null) {
+            return Center(child: Text('에러: ${dogProvider.error}'));
+          }
+          if (dogProvider.dogs.isEmpty) {
+            return const Center(child: Text('유기견 정보가 없습니다.'));
+          }
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            itemCount: dogProvider.dogs.length,
+            itemBuilder: (context, index) {
+              final dog = dogProvider.dogs[index];
+              return DogCard(
+                imageUrl: dog.imagesUrls.isNotEmpty ? dog.imagesUrls.first : '',
+                name: dog.name,
+                age: dog.age,
+                gender: dog.gender == 'MALE' ? '수컷' : '암컷',
+                weight: dog.weight,
+                foundLocation: dog.foundLocation,
+                shelterName: dog.shelterName,
+                onTap: () {
+                  // 상세 페이지로 이동 (id만 전달)
+                  Navigator.pushNamed(context, '/dog-detail', arguments: {'dogId': dog.name}); // TODO: dogId로 변경 필요
+                },
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

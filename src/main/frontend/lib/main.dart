@@ -14,11 +14,15 @@ import 'pages/community/free_post_edit_page.dart';
 import 'utils/theme.dart';
 import 'utils/constants.dart';
 import 'providers/user_provider.dart';
+import 'providers/dog_provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => UserProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => DogProvider()),
+      ],
       child: const MyApp(),
     ),
   );

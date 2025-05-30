@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 class DogCard extends StatelessWidget {
   final String imageUrl;
   final String name;
-  final String breed;
-  final String age;
+  final int age;
+  final String gender; // "수컷" 또는 "암컷"
+  final double weight;
+  final String foundLocation;
   final String shelterName;
   final VoidCallback? onTap;
 
@@ -12,8 +14,10 @@ class DogCard extends StatelessWidget {
     Key? key,
     required this.imageUrl,
     required this.name,
-    required this.breed,
     required this.age,
+    required this.gender,
+    required this.weight,
+    required this.foundLocation,
     required this.shelterName,
     this.onTap,
   }) : super(key: key);
@@ -24,48 +28,60 @@ class DogCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: InkWell(
         onTap: onTap,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
-              child: Image.network(
-                imageUrl,
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    height: 200,
-                    color: Colors.grey[300],
-                    child: const Icon(Icons.pets, size: 50),
-                  );
-                },
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  imageUrl,
+                  width: 110,
+                  height: 80,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      width: 110,
+                      height: 80,
+                      color: Colors.grey[300],
+                      child: const Icon(Icons.pets, size: 40),
+                    );
+                  },
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '$breed • $age',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    shelterName,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ],
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '$name | $gender',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${age}살 / ${weight}kg',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        const Text('발견장소 ', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(foundLocation, style: const TextStyle(color: Colors.black54)),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text('보호소 ', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(shelterName, style: const TextStyle(color: Colors.black54)),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
