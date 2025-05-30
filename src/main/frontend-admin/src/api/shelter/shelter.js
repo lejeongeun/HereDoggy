@@ -2,7 +2,7 @@ import api from "./api";
 
 // 보호소 생성 요청
 export const requestShelter = (data) =>
-   api.post("/api/shelters/requests", data);
+   api.post("/api/shelter-request", data);
 
 // 보호소 프로필 조회
 export const getShelterProfile = () =>

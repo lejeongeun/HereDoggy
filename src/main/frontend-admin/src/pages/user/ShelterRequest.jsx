@@ -41,7 +41,9 @@ function ShelterRequest() {
     const payload = {
       shelterName: form.shelterName,
       phone: form.phone,
-      address: address,
+      zipcode: form.zipcode,
+      address1: form.address1,
+      address2: form.address2,
       description: form.description,
       imageUrl: form.imageUrl || "",
     };
