@@ -74,18 +74,13 @@ public class ReviewPostService {
     }
 
 
-    public List<ReviewPostResponseDTO> getAllReviewPosts(CustomUserDetails userDetails) {
-        AuthUtils.getValidMember(userDetails);
-
+    public List<ReviewPostResponseDTO> getAllReviewPosts() {
         List<ReviewPost> lists = reviewPostRepository.findAllOrderByCreatedAtDesc();
-
         return convertToDTOList(lists);
     }
 
 
-    public ReviewPostResponseDTO getDetailReviewPosts(Long postId, CustomUserDetails userDetails) {
-        AuthUtils.getValidMember(userDetails);
-
+    public ReviewPostResponseDTO getDetailReviewPosts(Long postId) {
         ReviewPost post = reviewPostRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException("찾을 수 없는 게시물입니다."));
 

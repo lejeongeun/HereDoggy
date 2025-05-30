@@ -1,10 +1,10 @@
-package org.project.heredoggy.shelter.walk.walkOption.controller;
+package org.project.heredoggy.walk.walkOption.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.shelter.walk.walkOption.dto.WalkOptionRequestDTO;
-import org.project.heredoggy.shelter.walk.walkOption.service.WalkOptionService;
+import org.project.heredoggy.walk.walkOption.dto.WalkOptionRequestDTO;
+import org.project.heredoggy.walk.walkOption.service.WalkOptionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +22,6 @@ public class WalkOptionController {
                                                       @PathVariable("shelters_id") Long sheltersId,
                                                       @PathVariable("dogs_id") Long dogsId,
                                                       @Valid @RequestBody WalkOptionRequestDTO request){
-
         walkOptionService.create(userDetails, sheltersId, dogsId, request);
         return ResponseEntity.ok(Map.of("message", "예약 옵션이 생성되었습니다."));
     }

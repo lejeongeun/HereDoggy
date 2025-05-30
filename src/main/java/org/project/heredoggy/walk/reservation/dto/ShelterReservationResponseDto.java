@@ -1,4 +1,4 @@
-package org.project.heredoggy.shelter.walk.reservation.dto;
+package org.project.heredoggy.walk.reservation.dto;
 
 import lombok.*;
 import org.project.heredoggy.domain.postgresql.walk.reservation.WalkReservationStatus;
@@ -13,7 +13,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Builder
 public class ShelterReservationResponseDto {
-    private Long reservationId;
+    private Long id;
 
     // 사용자 이름, 이메일, 연락처
     private String memberName;

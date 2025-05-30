@@ -55,6 +55,9 @@ dependencies {
     // postgresql
     runtimeOnly 'org.postgresql:postgresql'
 
+    // JavaMailSender
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
     // jpa
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 

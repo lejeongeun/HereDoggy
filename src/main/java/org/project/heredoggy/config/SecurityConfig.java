@@ -6,6 +6,7 @@ import org.project.heredoggy.config.oauth.OAuth2SuccessHandler;
 import org.project.heredoggy.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -48,13 +49,14 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/hello").permitAll()
+
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/oauth2/authorization/**", "/login/oauth2/code/**").permitAll()
-                        .requestMatchers("/api/shelters/login").permitAll()
-                        .requestMatchers("/api/admin/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/members/free-posts/**", "/api/members/review-posts/**", "/api/members/missing-posts/**",  "/api/*-posts/*/comments", "/api/*-posts/*/likes/count").permitAll() // 게시물 조회, 댓글 조회, 좋아요 갯수는 비회원도 가능
+                        .requestMatchers(HttpMethod.POST,"/api/shelters/login", "/api/admin/login", "/oauth2/authorization/**", "/login/oauth2/code/**").permitAll()
                         .requestMatchers("/api/dogs/**").permitAll()
                         .requestMatchers("/error").permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/api/shelters").permitAll() //보호소리스트 조회
                         .requestMatchers("/api/members/**").hasRole("USER")
                         .requestMatchers("/api/shelters/**").hasRole("SHELTER_ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("SYSTEM_ADMIN")

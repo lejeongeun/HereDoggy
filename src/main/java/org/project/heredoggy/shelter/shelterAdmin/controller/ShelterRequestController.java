@@ -20,7 +20,7 @@ import java.util.Map;
 public class ShelterRequestController {
     private final ShelterRequestService shelterService;
 
-    @PostMapping("/shelterRequest")
+    @PostMapping("/shelter-request")
     public ResponseEntity<Map<String, String>> requestShelter(@Valid @RequestBody ShelterCreateRequestDTO request,
                                             @AuthenticationPrincipal CustomUserDetails userDetails) {
         System.out.println("userDetails = " + userDetails);

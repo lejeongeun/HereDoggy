@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class DogResponseDTO {
+    private Long id;
     private String name;
     private int age;
     private Gender gender;

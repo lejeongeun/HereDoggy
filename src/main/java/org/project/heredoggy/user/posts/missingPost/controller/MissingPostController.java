@@ -42,15 +42,14 @@ public class MissingPostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MissingPostResponseDTO>> getMissingPostsByCreatedAt(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        List<MissingPostResponseDTO> res = missingPostService.getAllMissingPosts(userDetails);
+    public ResponseEntity<List<MissingPostResponseDTO>> getMissingPostsByCreatedAt() {
+        List<MissingPostResponseDTO> res = missingPostService.getAllMissingPosts();
         return ResponseEntity.ok(res);
     }
 
     @GetMapping("/{post_id}")
-    public ResponseEntity<MissingPostResponseDTO> getDetailMissingPosts(@PathVariable("post_id") Long postId,
-                                                                     @AuthenticationPrincipal CustomUserDetails userDetails) {
-        MissingPostResponseDTO res = missingPostService.getDetailMissingPosts(postId, userDetails);
+    public ResponseEntity<MissingPostResponseDTO> getDetailMissingPosts(@PathVariable("post_id") Long postId) {
+        MissingPostResponseDTO res = missingPostService.getDetailMissingPosts(postId);
         return ResponseEntity.ok(res);
     }
 }

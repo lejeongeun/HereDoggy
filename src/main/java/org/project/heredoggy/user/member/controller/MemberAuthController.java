@@ -3,9 +3,7 @@ package org.project.heredoggy.user.member.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.member.Member;
-import org.project.heredoggy.user.member.dto.request.LoginRequestDTO;
-import org.project.heredoggy.user.member.dto.request.MemberSignUpRequestDTO;
-import org.project.heredoggy.user.member.dto.request.ReissueRequestDTO;
+import org.project.heredoggy.user.member.dto.request.*;
 import org.project.heredoggy.user.member.dto.response.TokenResponseDTO;
 import org.project.heredoggy.user.member.dto.response.ReissueResponseDTO;
 import org.project.heredoggy.user.member.service.AuthService;
@@ -72,5 +70,38 @@ public class MemberAuthController {
     public ResponseEntity<?> logout(@AuthenticationPrincipal CustomUserDetails userDetails) {
         redisService.deleteRefreshToken(userDetails.getMember().getId());
         return ResponseEntity.ok("로그아웃 완료");
+    }
+
+    //이메일 찾기
+    @PostMapping("/find-email")
+    public ResponseEntity<Map<String, String>> findEmail(@RequestBody FindEmailRequestDTO request) {
+        authService.findEmailByNameAndPhone(request);
+        return ResponseEntity.ok(Map.of("message", "입력된 정보로 등록된 이메일이 있는 경우, 해당 이메일로 아이디 정보를 전송했습니다."));
+    }
+
+    // 비밀번호 재설정 - gmail로 토큰 받기
+    @PostMapping("/password-reset-reqeust")
+    public ResponseEntity<Map<String, String>> requestPasswordReset(@RequestBody PasswordResetRequestDTO request) {
+        authService.sendPasswordResetEmail(request.getEmail());
+        return ResponseEntity.ok(Map.of("message", "비밀번호 재설정 토큰이 이메일로 전송되었습니다."));
+    }
+
+    // 새로운 비밀번호 입력하여 재설정하기
+    @PostMapping("/password-reset")
+    public ResponseEntity<Map<String, String>> resetPassword(@RequestBody PasswordResetConfirmDTO reset) {
+        authService.resetPassword(reset);
+        return ResponseEntity.ok(Map.of("message","비밀번호가 성공적으로 변경되었습니다."));
+    }
+
+    @PostMapping("/email-verification-request")
+    public ResponseEntity<Map<String, String>> requestEmailVerification(@RequestBody EmailVerificationRequestDTO dto) {
+        authService.sendEmailVerificationCode(dto.getEmail());
+        return ResponseEntity.ok(Map.of("message","이메일로 인증 코드가 전송되었습니다."));
+    }
+
+    @PostMapping("/email-verification-confirm")
+    public ResponseEntity<Map<String, String>> confirmEmailVerification(@RequestBody EmailVerificationConfirmDTO dto) {
+        authService.verifyEmailCode(dto.getEmail(), dto.getCode());
+        return ResponseEntity.ok(Map.of("message","이메일 인증이 완료되었습니다."));
     }
 }

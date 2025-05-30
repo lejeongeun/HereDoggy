@@ -2,7 +2,6 @@ package org.project.heredoggy.user.walk.reservation.service;
 
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.member.Member;
-import org.project.heredoggy.domain.postgresql.member.MemberRepository;
 import org.project.heredoggy.domain.postgresql.walk.reservation.Reservation;
 import org.project.heredoggy.domain.postgresql.walk.reservation.ReservationRepository;
 import org.project.heredoggy.domain.postgresql.walk.reservation.WalkReservationStatus;
@@ -78,6 +77,7 @@ public class MemberReservationService {
 
     public MemberReservationResponseDTO toDto(Reservation reservation){
         return MemberReservationResponseDTO.builder()
+                .id(reservation.getId())
                 .date(reservation.getDate())
                 .startTime(reservation.getStartTime())
                 .endTime(reservation.getEndTime())
@@ -91,7 +91,6 @@ public class MemberReservationService {
                 .build();
     }
 
-
     public void cancelRequestReservation(CustomUserDetails userDetails, Long reservationsId) {
         Member member = userDetails.getMember();
         Reservation reservation = reservationRepository.findById(reservationsId)
@@ -103,6 +102,7 @@ public class MemberReservationService {
         reservation.setStatus(WalkReservationStatus.CANCELED_REQUEST);
         reservationRepository.save(reservation);
     }
+
     public void validateDuplicateReservation(Member member, WalkOption walkOption){
         boolean exists = reservationRepository.existsByMemberAndWalkOptionAndStatusIn(
                 member, walkOption, List.of(WalkReservationStatus.PENDING, WalkReservationStatus.APPROVED));
