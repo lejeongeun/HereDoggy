@@ -1,26 +1,17 @@
-/* LoginPage.css */
-body {
-  background: #f5f7fa;
-}
-
-/* 중앙정렬 */
 .login-container {
   min-height: 100vh;
+  background: #fff;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }
 
-/* 카드형 폼 */
 .login-form {
+  width: 350px;
   background: #fff;
-  padding: 32px 24px;
   border-radius: 16px;
-   box-shadow:
-    0 10px 32px rgba(80, 210, 160, 0.12), /* 초록 계열 부드러운 그림자 */
-    0 2px 8px rgba(44, 62, 80, 0.08);     
-  width: 100%;
-  max-width: 340px;
+  padding: 40px 34px 34px 34px;
+  box-shadow: 0 6px 36px rgba(39, 60, 46, 0.13), 0 1.5px 7px rgba(34, 85, 57, 0.06);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -28,75 +19,87 @@ body {
 
 .login-title {
   text-align: center;
+  font-size: 2.1rem;
+  font-weight: 900;
+  letter-spacing: -1.2px;
+  color: #185a36;   /* 다크그린 */
   margin-bottom: 10px;
-  font-size: 1.6rem;
-  font-weight: bold;
-  color: #26a869;   /* 초록 포인트 */
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
 }
 
 .form-group label {
-  color: #485c52;
-  font-size: 1rem;
-  font-weight: 500;
+  display: block;
+  font-weight: 700;
+  color: #14402a;   /* 더 진한 다크그린 */
+  margin-bottom: 7px;
 }
 
 .form-group input {
-  padding: 10px 12px;
-  border: 1px solid #c0ecd5;
-  border-radius: 7px;
-  font-size: 1rem;
-  background: #f8fefb;
-  transition: border 0.15s;
-}
-.form-group input:focus {
-  border: 1.5px solid #36d484;
+  width: 100%;
+  padding: 13px 11px;
+  margin-bottom: 2px;
+  border-radius: 9px;
+  border: 1.5px solid #c7d7cd;
   outline: none;
+  font-size: 1.07rem;
+  background: #f8faf9;
+  color: #143021;
+  transition: border 0.16s, box-shadow 0.18s;
+}
+
+.form-group input:focus {
+  border: 2.2px solid #185a36;
+  background: #f2f8f3;
+  box-shadow: 0 2px 10px rgba(33, 71, 54, 0.07);
 }
 
 .login-btn {
-  background: #26a869;
+  background: linear-gradient(90deg, #185a36 75%, #246f48 100%);
   color: #fff;
-  font-weight: 600;
-  padding: 11px 0;
+  font-size: 1.13rem;
+  font-weight: 800;
   border: none;
-  border-radius: 7px;
+  border-radius: 11px;
+  padding: 13px 0;
+  margin-top: 10px;
+  margin-bottom: 3px;
+  box-shadow: 0 2px 16px rgba(18, 54, 35, 0.10);
   cursor: pointer;
-  margin-top: 6px;
-  font-size: 1.05rem;
-  transition: background 0.18s;
+  transition: background 0.16s, transform 0.09s;
 }
-.login-btn:hover {
-  background: #17854f;
+
+.login-btn:hover:enabled {
+  background: linear-gradient(90deg, #1e4c34 90%, #2a8b54 100%);
+  transform: translateY(-2px) scale(1.01);
 }
 
 .signup-btn {
-  background: none;
-  color: #26a869;
-  font-weight: 500;
-  border: none;
-  cursor: pointer;
-  padding: 7px 0 0 0;
+  width: 100%;
+  background: #f6fff5;
+  color: #185a36;
+  border: 1.4px solid #c7d7cd;
+  border-radius: 11px;
+  font-weight: 700;
   font-size: 1rem;
-  text-decoration: underline;
-  transition: color 0.16s;
-}
-.signup-btn:hover {
-  color: #17854f;
+  margin-top: 8px;
+  padding: 11px 0;
+  transition: background 0.16s, border 0.17s;
+  cursor: pointer;
 }
 
-/* 모바일 반응형 */
+.signup-btn:hover {
+  background: #eef7f1;
+  border-color: #185a36;
+  color: #14402a;
+}
+
 @media (max-width: 500px) {
   .login-form {
-    padding: 20px 4vw;
-    max-width: 97vw;
+    width: 98vw;
+    padding: 22px 4vw;
+    border-radius: 0;
+    box-shadow: none;
   }
-  .login-title {
-    font-size: 1.15rem;
+  .login-container {
+    min-height: 99vh;
   }
 }

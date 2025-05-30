@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import '../styles/signup.css';
+import { useNavigate } from 'react-router-dom';
 
 function SignUp() {
+  const navigate = useNavigate();  
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -36,6 +38,7 @@ function SignUp() {
       form  
     );
     alert(response.data.message || "회원가입 성공!");
+    navigate("/");  
   } catch (error) {
     if (error.response) {
       alert(error.response.data.message || "회원가입 실패");

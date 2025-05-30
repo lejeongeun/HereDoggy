@@ -1,0 +1,93 @@
+.shelter-request-container {
+  max-width: 430px;
+  margin: 54px auto 0 auto;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(39, 60, 46, 0.09), 0 1.5px 6px rgba(34, 85, 57, 0.06);
+  padding: 36px 30px 28px 30px;
+  transition: box-shadow 0.18s;
+}
+
+.shelter-request-container h2 {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #185a36;
+  margin-bottom: 22px;
+  letter-spacing: -1px;
+}
+
+.shelter-request-form label {
+  font-weight: 700;
+  color: #185a36;
+  margin-bottom: 8px;
+  display: block;
+  font-size: 1.01rem;
+}
+
+.shelter-request-form input,
+.shelter-request-form textarea {
+  width: 100%;
+  padding: 13px 11px;
+  margin-bottom: 18px;
+  border: 1.5px solid #c7d7cd;
+  border-radius: 9px;
+  font-size: 1.03rem;
+  background: #f8faf9;
+  color: #143021;
+  transition: border 0.16s, box-shadow 0.17s;
+}
+
+.shelter-request-form input:focus,
+.shelter-request-form textarea:focus {
+  border: 2px solid #185a36;
+  background: #f2f8f3;
+  box-shadow: 0 2px 10px rgba(33, 71, 54, 0.08);
+}
+
+.shelter-request-form textarea {
+  resize: vertical;
+  min-height: 68px;
+  max-height: 200px;
+  font-family: inherit;
+}
+
+.shelter-request-form button[type="submit"] {
+  width: 100%;
+  background: linear-gradient(90deg, #185a36 80%, #246f48 100%);
+  color: #fff;
+  font-size: 1.12rem;
+  font-weight: 800;
+  border: none;
+  border-radius: 11px;
+  padding: 14px 0;
+  margin-top: 5px;
+  box-shadow: 0 4px 18px rgba(18, 54, 35, 0.09);
+  cursor: pointer;
+  transition: background 0.16s, transform 0.09s;
+}
+
+.shelter-request-form button[type="submit"]:hover:enabled {
+  background: linear-gradient(93deg, #14402a 85%, #246f48 100%);
+  transform: translateY(-2px) scale(1.015);
+}
+
+.shelter-request-form button[disabled] {
+  background: #e0eae4;
+  color: #aaa;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+@media (max-width: 600px) {
+  .shelter-request-container {
+    max-width: 98vw;
+    padding: 20px 4vw;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .shelter-request-form button[type="submit"] {
+    font-size: 1rem;
+    padding: 11px 0;
+  }
+}

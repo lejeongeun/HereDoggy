@@ -11,11 +11,11 @@ import AdoptionManager from './pages/shelter/AdoptionManager';
 import RouteManager from './pages/shelter/RouteManager';
 import DonationManager from './pages/shelter/DonationManager';
 import MyPage from './pages/shelter/MyPage';
-import ShelterRegister from './pages/user/ShelterRegister';
 import DogList from './pages/shelter/DogList';
 import NoticeWrite from './components/shelter/notice/NoticeWrite';
 import NoticeDetail from './components/shelter/notice/NoticeDetail';
 import NoticeUpdate from './components/shelter/notice/NoticeUpdate';
+import ShelterRegister from './pages/user/ShelterRequest';
 
 function App() {
   return (
@@ -39,9 +39,9 @@ function App() {
           <Route path="mypage" element={<MyPage />} />
         </Route>
 
-        <Route path="/shelter/register" element={<ShelterRegister />}/>
+        <Route path="shelter-request" element={<ShelterRegister />}/>
 
-        <Route path="/admin/home" element={<Admin_Home />}/>
+        <Route path="admin/home" element={<Admin_Home />}/>
       </Routes>
     </Router>
   );

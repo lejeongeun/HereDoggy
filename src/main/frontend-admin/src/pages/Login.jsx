@@ -9,34 +9,43 @@ function Login() {
   const [useremail, setUseremail] = useState("");
   const [password, setPassword] = useState("");
 
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
   e.preventDefault();
 
   try {
     const response = await shelterLogin(useremail, password);
 
-    console.log("로그인 응답:", response.data);
+    // 200 OK일 때
+    const { nextAction, message, role } = response.data;
 
-    // role 정보가 응답에 있는지 확인
-    const role = response.data.role || "USER"; // role이 없으면 USER로 기본값
-
-    alert(response.data.message || "로그인 성공");
-    navigate("/shelter/dashboard");
-    // 권한(role)에 따라 분기
-    // if (role === "SHELTER_ADMIN") {
-    //   navigate("/shelter/dashboard");
-    // } else {
-    //   navigate("/shelter/register");
-    // }
+    alert(message || "로그인 성공");
+    setTimeout(() => {
+      if (nextAction) {
+        navigate(nextAction);
+      } else if (role === "SHELTER_ADMIN") {
+        navigate("/shelter/dashboard");
+      } else {
+        navigate("/");
+      }
+    }, 100);
   } catch (error) {
+    // 403 Forbidden(보호소 관리자 아님) 등 error.response로 들어오는 경우
     if (error.response) {
-      alert("로그인 실패: " + (error.response.data.message || error.response.data || error.message));
+      console.log("로그인 실패 응답:", error.response.data);
+      const { nextAction, message } = error.response.data || {};
+      alert(message || "로그인 실패");
+      setTimeout(() => {
+        if (nextAction) {
+          navigate(nextAction);
+        } else {
+          navigate("/");
+        }
+      }, 100);
     } else {
       alert("서버 연결 실패");
     }
   }
 };
-
 
   return (
     <div className="login-container">

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import '../../styles/shelter/pages/dogRegister.css';
 import api from "../../api/shelter/api";
+import { useNavigate } from "react-router-dom";
 
 function DogRegister() {
   // localStorage에서 shelters_id 동적으로 가져오기
@@ -10,7 +11,7 @@ function DogRegister() {
 
   const [images, setImages] = useState([]);
   const [previewUrls, setPreviewUrls] = useState(Array(5).fill(null)); // 5칸 고정
-
+  const navigate = useNavigate(); 
   const [form, setForm] = useState({
     name: "",
     age: "",
@@ -92,7 +93,7 @@ function DogRegister() {
         }
       );
       alert("등록이 완료되었습니다!");
-      // 등록 후 페이지 이동 등 처리
+      navigate("/shelter/doglist");
     } catch (err) {
       alert("등록 중 오류가 발생했습니다.");
       console.error(err);
