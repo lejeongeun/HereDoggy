@@ -1,6 +1,7 @@
 package org.project.heredoggy.dog.dto;
 
 import lombok.*;
+import org.project.heredoggy.domain.postgresql.dog.DogStatus;
 import org.project.heredoggy.domain.postgresql.dog.Gender;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class MainDogResponseDTO {
     private String personality;
     private Double weight;
     private Boolean isNeutered;
+    private DogStatus status;
     private String foundLocation;
     private List<String> imagesUrls;
     private String shelterName;

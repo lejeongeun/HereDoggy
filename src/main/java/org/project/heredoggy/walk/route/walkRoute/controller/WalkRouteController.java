@@ -1,9 +1,7 @@
 package org.project.heredoggy.walk.route.walkRoute.controller;
 
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.project.heredoggy.domain.postgresql.walk.route.WalkRoute;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.walk.route.walkRoute.dto.WalkRouteRequestDto;
 import org.project.heredoggy.walk.route.walkRoute.dto.WalkRouteResponseDTO;
@@ -48,5 +46,4 @@ public class WalkRouteController {
         walkRouteService.deleteWalkRoute(userDetails, sheltersId, walkRoutesId);
         return ResponseEntity.ok(Map.of("message", "산책 경로 컴포넌트가 삭제되었습니다."));
     }
-
 }
