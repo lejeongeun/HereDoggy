@@ -23,14 +23,14 @@
 .card-value {
   font-size: 2.8rem;
   font-weight: 700;
-  color: #184c24; /* 다크그린! */
+  color: #184c24;
   margin-bottom: 8px;
   letter-spacing: -1px;
 }
 
 .card-label {
   font-size: 1.12rem;
-  color: #497a5c; /* 한 톤 밝은 그린 */
+  color: #497a5c;
   font-weight: 500;
   letter-spacing: -0.5px;
   margin-top: 2px;

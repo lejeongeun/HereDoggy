@@ -1,6 +1,7 @@
 import '../../../styles/shelter/main/dashboardcards.css'
 
-function DashboardCards({ stats ={todayReservation: 6,
+function DashboardCards({ stats ={
+   todayReservation: 6,
    protecting: 25,
    thisMonthAdoption: 12,
    thisWeekWalk: 28} }) {

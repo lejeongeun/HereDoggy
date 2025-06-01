@@ -1,4 +1,5 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+import '../../../styles/shelter/main/dashBoard.css';
 
 const data = [
   { name: '월', reservations: 12 },

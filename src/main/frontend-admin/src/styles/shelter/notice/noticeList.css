@@ -1,4 +1,4 @@
-.notice-acco-wrap {
+.notice-list-wrap {
   max-width: 880px;
   margin: 44px auto 0 auto;
   padding: 0 18px 56px 18px;
@@ -6,44 +6,68 @@
   border-radius: 14px;
   box-shadow: 0 2px 12px rgba(24,76,36,0.08);
 }
-
-.notice-acco-title {
-  font-size: 1.23rem;
+.notice-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.notice-list-title {
+  font-size: 1.22rem;
   font-weight: 700;
   color: #21573d;
-  margin-bottom: 10px;
-  letter-spacing: -0.5px;
 }
-
-.notice-acco-list {
-  border-top: 1.5px solid #e3ede5;
+.notice-list-btn {
+  background: #26a869;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  padding: 8px 22px;
+  border-radius: 10px;
+  box-shadow: 0 1px 7px rgba(44,190,120,0.09);
+  transition: background 0.17s, box-shadow 0.13s, transform 0.13s;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  display: inline-block;
 }
-
-.notice-acco-item {
+.notice-list-btn:hover, .notice-list-btn:focus {
+  background: #1c8050;
+  box-shadow: 0 3px 12px rgba(44,190,120,0.14);
+  color: #fff;
+  transform: translateY(-2px) scale(1.04);
+  text-decoration: none;
+}
+.notice-list {
+  border-top: 1.5px solid #e4ebe5;
+}
+.notice-item {
   border-bottom: 1px solid #f0f3f3;
   background: #fff;
   transition: background 0.18s;
 }
-
-.notice-acco-head {
+.notice-item.empty {
+  color: #a2b2a7;
+  font-size: 1.09rem;
+  padding: 38px 0 30px 0 !important;
+  text-align: center;
+}
+.notice-head {
   display: flex;
   align-items: center;
   padding: 18px 14px;
   cursor: pointer;
   position: relative;
-  border-radius: 0;
   background: #fff;
   transition: background 0.16s;
 }
-
-.notice-acco-head.open,
-.notice-acco-head:hover {
+.notice-head.open,
+.notice-head:hover {
   background: #f4faf6;
 }
-
-.notice-acco-subject {
+.notice-title-link {
   flex: 1;
-  font-size: 1.13rem;
+  font-size: 1.11rem;
   font-weight: 500;
   color: #233523;
   white-space: nowrap;
@@ -53,18 +77,19 @@
   letter-spacing: -0.5px;
   transition: color 0.18s;
 }
-
-.notice-acco-date {
+.notice-title-link:hover {
+  text-decoration: underline;
+  color: #238f64;
+}
+.notice-date {
   color: #99a7a2;
   font-size: 1.01rem;
   font-weight: 400;
   margin-right: 16px;
   min-width: 86px;
   text-align: right;
-  letter-spacing: 0;
 }
-
-.notice-acco-icon {
+.notice-toggle {
   width: 30px;
   text-align: center;
   font-size: 1.35rem;
@@ -72,22 +97,17 @@
   font-weight: 900;
   transition: color 0.14s;
   margin-left: 3px;
+  cursor: pointer;
 }
-.notice-acco-head.open .notice-acco-icon {
+.notice-head.open .notice-toggle {
   color: #226943;
 }
-.notice-acco-subject-link:hover {
-  text-decoration: underline;
-  color: #238f64;
-}
-
-.notice-acco-icon:hover,
-.notice-acco-icon:focus {
+.notice-toggle:hover,
+.notice-toggle:focus {
   color: #176140;
   outline: none;
 }
-
-.notice-acco-detail {
+.notice-content {
   background: #fafdfe;
   padding: 23px 22px 20px 28px;
   font-size: 1.04rem;
@@ -100,21 +120,4 @@
 @keyframes fadeInAcco {
   from { opacity: 0; transform: translateY(-12px);}
   to   { opacity: 1; transform: none;}
-}
-
-/* 빈 리스트 메시지 */
-.notice-acco-item.text-center {
-  color: #a2b2a7;
-  font-size: 1.09rem;
-  padding: 38px 0 30px 0 !important;
-}
-
-/* 반응형 */
-@media (max-width: 700px) {
-  .notice-acco-wrap { max-width: 99vw; }
-}
-@media (max-width: 540px) {
-  .notice-acco-head,
-  .notice-acco-detail { padding-left: 7px; padding-right: 7px; }
-  .notice-acco-title { font-size: 1.08rem; }
 }

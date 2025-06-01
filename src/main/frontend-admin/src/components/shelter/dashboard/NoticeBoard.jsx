@@ -1,4 +1,3 @@
-// import 'bootstrap/dist/css/bootstrap.min.css';   // 삭제!
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getNotices } from '../../../api/shelter/notice';
@@ -23,17 +22,17 @@ function NoticeBoard() {
     fetchNotices();
   }, []);
 
-  if (loading) return <div className="noticeboard-container">로딩 중...</div>;
-  if (error) return <div className="noticeboard-container error">{error}</div>;
+  if (loading) return <div className="notice-table-wrap">로딩 중...</div>;
+  if (error) return <div className="notice-table-wrap error">{error}</div>;
 
   return (
-    <div className="noticeboard-container">
-      <h2>
-        <Link to={"/shelter/noticelist"} className="noticeboard-title-link">
+    <div className="notice-table-wrap">
+      <div className="notice-table-header">
+        <Link to="/shelter/noticelist" className="notice-table-title">
           공지사항
         </Link>
-      </h2>
-      <table className="noticeboard-table">
+      </div>
+      <table className="notice-table">
         <thead>
           <tr>
             <th>번호</th>
@@ -47,17 +46,17 @@ function NoticeBoard() {
             <tr key={notice.id || i}>
               <td>{notice.id}</td>
               <td>
-                <Link to={`/shelter/notice/detail/${notice.id}`} className="noticeboard-link">
+                <Link to={`/shelter/notice/detail/${notice.id}`} className="notice-table-link">
                   {notice.title}
                 </Link>
               </td>
-              <td>{notice.content}</td>
+              <td className="notice-table-content">
+                {notice.content && notice.content.length > 25
+                  ? notice.content.slice(0, 25) + '...'
+                  : notice.content}
+              </td>
               <td>
-                {notice.createdAt
-                  ? notice.createdAt.slice(0, 10)
-                  : notice.date
-                    ? notice.date.slice(0, 10)
-                    : ""}
+                {(notice.createdAt || notice.date || '').slice(0, 10)}
               </td>
             </tr>
           ))}

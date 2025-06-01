@@ -1,85 +1,73 @@
-.noticeboard-container {
+.notice-table-wrap {
   background: #fff;
   border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(24, 76, 36, 0.09);
-  padding: 28px 32px 20px 32px;
-  margin-bottom: 0;
-  /* 반응형 고려 시 min-width/max-width 가능 */
+  box-shadow: 0 2px 12px rgba(24,76,36,0.09);
+  padding: 22px 28px 16px 28px;
 }
-
-.noticeboard-title-link {
-  font-size: 1.18rem;
+.notice-table-header {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.notice-table-title {
+  font-size: 1.17rem;
   font-weight: 700;
   color: #184c24;
   text-decoration: none;
   letter-spacing: -0.5px;
-  transition: color 0.18s;
-  display: inline-block;
-  margin-bottom: 8px;
+  transition: color 0.17s;
 }
-
-.noticeboard-title-link:hover {
+.notice-table-title:hover {
   color: #249860;
   text-decoration: underline;
 }
-
-.noticeboard-table {
+.notice-table {
   width: 100%;
-  margin-top: 8px;
-  border-collapse: separate;      /* ← 둥근 테이블에 더 자연스러움 */
-  border-spacing: 0;
-  background: #f7fbf9;
+  border-collapse: collapse;
+  background: #fafcfb;
   font-size: 1rem;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 1px 5px rgba(24, 76, 36, 0.05);
+  margin-top: 0;
 }
-
-.noticeboard-table th,
-.noticeboard-table td {
-  padding: 13px 8px;
+.notice-table th, .notice-table td {
+  padding: 11px 7px;
   text-align: center;
 }
-
-.noticeboard-table th {
-  background: #e7f8ef;
+.notice-table th {
+  background: #effaf3;
   color: #184c24;
   font-weight: 600;
-  font-size: 1.05rem;
-  border-bottom: 2px solid #e2efe5;
-  letter-spacing: -0.5px;
+  font-size: 1.01rem;
+  border-bottom: 2px solid #e4efe6;
 }
-
-.noticeboard-table td {
-  border-bottom: 1px solid #ebf3ef;
-  color: #385647;
+.notice-table td {
+  border-bottom: 1px solid #edf3ef;
+  color: #344e3f;
   background: #fff;
-  font-size: 0.99rem;
-  word-break: keep-all;
+  font-size: 0.98rem;
 }
-
-.noticeboard-table tr:last-child td {
-  border-bottom: none;
+.notice-table-content {
+  text-align: left;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-
-.noticeboard-link {
+.notice-table-link {
   color: #1a5c38;
   font-weight: 500;
-  transition: color 0.16s;
+  transition: color 0.2s;
   text-decoration: none;
 }
-.noticeboard-link:hover {
+.notice-table-link:hover {
   color: #27a371;
   text-decoration: underline;
 }
-
 .error {
-  color: #d33636;
+  color: #ba1c1c;
   font-weight: 600;
-  margin-top: 12px;
-  letter-spacing: -0.5px;
   text-align: center;
-  background: #ffefef;
-  border-radius: 8px;
-  padding: 10px 0;
+  margin: 10px 0;
 }

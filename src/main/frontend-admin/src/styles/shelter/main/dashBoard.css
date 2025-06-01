@@ -13,21 +13,47 @@
   gap: 24px;
 }
 
-.dashboard-widget {
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 2px 12px rgba(24,76,36,0.07);
-  padding: 28px 32px;
-  flex: 1;
-  min-width: 0;
-  margin-bottom: 0;
-}
 .chart-title {
   font-size: 1.12rem;
   font-weight: 600;
   color: #184c24;
   margin-bottom: 12px;
   letter-spacing: -1px;
+  text-align: left;
+}
+
+/* X,Y축 텍스트 컬러 통일 */
+.recharts-cartesian-axis-tick-value {
+  font-size: 0.97rem;
+  fill: #447054;
+  font-family: inherit;
+}
+
+/* Y축 숫자 컬러 */
+.recharts-cartesian-axis-tick-value tspan {
+  fill: #447054;
+}
+
+/* 바 둥글게 처리 */
+.recharts-bar-rectangle path {
+  rx: 6px !important;
+  ry: 6px !important;
+}
+
+/* Tooltip */
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  box-shadow: 0 2px 12px rgba(24, 76, 36, 0.09);
+  border-radius: 10px;
+  background: #effaf3 !important;
+  color: #184c24;
+  font-size: 0.98rem;
+  border: none !important;
+  padding: 0.65rem 1rem !important;
+}
+
+/* 차트와 위젯 간격용 */
+.recharts-wrapper {
+  margin-bottom: 0;
 }
 
 .table-title {

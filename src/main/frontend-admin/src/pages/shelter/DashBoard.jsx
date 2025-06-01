@@ -14,10 +14,10 @@ function DashBoard() {
                 <NoticeBoard/>
             </div>
             <div className="dashboard-widgets-row">
-                <div className="dashboard-widget" style={{ maxWidth: 600 }}>
+                <div style={{ maxWidth: 600 }}>
                     <WeeklyReservationChart />
                 </div>
-                <div className="dashboard-widget" style={{ maxWidth: 600 }}>
+                <div style={{ maxWidth: 600 }}>
                     <AnimalRankingTable />
                 </div>
             </div>
