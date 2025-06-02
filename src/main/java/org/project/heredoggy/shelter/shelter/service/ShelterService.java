@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ShelterService {
+public class  ShelterService {
     private final ShelterRepository shelterRepository;
     private final ShelterImageRepository shelterImageRepository;
     private final ImageService imageService;

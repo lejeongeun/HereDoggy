@@ -16,13 +16,10 @@ import org.project.heredoggy.global.error.ErrorMessages;
 import org.project.heredoggy.global.exception.BadRequestException;
 import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.notification.ShelterSseNotificationFactory;
-import org.project.heredoggy.global.util.AuthUtils;
 import org.project.heredoggy.global.util.TimeUtil;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationRequestDTO;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationResponseDTO;
-import org.project.heredoggy.walk.walkOption.dto.WalkOptionRequestDTO;
-import org.project.heredoggy.walk.walkOption.dto.WalkOptionResponseDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

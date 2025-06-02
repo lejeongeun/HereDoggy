@@ -39,10 +39,9 @@ public class DogController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DogResponseDTO>> getDogsByShelter(@PathVariable("shelters_id") Long sheltersId,
-                                                                 @AuthenticationPrincipal CustomUserDetails userDetails){
-        SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
-        List<DogResponseDTO> dogList = dogService.getDogsByShelter(sheltersId);
+    public ResponseEntity<List<DogResponseDTO>> getDogsByShelter(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                 @PathVariable("shelters_id") Long sheltersId){
+        List<DogResponseDTO> dogList = dogService.getDogsByShelter(userDetails, sheltersId);
         return ResponseEntity.ok(dogList);
     }
 
@@ -50,8 +49,7 @@ public class DogController {
     public ResponseEntity<DogResponseDTO> getDetailsDog(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                         @PathVariable("shelters_id") Long sheltersId,
                                                         @PathVariable("dogs_id") Long dogsId) {
-        SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
-        DogResponseDTO dogDetails = dogService.getDetailsDog(dogsId);
+        DogResponseDTO dogDetails = dogService.getDetailsDog(userDetails, sheltersId, dogsId);
         return ResponseEntity.ok(dogDetails);
     }
 
@@ -62,7 +60,6 @@ public class DogController {
                                                      @RequestPart("dog") String dogJson,
                                                      @RequestPart(value = "newImages", required = false) List<MultipartFile> newImages,
                                                      @RequestParam(value = "deleteImageIds", required = false) List<Long> deleteImageIds) throws IOException{
-
         ObjectMapper objectMapper = new ObjectMapper();
         DogEditRequestDTO request = objectMapper.readValue(dogJson, DogEditRequestDTO.class);
 
@@ -74,12 +71,8 @@ public class DogController {
     public ResponseEntity<Map<String, String>> delete(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                       @PathVariable("shelters_id") Long sheltersId,
                                                       @PathVariable("dogs_id") Long dogs_id){
-        SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
-
-        dogService.delete(sheltersId, userDetails, dogs_id);
+        dogService.delete(userDetails, sheltersId, dogs_id);
         return ResponseEntity.ok(Map.of("message", "정보가 삭제 되었습니다."));
     }
-
-
 
 }
