@@ -1,46 +1,37 @@
-package org.project.heredoggy.domain.postgresql.notification;
+package org.project.heredoggy.domain.postgresql.fcm;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Builder
-public class Notification {
+public class FcmToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
+    private String token;
 
-    private String content;
-
-    @Enumerated(EnumType.STRING)
-    private NotificationType type;
-
-    private Boolean isRead = false;
-
-    @Enumerated(EnumType.STRING)
-    private ReferenceType referenceType;
-
-    private Long referenceId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "receiver_id", nullable = false)
-    private Member receiver;
-
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 }

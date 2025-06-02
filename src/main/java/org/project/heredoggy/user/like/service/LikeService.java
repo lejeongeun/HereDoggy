@@ -5,6 +5,7 @@ import org.project.heredoggy.domain.postgresql.comment.PostType;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.notice.NoticePost;
 import org.project.heredoggy.domain.postgresql.notice.NoticePostRepository;
+import org.project.heredoggy.domain.postgresql.notification.ReferenceType;
 import org.project.heredoggy.domain.postgresql.post.free.FreePost;
 import org.project.heredoggy.domain.postgresql.post.free.FreePostRepository;
 import org.project.heredoggy.domain.postgresql.post.like.Like;
@@ -14,6 +15,7 @@ import org.project.heredoggy.domain.postgresql.post.missing.MissingPostRepositor
 import org.project.heredoggy.domain.postgresql.post.review.ReviewPost;
 import org.project.heredoggy.domain.postgresql.post.review.ReviewPostRepository;
 import org.project.heredoggy.global.exception.NotFoundException;
+import org.project.heredoggy.global.notification.NotificationFactory;
 import org.project.heredoggy.global.util.AuthUtils;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,7 @@ public class LikeService {
     private final ReviewPostRepository reviewPostRepository;
     private final MissingPostRepository missingPostRepository;
     private final NoticePostRepository noticePostRepository;
+    private final NotificationFactory notificationFactory;
 
     @Transactional
     public boolean toggleLike(PostType postType, Long postId, CustomUserDetails userDetails) {
@@ -40,6 +43,12 @@ public class LikeService {
                     return false;
                 } else {
                     likeRepository.save(Like.builder().freePost(freePost).member(member).build());
+
+                    Member postWriter = freePost.getWriter();
+                    if (!member.equals(postWriter)) {
+                        notificationFactory.notifyLike(postWriter, member, convertToReferenceType(postType), postId);
+                    }
+
                     return true;
                 }
             //리뷰게시판
@@ -49,6 +58,12 @@ public class LikeService {
                 return false;
             } else {
                 likeRepository.save(Like.builder().reviewPost(reviewPost).member(member).build());
+
+                Member postWriter = reviewPost.getWriter();
+                if (!member.equals(postWriter)) {
+                    notificationFactory.notifyLike(postWriter, member, convertToReferenceType(postType), postId);
+                }
+
                 return true;
             }
             //실종/발견 게시판
@@ -58,6 +73,12 @@ public class LikeService {
                 return false;
             } else {
                 likeRepository.save(Like.builder().missingPost(missingPost).member(member).build());
+
+                Member postWriter = missingPost.getWriter();
+                if (!member.equals(postWriter)) {
+                    notificationFactory.notifyLike(postWriter, member, convertToReferenceType(postType), postId);
+                }
+
                 return true;
             }
             //공지게시판
@@ -67,6 +88,12 @@ public class LikeService {
                 return false;
             } else {
                 likeRepository.save(Like.builder().noticePost(noticePost).member(member).build());
+
+                Member postWriter = noticePost.getWriter();
+                if (!member.equals(postWriter)) {
+                    notificationFactory.notifyLike(postWriter, member, convertToReferenceType(postType), postId);
+                }
+
                 return true;
             }
         }
@@ -98,6 +125,15 @@ public class LikeService {
                     .orElseThrow(() -> new NotFoundException("해당 게시물은 존재하지 않습니다."));
             case NOTICE -> noticePostRepository.findById(postId)
                     .orElseThrow(() -> new NotFoundException("해당 게시물은 존재하지 않습니다."));
+        };
+    }
+
+    private ReferenceType convertToReferenceType(PostType postType) {
+        return switch (postType) {
+            case FREE -> ReferenceType.FREE_POST;
+            case REVIEW -> ReferenceType.REVIEW_POST;
+            case MISSING -> ReferenceType.MISSING_POST;
+            case NOTICE -> ReferenceType.SYSTEM_NOTICE;
         };
     }
 }
