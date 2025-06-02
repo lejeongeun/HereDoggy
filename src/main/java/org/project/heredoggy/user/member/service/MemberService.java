@@ -62,4 +62,9 @@ public class MemberService {
         redisService.deleteRefreshToken(memberId);
         memberRepository.deleteById(memberId);
     }
+
+    public void updateNotificationSetting(CustomUserDetails userDetails, boolean isEnabled) {
+        Member member = AuthUtils.getValidMember(userDetails);
+        member.setIsNotificationEnabled(isEnabled);
+    }
 }

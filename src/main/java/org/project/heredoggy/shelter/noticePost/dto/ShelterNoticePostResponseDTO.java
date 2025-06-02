@@ -2,6 +2,8 @@ package org.project.heredoggy.shelter.noticePost.dto;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,4 +17,5 @@ public class ShelterNoticePostResponseDTO {
     private String email;
     private String nickname;
     private String createdAt;
+    private List<String> imageUrls;
 }

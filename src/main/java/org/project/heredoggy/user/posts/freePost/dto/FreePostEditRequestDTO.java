@@ -7,7 +7,8 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class FreePostRequestDTO {
+public class FreePostEditRequestDTO {
     private String title;
     private String content;
+    private List<Long> deleteImageIds;
 }

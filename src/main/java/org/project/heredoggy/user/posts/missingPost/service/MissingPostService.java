@@ -1,20 +1,26 @@
 package org.project.heredoggy.user.posts.missingPost.service;
 
 import lombok.RequiredArgsConstructor;
+import org.project.heredoggy.domain.postgresql.comment.PostType;
 import org.project.heredoggy.domain.postgresql.member.Member;
-import org.project.heredoggy.domain.postgresql.post.free.FreePost;
-import org.project.heredoggy.domain.postgresql.post.free.FreePostRepository;
+import org.project.heredoggy.domain.postgresql.post.PostImage;
+import org.project.heredoggy.domain.postgresql.post.PostImageRepository;
 import org.project.heredoggy.domain.postgresql.post.missing.MissingPost;
 import org.project.heredoggy.domain.postgresql.post.missing.MissingPostRepository;
+import org.project.heredoggy.global.exception.BadRequestException;
 import org.project.heredoggy.global.exception.ConflictException;
 import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.util.AuthUtils;
+import org.project.heredoggy.image.ImageService;
 import org.project.heredoggy.security.CustomUserDetails;
+import org.project.heredoggy.user.posts.missingPost.dto.MissingPostEditRequestDTO;
 import org.project.heredoggy.user.posts.missingPost.dto.MissingPostRequestDTO;
 import org.project.heredoggy.user.posts.missingPost.dto.MissingPostResponseDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,9 +29,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MissingPostService {
     private final MissingPostRepository missingPostRepository;
+    private final PostImageRepository postImageRepository;
+    private final ImageService imageService;
 
     @Transactional
-    public void createMissingPost(MissingPostRequestDTO request, CustomUserDetails userDetails) {
+    public void createMissingPost(MissingPostRequestDTO request, CustomUserDetails userDetails, List<MultipartFile> images) {
+        if(images != null && images.size() > 5) {
+            throw new BadRequestException("이미지는 최대 5장까지 업로드 가능합니다");
+        }
         Member member = AuthUtils.getValidMember(userDetails);
 
         MissingPost post = MissingPost.builder()
@@ -45,10 +56,26 @@ public class MissingPostService {
                 .build();
 
         missingPostRepository.save(post);
+
+        if(images != null && !images.isEmpty()) {
+            for (MultipartFile image : images) {
+                if(image.isEmpty()) continue;
+                try {
+                    String imageUrl = imageService.savePostImage(image, PostType.MISSING, post.getId());
+                    PostImage postImage = PostImage.builder()
+                            .imageUrl(imageUrl)
+                            .missingPost(post)
+                            .build();
+                    postImageRepository.save(postImage);
+                } catch (IOException e) {
+                    throw new RuntimeException("이미지 업로드 중 오류가 발생을 하였습니다.", e);
+                }
+            }
+        }
     }
 
     @Transactional
-    public void editMissingPost(Long postId, MissingPostRequestDTO request, CustomUserDetails userDetails) {
+    public void editMissingPost(Long postId, MissingPostEditRequestDTO request, CustomUserDetails userDetails, List<MultipartFile> images) {
         AuthUtils.getValidMember(userDetails);
 
         MissingPost post = missingPostRepository.findById(postId)
@@ -70,6 +97,39 @@ public class MissingPostService {
         post.setIsContactPublic(request.getIsContactPublic());
 
         missingPostRepository.save(post);
+
+        if(request.getDeleteImageIds() != null && !request.getDeleteImageIds().isEmpty()) {
+            for (Long imageId : request.getDeleteImageIds()) {
+                PostImage image = postImageRepository.findById(imageId)
+                        .orElseThrow(() -> new NotFoundException("이미지를 찾을 수 없습니다."));
+
+                if(!image.getMissingPost().getId().equals(post.getId())) {
+                    throw new IllegalArgumentException("해당 게시글의 이미지가 아닙니다");
+                }
+                imageService.deleteImage(image.getImageUrl());
+                postImageRepository.delete(image);
+            }
+        }
+
+        if(images != null && !images.isEmpty()) {
+            long existingCount = postImageRepository.countByMissingPost(post);
+            if(existingCount + images.size() > 5) {
+                throw new BadRequestException("기존 이미지와 합쳐서 5장을 초과할 수 없습니다.");
+            }
+            for (MultipartFile image : images) {
+                if(image.isEmpty()) continue;
+                try {
+                    String imageUrl = imageService.savePostImage(image, PostType.MISSING, post.getId());
+                    PostImage postImage = PostImage.builder()
+                            .imageUrl(imageUrl)
+                            .missingPost(post)
+                            .build();
+                    postImageRepository.save(postImage);
+                } catch (IOException e) {
+                    throw new RuntimeException("이미지 업로드 중 오류가 발생을 하였습니다.");
+                }
+            }
+        }
     }
 
 
@@ -92,27 +152,30 @@ public class MissingPostService {
 
         List<MissingPost> lists = missingPostRepository.findAllOrderByCreatedAtDesc();
 
-        return convertToDTOList(lists);
+        return lists.stream()
+                .map(post -> convertToDTO(post, List.of()))
+                .collect(Collectors.toList());
     }
 
 
+    @Transactional
     public MissingPostResponseDTO getDetailMissingPosts(Long postId) {
 
         MissingPost post = missingPostRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException("찾을 수 없는 게시물입니다."));
 
+        List<String> imageUrls = postImageRepository.findByMissingPost(post).stream()
+                .map(PostImage::getImageUrl)
+                .toList();
+
         post.setViewCount(post.getViewCount() + 1);
         missingPostRepository.save(post);
 
-        return convertToDTO(post);
+
+        return convertToDTO(post, imageUrls);
     }
 
-    private List<MissingPostResponseDTO> convertToDTOList(List<MissingPost> lists) {
-        return lists.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-    private MissingPostResponseDTO convertToDTO(MissingPost post) {
+    private MissingPostResponseDTO convertToDTO(MissingPost post, List<String> images) {
         return MissingPostResponseDTO.builder()
                 .id(post.getId())
                 .title(post.getTitle())
@@ -126,6 +189,7 @@ public class MissingPostService {
                 .missingLocation(post.getMissingLocation())
                 .description(post.getDescription())
                 .isContactPublic(post.getIsContactPublic())
+                .imageUrls(images)
                 .build();
     }
 }

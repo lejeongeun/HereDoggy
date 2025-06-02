@@ -3,6 +3,7 @@ package org.project.heredoggy.user.member.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.member.Member;
+import org.project.heredoggy.user.fcm.service.FcmTokenService;
 import org.project.heredoggy.user.member.dto.request.*;
 import org.project.heredoggy.user.member.dto.response.TokenResponseDTO;
 import org.project.heredoggy.user.member.dto.response.ReissueResponseDTO;
@@ -30,6 +31,7 @@ public class MemberAuthController {
     private final AuthService authService;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
+    private final FcmTokenService fcmTokenService;
     private final RedisService redisService;
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> signUp(@Valid @RequestBody MemberSignUpRequestDTO request) {
@@ -69,6 +71,7 @@ public class MemberAuthController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> logout(@AuthenticationPrincipal CustomUserDetails userDetails) {
         redisService.deleteRefreshToken(userDetails.getMember().getId());
+        fcmTokenService.deleteByMember(userDetails.getMember());
         return ResponseEntity.ok("로그아웃 완료");
     }
 
