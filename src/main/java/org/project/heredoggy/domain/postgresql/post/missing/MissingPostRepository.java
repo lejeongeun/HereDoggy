@@ -1,5 +1,6 @@
 package org.project.heredoggy.domain.postgresql.post.missing;
 
+import org.project.heredoggy.domain.postgresql.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -10,4 +11,6 @@ import java.util.List;
 public interface MissingPostRepository extends JpaRepository<MissingPost, Long> {
     @Query("SELECT m FROM MissingPost m ORDER BY m.createdAt DESC")
     List<MissingPost> findAllOrderByCreatedAtDesc();
+
+    List<MissingPost> findByWriterOrderByCreatedAtDesc(Member writer);
 }

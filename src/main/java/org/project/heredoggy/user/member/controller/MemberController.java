@@ -6,6 +6,7 @@ import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.user.fcm.service.FcmTokenService;
 import org.project.heredoggy.user.member.dto.request.MemberEditRequestDTO;
 import org.project.heredoggy.user.member.dto.response.MemberDetailResponseDTO;
+import org.project.heredoggy.user.member.dto.response.MyPostResponseDTO;
 import org.project.heredoggy.user.member.service.MemberService;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationResponseDTO;
 import org.project.heredoggy.user.walk.reservation.service.MemberReservationService;
@@ -24,6 +25,9 @@ public class MemberController {
     private final MemberReservationService memberReservationService;
     private final FcmTokenService fcmTokenService;
 
+    // ==============================
+    //    👤 내 정보 CRUD
+    // ==============================
     @GetMapping("/profile")
     public ResponseEntity<MemberDetailResponseDTO> getMyDetail(@AuthenticationPrincipal CustomUserDetails userDetails) {
         MemberDetailResponseDTO member = memberService.getMemberDetails(userDetails);
@@ -43,7 +47,9 @@ public class MemberController {
         return ResponseEntity.ok(Map.of("message", "회원 탈퇴 성공"));
     }
 
-    // 산책 에약
+    // ==============================
+    //    📅 산책 예약
+    // ==============================
     @GetMapping("/reservations")
     public ResponseEntity<List<MemberReservationResponseDTO>> getAllReservation(@AuthenticationPrincipal CustomUserDetails userDetails){
         List<MemberReservationResponseDTO> reservationList = memberReservationService.getAllReservation(userDetails);
@@ -65,10 +71,23 @@ public class MemberController {
         return ResponseEntity.ok(Map.of("message", "예약 취소 요청이 전송되었습니다."));
     }
 
+    // ==============================
+    //    🔔 알림 설정
+    // ==============================
     @PatchMapping("/me/notification-enabled")
     public ResponseEntity<Map<String,String>> updateNotificationSetting(@RequestParam boolean enabled,
                                                           @AuthenticationPrincipal CustomUserDetails userDetails) {
         memberService.updateNotificationSetting(userDetails, enabled);
         return ResponseEntity.ok(Map.of("message", enabled ? "알림 수신 설정: ON" : "알림 수신 설정: OFF"));
+    }
+
+    // ==============================
+    //    🗒️ 게시물 조회
+    // ==============================
+
+    @GetMapping("/me/posts")
+    public ResponseEntity<MyPostResponseDTO> getMyPostList(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        MyPostResponseDTO res = memberService.getMyFreePostList(userDetails);
+        return ResponseEntity.ok(res);
     }
 }
