@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/login.css";
 import { shelterLogin } from "../api/shelter/auth";
+import { getShelterProfile } from "../api/shelter/shelter";
 import { Link } from "react-router-dom";
 
 function Login() {
@@ -10,42 +11,56 @@ function Login() {
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const response = await shelterLogin(useremail, password);
+    try {
+      const response = await shelterLogin(useremail, password);
+      const { nextAction, message, role } = response.data;
 
-    // 200 OK일 때
-    const { nextAction, message, role } = response.data;
+      alert(message || "로그인 성공");
 
-    alert(message || "로그인 성공");
-    setTimeout(() => {
-      if (nextAction) {
-        navigate(nextAction);
-      } else if (role === "SHELTER_ADMIN") {
-        navigate("/shelter/dashboard");
-      } else {
-        navigate("/");
+      // 로그인 성공 후 별도 프로필 조회해서 shelters_id 저장
+      if (role === "SHELTER_ADMIN") {
+        try {
+          const shelterRes = await getShelterProfile();
+          const shelters_id = shelterRes.data?.id;
+          console.log("shelters_id from profile:", shelterRes.data?.id);
+
+          if (shelters_id) {
+            localStorage.setItem("shelters_id", shelters_id);
+          }
+        } catch (err) {
+          console.error("보호소 프로필 조회 실패:", err);
+          alert("보호소 정보 조회에 실패했습니다.");
+          // 필요시 로그아웃 처리나 다른 조치 가능
+        }
       }
-    }, 100);
-  } catch (error) {
-    // 403 Forbidden(보호소 관리자 아님) 등 error.response로 들어오는 경우
-    if (error.response) {
-      console.log("로그인 실패 응답:", error.response.data);
-      const { nextAction, message } = error.response.data || {};
-      alert(message || "로그인 실패");
+
       setTimeout(() => {
         if (nextAction) {
           navigate(nextAction);
+        } else if (role === "SHELTER_ADMIN") {
+          navigate("/shelter/dashboard");
         } else {
           navigate("/");
         }
       }, 100);
-    } else {
-      alert("서버 연결 실패");
+    } catch (error) {
+      if (error.response) {
+        const { nextAction, message } = error.response.data || {};
+        alert(message || "로그인 실패");
+        setTimeout(() => {
+          if (nextAction) {
+            navigate(nextAction);
+          } else {
+            navigate("/");
+          }
+        }, 100);
+      } else {
+        alert("서버 연결 실패");
+      }
     }
-  }
-};
+  };
 
   return (
     <div className="login-container">

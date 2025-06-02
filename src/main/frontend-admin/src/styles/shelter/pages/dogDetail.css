@@ -1,0 +1,177 @@
+.dogdetail-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(44,69,67,0.09);
+  padding: 32px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+
+.dogdetail-back-btn {
+  background: none;
+  border: none;
+  color: #23a156;
+  font-size: 1.15rem;
+  margin-bottom: 8px;
+  cursor: pointer;
+  padding-left: 2px;
+}
+
+/* 이미지 영역: 5장 가로, 크게 */
+.dogdetail-images-row {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 10px;
+  min-height: 154px;
+}
+.dogdetail-img,
+.dogdetail-img-placeholder {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1.5px solid #e2e9e2;
+  background: #f6faf8;
+  display: block;
+}
+.dogdetail-img-placeholder {
+  background: #e7e7e7;
+}
+
+/* 정보 테이블 */
+.dogdetail-info-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 18px;
+}
+
+/* 이름 강조, 상단 row */
+.dogdetail-name-row {
+  font-size: 1.45rem;
+  font-weight: bold;
+  color: #184c24;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #e7eae9;
+  display: flex;
+  gap: 34px;
+}
+.dogdetail-name-row span:first-child {
+  width: 90px;
+  font-weight: 700;
+  color: #184c24;
+}
+.dogdetail-name-row span:last-child {
+  font-size: 1.45rem;
+  font-weight: 800;
+}
+
+/* 2컬럼 정보 */
+.dogdetail-info-cols-wrap {
+  display: flex;
+  gap: 54px;
+}
+
+.dogdetail-info-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 200px;
+  flex: 1;
+}
+
+.dogdetail-info-row {
+  display: flex;
+  gap: 36px;
+  font-size: 1.13rem;
+  color: #375d3f;
+}
+
+.dogdetail-info-row span:first-child {
+  width: 94px;
+  font-weight: 600;
+  color: #184c24;
+}
+
+.dogdetail-info-row span:last-child {
+  flex: 1;
+  font-weight: 400;
+  word-break: break-all;
+}
+
+/* 버튼 영역 */
+.dogdetail-btn-row {
+  display: flex;
+  gap: 18px;
+  justify-content: flex-end;
+  margin-top: 32px;
+}
+
+.dogdetail-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 11px 32px;
+  font-size: 1.08rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.13s;
+}
+.dogdetail-btn.edit {
+  background: #23a156;
+  color: #fff;
+}
+.dogdetail-btn.edit:hover {
+  background: #1e834b;
+}
+.dogdetail-btn.delete {
+  background: #e36868;
+  color: #fff;
+}
+.dogdetail-btn.delete:hover {
+  background: #be3636;
+}
+
+/* 로딩/에러 */
+.dogdetail-loading,
+.dogdetail-error {
+  text-align: center;
+  color: #be3636;
+  margin: 54px 0 24px 0;
+  font-size: 1.17rem;
+}
+
+/* 반응형 */
+@media (max-width: 1050px) {
+  .dogdetail-container {
+    padding: 20px 7px;
+    max-width: 98vw;
+  }
+  .dogdetail-images-row {
+    gap: 8px;
+  }
+  .dogdetail-info-cols-wrap {
+    gap: 16px;
+  }
+}
+@media (max-width: 700px) {
+  .dogdetail-container {
+    padding: 12px 2vw;
+  }
+  .dogdetail-info-cols-wrap {
+    flex-direction: column;
+    gap: 14px;
+  }
+  .dogdetail-images-row {
+    gap: 4px;
+    min-height: 86px;
+  }
+  .dogdetail-img,
+  .dogdetail-img-placeholder {
+    width: 86px;
+    height: 86px;
+  }
+}

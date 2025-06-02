@@ -3,10 +3,10 @@ import { getDogs } from "../../api/shelter/dog";
 import '../../styles/shelter/pages/dogList.css';
 import { Link } from "react-router-dom";
 
-const sheltersId = 1; // 실제 shelterId로 교체 필요
 const BACKEND_URL = "http://localhost:8080";
 
 function DogList() {
+  const sheltersId = localStorage.getItem("shelters_id");
   const [dogs, setDogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -18,17 +18,23 @@ function DogList() {
     }
     const fetchDogs = async () => {
       setLoading(true);
+      setError(null); // 초기화
       try {
         const response = await getDogs(sheltersId);
-        setDogs(response.data);
+
+        // API가 배열을 바로 반환하면
+        const dogsData = Array.isArray(response.data) ? response.data : response.data.dogs || [];
+
+        setDogs(dogsData);
       } catch (err) {
-        setError("유기견을 등록해주세요!");
+        console.error("유기견 목록 조회 실패:", err);
+        setError("유기견을 불러오는 중 오류가 발생했습니다.");
       } finally {
         setLoading(false);
       }
     };
     fetchDogs();
-  }, []);
+  }, [sheltersId]);
 
   if (loading) return <p>로딩 중...</p>;
   if (error) return (
@@ -79,8 +85,12 @@ function DogList() {
                   <div className="doglist-img doglist-img-placeholder" />
                 )}
               </td>
-              <td>{dog.name}</td>
-              <td>{dog.gender}</td>
+              <td>
+                <Link to={`/shelter/dog/${dog.id}`} className="doglist-link">
+                  {dog.name}
+                </Link>
+              </td>
+              <td>{dog.gender === "MALE" ? "수컷" : dog.gender === "FEMALE" ? "암컷" : dog.gender}</td>
               <td>{dog.age}살</td>
               <td>{dog.status}</td>
             </tr>

@@ -1,12 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
-import Admin_Home from './pages/admin/Admin_Home';
+import AdminHome from './pages/admin/AdminHome';
 import Layouts from './components/shelter/layouts/Layouts';
 import NoticeBoardList from './pages/shelter/NoticeList';
 import DashBoard from './pages/shelter/DashBoard';
 import WalkReservationManager from './pages/shelter/WalkReservationManager';
-import DogRegister from './pages/shelter/DogRegister';
+import DogRegister from './components/shelter/dog/DogRegister';
 import AdoptionManager from './pages/shelter/AdoptionManager';
 import RouteManager from './pages/shelter/RouteManager';
 import DonationManager from './pages/shelter/DonationManager';
@@ -16,6 +16,8 @@ import NoticeWrite from './components/shelter/notice/NoticeWrite';
 import NoticeDetail from './components/shelter/notice/NoticeDetail';
 import NoticeUpdate from './components/shelter/notice/NoticeUpdate';
 import ShelterRegister from './pages/user/ShelterRequest';
+import DogDetail from './components/shelter/dog/DogDetail';
+import DogEdit from './components/shelter/dog/DogEdit';
 
 function App() {
   return (
@@ -33,6 +35,9 @@ function App() {
           <Route path="walkreservationmanager" element={<WalkReservationManager />} />
           <Route path="dogregister" element={<DogRegister />} />
           <Route path="doglist" element={<DogList sheltersId={localStorage.getItem('shelters_id')} />} />
+          <Route path="dog/:id" element={<DogDetail />} />
+           <Route path="/shelter/dogedit/:id" element={<DogEdit />} />
+
           <Route path="adoptionmanager" element={<AdoptionManager />} />
           <Route path="routemanager" element={<RouteManager />} />
           <Route path="donationmanager" element={<DonationManager />} />
@@ -41,7 +46,7 @@ function App() {
 
         <Route path="shelter-request" element={<ShelterRegister />}/>
 
-        <Route path="admin/home" element={<Admin_Home />}/>
+        <Route path="admin/home" element={<AdminHome />}/>
       </Routes>
     </Router>
   );

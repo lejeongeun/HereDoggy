@@ -59,6 +59,11 @@
   display: inline-block;
 }
 
+.doglist-link {
+  text-decoration: none;
+  color: black;
+}
+
 .doglist-img-placeholder {
   background: #ccc;
 }

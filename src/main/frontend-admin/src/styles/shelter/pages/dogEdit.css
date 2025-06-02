@@ -1,0 +1,124 @@
+.dogedit-container {
+  max-width: 430px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 18px #e3e3e3;
+  padding: 28px 22px 22px 22px;
+  box-sizing: border-box;
+}
+
+.dogedit-container h2 {
+  margin-bottom: 18px;
+  color: #1a623b;
+  font-size: 1.35rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.dogedit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.dogedit-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dogedit-row-checkbox {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.dogedit-form label {
+  color: #25613e;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.dogedit-form input[type="text"],
+.dogedit-form input[type="number"],
+.dogedit-form input[type="file"],
+.dogedit-form select {
+  border: 1.5px solid #e1eae1;
+  border-radius: 7px;
+  font-size: 1rem;
+  padding: 8px 12px;
+  outline: none;
+  background: #f8fbf7;
+  color: #27472a;
+  transition: border 0.14s;
+}
+
+.dogedit-form input:focus,
+.dogedit-form select:focus {
+  border: 1.5px solid #1a623b;
+}
+
+.dogedit-form input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+}
+
+.dogedit-img-preview-row {
+  display: flex;
+  gap: 10px;
+  margin: 7px 0 14px 0;
+}
+
+.dogedit-img-preview {
+  width: 66px;
+  height: 66px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e3e3e3;
+  background: #e9ece9;
+}
+
+.dogedit-btn-row {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.dogedit-btn {
+  padding: 7px 20px;
+  border-radius: 5px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.14s, color 0.14s;
+}
+
+.dogedit-btn.submit {
+  background: #23a156;
+  color: #fff;
+}
+.dogedit-btn.submit:disabled {
+  background: #b1dfbc;
+}
+
+.dogedit-btn.cancel {
+  background: #f4f4f4;
+  color: #3a3a3a;
+}
+
+.dogedit-loading, .dogedit-error {
+  text-align: center;
+  font-size: 1.13rem;
+  color: #888;
+  margin: 32px 0;
+}
+
+/* 반응형 */
+@media (max-width: 500px) {
+  .dogedit-container { padding: 12px 2vw 12px 2vw; }
+  .dogedit-img-preview { width: 48px; height: 48px; }
+}

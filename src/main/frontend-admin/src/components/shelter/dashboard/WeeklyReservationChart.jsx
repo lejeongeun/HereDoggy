@@ -13,7 +13,7 @@ const data = [
 
 function WeeklyReservationChart() {
   return (
-    <div className="dashboard-widget" style={{ maxWidth: 400 }}>
+    <div className="dashboard-widget">
       <div className="chart-title">주간 예약 현황</div>
       <ResponsiveContainer width="100%" height={230}>
         <BarChart data={data}>

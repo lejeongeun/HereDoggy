@@ -80,6 +80,4 @@ public class DogController {
         return ResponseEntity.ok(Map.of("message", "정보가 삭제 되었습니다."));
     }
 
-
-
 }

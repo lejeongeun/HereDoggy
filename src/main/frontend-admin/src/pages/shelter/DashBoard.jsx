@@ -5,25 +5,24 @@ import AnimalRankingTable from "../../components/shelter/dashboard/AnimalRanking
 import '../../styles/shelter/main/dashBoard.css';
 
 function DashBoard() {
-    return(
+    return (
         <div className="dashboard-main-bg">
             <div className="dashboard-cards-row">
-                <DashboardCards/>
+                <DashboardCards />
             </div>
-            <div className="dashboard-widget" style={{ marginBottom: 32 }}>
-                <NoticeBoard/>
+            <div className="dashboard-widget">
+                <NoticeBoard />
             </div>
             <div className="dashboard-widgets-row">
-                <div style={{ maxWidth: 600 }}>
+                <div>
                     <WeeklyReservationChart />
                 </div>
-                <div style={{ maxWidth: 600 }}>
+                <div>
                     <AnimalRankingTable />
                 </div>
             </div>
         </div>
-    )
+    );
 }
-
 
 export default DashBoard;
