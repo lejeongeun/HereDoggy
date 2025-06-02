@@ -1,4 +1,4 @@
-package org.project.heredoggy.user.posts.freePost.dto;
+package org.project.heredoggy.shelter.noticePost.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +7,8 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class FreePostRequestDTO {
+public class ShelterNoticePostEditRequestDTO {
     private String title;
     private String content;
+    private List<Long> deleteImageIds;
 }

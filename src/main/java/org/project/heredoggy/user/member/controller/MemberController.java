@@ -3,6 +3,7 @@ package org.project.heredoggy.user.member.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.security.CustomUserDetails;
+import org.project.heredoggy.user.fcm.service.FcmTokenService;
 import org.project.heredoggy.user.member.dto.request.MemberEditRequestDTO;
 import org.project.heredoggy.user.member.dto.response.MemberDetailResponseDTO;
 import org.project.heredoggy.user.member.service.MemberService;
@@ -19,9 +20,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
 public class MemberController {
-
     private final MemberService memberService;
     private final MemberReservationService memberReservationService;
+    private final FcmTokenService fcmTokenService;
 
     @GetMapping("/profile")
     public ResponseEntity<MemberDetailResponseDTO> getMyDetail(@AuthenticationPrincipal CustomUserDetails userDetails) {
@@ -37,6 +38,7 @@ public class MemberController {
 
     @DeleteMapping("/removal")
     public ResponseEntity<Map<String, String>> remove(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        fcmTokenService.deleteByMember(userDetails.getMember());
         memberService.remove(userDetails);
         return ResponseEntity.ok(Map.of("message", "회원 탈퇴 성공"));
     }
@@ -61,5 +63,12 @@ public class MemberController {
                                                                        @AuthenticationPrincipal CustomUserDetails userDetails){
         memberReservationService.cancelRequestReservation(userDetails, reservationsId);
         return ResponseEntity.ok(Map.of("message", "예약 취소 요청이 전송되었습니다."));
+    }
+
+    @PatchMapping("/me/notification-enabled")
+    public ResponseEntity<Map<String,String>> updateNotificationSetting(@RequestParam boolean enabled,
+                                                          @AuthenticationPrincipal CustomUserDetails userDetails) {
+        memberService.updateNotificationSetting(userDetails, enabled);
+        return ResponseEntity.ok(Map.of("message", enabled ? "알림 수신 설정: ON" : "알림 수신 설정: OFF"));
     }
 }

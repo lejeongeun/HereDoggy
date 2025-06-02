@@ -1,14 +1,19 @@
 package org.project.heredoggy.user.posts.freePost.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.security.CustomUserDetails;
+import org.project.heredoggy.user.posts.freePost.dto.FreePostEditRequestDTO;
 import org.project.heredoggy.user.posts.freePost.dto.FreePostRequestDTO;
 import org.project.heredoggy.user.posts.freePost.dto.FreePostResponseDTO;
 import org.project.heredoggy.user.posts.freePost.service.FreePostService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -18,20 +23,39 @@ import java.util.Map;
 @RequestMapping("/api/members/free-posts")
 public class FreePostController {
     private final FreePostService freePostService;
+    private final ObjectMapper objectMapper;
 
-    @PostMapping
-    public ResponseEntity<Map<String, String>> createFreePost(@Valid @RequestBody FreePostRequestDTO request,
-                                                              @AuthenticationPrincipal CustomUserDetails userDetails) {
-        freePostService.createFreePost(request, userDetails);
-        return ResponseEntity.ok(Map.of("message", "자유게시판 생성 완료"));
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Map<String, String>> createFreePost(
+            @Valid @RequestPart("info") String infoJson,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        try {
+            FreePostRequestDTO request = objectMapper.readValue(infoJson, FreePostRequestDTO.class);
+            freePostService.createFreePost(request, userDetails, images);
+            return ResponseEntity.ok(Map.of("message", "자유게시판 생성 완료"));
+        } catch (JsonProcessingException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", "JSON 파싱 실패", "error", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(Map.of("message", "서버오류", "error", e.getMessage()));
+        }
     }
 
-    @PutMapping("/{post_id}")
-    public ResponseEntity<Map<String, String>> editFreePost(@PathVariable("post_id") Long postId,
-                                                            @Valid @RequestBody FreePostRequestDTO request,
-                                                            @AuthenticationPrincipal CustomUserDetails userDetails) {
-        freePostService.editFreePost(postId, request, userDetails);
-        return ResponseEntity.ok(Map.of("message", "자유게시판 수정 완료"));
+    @PutMapping(value = "/{post_id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Map<String, String>> editFreePost(
+            @PathVariable("post_id") Long postId,
+            @RequestPart("info") String infoJson,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        try {
+            FreePostEditRequestDTO request = objectMapper.readValue(infoJson, FreePostEditRequestDTO.class);
+            freePostService.editFreePost(postId, request, userDetails, images);
+            return ResponseEntity.ok(Map.of("message", "자유게시판 수정 완료"));
+        } catch (JsonProcessingException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", "JSON 파싱 실패", "error", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(Map.of("message", "서버오류", "error", e.getMessage()));
+        }
     }
 
     @DeleteMapping("/{post_id}")

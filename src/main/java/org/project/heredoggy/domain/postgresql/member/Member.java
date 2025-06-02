@@ -2,6 +2,7 @@ package org.project.heredoggy.domain.postgresql.member;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.project.heredoggy.domain.postgresql.fcm.FcmToken;
 import org.project.heredoggy.domain.postgresql.notice.NoticePost;
 import org.project.heredoggy.domain.postgresql.post.free.FreePost;
 import org.project.heredoggy.domain.postgresql.post.like.Like;
@@ -73,6 +74,9 @@ public class Member {
 
     @OneToOne(mappedBy = "shelterAdmin")
     private Shelter shelter;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FcmToken> fcmTokens = new ArrayList<>();
 
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FreePost> freePosts = new ArrayList<>();

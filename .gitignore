@@ -28,6 +28,8 @@ out/
 
 /src/main/resources/application.yml
 
+/src/main/resources/firebase/*.json
+
 /uploads/
 
 ### NetBeans ###

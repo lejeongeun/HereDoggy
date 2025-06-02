@@ -1,6 +1,7 @@
 package org.project.heredoggy.image;
 
 import lombok.RequiredArgsConstructor;
+import org.project.heredoggy.domain.postgresql.comment.PostType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -70,6 +71,23 @@ public class ImageService {
         file.transferTo(savePath);
 
         return "/uploads/shelters/" + shelterId + "/shelter-images/" + fileName;
+    }
+
+    public String savePostImage(MultipartFile image, PostType postType, Long postId) throws IOException {
+        String fileName = UUID.randomUUID() + "-" + image.getOriginalFilename();
+
+        File folder = Paths.get(
+                getAbsoluteUploadDir(),
+                postType.name().toLowerCase() + "-posts",  // 예: free, review, missing
+                String.valueOf(postId)
+        ).toFile();
+
+        if (!folder.exists()) folder.mkdirs();
+
+        File savePath = new File(folder, fileName);
+        image.transferTo(savePath);
+
+        return "/uploads/" + postType.name().toLowerCase() + "-posts/" + postId + "/" + fileName;
     }
 
 
