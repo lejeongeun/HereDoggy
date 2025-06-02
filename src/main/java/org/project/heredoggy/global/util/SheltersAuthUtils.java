@@ -25,6 +25,7 @@ public class SheltersAuthUtils {
 
         return shelter;
     }
+
     public static Shelter validateShelterAccess(CustomUserDetails userDetails, Long sheltersId){
         Shelter shelter = getValidMember(userDetails).getShelter();
 
