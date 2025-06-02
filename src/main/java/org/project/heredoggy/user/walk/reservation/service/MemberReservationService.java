@@ -15,6 +15,7 @@ import org.project.heredoggy.domain.postgresql.walk.walkOption.WalkOptionReposit
 import org.project.heredoggy.global.error.ErrorMessages;
 import org.project.heredoggy.global.exception.BadRequestException;
 import org.project.heredoggy.global.exception.NotFoundException;
+import org.project.heredoggy.global.notification.ShelterSseNotificationFactory;
 import org.project.heredoggy.global.util.AuthUtils;
 import org.project.heredoggy.global.util.TimeUtil;
 import org.project.heredoggy.security.CustomUserDetails;
@@ -36,6 +37,7 @@ public class MemberReservationService {
     private final ReservationRepository reservationRepository;
     private final WalkOptionRepository walkOptionRepository;
     private final DogRepository dogRepository;
+    private final ShelterSseNotificationFactory sseNotificationFactory;
 
     public List<DogResponseDTO> getAllReservationDog() {
         return dogRepository.findAll().stream()
@@ -80,6 +82,13 @@ public class MemberReservationService {
                 .build();
 
         reservationRepository.save(reservation);
+
+        sseNotificationFactory.notifyWalkReservation(
+                walkOption.getShelter().getShelterAdmin(),
+                walkOption.getDog().getName(),
+                member.getNickname(),
+                reservation.getId()
+        );
 
     }
 
@@ -129,6 +138,13 @@ public class MemberReservationService {
 
         reservation.setStatus(WalkReservationStatus.CANCELED_REQUEST);
         reservationRepository.save(reservation);
+
+        sseNotificationFactory.notifyWalkReservationCanceled(
+                reservation.getShelter().getShelterAdmin(),
+                reservation.getDog().getName(),
+                member.getName(),
+                reservation.getId()
+        );
     }
 
     public void validateDuplicateReservation(Member member, WalkOption walkOption){

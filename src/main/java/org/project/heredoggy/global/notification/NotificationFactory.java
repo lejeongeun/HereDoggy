@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.notification.NotificationType;
 import org.project.heredoggy.domain.postgresql.notification.ReferenceType;
+import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
 import org.project.heredoggy.user.notification.service.NotificationService;
 import org.springframework.stereotype.Component;
 
@@ -49,6 +50,8 @@ public class NotificationFactory {
             );
         }
     }
+
+
 
 
 }
