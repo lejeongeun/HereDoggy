@@ -92,7 +92,7 @@ function DogList() {
               </td>
               <td>{dog.gender === "MALE" ? "수컷" : dog.gender === "FEMALE" ? "암컷" : dog.gender}</td>
               <td>{dog.age}살</td>
-              <td>{dog.status}</td>
+              <td>{dog.status === "AVAILABLE" ? "예약가능" : dog.status === "RESERVED" ? "예약완료" : dog.status === "ADOPTED" ? "입양완료" : dog.status}</td>
             </tr>
           ))}
         </tbody>

@@ -96,7 +96,7 @@ function DogDetail() {
           <div className="dogdetail-info-col">
             <div className="dogdetail-info-row">
               <span>상태</span>
-              <span>{dog.status}</span>
+              <span>{dog.status === "AVAILABLE" ? "예약가능" : dog.status === "RESERVED" ? "예약완료" : dog.status === "ADOPTED" ? "입양완료" : dog.status}</span>
             </div>
             <div className="dogdetail-info-row">
               <span>발견장소</span>

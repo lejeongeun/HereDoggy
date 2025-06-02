@@ -52,7 +52,8 @@ public class ShelterAuthController {
                 return ResponseEntity.ok(
                         Map.of(
                                 "message", "보호소 관리자 로그인 성공",
-                                "role", userRole.name()
+                                "role", userRole.name(),
+                                "shelterId", userDetails.getMember().getShelter().getId()
                         )
                 );
             } else {

@@ -250,8 +250,8 @@ function DogEdit() {
               required
             >
               <option value="">선택</option>
-              <option value="AVAILABLE">분양대기</option>
-              <option value="RESERVED">예약중</option>
+              <option value="AVAILABLE">예약가능</option>
+              <option value="RESERVED">예약완료</option>
               <option value="ADOPTED">입양완료</option>
             </select>
           </div>

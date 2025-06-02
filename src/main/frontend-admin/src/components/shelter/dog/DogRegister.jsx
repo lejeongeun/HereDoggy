@@ -1,7 +1,6 @@
 import { useState } from "react";
 import '../../../styles/shelter/pages/dogRegister.css';
 import api from "../../../api/shelter/api";
-import getDogs from "../../../api/shelter/dog";
 import { useNavigate } from "react-router-dom";
 
 function DogRegister() {
@@ -190,8 +189,8 @@ function DogRegister() {
               required
             >
               <option value="">선택</option>
-              <option value="AVAILABLE">분양대기</option>
-              <option value="RESERVED">예약중</option>
+              <option value="AVAILABLE">예약가능</option>
+              <option value="RESERVED">예약완료</option>
               <option value="ADOPTED">입양완료</option>
             </select>
           </div>

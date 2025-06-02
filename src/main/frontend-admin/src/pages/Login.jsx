@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/login.css";
 import { shelterLogin } from "../api/shelter/auth";
-import { getShelterProfile } from "../api/shelter/shelter";
 import { Link } from "react-router-dom";
 
 function Login() {
@@ -15,25 +14,12 @@ function Login() {
 
     try {
       const response = await shelterLogin(useremail, password);
-      const { nextAction, message, role } = response.data;
+      const { nextAction, message, role, shelterId } = response.data;
 
       alert(message || "로그인 성공");
 
-      // 로그인 성공 후 별도 프로필 조회해서 shelters_id 저장
-      if (role === "SHELTER_ADMIN") {
-        try {
-          const shelterRes = await getShelterProfile();
-          const shelters_id = shelterRes.data?.id;
-          console.log("shelters_id from profile:", shelterRes.data?.id);
-
-          if (shelters_id) {
-            localStorage.setItem("shelters_id", shelters_id);
-          }
-        } catch (err) {
-          console.error("보호소 프로필 조회 실패:", err);
-          alert("보호소 정보 조회에 실패했습니다.");
-          // 필요시 로그아웃 처리나 다른 조치 가능
-        }
+      if (role === "SHELTER_ADMIN" && shelterId) {
+        localStorage.setItem("shelters_id", shelterId);
       }
 
       setTimeout(() => {
