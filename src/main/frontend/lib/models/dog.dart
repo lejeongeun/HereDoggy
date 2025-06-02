@@ -1,4 +1,5 @@
 class Dog {
+  final int id;
   final String name;
   final int age;
   final String gender;
@@ -10,6 +11,7 @@ class Dog {
   final String shelterName;
 
   Dog({
+    required this.id,
     required this.name,
     required this.age,
     required this.gender,
@@ -23,6 +25,7 @@ class Dog {
 
   factory Dog.fromJson(Map<String, dynamic> json) {
     return Dog(
+      id: json['id'] is int ? json['id'] : int.parse(json['id'].toString()),
       name: json['name'] as String,
       age: json['age'] as int,
       gender: json['gender'] as String,
@@ -37,6 +40,7 @@ class Dog {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'name': name,
       'age': age,
       'gender': gender,

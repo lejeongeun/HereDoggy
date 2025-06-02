@@ -11,6 +11,7 @@ import 'pages/notification/notification_page.dart';
 import 'pages/community/free_post_write_page.dart';
 import 'pages/community/free_post_detail_page.dart';
 import 'pages/community/free_post_edit_page.dart';
+import 'pages/walk/dog_detail_page.dart';
 import 'utils/theme.dart';
 import 'utils/constants.dart';
 import 'providers/user_provider.dart';
@@ -59,6 +60,16 @@ class MyApp extends StatelessWidget {
         '/free-post-write': (context) => const FreePostWritePage(),
       },
       onGenerateRoute: (settings) {
+        if (settings.name == '/dog-detail') {
+          final args = settings.arguments as Map<String, dynamic>?;
+          final dogIdRaw = args?['dogId'];
+          final dogId = dogIdRaw is int ? dogIdRaw : int.parse(dogIdRaw.toString());
+          if (dogId != null) {
+            return MaterialPageRoute(
+              builder: (context) => DogDetailPage(dogId: dogId),
+            );
+          }
+        }
         if (settings.name != null && settings.name!.startsWith('/free-post-detail/')) {
           final idStr = settings.name!.split('/').last;
           final postId = int.tryParse(idStr);

@@ -72,7 +72,9 @@ class _WalkReservationPageState extends State<WalkReservationPage> {
             itemBuilder: (context, index) {
               final dog = dogProvider.dogs[index];
               return DogCard(
-                imageUrl: dog.imagesUrls.isNotEmpty ? dog.imagesUrls.first : '',
+                imageUrl: dog.imagesUrls.isNotEmpty
+                  ? 'http://10.0.2.2:8080${dog.imagesUrls.first}'
+                  : '',
                 name: dog.name,
                 age: dog.age,
                 gender: dog.gender == 'MALE' ? '수컷' : '암컷',
@@ -80,8 +82,8 @@ class _WalkReservationPageState extends State<WalkReservationPage> {
                 foundLocation: dog.foundLocation,
                 shelterName: dog.shelterName,
                 onTap: () {
-                  // 상세 페이지로 이동 (id만 전달)
-                  Navigator.pushNamed(context, '/dog-detail', arguments: {'dogId': dog.name}); // TODO: dogId로 변경 필요
+                  // 상세 페이지로 이동 (dogId를 넘김)
+                  Navigator.pushNamed(context, '/dog-detail', arguments: {'dogId': dog.id});
                 },
               );
             },
