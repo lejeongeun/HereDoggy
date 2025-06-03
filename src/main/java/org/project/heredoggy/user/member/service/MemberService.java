@@ -1,5 +1,8 @@
 package org.project.heredoggy.user.member.service;
 
+import org.project.heredoggy.domain.postgresql.post.free.FreePostRepository;
+import org.project.heredoggy.domain.postgresql.post.missing.MissingPostRepository;
+import org.project.heredoggy.domain.postgresql.post.review.ReviewPostRepository;
 import org.project.heredoggy.global.exception.ConflictException;
 import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.util.AuthUtils;
@@ -10,13 +13,21 @@ import org.project.heredoggy.domain.postgresql.member.MemberRepository;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.user.member.dto.request.MemberEditRequestDTO;
 import org.project.heredoggy.user.member.dto.response.MemberDetailResponseDTO;
+import org.project.heredoggy.user.member.dto.response.MyPostResponseDTO;
+import org.project.heredoggy.user.member.dto.response.PostDTO;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
     private final RedisService redisService;
+    private final FreePostRepository freePostRepository;
+    private final MissingPostRepository missingPostRepository;
+    private final ReviewPostRepository reviewPostRepository;
+
     public MemberDetailResponseDTO getMemberDetails(CustomUserDetails userDetails) {
         Long memberId = AuthUtils.getValidMember(userDetails).getId();
         Member member = memberRepository.findById(memberId)
@@ -66,5 +77,27 @@ public class MemberService {
     public void updateNotificationSetting(CustomUserDetails userDetails, boolean isEnabled) {
         Member member = AuthUtils.getValidMember(userDetails);
         member.setIsNotificationEnabled(isEnabled);
+    }
+
+    public MyPostResponseDTO getMyFreePostList(CustomUserDetails userDetails) {
+        Member member = AuthUtils.getValidMember(userDetails);
+
+        List<PostDTO> freePosts = freePostRepository.findByWriterOrderByCreatedAtDesc(member).stream()
+                .map(PostDTO::fromFreePost)
+                .toList();
+
+        List<PostDTO> reviewPosts = reviewPostRepository.findByWriterOrderByCreatedAtDesc(member).stream()
+                .map(PostDTO::fromReviewPost)
+                .toList();
+
+        List<PostDTO> missingPosts = missingPostRepository.findByWriterOrderByCreatedAtDesc(member).stream()
+                .map(PostDTO::fromMissingPost)
+                .toList();
+
+        return MyPostResponseDTO.builder()
+                .freePosts(freePosts)
+                .reviewPosts(reviewPosts)
+                .missingPosts(missingPosts)
+                .build();
     }
 }

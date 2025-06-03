@@ -2,6 +2,7 @@ package org.project.heredoggy.domain.postgresql.shelter.shelter;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.project.heredoggy.domain.postgresql.adoption.Adoption;
 import org.project.heredoggy.domain.postgresql.dog.Dog;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.walk.walkOption.WalkOption;
@@ -66,4 +67,7 @@ public class Shelter {
 
     @OneToMany(mappedBy = "shelter", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WalkOption> walkOptions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "shelter", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Adoption> adoptions = new ArrayList<>();
 }

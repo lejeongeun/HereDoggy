@@ -49,24 +49,20 @@ public class DogService {
         dog = dogRepository.save(dog);
 
         // 이미지 파일이 존재할 경우 -> dogImage 생성 + 연관관계 설정
-        if (imageFiles != null && !imageFiles.isEmpty()){
-            for (MultipartFile file : imageFiles){
-                String imageUrl = imageService.saveImage(file, shelter.getId(), dog.getId()); // 이미지 저장 후 url 반환
-                DogImage image = DogImage.builder()
-                        .imageUrl(imageUrl)
-                        .build();
-                dog.addImage(image);
-            }
-        }
+        saveImages(imageFiles, dog, shelter);
     }
 
-    public List<DogResponseDTO> getDogsByShelter(Long sheltersId) {
-        return dogRepository.findByShelterId(sheltersId).stream()
+    public List<DogResponseDTO> getDogsByShelter(CustomUserDetails userDetails, Long sheltersId) {
+        Shelter shelter = SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
+
+        return dogRepository.findByShelterId(shelter.getId()).stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
-    public DogResponseDTO getDetailsDog(Long dogsId) {
+    public DogResponseDTO getDetailsDog(CustomUserDetails userDetails, Long sheltersId, Long dogsId) {
+        Shelter shelter = SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
+
         Dog dog = dogRepository.findById(dogsId).orElseThrow(
                 ()-> new NotFoundException(ErrorMessages.DOG_NOT_FOUND)
         );
@@ -108,23 +104,14 @@ public class DogService {
             }
             dog.getImages().removeAll(imagesToRemove);
         }
-        // 새 이미지 생성
-        if (newImages != null && !newImages.isEmpty()){
-            for (MultipartFile file : newImages) {
-                String imageUrl = imageService.saveImage(file, shelter.getId(), dog.getId());
-                DogImage newImage = DogImage.builder()
-                        .imageUrl(imageUrl)
-                        .build();
-                dog.addImage(newImage);
-            }
-        }
+        saveImages(newImages, dog, shelter);
 
 
         dogRepository.save(dog);
 
     }
     @Transactional
-    public void delete(Long sheltersId, CustomUserDetails userDetails, Long dogsId) {
+    public void delete(CustomUserDetails userDetails, Long sheltersId, Long dogsId) {
         Shelter shelter = SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
 
         // 로그인 검증
@@ -185,5 +172,16 @@ public class DogService {
                         .collect(Collectors.toList()))
                 .shelterName(dog.getShelter().getName())
                 .build();
+    }
+    private void saveImages (List<MultipartFile> imageFiles, Dog dog, Shelter shelter) throws IOException{
+        if (imageFiles != null && !imageFiles.isEmpty()){
+            for (MultipartFile file : imageFiles){
+                String imageUrl = imageService.saveImage(file, shelter.getId(), dog.getId()); // 이미지 저장 후 url 반환
+                DogImage image = DogImage.builder()
+                        .imageUrl(imageUrl)
+                        .build();
+                dog.addImage(image);
+            }
+        }
     }
 }
