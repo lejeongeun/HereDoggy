@@ -9,6 +9,7 @@ import org.project.heredoggy.domain.postgresql.post.like.Like;
 import org.project.heredoggy.domain.postgresql.post.missing.MissingPost;
 import org.project.heredoggy.domain.postgresql.post.review.ReviewPost;
 import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
+import org.project.heredoggy.domain.postgresql.walk.reservation.Reservation;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -74,6 +75,9 @@ public class Member {
 
     @OneToOne(mappedBy = "shelterAdmin")
     private Shelter shelter;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reservation> reservations = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FcmToken> fcmTokens = new ArrayList<>();
