@@ -20,7 +20,7 @@ class MyPage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.black),
-            onPressed: () {}, // 추후 구현
+            onPressed: () {}, // 세팅기능 추후 구현
           ),
         ],
         iconTheme: const IconThemeData(color: Colors.black),
@@ -69,6 +69,32 @@ class MyPage extends StatelessWidget {
                   ),
                 ),
                 const Divider(thickness: 1, height: 1),
+                // 5개 탭 UI 추가
+                ListTile(
+                  title: Text('산책', style: TextStyle(fontSize: 16)),
+                  trailing: Icon(Icons.chevron_right),
+                  onTap: null,
+                ),
+                ListTile(
+                  title: Text('내 게시글', style: TextStyle(fontSize: 16)),
+                  trailing: Icon(Icons.chevron_right),
+                  onTap: null,
+                ),
+                ListTile(
+                  title: Text('입양신청 내역', style: TextStyle(fontSize: 16)),
+                  trailing: Icon(Icons.chevron_right),
+                  onTap: null,
+                ),
+                ListTile(
+                  title: Text('후원내역', style: TextStyle(fontSize: 16)),
+                  trailing: Icon(Icons.chevron_right),
+                  onTap: null,
+                ),
+                ListTile(
+                  title: Text('문의내역', style: TextStyle(fontSize: 16)),
+                  trailing: Icon(Icons.chevron_right),
+                  onTap: null,
+                ),
                 const Expanded(child: SizedBox()),
               ],
             )
