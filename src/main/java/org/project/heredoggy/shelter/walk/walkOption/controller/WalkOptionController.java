@@ -41,9 +41,6 @@ public class WalkOptionController {
                                                       @PathVariable("options_id") Long optionsId){
         walkOptionService.delete(userDetails, sheltersId, dogsId, optionsId);
         return ResponseEntity.ok(Map.of("message", "예약 옵션이 삭제되었습니다."));
-
     }
-
-
 
 }

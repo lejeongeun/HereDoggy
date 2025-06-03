@@ -3,7 +3,10 @@ package org.project.heredoggy.user.walk.reservation.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.dog.dto.DogResponseDTO;
+import org.project.heredoggy.domain.postgresql.walk.walkOption.WalkOption;
 import org.project.heredoggy.security.CustomUserDetails;
+import org.project.heredoggy.shelter.walk.walkOption.dto.WalkOptionRequestDTO;
+import org.project.heredoggy.shelter.walk.walkOption.dto.WalkOptionResponseDTO;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationRequestDTO;
 import org.project.heredoggy.user.walk.reservation.service.MemberReservationService;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +32,17 @@ public class MemberReservationController {
     public ResponseEntity<DogResponseDTO> getDetailsReservationsDog(@PathVariable("dogs_id") Long dogsId){
         DogResponseDTO dogDetails = memberReservationService.getDetailsReservationsDog(dogsId);
         return ResponseEntity.ok(dogDetails);
+    }
+    @GetMapping("/{dogs_id}/walk-options")
+    public ResponseEntity<List<WalkOptionResponseDTO>> getDogWalkOptions(@PathVariable("dogs_id") Long dogsId){
+        List<WalkOptionResponseDTO> walkOptionList = memberReservationService.getDogWalkOptions(dogsId);
+        return ResponseEntity.ok(walkOptionList);
+    }
+    @GetMapping("/{dogs_id}/walk-options/{walk_options_id}")
+    public ResponseEntity<WalkOptionResponseDTO> getDogDetailsWalkOptions(@PathVariable("dogs_id") Long dogsId,
+                                                                          @PathVariable("walk_options_id") Long walkOptionsId){
+        WalkOptionResponseDTO walkOptionDetails = memberReservationService.getDogDetailsWalkOptions(dogsId, walkOptionsId);
+        return ResponseEntity.ok(walkOptionDetails);
     }
 
     @PostMapping("/{dogs_id}/walk-options/{walk_options_id}/reservationsRequest")

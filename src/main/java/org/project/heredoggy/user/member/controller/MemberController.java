@@ -65,7 +65,6 @@ public class MemberController {
                                                                               @PathVariable("reservations_id") Long reservationsId){
         MemberReservationResponseDTO reservationDetails = memberReservationService.getDetailsReservation(userDetails, reservationsId);
         return ResponseEntity.ok(reservationDetails);
-
     }
 
     @PutMapping("/reservations/{reservations_id}/cancel-request")
