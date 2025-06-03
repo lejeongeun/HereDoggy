@@ -17,6 +17,8 @@ import org.project.heredoggy.global.exception.BadRequestException;
 import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.util.TimeUtil;
 import org.project.heredoggy.security.CustomUserDetails;
+import org.project.heredoggy.shelter.walk.walkOption.dto.WalkOptionRequestDTO;
+import org.project.heredoggy.shelter.walk.walkOption.dto.WalkOptionResponseDTO;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationRequestDTO;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationResponseDTO;
 import org.springframework.stereotype.Service;
@@ -47,6 +49,23 @@ public class MemberReservationService {
 
         return toDogDto(dog);
     }
+
+    public List<WalkOptionResponseDTO> getDogWalkOptions(Long dogsId) {
+        Dog dog = dogRepository.findById(dogsId)
+                .orElseThrow(()-> new BadRequestException(ErrorMessages.DOG_NOT_FOUND));
+        return walkOptionRepository.findAll().stream()
+                .map(this::toWalkOptionsDto)
+                .collect(Collectors.toList());
+    }
+    public WalkOptionResponseDTO getDogDetailsWalkOptions(Long dogsId, Long walkOptionsId) {
+        Dog dog = dogRepository.findById(dogsId)
+                .orElseThrow(()-> new BadRequestException(ErrorMessages.DOG_NOT_FOUND));
+        WalkOption walkOption = walkOptionRepository.findById(walkOptionsId)
+                .orElseThrow(()-> new BadRequestException(ErrorMessages.OPTIONS_INFO_NOT_FOUND));
+
+        return toWalkOptionsDto(walkOption);
+    }
+
 
     // 예약 신청
     @Transactional
@@ -128,6 +147,7 @@ public class MemberReservationService {
         reservationRepository.save(reservation);
     }
 
+
     public void validateDuplicateReservation(Member member, WalkOption walkOption){
         boolean exists = reservationRepository.existsByMemberAndWalkOptionAndStatusIn(
                 member, walkOption, List.of(WalkReservationStatus.PENDING, WalkReservationStatus.APPROVED));
@@ -150,6 +170,15 @@ public class MemberReservationService {
                 .imagesUrls(dog.getImages().stream()
                         .map(DogImage::getImageUrl)
                         .collect(Collectors.toList()))
+                .build();
+    }
+    public WalkOptionResponseDTO toWalkOptionsDto(WalkOption walkOption){
+        return WalkOptionResponseDTO.builder()
+                .id(walkOption.getId())
+                .date(walkOption.getDate())
+                .startTime(walkOption.getStartTime())
+                .endTime(walkOption.getEndTime())
+                .dogsId(walkOption.getDog().getId())
                 .build();
     }
 
@@ -176,4 +205,7 @@ public class MemberReservationService {
             throw new BadRequestException("해당 강아지는 오후 예약이 이미 존재합니다.");
         }
     }
+
+
+
 }
