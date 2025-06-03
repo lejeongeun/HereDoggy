@@ -51,6 +51,22 @@ public class NotificationFactory {
         }
     }
 
+    public void notifyWalkResult(Member receiver, boolean isApproved, Long reservationId) {
+        String title = isApproved ? "🚶 산책 예약 승인" : "🚫 산책 예약 거절";
+        String content = isApproved
+                ? "보호소에서 회원님의 산책 예약을 승인했어요! 마이페이지에서 확인해보세요."
+                : "보호소에서 회원님의 산책 예약을 거절했어요. 다른 일정을 시도해보세요.";
+
+        notificationService.sendNotification(
+                receiver,
+                NotificationType.WALK_RESULT,
+                ReferenceType.WALK_RESERVATION,
+                reservationId,
+                title,
+                content
+        );
+    }
+
 
 
 

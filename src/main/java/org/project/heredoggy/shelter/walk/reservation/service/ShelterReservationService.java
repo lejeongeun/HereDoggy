@@ -6,6 +6,7 @@ import org.project.heredoggy.domain.postgresql.walk.reservation.ReservationRepos
 import org.project.heredoggy.domain.postgresql.walk.reservation.WalkReservationStatus;
 import org.project.heredoggy.global.error.ErrorMessages;
 import org.project.heredoggy.global.exception.NotFoundException;
+import org.project.heredoggy.global.notification.NotificationFactory;
 import org.project.heredoggy.global.util.SheltersAuthUtils;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.shelter.walk.reservation.dto.ShelterReservationResponseDto;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ShelterReservationService {
     private final ReservationRepository reservationRepository;
+    private final NotificationFactory notificationFactory;
 
     public List<ShelterReservationResponseDto> getAllReservations(CustomUserDetails userDetails, Long sheltersId) {
         validateShelters(userDetails, sheltersId);
@@ -46,6 +48,12 @@ public class ShelterReservationService {
         reservation.setDecisionAt(LocalDateTime.now()); // 관리자 승인 시간
 
         reservationRepository.save(reservation);
+
+        notificationFactory.notifyWalkResult(
+                reservation.getMember(),
+                true,
+                reservation.getId()
+        );
     }
 
     public void rejectReservations(CustomUserDetails userDetails, Long sheltersId, Long reservationsId) {
@@ -57,6 +65,12 @@ public class ShelterReservationService {
         reservation.setDecisionAt(LocalDateTime.now());
 
         reservationRepository.save(reservation);
+
+        notificationFactory.notifyWalkResult(
+                reservation.getMember(),
+                false,
+                reservation.getId()
+        );
     }
 
     public void cancelReservations(CustomUserDetails userDetails, Long sheltersId, Long reservationsId) {
