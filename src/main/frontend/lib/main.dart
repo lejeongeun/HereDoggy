@@ -12,12 +12,17 @@ import 'pages/community/free_post_write_page.dart';
 import 'pages/community/free_post_detail_page.dart';
 import 'pages/community/free_post_edit_page.dart';
 import 'pages/walk/dog_detail_page.dart';
+import 'pages/map_test/map_test_page.dart';
+import 'pages/map_test/map_test_page2.dart';
 import 'utils/theme.dart';
 import 'utils/constants.dart';
 import 'providers/user_provider.dart';
 import 'providers/dog_provider.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await NaverMapSdk.instance.initialize(clientId: 'hg3aq1mpce');
   runApp(
     MultiProvider(
       providers: [
@@ -58,6 +63,8 @@ class MyApp extends StatelessWidget {
         AppConstants.adoptionRoute: (context) => const AdoptionPage(),
         AppConstants.notificationRoute: (context) => const NotificationPage(),
         '/free-post-write': (context) => const FreePostWritePage(),
+        AppConstants.mapTestRoute: (context) => const MapTestPage(),
+        AppConstants.mapTest2Route: (context) => const MapTestPage2(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/dog-detail') {

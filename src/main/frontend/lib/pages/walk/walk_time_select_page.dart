@@ -20,6 +20,17 @@ class _WalkTimeSelectPageState extends State<WalkTimeSelectPage> {
   bool _loading = true;
   String? _error;
 
+  // 고정 시간대
+  final List<Map<String, String>> _morningSlots = [
+    {'start': '10:00', 'end': '11:00'},
+    {'start': '11:00', 'end': '12:00'},
+  ];
+  final List<Map<String, String>> _afternoonSlots = [
+    {'start': '14:00', 'end': '15:00'},
+    {'start': '15:00', 'end': '16:00'},
+    {'start': '16:00', 'end': '17:00'},
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -36,7 +47,6 @@ class _WalkTimeSelectPageState extends State<WalkTimeSelectPage> {
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
         _walkOptions = data.map((e) => WalkOption.fromJson(e)).toList();
-        // 기본 선택 날짜: walkOption이 있는 첫 날짜
         if (_walkOptions.isNotEmpty) {
           _selectedDay = _walkOptions.first.date;
         }
@@ -53,8 +63,16 @@ class _WalkTimeSelectPageState extends State<WalkTimeSelectPage> {
 
   List<DateTime> get _availableDates => _walkOptions.map((e) => e.date).toSet().toList();
 
-  List<WalkOption> get _optionsForSelectedDay =>
-      _walkOptions.where((e) => _selectedDay != null && isSameDay(e.date, _selectedDay!)).toList();
+  // 선택된 날짜의 walkOption을 시간대별로 매핑
+  Map<String, WalkOption?> _walkOptionMapForSelectedDay() {
+    final options = _walkOptions.where((e) => _selectedDay != null && isSameDay(e.date, _selectedDay!)).toList();
+    Map<String, WalkOption?> map = {};
+    for (var slot in [..._morningSlots, ..._afternoonSlots]) {
+      final found = options.where((o) => o.startTime == slot['start'] && o.endTime == slot['end']);
+      map['${slot['start']}-${slot['end']}'] = found.isNotEmpty ? found.first : null;
+    }
+    return map;
+  }
 
   Future<void> _requestReservation() async {
     if (_selectedWalkOptionId == null) return;
@@ -87,6 +105,7 @@ class _WalkTimeSelectPageState extends State<WalkTimeSelectPage> {
 
   @override
   Widget build(BuildContext context) {
+    final walkOptionMap = _walkOptionMapForSelectedDay();
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -149,32 +168,77 @@ class _WalkTimeSelectPageState extends State<WalkTimeSelectPage> {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        // 시간대 선택
-                        if (_optionsForSelectedDay.isNotEmpty)
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ..._optionsForSelectedDay.map((option) {
-                                final isSelected = _selectedWalkOptionId == option.walkOptionId;
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 8.0),
-                                  child: ChoiceChip(
-                                    label: Text('${option.startTime}~${option.endTime}'),
-                                    selected: isSelected,
-                                    onSelected: (selected) {
-                                      setState(() {
-                                        _selectedWalkOptionId = selected ? option.walkOptionId : null;
-                                      });
-                                    },
-                                    backgroundColor: Colors.grey[200],
-                                    selectedColor: Colors.green[100],
-                                  ),
-                                );
-                              }).toList(),
-                            ],
-                          )
-                        else
-                          const Text('이 날짜에는 예약 가능한 시간이 없습니다.'),
+                        // 오전 시간대
+                        const Text('오전', style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: _morningSlots.map((slot) {
+                            final key = '${slot['start']}-${slot['end']}';
+                            final option = walkOptionMap[key];
+                            final isEnabled = option != null;
+                            final isSelected = isEnabled && _selectedWalkOptionId == option!.walkOptionId;
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 12.0),
+                              child: ElevatedButton(
+                                onPressed: isEnabled
+                                    ? () {
+                                        setState(() {
+                                          _selectedWalkOptionId = option!.walkOptionId;
+                                        });
+                                      }
+                                    : null,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: isSelected
+                                      ? Colors.green[300]
+                                      : isEnabled
+                                          ? Colors.white
+                                          : Colors.grey[300],
+                                  foregroundColor: Colors.black,
+                                  side: const BorderSide(color: Colors.black26),
+                                  elevation: 0,
+                                ),
+                                child: Text('${slot['start']} - ${slot['end']}'),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        const SizedBox(height: 16),
+                        // 오후 시간대
+                        const Text('오후', style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: _afternoonSlots.map((slot) {
+                            final key = '${slot['start']}-${slot['end']}';
+                            final option = walkOptionMap[key];
+                            final isEnabled = option != null;
+                            final isSelected = isEnabled && _selectedWalkOptionId == option!.walkOptionId;
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 12.0),
+                              child: ElevatedButton(
+                                onPressed: isEnabled
+                                    ? () {
+                                        setState(() {
+                                          _selectedWalkOptionId = option!.walkOptionId;
+                                        });
+                                      }
+                                    : null,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: isSelected
+                                      ? Colors.green[300]
+                                      : isEnabled
+                                          ? Colors.white
+                                          : Colors.grey[300],
+                                  foregroundColor: Colors.black,
+                                  side: const BorderSide(color: Colors.black26),
+                                  elevation: 0,
+                                ),
+                                child: Text('${slot['start']} - ${slot['end']}'),
+                              ),
+                            );
+                          }).toList(),
+                        ),
                         const SizedBox(height: 24),
                         // 메모 입력란
                         TextField(

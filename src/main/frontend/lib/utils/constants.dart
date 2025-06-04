@@ -14,6 +14,8 @@ class AppConstants {
   static const String shelterListRoute = '/shelter';
   static const String walkReservationRoute = '/walk';
   static const String myPageRoute = '/mypage';
+  static const String mapTestRoute = '/map-test';
+  static const String mapTest2Route = '/map-test2';
 
   // 로컬 스토리지 키
   static const String tokenKey = 'auth_token';
