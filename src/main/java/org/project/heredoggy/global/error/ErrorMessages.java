@@ -19,7 +19,7 @@ public class ErrorMessages {
     public static final String ALREADY_ADOPTION_REQUEST = "이미 해당 강아지에 입양 신청을 하셨습니다.";
     public static final String ADOPTION_NOT_FOUND = "입양 신청 정보가 존재하지 않습니다.";
     public static final String ADOPTION_FORBIDDEN = "본인의 입양 신청만 조회할 수 있습니다.";
-    public static final String SHELTER_ADOPTIONS_NOT_AUTH = "해당 입양 신청에 접근할 권한이 없습니다.";
+    public static final String SHELTERS_NOT_FOUND = "보호소의 정보가 존재하지 않습니다.";
 
 
 }

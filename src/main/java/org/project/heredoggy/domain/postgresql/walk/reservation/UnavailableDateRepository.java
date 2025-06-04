@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface UnavailableDateRepository extends JpaRepository<UnavailableDate, Long> {
     List<UnavailableDate> findByDogId(Long dogId);
-    boolean existsByDogAndDate(Dog dog, LocalDate date);
+    boolean existsByDogIdAndDate(Long dogId, LocalDate date);
 }

@@ -14,7 +14,6 @@ import java.time.LocalTime;
 @Builder
 public class MemberReservationResponseDTO {
     private Long id;
-    private Long walkOptionsId;
 
     private LocalDate date;
     private LocalTime startTime;
@@ -28,8 +27,6 @@ public class MemberReservationResponseDTO {
     private String shelterName;
 
     private WalkReservationStatus walkReservationStatus;
-
-
     private LocalDateTime createAt;
 
 }
