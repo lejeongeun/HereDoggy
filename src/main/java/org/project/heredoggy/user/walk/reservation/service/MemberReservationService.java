@@ -7,15 +7,14 @@ import org.project.heredoggy.domain.postgresql.dog.Dog;
 import org.project.heredoggy.domain.postgresql.dog.DogImage;
 import org.project.heredoggy.domain.postgresql.dog.DogRepository;
 import org.project.heredoggy.domain.postgresql.member.Member;
-import org.project.heredoggy.domain.postgresql.walk.reservation.Reservation;
-import org.project.heredoggy.domain.postgresql.walk.reservation.ReservationRepository;
-import org.project.heredoggy.domain.postgresql.walk.reservation.WalkReservationStatus;
-import org.project.heredoggy.domain.postgresql.walk.walkOption.WalkOption;
-import org.project.heredoggy.domain.postgresql.walk.walkOption.WalkOptionRepository;
+import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
+import org.project.heredoggy.domain.postgresql.walk.reservation.*;
 import org.project.heredoggy.global.error.ErrorMessages;
 import org.project.heredoggy.global.exception.BadRequestException;
 import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.notification.ShelterSseNotificationFactory;
+import org.project.heredoggy.global.util.AuthUtils;
+
 import org.project.heredoggy.global.util.TimeUtil;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationRequestDTO;
@@ -23,6 +22,7 @@ import org.project.heredoggy.user.walk.reservation.dto.MemberReservationResponse
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -32,9 +32,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MemberReservationService {
     private final ReservationRepository reservationRepository;
-    private final WalkOptionRepository walkOptionRepository;
     private final DogRepository dogRepository;
     private final ShelterSseNotificationFactory sseNotificationFactory;
+    private final UnavailableDateRepository unavailableDateRepository;
+
 
     public List<DogResponseDTO> getAllReservationDog() {
         return dogRepository.findAll().stream()
@@ -43,7 +44,6 @@ public class MemberReservationService {
     }
 
     public DogResponseDTO getDetailsReservationsDog(Long dogsId) {
-
         Dog dog = dogRepository.findById(dogsId)
                 .orElseThrow(()-> new BadRequestException(ErrorMessages.DOG_NOT_FOUND));
 
@@ -52,28 +52,37 @@ public class MemberReservationService {
 
     // 예약 신청
     @Transactional
-    public void requestReservation(CustomUserDetails userDetails, Long dogsId, Long walkOptionsId, MemberReservationRequestDTO requestDTO) {
+    public void requestReservation(CustomUserDetails userDetails, Long dogsId, MemberReservationRequestDTO requestDTO) {
         Member member = userDetails.getMember();
 
-        WalkOption walkOption = walkOptionRepository.findById(walkOptionsId)
-                .orElseThrow(()-> new NotFoundException(ErrorMessages.OPTIONS_INFO_NOT_FOUND));
+        Dog dog = dogRepository.findById(dogsId)
+                .orElseThrow(()-> new NotFoundException(ErrorMessages.DOG_NOT_FOUND));
+        Shelter shelter = dog.getShelter();
 
-        if (!walkOption.getDog().getId().equals(dogsId)){
-            throw new InvalidRequestStateException("해당 강아지에 대한 산책 옵션이 아닙니다.");
+        LocalDate date = requestDTO.getDate();
+        LocalTime startTime = requestDTO.getStartTime();
+
+        // 예약 불가일 체크
+        if (unavailableDateRepository.existsByDogIdAndDate(dog.getId(), date)){
+            throw new InvalidRequestStateException("해당 날짜는 예약할 수 없습니다.");
         }
-        // 중복 예약 체크
-        validateDuplicateReservation(member, walkOption);
-        validateTimeConflict(walkOption);
+
+        // 시간 중복 체크
+        if (reservationRepository.existsByDogAndDateAndStartTime(dog, date, startTime)){
+            throw new InvalidRequestStateException("이미 해당 시간에 예약이 존재합니다.");
+        }
+
+        // 오전 오후 예약 제한 체크
+        validateTimeConflict(dog, date, startTime);
 
         Reservation reservation = Reservation.builder()
-                .date(walkOption.getDate())
-                .startTime(walkOption.getStartTime())
-                .endTime(walkOption.getEndTime())
+                .date(date)
+                .startTime(startTime)
+                .endTime(requestDTO.getEndTime())
                 .note(requestDTO.getNote())
                 .member(member)
-                .dog(walkOption.getDog())
-                .shelter(walkOption.getShelter())
-                .walkOption(walkOption)
+                .dog(dog)
+                .shelter(shelter)
                 .status(WalkReservationStatus.PENDING)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -81,8 +90,8 @@ public class MemberReservationService {
         reservationRepository.save(reservation);
 
         sseNotificationFactory.notifyWalkReservation(
-                walkOption.getShelter().getShelterAdmin(),
-                walkOption.getDog().getName(),
+                shelter.getShelterAdmin(),
+                dog.getName(),
                 member.getNickname(),
                 reservation.getId()
         );
@@ -111,7 +120,6 @@ public class MemberReservationService {
     public MemberReservationResponseDTO toDto(Reservation reservation){
         return MemberReservationResponseDTO.builder()
                 .id(reservation.getId())
-                .walkOptionsId(reservation.getWalkOption().getId())
                 .date(reservation.getDate())
                 .startTime(reservation.getStartTime())
                 .endTime(reservation.getEndTime())
@@ -144,15 +152,6 @@ public class MemberReservationService {
         );
     }
 
-    public void validateDuplicateReservation(Member member, WalkOption walkOption){
-        boolean exists = reservationRepository.existsByMemberAndWalkOptionAndStatusIn(
-                member, walkOption, List.of(WalkReservationStatus.PENDING, WalkReservationStatus.APPROVED));
-
-        if (exists){
-            throw new BadRequestException("이미 해당 시간에 예약이 존재합니다.");
-        }
-    }
-
     public DogResponseDTO toDogDto(Dog dog){
         return DogResponseDTO.builder()
                 .id(dog.getId())
@@ -169,10 +168,10 @@ public class MemberReservationService {
                 .build();
     }
 
-    private void validateTimeConflict(WalkOption newOptions){
+    private void validateTimeConflict(Dog dog, LocalDate date, LocalTime newStartTime){
         List<Reservation> existingReservations = reservationRepository.findByDogIdAndDateAndStatusIn(
-                newOptions.getDog().getId(),
-                newOptions.getDate(),
+                dog.getId(),
+                date,
                 List.of(WalkReservationStatus.PENDING, WalkReservationStatus.APPROVED)
         );
 
@@ -184,12 +183,25 @@ public class MemberReservationService {
             if (TimeUtil.isMorning(start)) hasMorning = true;
             if (TimeUtil.isAfternoon(start)) hasAfternoon = true;
         }
-        if (TimeUtil.isMorning(newOptions.getStartTime()) && hasMorning){
+
+        if (TimeUtil.isMorning(newStartTime) && hasMorning){
             throw new BadRequestException(" 해당 강아지는 오전 예약이 이미 존재합니다.");
         }
 
-        if (TimeUtil.isAfternoon(newOptions.getStartTime()) && hasAfternoon){
+        // 오전/오후가 아닌 시간일 경우 예외 처리 (예: 12:30 ~ 13:30 같은 시간)
+        if (TimeUtil.isAfternoon(newStartTime) && hasAfternoon){
             throw new BadRequestException("해당 강아지는 오후 예약이 이미 존재합니다.");
         }
+    }
+
+    public List<LocalDate> getUnavailableList(CustomUserDetails userDetails, Long dogsId) {
+        Member member = AuthUtils.getValidMember(userDetails);
+
+        Dog dog = dogRepository.findById(dogsId)
+                .orElseThrow(()-> new NotFoundException(ErrorMessages.DOG_NOT_FOUND));
+
+        return unavailableDateRepository.findByDogId(dog.getId()).stream()
+                .map(UnavailableDate::getDate)
+                .collect(Collectors.toList());
     }
 }

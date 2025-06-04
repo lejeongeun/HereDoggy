@@ -2,7 +2,6 @@ package org.project.heredoggy.user.member.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.checkerframework.checker.units.qual.A;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.user.adoption.dto.MemberAdoptionResponseDTO;
 import org.project.heredoggy.user.adoption.service.MemberAdoptionService;
@@ -66,7 +65,6 @@ public class MemberController {
                                                                               @PathVariable("reservations_id") Long reservationsId){
         MemberReservationResponseDTO reservationDetails = memberReservationService.getDetailsReservation(userDetails, reservationsId);
         return ResponseEntity.ok(reservationDetails);
-
     }
 
     @PutMapping("/reservations/{reservations_id}/cancel-request")

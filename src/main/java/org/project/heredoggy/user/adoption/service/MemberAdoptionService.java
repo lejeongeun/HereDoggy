@@ -121,6 +121,4 @@ public class MemberAdoptionService {
                 .status(adoption.getStatus())
                 .build();
     }
-
-
 }
