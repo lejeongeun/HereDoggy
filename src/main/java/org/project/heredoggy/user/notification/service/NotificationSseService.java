@@ -22,7 +22,7 @@ public class NotificationSseService {
 
     private final NotificationRepository notificationRepository;
 
-    // [1] 한 유저가 여러 탭에서 접속할 수 있도록 List<SseEmitter>
+    // 한 유저가 여러 탭에서 접속할 수 있도록 List<SseEmitter>
     private final Map<Long, List<SseEmitter>> emitterMap = new ConcurrentHashMap<>();
 
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -30,6 +30,7 @@ public class NotificationSseService {
     public SseEmitter connect(Long memberId) {
         SseEmitter emitter = new SseEmitter(60 * 60 * 1000L); // 1시간 유지
 
+        //사용자 id별로 emitter들을 담아두는 저장소
         emitterMap.computeIfAbsent(memberId, k -> new CopyOnWriteArrayList<>()).add(emitter);
 
         emitter.onCompletion(() -> removeEmitter(memberId, emitter));
@@ -82,11 +83,13 @@ public class NotificationSseService {
         notificationRepository.save(notification);
     }
 
+    @Transactional
     public void sendNotification(Member receiver, String title, String content, NotificationType type,
                                  ReferenceType referenceType, Long referenceId) {
 
         saveNotification(receiver, title, content, type, referenceType, referenceId);
 
+        //해당 사람이 연결했던 emitter들을 가져옴
         List<SseEmitter> emitters = emitterMap.get(receiver.getId());
         if (emitters != null && !emitters.isEmpty()) {
             Map<String, Object> payload = Map.of(
@@ -109,4 +112,6 @@ public class NotificationSseService {
             }
         }
     }
+
+
 }
