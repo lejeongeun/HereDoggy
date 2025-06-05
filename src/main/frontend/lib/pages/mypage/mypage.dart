@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 import '../../providers/user_provider.dart';
 import '../../components/auth/login_form.dart';
 import '../home/home_page.dart';
+import '../../services/auth_service.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class MyPage extends StatelessWidget {
   const MyPage({Key? key}) : super(key: key);
@@ -73,7 +76,14 @@ class MyPage extends StatelessWidget {
                 ListTile(
                   title: Text('산책', style: TextStyle(fontSize: 16)),
                   trailing: Icon(Icons.chevron_right),
-                  onTap: null,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const WalkTabPage(),
+                      ),
+                    );
+                  },
                 ),
                 ListTile(
                   title: Text('내 게시글', style: TextStyle(fontSize: 16)),
@@ -296,6 +306,140 @@ class ProfileEditPage extends StatelessWidget {
             const SizedBox(height: 24),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// 예약내역 임시 페이지 추가
+class WalkReservationHistoryPage extends StatefulWidget {
+  const WalkReservationHistoryPage({Key? key}) : super(key: key);
+
+  @override
+  State<WalkReservationHistoryPage> createState() => _WalkReservationHistoryPageState();
+}
+
+class _WalkReservationHistoryPageState extends State<WalkReservationHistoryPage> {
+  final _authService = AuthService();
+  bool _isLoading = true;
+  String? _error;
+  List<dynamic> _reservations = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchReservations();
+  }
+
+  Future<void> _fetchReservations() async {
+    try {
+      final token = await _authService.getAccessToken();
+      final response = await http.get(
+        Uri.parse('http://10.0.2.2:8080/api/members/reservations'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      if (response.statusCode == 200) {
+        setState(() {
+          _reservations = json.decode(utf8.decode(response.bodyBytes));
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _error = '예약 내역을 불러오지 못했습니다.';
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _error = '네트워크 오류가 발생했습니다.';
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('예약 내역'),
+      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _error != null
+              ? Center(child: Text(_error!))
+              : _reservations.isEmpty
+                  ? const Center(child: Text('예약 내역이 없습니다.'))
+                  : ListView.separated(
+                      itemCount: _reservations.length,
+                      separatorBuilder: (context, index) => const Divider(height: 1),
+                      itemBuilder: (context, index) {
+                        final r = _reservations[index];
+                        return ListTile(
+                          title: Text('${r['dogName'] ?? '-'} (${r['shelterName'] ?? '-'})'),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('날짜: ${r['date'] ?? '-'}'),
+                              Text('시간: ${r['startTime'] ?? '-'} ~ ${r['endTime'] ?? '-'}'),
+                              Text('상태: ${_statusToKor(r['walkReservationStatus'])}'),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+    );
+  }
+
+  String _statusToKor(String? status) {
+    switch (status) {
+      case 'PENDING':
+        return '대기중';
+      case 'APPROVED':
+        return '승인됨';
+      case 'REJECTED':
+        return '거절됨';
+      case 'CANCELED':
+        return '취소됨';
+      case 'CANCELED_REQUEST':
+        return '취소 요청';
+      case 'COMPLETED':
+        return '완료';
+      default:
+        return '-';
+    }
+  }
+}
+
+// 산책 관련 탭 모음 페이지
+class WalkTabPage extends StatelessWidget {
+  const WalkTabPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('산책'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: Column(
+        children: [
+          const Divider(thickness: 1, height: 1),
+          ListTile(
+            title: const Text('예약 내역'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const WalkReservationHistoryPage(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

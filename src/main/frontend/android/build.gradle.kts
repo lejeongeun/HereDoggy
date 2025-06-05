@@ -2,7 +2,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        maven("https://repository.map.naver.com/archive/maven")
+        // maven("https://repository.map.naver.com/archive/maven")
     }
 }
 

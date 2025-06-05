@@ -115,22 +115,10 @@ class HomePage extends StatelessWidget {
                     ),
                   ],
                 ),
-                // 지도 테스트 버튼 추가
+                // 지도 테스트 버튼
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: green,
-                        side: BorderSide(color: green),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      ),
-                      icon: const Icon(Icons.map_outlined, size: 18),
-                      label: const Text('지도 테스트', style: TextStyle(fontWeight: FontWeight.w500)),
-                      onPressed: () => Navigator.pushNamed(context, AppConstants.mapTestRoute),
-                    ),
-                    const SizedBox(width: 8),
                     OutlinedButton.icon(
                       style: OutlinedButton.styleFrom(
                         foregroundColor: green,
