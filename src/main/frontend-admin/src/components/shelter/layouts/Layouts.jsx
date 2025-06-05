@@ -11,6 +11,9 @@ function Layouts() {
         width: sidebarWidth,
         position: 'fixed',
         height: '100vh',
+        zIndex: 100,
+        background: '#fff',
+        borderRight: '2px solid #e9eee6'
       }}>
         <Sidebar />
       </div>
@@ -24,10 +27,14 @@ function Layouts() {
       }}>
         {/* 고정 탑바 */}
         <div style={{
-          position: 'sticky',
+          position: 'fixed',
           top: 0,
+          right: 0,
+          left: sidebarWidth,
           background: '#fff',
-          zIndex: 1
+          zIndex: 90,
+          borderBottom: '2px solid #e9eee6',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
         }}>
           <Topbar />
         </div>
@@ -35,8 +42,10 @@ function Layouts() {
         <main style={{
           flex: 1,
           overflowY: 'auto',
-          padding: 24,
-          background: '#fafbfa'
+          padding: '88px 24px 24px 24px',
+          background: '#fafbfa',
+          position: 'relative',
+          zIndex: 1
         }}>
           <Outlet />
         </main>

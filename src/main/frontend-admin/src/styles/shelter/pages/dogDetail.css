@@ -1,12 +1,9 @@
 .dogdetail-container {
+  padding: 24px;
   max-width: 1200px;
-  margin: 42px auto 60px auto;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 6px 24px #e5ebf4cc;
-  padding: 48px 50px 36px 50px;
-  border: 2px solid #ecf1f5;
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
 .dogdetail-back-btn {
@@ -163,4 +160,19 @@
     flex-direction: column;
     gap: 10px;
   }
+}
+
+.dogdetail-images-slider {
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 1;
+}
+
+.dogdetail-images-slider .swiper {
+  z-index: 1;
+}
+
+.dogdetail-images-slider .swiper-button-next,
+.dogdetail-images-slider .swiper-button-prev {
+  z-index: 2;
 }

@@ -21,9 +21,12 @@ function DogList() {
       setError(null); // 초기화
       try {
         const response = await getDogs(sheltersId);
+        console.log("API 응답:", response.data);
+        console.log("첫 번째 강아지 데이터 전체 구조:", JSON.stringify(response.data[0], null, 2)); // 전체 구조 확인
 
         // API가 배열을 바로 반환하면
         const dogsData = Array.isArray(response.data) ? response.data : response.data.dogs || [];
+        console.log("처리된 강아지 데이터:", dogsData); // 처리된 데이터 확인
 
         setDogs(dogsData);
       } catch (err) {
@@ -75,11 +78,12 @@ function DogList() {
           {dogs.map((dog) => (
             <tr key={dog.id}>
               <td>
-                {dog.imagesUrls && dog.imagesUrls.length > 0 ? (
+                {dog.images && dog.images.length > 0 ? (
                   <img
-                    src={BACKEND_URL + dog.imagesUrls[0]}
+                    src={BACKEND_URL + dog.images[0].imageUrl}
                     alt={dog.name}
                     className="doglist-img"
+                    data-image-id={dog.images[0].id}
                   />
                 ) : (
                   <div className="doglist-img doglist-img-placeholder" />

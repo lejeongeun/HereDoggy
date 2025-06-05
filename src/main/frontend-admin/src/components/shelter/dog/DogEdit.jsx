@@ -33,7 +33,7 @@ function DogEdit() {
       setLoading(true);
       try {
         const { data } = await api.get(`/api/shelters/${shelters_id}/dogs/${id}`);
-        console.log(data);
+        console.log("Dog data:", data);
         setForm({
           name: data.name || "",
           age: data.age || "",
@@ -44,8 +44,18 @@ function DogEdit() {
           foundLocation: data.foundLocation || "",
           status: data.status || "AVAILABLE",
         });
-        setOriginImages(data.images || []); // [{id, url}]
+        // 이미지 데이터 구조 확인 및 설정
+        if (data.images && Array.isArray(data.images)) {
+          const formattedImages = data.images.map(img => ({
+            id: img.id,
+            url: img.imageUrl || img.url
+          }));
+          setOriginImages(formattedImages);
+        } else {
+          setOriginImages([]);
+        }
       } catch (err) {
+        console.error("Error fetching dog:", err);
         alert("유기견 정보를 불러올 수 없습니다.");
         navigate(-1);
       } finally {
@@ -140,32 +150,102 @@ function DogEdit() {
 
   return (
     <form className="dog-detail-card" onSubmit={handleSubmit}>
-      <div className="dog-img-row">
+      <div className="dog-img-row" style={{ 
+        display: 'flex', 
+        gap: '16px', 
+        marginBottom: '24px', 
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
         {/* 기존 이미지 먼저 (삭제 가능) */}
         {originImages.map((img, i) => (
-          <div className="dog-img-thumb" key={`origin-${img.id}`}>
-            <img src={BACKEND_URL + img.url} alt={`origin${i}`} />
+          <div className="dog-img-thumb" key={`origin-${img.id}`} style={{
+            position: 'relative',
+            width: '200px',
+            height: '200px',
+            borderRadius: '16px',
+            overflow: 'hidden',
+            background: '#f5f5f5',
+            border: '2px dashed #ddd',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <img 
+              src={img.url.startsWith('http') ? img.url : BACKEND_URL + img.url} 
+              alt={`origin${i}`} 
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
             <button
               type="button"
               className="dog-img-del-btn"
               onClick={() => handleOriginDelete(i)}
               tabIndex={-1}
               title="삭제"
-            >x</button>
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
           </div>
         ))}
         {/* 새로 추가될 이미지 미리보기 */}
         {previewUrls.map(
           (url, i) =>
             url && (
-              <div className="dog-img-thumb" key={`new-${i}`}>
-                <img src={url} alt={`preview${i}`} />
+              <div className="dog-img-thumb" key={`new-${i}`} style={{
+                position: 'relative',
+                width: '200px',
+                height: '200px',
+                borderRadius: '16px',
+                overflow: 'hidden',
+                background: '#f5f5f5',
+                border: '2px dashed #ddd',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <img 
+                  src={url} 
+                  alt={`preview${i}`} 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+                <button
+                  type="button"
+                  className="dog-img-del-btn"
+                  onClick={() => {
+                    setImages(prev => prev.filter((_, idx) => idx !== i));
+                    setPreviewUrls(prev => {
+                      const newUrls = [...prev];
+                      newUrls[i] = null;
+                      return newUrls;
+                    });
+                  }}
+                  tabIndex={-1}
+                  title="삭제"
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
               </div>
             )
         )}
         {/* 5칸 고정 (빈칸 표시) */}
         {Array(5 - (originImages.length + images.length)).fill(0).map((_, i) => (
-          <div className="dog-img-thumb" key={`empty-${i}`} />
+          <div className="dog-img-thumb" key={`empty-${i}`} style={{
+            position: 'relative',
+            width: '200px',
+            height: '200px',
+            borderRadius: '16px',
+            overflow: 'hidden',
+            background: '#f5f5f5',
+            border: '2px dashed #ddd',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }} />
         ))}
       </div>
       <div style={{ marginBottom: "16px" }}>

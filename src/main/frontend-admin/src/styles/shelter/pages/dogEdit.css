@@ -11,46 +11,105 @@
 
 .dog-img-row {
   display: flex;
-  gap: 26px;
-  margin-bottom: 36px;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
 .dog-img-thumb {
-  width: 360px;
+  position: relative;
+  width: 200px;
   height: 200px;
-  border-radius: 18px;
-  background: #e3e7eb;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #f5f5f5;
+  border: 2px dashed #ddd;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  position: relative;
-  border: 2.3px solid #dbe6f2;
 }
+
 .dog-img-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
+
+/* 이미지 삭제 버튼 */
 .dog-img-del-btn {
   position: absolute;
   top: 8px;
   right: 8px;
-  width: 30px;
-  height: 30px;
-  background: #fff;
-  color: #df5656;
-  border: none;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  font-size: 1.3rem;
-  font-weight: 700;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
   cursor: pointer;
-  box-shadow: 0 2px 6px #f3cfcf60;
-  transition: background 0.15s;
-  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
 }
+
 .dog-img-del-btn:hover {
-  background: #fbeaea;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+/* 이미지 업로드 버튼 */
+.dog-img-upload-btn {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 16px;
+  border: 2px dashed #ddd;
+  background: #f5f5f5;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.dog-img-upload-btn:hover {
+  border-color: #666;
+  background: #eee;
+}
+
+.dog-img-upload-btn input[type="file"] {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.dog-img-upload-btn svg {
+  width: 32px;
+  height: 32px;
+  color: #666;
+}
+
+.dog-img-upload-btn span {
+  font-size: 14px;
+  color: #666;
+}
+
+/* 이미지 업로드 버튼 비활성화 */
+.dog-img-upload-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* 이미지 업로드 버튼 비활성화 시 호버 효과 제거 */
+.dog-img-upload-btn:disabled:hover {
+  border-color: #ddd;
+  background: #f5f5f5;
 }
 
 .dog-info-grid {

@@ -6,8 +6,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: relative;
-  z-index: 90;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
   padding: 0 32px;
   box-sizing: border-box;
 }
@@ -40,6 +42,7 @@
   position: relative;
   transition: background 0.14s, color 0.13s;
 }
+
 .notif-btn:hover,
 .notif-btn:focus {
   background: #e8f6ed;
@@ -69,7 +72,7 @@
   border: 2px solid #4AB071;
   border-radius: 9px;
   padding: 6px 18px;
-  font-weight: 00;
+  font-weight: 600;
   font-size: 1.08rem;
   cursor: pointer;
   margin-left: 7px;
@@ -78,6 +81,7 @@
   transition: background 0.15s, color 0.13s, border 0.14s;
   outline: none;
 }
+
 .mypage-btn:hover, .logout-btn:hover,
 .mypage-btn:focus, .logout-btn:focus {
   background: #e8f6ed;
