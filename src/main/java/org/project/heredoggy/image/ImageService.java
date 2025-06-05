@@ -55,6 +55,31 @@ public class ImageService {
     }
 
 
+    //기본 강아지 이미지 dog api 사용해서 받아오기
+    public String saveDogImageFromUrl(String imageUrl, Long shelterId, Long dogId) throws IOException {
+        // 파일명 생성
+        String fileName = UUID.randomUUID() + "-dog.jpg";
+
+        // 저장할 폴더
+        File folder = Paths.get(
+                getAbsoluteUploadDir(),
+                "shelters",
+                String.valueOf(shelterId),
+                "dogs",
+                String.valueOf(dogId)
+        ).toFile();
+
+        if (!folder.exists()) folder.mkdirs();
+
+        // 이미지 다운로드
+        Path savePath = new File(folder, fileName).toPath();
+        try (var in = new java.net.URL(imageUrl).openStream()) {
+            Files.copy(in, savePath);
+        }
+
+        return "/uploads/shelters/" + shelterId + "/dogs/" + dogId + "/" + fileName;
+    }
+
     //보호소 사진 저장
     public String saveShelterImage(MultipartFile file, Long shelterId) throws IOException {
         String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();

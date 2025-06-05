@@ -1,14 +1,19 @@
 package org.project.heredoggy.domain.postgresql.notification;
 
 public enum ReferenceType {
+    // 게시글
     FREE_POST,
     REVIEW_POST,
     MISSING_POST,
-    Notice_POST,
+    NOTICE_POST,        // 시스템 or 보호소 공지
+
+    // 댓글
     COMMENT,
-    MEMBER,
-    DOG,
-    ADOPTION_REQUEST,
+
+    // 신청/요청
     WALK_RESERVATION,
+
+    // 처리 결과
+    ADOPTION,
     SYSTEM_NOTICE
 }

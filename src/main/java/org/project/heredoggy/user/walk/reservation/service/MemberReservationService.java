@@ -13,7 +13,9 @@ import org.project.heredoggy.domain.postgresql.walk.reservation.*;
 import org.project.heredoggy.global.error.ErrorMessages;
 import org.project.heredoggy.global.exception.BadRequestException;
 import org.project.heredoggy.global.exception.NotFoundException;
+import org.project.heredoggy.global.notification.ShelterSseNotificationFactory;
 import org.project.heredoggy.global.util.AuthUtils;
+
 import org.project.heredoggy.global.util.TimeUtil;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationRequestDTO;
@@ -32,7 +34,9 @@ import java.util.stream.Collectors;
 public class MemberReservationService {
     private final ReservationRepository reservationRepository;
     private final DogRepository dogRepository;
+    private final ShelterSseNotificationFactory sseNotificationFactory;
     private final UnavailableDateRepository unavailableDateRepository;
+
 
     public List<DogResponseDTO> getAllReservationDog() {
         return dogRepository.findAll().stream()
@@ -86,6 +90,13 @@ public class MemberReservationService {
 
         reservationRepository.save(reservation);
 
+        sseNotificationFactory.notifyWalkReservation(
+                shelter.getShelterAdmin(),
+                dog.getName(),
+                member.getNickname(),
+                reservation.getId()
+        );
+
     }
 
     public List<MemberReservationResponseDTO> getAllReservation(CustomUserDetails userDetails) {
@@ -133,6 +144,13 @@ public class MemberReservationService {
 
         reservation.setStatus(WalkReservationStatus.CANCELED_REQUEST);
         reservationRepository.save(reservation);
+
+        sseNotificationFactory.notifyWalkReservationCanceled(
+                reservation.getShelter().getShelterAdmin(),
+                reservation.getDog().getName(),
+                member.getName(),
+                reservation.getId()
+        );
     }
 
     public DogResponseDTO toDogDto(Dog dog){

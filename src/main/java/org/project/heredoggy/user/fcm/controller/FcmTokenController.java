@@ -20,14 +20,15 @@ public class FcmTokenController {
 
     @PostMapping("/token")
     public ResponseEntity<Map<String, String>> saveToken(@RequestBody FcmTokenRequestDTO request,
-                                         @AuthenticationPrincipal CustomUserDetails userDetails) {
+                                                         @AuthenticationPrincipal CustomUserDetails userDetails) {
         fcmTokenService.saveOrUpdate(request.getToken(), AuthUtils.getValidMember(userDetails));
         return ResponseEntity.ok(Map.of("message", "fcm 토큰 등록 완료"));
     }
 
-    @DeleteMapping("/token")
-    public ResponseEntity<Map<String, String>> deleteToken(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        fcmTokenService.deleteByMember(AuthUtils.getValidMember(userDetails));
+    @DeleteMapping
+    public ResponseEntity<Map<String, String>> deleteToken(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                           @RequestParam("token") String token) {
+        fcmTokenService.deleteToken(token, userDetails.getMember());
         return ResponseEntity.ok(Map.of("message", "fcm 토큰 삭제 완료"));
     }
 }

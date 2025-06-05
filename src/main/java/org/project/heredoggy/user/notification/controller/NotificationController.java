@@ -41,7 +41,7 @@ public class NotificationController {
     // 개별 알림 읽음 처리
     @PatchMapping("/{id}/read")
     public ResponseEntity<Map<String, String>> markAsRead(@PathVariable("id") Long id,
-                                           @AuthenticationPrincipal CustomUserDetails userDetails) {
+                                                          @AuthenticationPrincipal CustomUserDetails userDetails) {
         notificationService.markAsRead(id, userDetails);
         return ResponseEntity.ok(Map.of("message", "개별 알림 읽음 처리 완료"));
     }
@@ -49,7 +49,7 @@ public class NotificationController {
     // 알림 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, String>> deleteNotification(@PathVariable("id") Long id,
-                                                   @AuthenticationPrincipal CustomUserDetails userDetails) {
+                                                                  @AuthenticationPrincipal CustomUserDetails userDetails) {
         notificationService.deleteNotification(id, userDetails);
         return ResponseEntity.ok(Map.of("message", "알림 삭제 완료"));
     }
