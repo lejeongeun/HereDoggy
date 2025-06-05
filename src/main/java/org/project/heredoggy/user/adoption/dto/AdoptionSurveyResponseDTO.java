@@ -1,6 +1,8 @@
 package org.project.heredoggy.user.adoption.dto;
 
 import lombok.*;
+import org.project.heredoggy.domain.postgresql.adoption.Adoption;
+import org.project.heredoggy.domain.postgresql.adoption.AdoptionSurvey;
 import org.project.heredoggy.domain.postgresql.adoption.FamilyAgreement;
 import java.time.LocalDateTime;
 
@@ -31,6 +33,26 @@ public class AdoptionSurveyResponseDTO {
     private Boolean agreeFee; // 입양 비용에 대한 동의 여부
 
     private LocalDateTime createdAt;
+
+    public static AdoptionSurveyResponseDTO surveyResponse(AdoptionSurvey survey){
+        return AdoptionSurveyResponseDTO.builder()
+                .id(survey.getId())
+                .adoption_id(survey.getAdoption().getId())
+                .hasPetExp(survey.getHasPetExp())
+                .petExpDetails(survey.getPetExpDetails())
+                .hasPetNow(survey.getHasPetNow())
+                .petNowDetail(survey.getPetNowDetail())
+                .family(survey.getFamily())
+                .familyAgreement(survey.getFamilyAgreement())
+                .reason(survey.getReason())
+                .sharePhoto(survey.getSharePhoto())
+                .commitEndOfLife(survey.getCommitEndOfLife())
+                .careAfterAdopt(survey.getCareAfterAdopt())
+                .agreeNeutering(survey.getAgreeNeutering())
+                .agreeFee(survey.getAgreeFee())
+                .createdAt(survey.getCreatedAt())
+                .build();
+    }
 
 
 }

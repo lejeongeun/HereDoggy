@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -31,12 +32,18 @@ public class MemberReservationController {
         return ResponseEntity.ok(dogDetails);
     }
 
-    @PostMapping("/{dogs_id}/walk-options/{walk_options_id}/reservationsRequest")
+    @GetMapping("/{dogs_id}/unavailable-dates")
+    public ResponseEntity<List<LocalDate>> getUnavailableList(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                              @PathVariable("dogs_id") Long dogsId) {
+        List<LocalDate> dates = memberReservationService.getUnavailableList(userDetails, dogsId);
+        return ResponseEntity.ok(dates);
+    }
+
+    @PostMapping("/{dogs_id}/reservationsRequest")
     public ResponseEntity<Map<String, String>> requestReservation(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                   @PathVariable("dogs_id") Long dogsId,
-                                                                  @PathVariable("walk_options_id") Long walkOptionsId,
                                                                   @Valid @RequestBody MemberReservationRequestDTO requestDTO) {
-        memberReservationService.requestReservation(userDetails, dogsId, walkOptionsId, requestDTO);
+        memberReservationService.requestReservation(userDetails, dogsId, requestDTO);
         return ResponseEntity.ok(Map.of("message", "산책 예약이 신청되었습니다."));
     }
 }

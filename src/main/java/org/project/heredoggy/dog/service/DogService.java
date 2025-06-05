@@ -1,10 +1,7 @@
 package org.project.heredoggy.dog.service;
 
 import lombok.RequiredArgsConstructor;
-import org.project.heredoggy.dog.dto.DogEditRequestDTO;
-import org.project.heredoggy.dog.dto.DogRequestDTO;
-import org.project.heredoggy.dog.dto.DogResponseDTO;
-import org.project.heredoggy.dog.dto.MainDogResponseDTO;
+import org.project.heredoggy.dog.dto.*;
 import org.project.heredoggy.global.error.ErrorMessages;
 import org.project.heredoggy.domain.postgresql.dog.Dog;
 import org.project.heredoggy.domain.postgresql.dog.DogImage;
@@ -151,8 +148,11 @@ public class DogService {
                 .isNeutered(dog.getIsNeutered())
                 .status(dog.getStatus())
                 .foundLocation(dog.getFoundLocation())
-                .imagesUrls(dog.getImages().stream()
-                        .map(DogImage::getImageUrl)
+                .images(dog.getImages().stream()
+                        .map(img -> DogImageResponseDTO.builder()
+                                .id(img.getId())
+                                .imageUrl(img.getImageUrl())
+                                .build())
                         .collect(Collectors.toList()))
                 .build();
     }
