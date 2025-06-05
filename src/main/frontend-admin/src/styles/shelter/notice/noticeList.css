@@ -1,7 +1,7 @@
 .notice-list-wrap {
-  max-width: 880px;
-  margin: 44px auto 0 auto;
-  padding: 0 18px 56px 18px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 10px;
   background: #fff;
   border-radius: 14px;
   box-shadow: 0 2px 12px rgba(24,76,36,0.08);

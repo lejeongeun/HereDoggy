@@ -1,0 +1,103 @@
+.walkregister-wrap {
+  width: 900px;
+  margin: 0 auto;
+}
+.walkregister-map {
+  width: 100%;
+  height: 400px;
+  min-height: 300px;
+}
+
+.walkregister-address-area {
+  margin: 18px 0;
+}
+
+.walkregister-label {
+  font-weight: 700;
+  color: #185a36;
+}
+
+.walkregister-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.walkregister-address-input {
+  flex: 1;
+  padding: 11px 12px;
+  border-radius: 9px;
+  border: 1.5px solid #c7d7cd;
+  font-size: 1.05rem;
+  background: #f8faf9;
+}
+
+.walkregister-search-btn {
+  background: #fff;
+  color: #4AB071;
+  border: 2px solid #4AB071;
+  border-radius: 7px;
+  padding: 0 16px;
+  font-weight: 700;
+  font-size: 1.01rem;
+  cursor: pointer;
+  height: 41px;
+}
+
+.walkregister-search-btn:hover,
+.walkregister-search-btn:focus {
+  background: #e8f6ed;
+  color: #357c4c;
+  border: 2px solid #357c4c;
+}
+
+.walkregister-zipcode {
+  color: #357c4c;
+  font-size: 0.98rem;
+  margin-top: 7px;
+}
+
+.walkregister-map {
+  width: 100%;
+  height: 500px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 18px #e5f4ec;
+}
+
+.walkregister-selected-address {
+  margin-top: 14px;
+  color: #185a36;
+  font-weight: 600;
+}
+.walkregister-path-info {
+  margin: 16px 0 4px 0;
+  font-size: 1.1rem;
+  color: #185a36;
+}
+
+.walkregister-btn-outline {
+  background: #fff;
+  color: #4AB071;
+  border: 2px solid #4AB071;
+  border-radius: 7px;
+  padding: 7px 20px;
+  font-weight: 600;
+  font-size: 1.01rem;
+  cursor: pointer;
+}
+
+.walkregister-btn-solid {
+  background: #4AB071;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 7px 20px;
+  font-weight: 600;
+  font-size: 1.01rem;
+  cursor: pointer;
+}
+
+.walkregister-btn-outline:hover, .walkregister-btn-solid:hover {
+  opacity: 0.85;
+}

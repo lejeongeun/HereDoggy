@@ -18,7 +18,8 @@ function Login() {
 
       alert(message || "로그인 성공");
 
-      if (role === "SHELTER_ADMIN" && shelterId) {
+      // 로그인 성공 후 shelterId 저장
+      if (role === "SHELTER_ADMIN") {
         localStorage.setItem("shelters_id", shelterId);
       }
 
@@ -52,7 +53,7 @@ function Login() {
     <div className="login-container">
       <form className="login-form" onSubmit={handleSubmit}>
         <h2 className="login-title">어서오개</h2>
-        <div className="form-group">
+        <div className="login-form-group">
           <label>아이디</label>
           <input
             type="text"
@@ -62,7 +63,7 @@ function Login() {
             placeholder="이메일 입력"
           />
         </div>
-        <div className="form-group">
+        <div className="login-form-group">
           <label>비밀번호</label>
           <input
             type="password"

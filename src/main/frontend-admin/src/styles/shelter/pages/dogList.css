@@ -1,6 +1,6 @@
 .doglist-container {
-  max-width: 900px;
-  margin: 32px auto;
+  width: 100%;
+  margin: 0 auto;
   background: #f8f8f8;
   padding: 24px 18px 32px 18px;
   border-radius: 14px;

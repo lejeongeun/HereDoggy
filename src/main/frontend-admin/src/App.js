@@ -5,10 +5,9 @@ import AdminHome from './pages/admin/AdminHome';
 import Layouts from './components/shelter/layouts/Layouts';
 import NoticeBoardList from './pages/shelter/NoticeList';
 import DashBoard from './pages/shelter/DashBoard';
-import WalkReservationManager from './pages/shelter/WalkReservationManager';
+import WalkReservation from './pages/shelter/WalkReservation';
 import DogRegister from './components/shelter/dog/DogRegister';
 import AdoptionManager from './pages/shelter/AdoptionManager';
-import RouteManager from './pages/shelter/RouteManager';
 import DonationManager from './pages/shelter/DonationManager';
 import MyPage from './pages/shelter/MyPage';
 import DogList from './pages/shelter/DogList';
@@ -18,6 +17,9 @@ import NoticeUpdate from './components/shelter/notice/NoticeUpdate';
 import ShelterRegister from './pages/user/ShelterRequest';
 import DogDetail from './components/shelter/dog/DogDetail';
 import DogEdit from './components/shelter/dog/DogEdit';
+import WalkList from './pages/shelter/WalkList';
+import WalkRegister from './components/shelter/walk/WalkRegister';
+import Test from './components/shelter/walk/Test';
 
 function App() {
   return (
@@ -32,14 +34,17 @@ function App() {
           <Route path="noticewrite" element={<NoticeWrite />} />
           <Route path="notice/detail/:id" element={<NoticeDetail />} />
           <Route path="notice/update/:id" element={<NoticeUpdate />} />
-          <Route path="walkreservationmanager" element={<WalkReservationManager />} />
+          <Route path="walkreservation" element={<WalkReservation />} />
           <Route path="dogregister" element={<DogRegister />} />
           <Route path="doglist" element={<DogList sheltersId={localStorage.getItem('shelters_id')} />} />
           <Route path="dog/:id" element={<DogDetail />} />
-           <Route path="/shelter/dogedit/:id" element={<DogEdit />} />
+          <Route path="/shelter/dogedit/:id" element={<DogEdit />} />
+
+          <Route path="/shelter/test" element={<Test />} />
 
           <Route path="adoptionmanager" element={<AdoptionManager />} />
-          <Route path="routemanager" element={<RouteManager />} />
+          <Route path="walklist" element={<WalkList />} />
+          <Route path="walkregister" element={<WalkRegister />} />
           <Route path="donationmanager" element={<DonationManager />} />
           <Route path="mypage" element={<MyPage />} />
         </Route>

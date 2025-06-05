@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import api from "../../../api/shelter/api";  // <--- axios 인스턴스 import
+import api from "../../../api/shelter/api";
+import WalkOption from "./WalkOption";
 import "../../../styles/shelter/pages/dogEdit.css";
 
 const BACKEND_URL = "http://localhost:8080";
 
 function DogEdit() {
   const { id } = useParams();
-  const shelters_id = '1'; // 실제로는 localStorage 등에서 동적으로!
+  const shelters_id = localStorage.getItem("shelters_id");
   const navigate = useNavigate();
 
+  const [originImages, setOriginImages] = useState([]); // [{id, url}]
+  const [deleteImageIds, setDeleteImageIds] = useState([]); // 삭제할 id(Long)[]
   const [images, setImages] = useState([]); // 새로 업로드한 파일들
   const [previewUrls, setPreviewUrls] = useState(Array(5).fill(null)); // 새 이미지 미리보기
-  const [originUrls, setOriginUrls] = useState([]); // 기존 이미지 URL (string[])
   const [form, setForm] = useState({
     name: "",
     age: "",
@@ -30,8 +32,8 @@ function DogEdit() {
     const fetchDog = async () => {
       setLoading(true);
       try {
-        // axios 직접 호출
         const { data } = await api.get(`/api/shelters/${shelters_id}/dogs/${id}`);
+        console.log(data);
         setForm({
           name: data.name || "",
           age: data.age || "",
@@ -42,7 +44,7 @@ function DogEdit() {
           foundLocation: data.foundLocation || "",
           status: data.status || "AVAILABLE",
         });
-        setOriginUrls(data.imagesUrls || []);
+        setOriginImages(data.images || []); // [{id, url}]
       } catch (err) {
         alert("유기견 정보를 불러올 수 없습니다.");
         navigate(-1);
@@ -58,26 +60,31 @@ function DogEdit() {
   const handleImageChange = (e) => {
     let files = Array.from(e.target.files);
     let newFiles = [...images, ...files];
-    if (originUrls.length + newFiles.length > 5) {
+    if (originImages.length + newFiles.length > 5) {
       alert("이미지는 최대 5장까지 등록할 수 있습니다.");
-      newFiles = newFiles.slice(0, 5 - originUrls.length);
+      newFiles = newFiles.slice(0, 5 - originImages.length);
+      files = newFiles.slice(images.length); // 새로 추가된 파일만
     }
     setImages(newFiles);
 
-    // 새로 올릴 이미지 미리보기
-    const preview = Array(5 - originUrls.length).fill(null);
-    newFiles.forEach((file, idx) => {
-      preview[idx] = URL.createObjectURL(file);
+    // 미리보기 누적
+    setPreviewUrls(prev => {
+      const arr = prev.slice(0, newFiles.length - files.length); // 기존 미리보기 유지
+      files.forEach(file => {
+        arr.push(URL.createObjectURL(file));
+      });
+      // 5개 고정
+      return arr.concat(Array(5 - originImages.length - arr.length).fill(null));
     });
-    setPreviewUrls(preview);
 
-    // input 리셋
     e.target.value = "";
   };
 
   // 기존 이미지 삭제
   const handleOriginDelete = (idx) => {
-    setOriginUrls(originUrls.filter((_, i) => i !== idx));
+    const img = originImages[idx]; // img: {id, url}
+    setDeleteImageIds(prev => [...prev, img.id]);
+    setOriginImages(prev => prev.filter((_, i) => i !== idx));
   };
 
   // 입력값 변경
@@ -96,7 +103,7 @@ function DogEdit() {
       alert("쉘터 정보가 없습니다. 다시 로그인 해주세요.");
       return;
     }
-    if (originUrls.length + images.length === 0) {
+    if (originImages.length + images.length === 0) {
       alert("이미지는 1장 이상 첨부해주세요.");
       return;
     }
@@ -109,8 +116,8 @@ function DogEdit() {
     };
     const formData = new FormData();
     formData.append("dog", JSON.stringify(dog));
-    (originUrls || []).forEach(url => formData.append("imagesUrls", url));
-    (images || []).forEach(file => formData.append("images", file));
+    (images || []).forEach(file => formData.append("newImages", file));
+    (deleteImageIds || []).forEach(id => formData.append("deleteImageIds", id));
 
     try {
       await api.put(
@@ -135,9 +142,9 @@ function DogEdit() {
     <form className="dog-detail-card" onSubmit={handleSubmit}>
       <div className="dog-img-row">
         {/* 기존 이미지 먼저 (삭제 가능) */}
-        {originUrls.map((url, i) => (
-          <div className="dog-img-thumb" key={`origin-${i}`}>
-            <img src={BACKEND_URL + url} alt={`origin${i}`} />
+        {originImages.map((img, i) => (
+          <div className="dog-img-thumb" key={`origin-${img.id}`}>
+            <img src={BACKEND_URL + img.url} alt={`origin${i}`} />
             <button
               type="button"
               className="dog-img-del-btn"
@@ -157,7 +164,7 @@ function DogEdit() {
             )
         )}
         {/* 5칸 고정 (빈칸 표시) */}
-        {Array(5 - (originUrls.length + images.length)).fill(0).map((_, i) => (
+        {Array(5 - (originImages.length + images.length)).fill(0).map((_, i) => (
           <div className="dog-img-thumb" key={`empty-${i}`} />
         ))}
       </div>
@@ -169,7 +176,7 @@ function DogEdit() {
           multiple
           onChange={handleImageChange}
           style={{ marginTop: 4, marginBottom: 12 }}
-          disabled={originUrls.length + images.length >= 5}
+          disabled={originImages.length + images.length >= 5}
         />
         <span style={{ fontSize: "0.96rem", color: "#6a757a" }}>최대 5장</span>
       </div>
@@ -283,6 +290,11 @@ function DogEdit() {
           취소
         </button>
       </div>
+      <hr style={{ margin: "40px 0" }} />
+      <section className="walk-option-section">
+        <h2 style={{ fontSize: "1.15rem", color: "#275742", marginBottom: 14 }}>산책 예약 옵션 관리</h2>
+        <WalkOption dogId={id} sheltersId={shelters_id} />
+      </section>
     </form>
   );
 }

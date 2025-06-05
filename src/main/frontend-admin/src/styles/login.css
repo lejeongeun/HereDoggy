@@ -33,64 +33,67 @@
   margin-bottom: 7px;
 }
 
-.form-group input {
-  width: 100%;
-  padding: 13px 11px;
-  margin-bottom: 2px;
-  border-radius: 9px;
+.login-form-group input {
+  width: 345px;
+  height: 35px;
+  margin: 0 auto;
+  border-radius: 8px;
   border: 1.5px solid #c7d7cd;
   outline: none;
   font-size: 1.07rem;
-  background: #f8faf9;
+  background: #f8fefb;
   color: #143021;
   transition: border 0.16s, box-shadow 0.18s;
 }
 
-.form-group input:focus {
-  border: 2.2px solid #185a36;
-  background: #f2f8f3;
+.login-form-group input:focus {
+  border: 1.5px solid #26a869;
+  outline: none;
+  background: #f2fff6;
   box-shadow: 0 2px 10px rgba(33, 71, 54, 0.07);
 }
 
 .login-btn {
-  background: linear-gradient(90deg, #185a36 75%, #246f48 100%);
-  color: #fff;
-  font-size: 1.13rem;
-  font-weight: 800;
-  border: none;
-  border-radius: 11px;
-  padding: 13px 0;
-  margin-top: 10px;
-  margin-bottom: 3px;
-  box-shadow: 0 2px 16px rgba(18, 54, 35, 0.10);
+  width: 100%;
+  background: #fff;
+  color: #4AB071;
+  border: 2px solid #4AB071;
+  border-radius: 8px;
+  padding: 12px 0;
+  font-weight: 700;
+  font-size: 1.08rem;
   cursor: pointer;
-  transition: background 0.16s, transform 0.09s;
+  box-shadow: 0 2px 8px #e5f4ec;
+  transition: background 0.15s, color 0.13s, border 0.14s;
+  outline: none;
 }
-
-.login-btn:hover:enabled {
-  background: linear-gradient(90deg, #1e4c34 90%, #2a8b54 100%);
-  transform: translateY(-2px) scale(1.01);
+.login-btn:hover, .login-btn:focus {
+  background: #e8f6ed;
+  color: #357c4c;
+  border: 2px solid #357c4c;
 }
 
 .signup-btn {
   width: 100%;
-  background: #f6fff5;
+  background: #fff;
   color: #185a36;
-  border: 1.4px solid #c7d7cd;
-  border-radius: 11px;
+  border: 2px solid #c7d7cd;
+  border-radius: 8px;
   font-weight: 700;
   font-size: 1rem;
   margin-top: 8px;
-  padding: 11px 0;
-  transition: background 0.16s, border 0.17s;
+  padding: 12px 0;
+  transition: background 0.14s, border 0.14s, color 0.13s;
   cursor: pointer;
+  outline: none;
 }
 
-.signup-btn:hover {
-  background: #eef7f1;
-  border-color: #185a36;
-  color: #14402a;
+.signup-btn:hover, .signup-btn:focus {
+  background: #f2f8f3;
+  border-color: #4AB071;
+  color: #4AB071;
 }
+
 
 @media (max-width: 500px) {
   .login-form {

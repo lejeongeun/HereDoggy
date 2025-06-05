@@ -1,13 +1,17 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getDogDetail, deleteDog } from "../../../api/shelter/dog";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import { Navigation } from 'swiper/modules';
 import "../../../styles/shelter/pages/dogDetail.css";
 
 const BACKEND_URL = "http://localhost:8080";
 
 function DogDetail() {
   const { id } = useParams();
-  const sheltersId = 1;
+  const sheltersId = localStorage.getItem("shelters_id");
   const [dog, setDog] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -55,20 +59,32 @@ function DogDetail() {
       <button className="dogdetail-back-btn" onClick={() => navigate("/shelter/doglist")}>
         목록으로
       </button>
-      <div className="dogdetail-images-row">
-        {dog.imagesUrls && dog.imagesUrls.length > 0 ? (
-          dog.imagesUrls.map((url, idx) => (
-            <img
-              key={idx}
-              src={BACKEND_URL + url}
-              alt={dog.name}
-              className="dogdetail-img"
-            />
-          ))
-        ) : (
-          <div className="dogdetail-img dogdetail-img-placeholder" />
-        )}
-      </div>
+      <div className="dogdetail-images-slider">
+  <Swiper
+    modules={[Navigation]}
+    navigation
+    spaceBetween={16}
+    slidesPerView={1}    // 한 번에 1장씩
+    style={{ maxWidth: 400, borderRadius: 18 }}
+  >
+    {(dog.imagesUrls && dog.imagesUrls.length > 0) ? (
+      dog.imagesUrls.map((url, idx) => (
+        <SwiperSlide key={idx}>
+          <img
+            src={BACKEND_URL + url}
+            alt={dog.name}
+            className="dogdetail-img"
+            style={{ width: '100%', height: 300, objectFit: 'cover', borderRadius: 18 }}
+          />
+        </SwiperSlide>
+      ))
+    ) : (
+      <SwiperSlide>
+        <div className="dogdetail-img dogdetail-img-placeholder" style={{ width: '100%', height: 240, borderRadius: 18 }}/>
+      </SwiperSlide>
+    )}
+  </Swiper>
+</div>
       <div className="dogdetail-info-table">
         <div className="dogdetail-info-row dogdetail-name-row">
           <span>이름</span>

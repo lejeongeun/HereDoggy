@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { getDogs } from "../../../api/shelter/dog";
-import '../../../styles/shelter/main/dogCount.css';
+import '../../../styles/shelter/main/adoptedCount.css';
 
-function DogCount() {
+function AdoptedCount() {
     const shelterId = localStorage.getItem("shelters_id");
     const [dogs, setDogs] = useState([]);
 
@@ -20,14 +20,14 @@ function DogCount() {
         fetchDogs();
     }, [shelterId]);
 
-    const activeDogsCount = dogs.filter(dog => dog.status === "AVAILABLE" || dog.status === "RESERVED").length;
+    const adoptionDogsCount = dogs.filter(dog => dog.status === "ADOPTED").length;
 
         return (
             <div className="dogcount-card">
-            <div className="dogcount-value">{activeDogsCount}</div>
-            <div className="dogcount-label">보호중</div>
+            <div className="dogcount-value">{adoptionDogsCount}</div>
+            <div className="dogcount-label">이달입양</div>
             </div>
         );
 }
 
-export default DogCount;
+export default AdoptedCount;

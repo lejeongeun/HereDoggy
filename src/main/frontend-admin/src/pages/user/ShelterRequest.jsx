@@ -25,6 +25,26 @@ function ShelterRequest() {
     }));
   };
 
+  // 주소 검색 함수
+  const handleAddressSearch = () => {
+    new window.daum.Postcode({
+      oncomplete: function (data) {
+        let fullAddr = data.address;
+        let extraAddr = '';
+        if (data.addressType === 'R') {
+          if (data.bname !== '') extraAddr += data.bname;
+          if (data.buildingName !== '') extraAddr += (extraAddr ? ', ' + data.buildingName : data.buildingName);
+          if (extraAddr !== '') fullAddr += ' (' + extraAddr + ')';
+        }
+        setForm(prev => ({
+          ...prev,
+          zipcode: data.zonecode,
+          address1: fullAddr,
+        }));
+      }
+    }).open();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -34,9 +54,6 @@ function ShelterRequest() {
     }
 
     setLoading(true);
-
-    const address =
-      `[${form.zipcode}] ${form.address1} ${form.address2 || ""}`.trim();
 
     const payload = {
       shelterName: form.shelterName,
@@ -62,91 +79,102 @@ function ShelterRequest() {
 
   return (
     <div className="shelter-request-container">
-      <h2>보호소 생성 요청</h2>
       <form className="shelter-request-form" onSubmit={handleSubmit}>
-        <label>
-          보호소 이름<br />
+       <h2>보호소 생성 요청</h2>
+        <div className="form-group">
+          <label htmlFor="shelterName">보호소 이름</label>
           <input
+            id="shelterName"
             name="shelterName"
             value={form.shelterName}
             onChange={handleChange}
             required
             placeholder="보호소 이름 입력"
           />
-        </label>
-        <br />
+        </div>
 
-        <label>
-          전화번호<br />
+        <div className="form-group">
+          <label htmlFor="phone">전화번호</label>
           <input
+            id="phone"
             name="phone"
             value={form.phone}
             onChange={handleChange}
             required
             placeholder="전화번호 입력"
           />
-        </label>
-        <br />
+        </div>
 
-        <label>
-          우편번호<br />
-          <input
-            name="zipcode"
-            value={form.zipcode}
-            onChange={handleChange}
-            required
-            placeholder="우편번호 입력"
-          />
-        </label>
-        <br />
+        <div className="form-group">
+          <label htmlFor="zipcode">우편번호</label>
+          <div className="zip-row">
+            <input
+              id="zipcode"
+              name="zipcode"
+              value={form.zipcode}
+              onChange={handleChange}
+              required
+              placeholder="우편번호 입력"
+              readOnly
+            />
+            <button
+              type="button"
+              className="address-search-btn"
+              onClick={handleAddressSearch}
+            >
+              주소 검색
+            </button>
+          </div>
+        </div>
 
-        <label>
-          주소<br />
+        <div className="form-group">
+          <label htmlFor="address1">주소</label>
           <input
+            id="address1"
             name="address1"
             value={form.address1}
             onChange={handleChange}
             required
             placeholder="주소 입력"
+            readOnly
           />
-        </label>
-        <br />
+        </div>
 
-        <label>
-          상세주소<br />
+        <div className="form-group">
+          <label htmlFor="address2">상세주소</label>
           <input
+            id="address2"
             name="address2"
             value={form.address2}
             onChange={handleChange}
             placeholder="상세주소 입력"
           />
-        </label>
-        <br />
+        </div>
 
-        <label>
-          설명<br />
+        <div className="form-group">
+          <label htmlFor="description">설명</label>
           <textarea
+            id="description"
             name="description"
             value={form.description}
             onChange={handleChange}
             rows={4}
             placeholder="보호소에 대한 설명"
           />
-        </label>
-        <br />
+        </div>
 
-        <label>
-          이미지 URL<br />
+        <div className="form-group">
+          <label htmlFor="imageUrl">이미지 URL</label>
           <input
+            id="imageUrl"
             name="imageUrl"
             value={form.imageUrl}
             onChange={handleChange}
             placeholder="대표 이미지 URL (선택)"
           />
-        </label>
-        <br />
+        </div>
 
-        <button type="submit" disabled={loading}>
+        <button type="submit" className="signupbtn" disabled={loading}>
           {loading ? "요청 중..." : "생성 요청 제출"}
         </button>
       </form>

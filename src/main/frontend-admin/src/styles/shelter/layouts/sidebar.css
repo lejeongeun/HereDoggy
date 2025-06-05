@@ -1,46 +1,78 @@
 .sidebar {
-  width: 100%;
-  background: #46554a;
-  color: #fff;
-  padding: 32px 0 0 0;
-  min-height: 100vh;
-  box-shadow: 2px 0 12px rgba(44,190,120,0.07);
+  width: 220px;
+  min-width: 140px;
+  height: 100vh;
+  background: #f8faf9;
+  border-right: 2px solid #e3ebe2;
+  box-shadow: 2px 0 12px #e5ebf433;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 20;
 }
 
-.sidebar h1 {
-  font-size: 1.25rem;
-  font-weight: bold;
-  margin-bottom: 40px;
-  color: #fff;
-  letter-spacing: 1.5px;
+.sidebar-logo {
+  font-weight: 900;
+  font-size: 1.5rem;
+  color: #4AB071;
+  padding: 34px 0 22px 28px;
+  letter-spacing: -1.3px;
 }
 
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-  width: 100%;
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 12px;
+  padding: 0 0 0 7px;
 }
 
-.sidebar li {
-  width: 100%;
-  margin-bottom: 16px;
-}
-
-.sidebar a {
-  display: block;
-  padding: 10px 24px;
-  color: #fff;
-  text-decoration: none;
+.sidebar-menu-item {
+  font-size: 1.08rem;
+  color: #185a36;
+  padding: 13px 12px 13px 21px;
   border-radius: 7px 0 0 7px;
-  transition: background 0.13s;
-  font-size: 1.03rem;
+  margin-right: 14px;
+  display: flex;
+  align-items: center;
+  transition: background 0.13s, color 0.13s, font-weight 0.12s;
 }
 
-.sidebar a:hover,
-.sidebar a.active {
-  background: #26a869;
-  color: #fff;
+.sidebar-menu-item a {
+  color: inherit;
+  text-decoration: none;
+  width: 100%;
+  display: block;
+}
+
+.sidebar-menu-item.active, .sidebar-menu-item:hover {
+  background: #e8f6ed;
+  color: #4AB071;
+  font-weight: 700;
+  border-right: 4px solid #4AB071;
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+  padding: 18px 0 24px 24px;
+  font-size: 1.04rem;
+  color: #7e9488;
+  border-top: 1px solid #e9eee6;
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    width: 54vw;
+    min-width: 0;
+    max-width: 240px;
+  }
+  .sidebar-logo { padding: 20px 0 18px 16px; font-size: 1.14rem; }
+}
+
+@media (max-width: 600px) {
+  .sidebar {
+    display: none; /* 모바일에서는 Drawer로 */
+  }
 }

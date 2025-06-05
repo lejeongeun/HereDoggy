@@ -48,6 +48,18 @@ function DogRegister() {
       [name]: value,
     }));
   };
+// 새 이미지 삭제
+const handleImageDelete = (idx) => {
+  // idx번째 이미지와 미리보기 제거
+  const newImages = images.filter((_, i) => i !== idx);
+  const newPreview = previewUrls.filter((_, i) => i !== idx);
+
+  // 5칸 고정(비어있는 칸 null로 채우기)
+  while (newPreview.length < 5) newPreview.push(null);
+
+  setImages(newImages);
+  setPreviewUrls(newPreview);
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -95,23 +107,53 @@ function DogRegister() {
           url ? (
             <div className="dog-img-thumb" key={i}>
               <img src={url} alt={`preview${i}`} />
+              <button
+                type="button"
+                className="dog-img-del-btn"
+                onClick={() => handleImageDelete(i)}
+                tabIndex={-1}
+                title="삭제"
+              >x</button>
             </div>
           ) : (
             <div className="dog-img-thumb" key={i} />
           )
         )}
       </div>
+
       <div style={{ marginBottom: "16px" }}>
         <input
           type="file"
-          name="images"
+          id="dog-file"
           accept="image/*"
           multiple
+          style={{ display: "none" }}
           onChange={handleImageChange}
-          style={{ marginTop: 4, marginBottom: 12 }}
         />
-        <span style={{ fontSize: "0.96rem", color: "#6a757a" }}>최대 5장</span>
+        <label
+          htmlFor="dog-file"
+          style={{
+            display: "inline-block",
+            background: "#fff",
+            color: "#4AB071",
+            border: "2px solid #4AB071",
+            borderRadius: 8,
+            padding: "8px 18px",
+            fontWeight: 600,
+            cursor: "pointer",
+            marginRight: 12,
+            fontSize: "1rem"
+          }}
+        >
+          이미지 선택
+        </label>
+        <span style={{ fontSize: "0.96rem", color: "#6a757a" }}>
+          {images.length > 0
+            ? `${images.length}개 파일 선택됨`
+            : "최대 5장"}
+        </span>
       </div>
+
       <div className="dog-info-grid">
         <div className="dog-info-col">
           <div className="info-row">
