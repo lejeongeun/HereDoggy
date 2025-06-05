@@ -73,18 +73,6 @@ public class MemberReservationService {
         validateTimeConflict(dog, date, startTime);
 
         Reservation reservation = Reservation.builder()
-<<<<<<< HEAD
-                .date(walkOption.getDate()) // walkOption 선택한 날짜
-                .startTime(walkOption.getStartTime()) //walkOption 선택한 시간
-                .endTime(walkOption.getEndTime())
-                .note(requestDTO.getNote()) // 사용자가 예약보낼때 작성한 메모
-                .member(member)
-                .dog(walkOption.getDog())
-                .shelter(walkOption.getShelter())
-                .walkOption(walkOption)
-                .status(WalkReservationStatus.PENDING) // 예약 상태 (기본값:대기중)
-                .createdAt(LocalDateTime.now()) // 예약 요청 시간
-=======
                 .date(date)
                 .startTime(startTime)
                 .endTime(requestDTO.getEndTime())
@@ -94,7 +82,6 @@ public class MemberReservationService {
                 .shelter(shelter)
                 .status(WalkReservationStatus.PENDING)
                 .createdAt(LocalDateTime.now())
->>>>>>> 822477157ced993bc58d835f3e140df80578a95b
                 .build();
 
         reservationRepository.save(reservation);
