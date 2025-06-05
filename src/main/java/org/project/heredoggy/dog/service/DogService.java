@@ -173,6 +173,7 @@ public class DogService {
                 .shelterName(dog.getShelter().getName())
                 .build();
     }
+
     private void saveImages (List<MultipartFile> imageFiles, Dog dog, Shelter shelter) throws IOException{
         if (imageFiles != null && !imageFiles.isEmpty()){
             for (MultipartFile file : imageFiles){
