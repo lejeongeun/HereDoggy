@@ -22,7 +22,7 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await NaverMapSdk.instance.initialize(clientId: 'hg3aq1mpce');
+  await NaverMapSdk.instance.initialize(clientId: '6g5g6qsdkx');
   runApp(
     MultiProvider(
       providers: [

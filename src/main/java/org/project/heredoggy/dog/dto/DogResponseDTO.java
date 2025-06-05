@@ -20,5 +20,5 @@ public class DogResponseDTO {
     private Boolean isNeutered;
     private DogStatus status;
     private String foundLocation;
-    private List<String> imagesUrls;
+    private List<DogImageResponseDTO> images;
 }

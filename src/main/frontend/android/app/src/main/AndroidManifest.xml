@@ -9,7 +9,7 @@
         <!-- 네이버 지도 API 키 -->
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
-            android:value="hg3aq1mpce" />
+            android:value="6g5g6qsdkx" />
         <!-- 구글 지도 API 키 -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"

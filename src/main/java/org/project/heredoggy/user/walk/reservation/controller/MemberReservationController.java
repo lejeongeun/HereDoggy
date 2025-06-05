@@ -3,16 +3,14 @@ package org.project.heredoggy.user.walk.reservation.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.dog.dto.DogResponseDTO;
-import org.project.heredoggy.domain.postgresql.walk.walkOption.WalkOption;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.shelter.walk.walkOption.dto.WalkOptionRequestDTO;
-import org.project.heredoggy.shelter.walk.walkOption.dto.WalkOptionResponseDTO;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationRequestDTO;
 import org.project.heredoggy.user.walk.reservation.service.MemberReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -33,24 +31,19 @@ public class MemberReservationController {
         DogResponseDTO dogDetails = memberReservationService.getDetailsReservationsDog(dogsId);
         return ResponseEntity.ok(dogDetails);
     }
-    @GetMapping("/{dogs_id}/walk-options")
-    public ResponseEntity<List<WalkOptionResponseDTO>> getDogWalkOptions(@PathVariable("dogs_id") Long dogsId){
-        List<WalkOptionResponseDTO> walkOptionList = memberReservationService.getDogWalkOptions(dogsId);
-        return ResponseEntity.ok(walkOptionList);
-    }
-    @GetMapping("/{dogs_id}/walk-options/{walk_options_id}")
-    public ResponseEntity<WalkOptionResponseDTO> getDogDetailsWalkOptions(@PathVariable("dogs_id") Long dogsId,
-                                                                          @PathVariable("walk_options_id") Long walkOptionsId){
-        WalkOptionResponseDTO walkOptionDetails = memberReservationService.getDogDetailsWalkOptions(dogsId, walkOptionsId);
-        return ResponseEntity.ok(walkOptionDetails);
+
+    @GetMapping("/{dogs_id}/unavailable-dates")
+    public ResponseEntity<List<LocalDate>> getUnavailableList(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                              @PathVariable("dogs_id") Long dogsId) {
+        List<LocalDate> dates = memberReservationService.getUnavailableList(userDetails, dogsId);
+        return ResponseEntity.ok(dates);
     }
 
-    @PostMapping("/{dogs_id}/walk-options/{walk_options_id}/reservationsRequest")
+    @PostMapping("/{dogs_id}/reservationsRequest")
     public ResponseEntity<Map<String, String>> requestReservation(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                   @PathVariable("dogs_id") Long dogsId,
-                                                                  @PathVariable("walk_options_id") Long walkOptionsId,
                                                                   @Valid @RequestBody MemberReservationRequestDTO requestDTO) {
-        memberReservationService.requestReservation(userDetails, dogsId, walkOptionsId, requestDTO);
+        memberReservationService.requestReservation(userDetails, dogsId, requestDTO);
         return ResponseEntity.ok(Map.of("message", "산책 예약이 신청되었습니다."));
     }
 }
