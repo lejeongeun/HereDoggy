@@ -49,20 +49,26 @@ public class Member {
     @Column(nullable = false)
     private String phone;
 
+    @Column(nullable = false)
     private String address;
 
-    private String profileImageUrl;
+    @Builder.Default
+    private String profileImageUrl = "DEFAULT_IMAGE";
 
+    @Builder.Default
     private Boolean isNotificationEnabled = true;
 
+    @Builder.Default
     private Boolean isActive = true;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RoleType role;
 
+    @Builder.Default
     private Double totalWalkDistance = 0.0;
 
+    @Builder.Default
     private Long totalWalkDuration = 0L;
 
     @CreatedDate

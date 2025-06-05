@@ -44,8 +44,9 @@ public class MemberController {
     }
 
     @DeleteMapping("/removal")
-    public ResponseEntity<Map<String, String>> remove(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        fcmTokenService.deleteByMember(userDetails.getMember());
+    public ResponseEntity<Map<String, String>> remove(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                      @RequestBody String token) {
+        fcmTokenService.deleteToken(token, userDetails.getMember());
         memberService.remove(userDetails);
         return ResponseEntity.ok(Map.of("message", "회원 탈퇴 성공"));
     }

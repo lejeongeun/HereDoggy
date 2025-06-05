@@ -11,11 +11,13 @@ import org.project.heredoggy.domain.postgresql.member.MemberRepository;
 import org.project.heredoggy.global.error.ErrorMessages;
 import org.project.heredoggy.global.exception.ForbiddenException;
 import org.project.heredoggy.global.exception.NotFoundException;
+import org.project.heredoggy.global.notification.ShelterSseNotificationFactory;
 import org.project.heredoggy.global.util.AuthUtils;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.user.adoption.dto.AdoptionSurveyRequestDTO;
 import org.project.heredoggy.user.adoption.dto.MemberAdoptionRequestDTO;
 import org.project.heredoggy.user.adoption.dto.MemberAdoptionResponseDTO;
+import org.project.heredoggy.user.notification.service.NotificationSseService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +30,7 @@ public class MemberAdoptionService {
     private final AdoptionRepository adoptionRepository;
     private final MemberRepository memberRepository;
     private final DogRepository dogRepository;
+    private final ShelterSseNotificationFactory sseNotificationFactory;
 
     @Transactional
     public void requestAdoption(CustomUserDetails userDetails, Long dogsId, MemberAdoptionRequestDTO request) {
@@ -80,6 +83,12 @@ public class MemberAdoptionService {
         adoption.setSurvey(adoptionSurvey);
         adoptionRepository.save(adoption);
 
+        sseNotificationFactory.notifyAdoptionRequest(
+                dog.getShelter().getShelterAdmin(),
+                dog.getName(),
+                member.getNickname(),
+                adoption.getId()
+        );
     }
 
     public List<MemberAdoptionResponseDTO> getAllMyAdoptions(CustomUserDetails userDetails) {
