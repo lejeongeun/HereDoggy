@@ -2,6 +2,7 @@ package org.project.heredoggy.user.walk.reservation.service;
 
 import com.sun.jdi.request.InvalidRequestStateException;
 import lombok.RequiredArgsConstructor;
+import org.project.heredoggy.dog.dto.DogImageResponseDTO;
 import org.project.heredoggy.dog.dto.DogResponseDTO;
 import org.project.heredoggy.domain.postgresql.dog.Dog;
 import org.project.heredoggy.domain.postgresql.dog.DogImage;
@@ -162,8 +163,11 @@ public class MemberReservationService {
                 .isNeutered(dog.getIsNeutered())
                 .status(dog.getStatus())
                 .foundLocation(dog.getFoundLocation())
-                .imagesUrls(dog.getImages().stream()
-                        .map(DogImage::getImageUrl)
+                .images(dog.getImages().stream()
+                        .map(img -> DogImageResponseDTO.builder()
+                                .id(img.getId())
+                                .imageUrl(img.getImageUrl())
+                                .build())
                         .collect(Collectors.toList()))
                 .build();
     }
