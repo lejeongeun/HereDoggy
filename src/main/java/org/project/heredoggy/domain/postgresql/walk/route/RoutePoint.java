@@ -14,11 +14,16 @@ public class RoutePoint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Double lat;
     private Double lng;
+
     private int sequence;
 
-    @ManyToOne
-    @JoinColumn(name = "route_id", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PointType pointType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "walk_route_id", nullable = false)
     private WalkRoute walkRoute;
 }
