@@ -16,8 +16,8 @@ public class NotificationFactory {
     /**
      * 댓글 작성 시 수신자에게 알림전송
      *
-     * - 작성자와 수신자가 동일하지 않은 경우에만 알림을 발송합니다.
-     * - 알림 유형은 COMMENT이며, 참조 타입과 게시물 ID를 함께 전달합니다.
+     * - 작성자와 수신자가 동일하지 않은 경우에만 알림을 발송
+     * - 알림 유형은 COMMENT이며, 참조 타입과 게시물 ID를 함께 전달
      *
      * @param receiver   알림을 받을 회원
      * @param commenter  댓글을 작성한 회원
@@ -68,6 +68,25 @@ public class NotificationFactory {
     }
 
 
+    /**
+     * 문의사항 답변을 수신자에게 알림전송
+     *
+     *
+     * @param receiver   알림을 받을 회원
+     * @param inquiryId  문의 id
+     * @param title      제목
+     * @param content    내용
+     */
+    public void notifyInquiry(Member receiver, Long inquiryId, String title, String content) {
+        notificationService.sendNotification(
+                receiver,
+                NotificationType.INQUIRY_RESULT,
+                ReferenceType.INQUIRY,
+                inquiryId,
+                title,
+                content
+        );
+    }
 
 
 }

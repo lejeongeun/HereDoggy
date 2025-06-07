@@ -11,7 +11,6 @@ import java.util.Optional;
 public interface ShelterRepository extends JpaRepository<Shelter, Long> {
     List<Shelter> findByRegionContaining(String region);
     Optional<Shelter> findByShelterAdmin(Member member);
-//    @Query("SELECT s FROM Shelter s JOIN FETCH s.dogs WHERE s.id = :shelterId AND s.member.id = :memberId")
-//    Optional<Shelter> findWithDogsByIdAndMemberId(@Param("shelterId") Long sheltersId,
-//                                                  @Param("memberId") Long membersId);
+
+    Optional<Shelter> findByName(String name);
 }
