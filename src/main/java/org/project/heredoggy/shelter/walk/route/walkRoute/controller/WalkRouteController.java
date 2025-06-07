@@ -26,23 +26,26 @@ public class WalkRouteController {
         walkRouteService.createRoute(userDetails, sheltersId, request);
         return ResponseEntity.ok(Map.of("message", "기본 경로가 생성되었습니다."));
     }
+
     @GetMapping
     public ResponseEntity<List<WalkRouteResponseDTO>> getAllWalkRoute(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                       @PathVariable("shelters_id") Long sheltersId){
         List<WalkRouteResponseDTO> walkRouteList = walkRouteService.getAllWalkRoute(userDetails, sheltersId);
         return ResponseEntity.ok(walkRouteList);
     }
-    @GetMapping("/{walk-routes_id}")
+
+    @GetMapping("/{walk_routes_id}")
     public ResponseEntity<WalkRouteResponseDTO> getDetailsWalkRoute(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                     @PathVariable("shelters_id") Long sheltersId,
-                                                                    @PathVariable("walk-routes_id") Long walkRoutesId){
+                                                                    @PathVariable("walk_routes_id") Long walkRoutesId){
         WalkRouteResponseDTO walkRouteDetails = walkRouteService.getDetailsWalkRoute(userDetails, sheltersId, walkRoutesId);
         return ResponseEntity.ok(walkRouteDetails);
     }
-    @DeleteMapping("/{walk-routes_id}")
+
+    @DeleteMapping("/{walk_routes_id}")
     public ResponseEntity<Map<String, String>> deleteWalkRoute(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                @PathVariable("shelters_id") Long sheltersId,
-                                                               @PathVariable("walk-routes_id") Long walkRoutesId){
+                                                               @PathVariable("walk_routes_id") Long walkRoutesId){
         walkRouteService.deleteWalkRoute(userDetails, sheltersId, walkRoutesId);
         return ResponseEntity.ok(Map.of("message", "산책 경로 컴포넌트가 삭제되었습니다."));
     }

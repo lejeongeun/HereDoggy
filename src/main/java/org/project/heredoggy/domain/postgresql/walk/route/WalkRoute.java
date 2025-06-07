@@ -28,14 +28,26 @@ public class WalkRoute {
 
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "shelter_id")
-    private Shelter shelter;
-
-    @OneToMany(mappedBy = "walkRoute", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RoutePoint> points = new ArrayList<>();
+    private Double totalDistance; // 총 거리
+    private Integer expectedDuration; // 분 단위
 
     @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shelter_id")
+    private Shelter shelter;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "walkRoute", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RoutePoint> points = new ArrayList<>();
+
+    public void addPoint(RoutePoint point){
+        if (this.points == null) {
+            this.points = new ArrayList<>();
+        }
+        points.add(point);
+        point.setWalkRoute(this);
+    }
 }

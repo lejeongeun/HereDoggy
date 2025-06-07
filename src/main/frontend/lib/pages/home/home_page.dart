@@ -115,6 +115,23 @@ class HomePage extends StatelessWidget {
                     ),
                   ],
                 ),
+                // 지도 테스트 버튼
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: green,
+                        side: BorderSide(color: green),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      ),
+                      icon: const Icon(Icons.map_outlined, size: 18),
+                      label: const Text('지도 테스트2', style: TextStyle(fontWeight: FontWeight.w500)),
+                      onPressed: () => Navigator.pushNamed(context, AppConstants.mapTest2Route),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 24),
                 // 4. 귀여운 보호소 아이들 제목
                 Row(
@@ -309,7 +326,7 @@ class _HomeBottomNavBar extends StatelessWidget {
             Navigator.pushReplacementNamed(context, AppConstants.homeRoute);
             break;
           case 1:
-            Navigator.pushReplacementNamed(context, AppConstants.walkReservationRoute);
+            Navigator.pushNamed(context, AppConstants.walkReservationRoute);
             break;
           case 2:
             Navigator.pushReplacementNamed(context, AppConstants.communityRoute);
