@@ -3,8 +3,15 @@ package org.project.heredoggy.config;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.project.heredoggy.domain.postgresql.comment.Comment;
+import org.project.heredoggy.domain.postgresql.comment.CommentRepository;
+import org.project.heredoggy.domain.postgresql.comment.PostType;
 import org.project.heredoggy.domain.postgresql.dog.*;
 import org.project.heredoggy.domain.postgresql.member.*;
+import org.project.heredoggy.domain.postgresql.post.free.FreePost;
+import org.project.heredoggy.domain.postgresql.post.free.FreePostRepository;
+import org.project.heredoggy.domain.postgresql.post.like.Like;
+import org.project.heredoggy.domain.postgresql.post.like.LikeRepository;
 import org.project.heredoggy.domain.postgresql.shelter.shelter.*;
 import org.project.heredoggy.image.ImageService;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -16,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
 @Slf4j
@@ -27,7 +35,9 @@ public class DataInitializer {
     private final ShelterRepository shelterRepository;
     private final DogRepository dogRepository;
     private final PasswordEncoder passwordEncoder;
-    private final RestTemplateBuilder restTemplateBuilder;
+    private final FreePostRepository freePostRepository;
+    private final CommentRepository commentRepository;
+    private final LikeRepository likeRepository;
     private final ImageService imageService;
 
     @PostConstruct
@@ -63,7 +73,7 @@ public class DataInitializer {
         memberRepository.save(admin);
 
         // 1. 일반 회원 및 보호소 관리자 생성
-        List<Member> members = IntStream.rangeClosed(1, 5)
+        List<Member> members = IntStream.rangeClosed(1, 102)
                 .mapToObj(i -> {
                     boolean isShelterAdmin = i <= 2;
                     return Member.builder()
@@ -79,7 +89,7 @@ public class DataInitializer {
                             .address("(12345) 서울시 중구 테스트로 " + i + "길")
                             .birth(isShelterAdmin
                                     ? (i == 1 ? LocalDate.of(1990, 1, 1) : LocalDate.of(1992, 5, 12))
-                                    : LocalDate.of(2000, i, i))
+                                    : LocalDate.of(2000, (i % 12) + 1, Math.min((i % 28) + 1, 28)))
                             .role(isShelterAdmin ? RoleType.SHELTER_ADMIN : RoleType.USER)
                             .build();
                 })
@@ -89,7 +99,6 @@ public class DataInitializer {
         // 2. 보호소 2개 생성 (SHELTER_ADMIN에 연결)
         List<Shelter> shelters = IntStream.rangeClosed(1, 2)
                 .mapToObj(i -> Shelter.builder()
-                        .email("shelter" + i + "@gmail.com")
                         .name("보호소" + i)
                         .phone("02-0000-000" + i)
                         .address("서울시 강남구 보호소" + i + "번지")
@@ -134,6 +143,45 @@ public class DataInitializer {
                 log.error("강아지 이미지 저장 실패", e);
             }
         });
+        List<Member> normalUsers = members.stream()
+                .filter(m -> m.getRole() == RoleType.USER)
+                .toList();
+
+        // 4. 자유게시글 + 댓글 + 좋아요 추가
+        IntStream.rangeClosed(1, 500).forEach(i -> {
+            Member writer = normalUsers.get(i % normalUsers.size());
+            long randomViewCount = ThreadLocalRandom.current().nextInt(0, 1000);
+
+            FreePost savedPost = freePostRepository.save(
+                    FreePost.builder()
+                            .title("테스트 제목 " + i)
+                            .content("테스트 내용 " + i)
+                            .writer(writer)
+                            .viewCount(randomViewCount)
+                            .build()
+            );
+
+            // 댓글 2개 추가
+            IntStream.rangeClosed(1, 2).forEach(j -> {
+                commentRepository.save(Comment.builder()
+                        .writer(normalUsers.get((i + j) % normalUsers.size()))
+                        .content("댓글 " + j + "번입니다.")
+                        .postType(PostType.FREE)
+                        .postId(savedPost.getId())
+                        .build());
+            });
+
+            // 좋아요 3~10개 랜덤 추가
+            int likeCount = ThreadLocalRandom.current().nextInt(3, 11);
+            IntStream.rangeClosed(1, likeCount).forEach(k -> {
+                likeRepository.save(Like.builder()
+                        .member(normalUsers.get((i + k) % normalUsers.size()))
+                        .freePost(savedPost)
+                        .build());
+            });
+        });
+
+
     }
 
     private String fetchRandomDogImageUrl() {

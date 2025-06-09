@@ -104,7 +104,7 @@ public class LikeService {
         Object post = getPostByType(postType, postId);
 
         if(post instanceof FreePost freePost) {
-            return likeRepository.countByFreePost(freePost);
+            return likeRepository.countByFreePostId(freePost.getId());
         } else if (post instanceof ReviewPost reviewPost) {
             return likeRepository.countByReviewPost(reviewPost);
         } else if (post instanceof MissingPost missingPost) {

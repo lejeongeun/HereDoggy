@@ -26,9 +26,6 @@ public class Shelter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String email;  //담당자 이메일
-
     @Column(nullable = false, unique = true)
     private String name;
 

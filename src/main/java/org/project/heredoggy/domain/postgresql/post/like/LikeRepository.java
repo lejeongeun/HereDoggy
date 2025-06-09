@@ -21,7 +21,7 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     void deleteByMemberAndReviewPost(Member member, ReviewPost reviewPost);
     void deleteByMemberAndNoticePost(Member member, NoticePost noticePost);
 
-    Long countByFreePost(FreePost freePost);
+    Long countByFreePostId(Long postId);
     Long countByMissingPost(MissingPost missingPost);
     Long countByReviewPost(ReviewPost reviewPost);
     Long countByNoticePost(NoticePost noticePost);

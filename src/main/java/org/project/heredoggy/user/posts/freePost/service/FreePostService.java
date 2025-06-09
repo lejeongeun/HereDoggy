@@ -1,12 +1,14 @@
 package org.project.heredoggy.user.posts.freePost.service;
 
 import lombok.RequiredArgsConstructor;
+import org.project.heredoggy.domain.postgresql.comment.CommentRepository;
 import org.project.heredoggy.domain.postgresql.comment.PostType;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.post.PostImage;
 import org.project.heredoggy.domain.postgresql.post.PostImageRepository;
 import org.project.heredoggy.domain.postgresql.post.free.FreePost;
 import org.project.heredoggy.domain.postgresql.post.free.FreePostRepository;
+import org.project.heredoggy.domain.postgresql.post.like.LikeRepository;
 import org.project.heredoggy.global.exception.BadRequestException;
 import org.project.heredoggy.global.exception.ConflictException;
 import org.project.heredoggy.global.exception.NotFoundException;
@@ -16,6 +18,9 @@ import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.user.posts.freePost.dto.FreePostEditRequestDTO;
 import org.project.heredoggy.user.posts.freePost.dto.FreePostRequestDTO;
 import org.project.heredoggy.user.posts.freePost.dto.FreePostResponseDTO;
+import org.project.heredoggy.user.posts.freePost.dto.FreePostSummaryResponseDTO;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +34,8 @@ import java.util.stream.Collectors;
 public class FreePostService {
     private final FreePostRepository freePostRepository;
     private final PostImageRepository postImageRepository;
+    private final CommentRepository commentRepository;
+    private final LikeRepository likeRepository;
     private final ImageService imageService;
 
     @Transactional
@@ -132,13 +139,34 @@ public class FreePostService {
     }
 
 
-    public List<FreePostResponseDTO> getAllFreePosts() {
+    public Slice<FreePostSummaryResponseDTO> getFreePostsSlice(Pageable pageable) {
 
-        List<FreePost> lists = freePostRepository.findAllOrderByCreatedAtDesc();
+        Slice<FreePost> slice = freePostRepository.findAllBy(pageable);
 
-        return lists.stream()
-                .map(post -> convertToDTO(post, List.of()))
-                .collect(Collectors.toList());
+        return slice.map(post -> {
+            String preview = post.getContent().length() > 20
+                    ? post.getContent().substring(0, 20) + "..."
+                    : post.getContent();
+            String thumbnail = post.getPostImages().isEmpty()
+                    ? "DEFAULT_IMG_URL"
+                    : post.getPostImages().get(0).getImageUrl();
+
+            Long commentCount = commentRepository.countByPostIdAndPostType(post.getId(), PostType.FREE);
+            Long likeCount = likeRepository.countByFreePostId(post.getId());
+
+            return FreePostSummaryResponseDTO.builder()
+                    .id(post.getId())
+                    .title(post.getTitle())
+                    .nickname(post.getWriter().getNickname())
+                    .previewContent(preview)
+                    .viewCount(post.getViewCount())
+                    .likeCount(likeCount)
+                    .commentCount(commentCount)
+                    .thumbnailImageUrl(thumbnail)
+                    .createdAt(post.getCreatedAt())
+                    .build();
+
+        });
     }
 
 
@@ -164,7 +192,6 @@ public class FreePostService {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .viewCount(post.getViewCount())
-                .email(post.getWriter().getEmail())
                 .nickname(post.getWriter().getNickname())
                 .createdAt(String.valueOf(post.getCreatedAt()))
                 .imagesUrls(imageUrl)

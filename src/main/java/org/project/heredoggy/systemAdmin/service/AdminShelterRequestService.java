@@ -56,7 +56,6 @@ public class AdminShelterRequestService {
 
         Shelter shelter = Shelter.builder()
                 .shelterAdmin(requester)
-                .email(requester.getEmail())
                 .name(request.getShelterName())
                 .phone(request.getPhone())
                 .address(request.getAddress())

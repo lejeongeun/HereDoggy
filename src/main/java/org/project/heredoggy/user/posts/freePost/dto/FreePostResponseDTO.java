@@ -14,7 +14,6 @@ public class FreePostResponseDTO {
     private String title;
     private String content;
     private Long viewCount;
-    private String email;
     private String nickname;
     private String createdAt;
     private List<String> imagesUrls;

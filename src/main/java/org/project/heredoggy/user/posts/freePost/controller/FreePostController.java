@@ -8,7 +8,12 @@ import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.user.posts.freePost.dto.FreePostEditRequestDTO;
 import org.project.heredoggy.user.posts.freePost.dto.FreePostRequestDTO;
 import org.project.heredoggy.user.posts.freePost.dto.FreePostResponseDTO;
+import org.project.heredoggy.user.posts.freePost.dto.FreePostSummaryResponseDTO;
 import org.project.heredoggy.user.posts.freePost.service.FreePostService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -66,9 +71,10 @@ public class FreePostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FreePostResponseDTO>> getFreePostsByCreatedAt() {
-        List<FreePostResponseDTO> res = freePostService.getAllFreePosts();
-        return ResponseEntity.ok(res);
+    public ResponseEntity<Slice<FreePostSummaryResponseDTO>> getFreePostsSlice(
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)Pageable pageable) {
+        Slice<FreePostSummaryResponseDTO> result = freePostService.getFreePostsSlice(pageable);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/{post_id}")
