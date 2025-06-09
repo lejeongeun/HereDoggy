@@ -1,6 +1,7 @@
 package org.project.heredoggy.shelter.walk.unavailableDate.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.checkerframework.checker.units.qual.C;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.shelter.walk.unavailableDate.dto.UnavailableDateRequestDTO;
 import org.project.heredoggy.shelter.walk.unavailableDate.service.UnavailableDateService;
@@ -37,5 +38,17 @@ public class UnavailableDateController {
         List<LocalDate> allDates = unavailableDateService.getAllUnavailableDate(userDetails, sheltersId, dogsId);
         return ResponseEntity.ok(allDates);
     }
+
+    @DeleteMapping("/{unavailable_id}")
+    public ResponseEntity<Map<String, String>> removeUnavailableDate(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                     @PathVariable("shelters_id") Long sheltersId,
+                                                                     @PathVariable("dogs_id") Long dogsId,
+                                                                     @PathVariable("unavailable_id") Long unavailableId){
+        unavailableDateService.removeUnavailableDate(userDetails, sheltersId, dogsId, unavailableId);
+        return ResponseEntity.ok(Map.of("message", "예약 불가 날짜가 취소되었습니다."));
+
+    }
+
+
 
 }

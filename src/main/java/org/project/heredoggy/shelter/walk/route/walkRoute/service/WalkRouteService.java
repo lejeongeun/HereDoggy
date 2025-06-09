@@ -48,7 +48,6 @@ public class WalkRouteService {
                     .sequence(p.getSequence())
                     .pointType(p.getPointType())
                     .build();
-
             walkRoute.addPoint(point);
         });
 
@@ -69,7 +68,6 @@ public class WalkRouteService {
         return walkRouteMapper.toDto(walkRoute);
 
     }
-
 
     public void deleteWalkRoute(CustomUserDetails userDetails, Long sheltersId, Long walkRoutesId) {
         Shelter shelter = SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
