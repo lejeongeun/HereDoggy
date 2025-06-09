@@ -29,7 +29,7 @@ public class Shelter {
     @Column(nullable = false)
     private String email;  //담당자 이메일
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false)

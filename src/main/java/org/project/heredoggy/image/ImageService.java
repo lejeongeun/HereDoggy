@@ -98,12 +98,31 @@ public class ImageService {
         return "/uploads/shelters/" + shelterId + "/shelter-images/" + fileName;
     }
 
+
+    //문의하기 사진 저장
+    public String saveInquiryImage(MultipartFile image, Long inquiryId) throws IOException{
+        String fileName = UUID.randomUUID() + "-" + image.getOriginalFilename();
+        File folder = Paths.get(
+                getAbsoluteUploadDir(),
+                "inquiry",
+                String.valueOf(inquiryId),
+                "inquiry-images"
+        ).toFile();
+
+        if(!folder.exists()) folder.mkdirs();
+
+        File savePath = new File(folder, fileName);
+        image.transferTo(savePath);
+
+        return "/uploads/inquiries/" + inquiryId + "/inquiry-images/" + fileName;
+    }
+
     public String savePostImage(MultipartFile image, PostType postType, Long postId) throws IOException {
         String fileName = UUID.randomUUID() + "-" + image.getOriginalFilename();
 
         File folder = Paths.get(
                 getAbsoluteUploadDir(),
-                postType.name().toLowerCase() + "-posts",  // 예: free, review, missing
+                postType.name().toLowerCase() + "-posts",  // free, review, missing
                 String.valueOf(postId)
         ).toFile();
 
@@ -114,6 +133,8 @@ public class ImageService {
 
         return "/uploads/" + postType.name().toLowerCase() + "-posts/" + postId + "/" + fileName;
     }
+
+
 
 
 

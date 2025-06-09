@@ -66,6 +66,23 @@ public class ShelterSseNotificationFactory {
         );
     }
 
-
-
+    /**
+     * 보호소 관리자에게 문의 알림을 전송
+     *
+     * @param shelterAdmin 보호소 관리자 계정
+     * @param memberName   신청자 이름
+     * @param inquiryId    문의 ID
+     */
+    public void notifyInquiryToShelter(Member shelterAdmin, String memberName, String inquiryTitle, Long inquiryId) {
+        String title = "새 문의 도착";
+        String content = "📩 " + memberName + "님이 '" + inquiryTitle + "' 문의를 등록했습니다.";
+        notificationSseService.sendNotification(
+                shelterAdmin,
+                title,
+                content,
+                NotificationType.INQUIRY,
+                ReferenceType.INQUIRY,
+                inquiryId
+        );
+    }
 }
