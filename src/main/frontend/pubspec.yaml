@@ -40,6 +40,7 @@ dependencies:
   table_calendar: ^3.0.9
   google_maps_flutter: ^2.5.3
   geolocator: ^10.0.0
+  flutter_svg: ^2.0.7
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -96,3 +97,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  assets:
+    - assets/icons/google.svg
+    - assets/icons/kakao.svg

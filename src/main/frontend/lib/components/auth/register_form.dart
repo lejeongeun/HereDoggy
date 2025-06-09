@@ -91,7 +91,7 @@ class _RegisterFormState extends State<RegisterForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE0E0E0),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -103,11 +103,11 @@ class _RegisterFormState extends State<RegisterForm> {
                 Row(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.arrow_back, size: 32),
+                      icon: const Icon(Icons.arrow_back, size: 32, color: Color(0xFF388E3C)),
                       onPressed: () => Navigator.pop(context),
                     ),
                     const SizedBox(width: 8),
-                    const Text('회원가입', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+                    const Text('회원가입', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF388E3C))),
                   ],
                 ),
                 const SizedBox(height: 24),
@@ -154,16 +154,19 @@ class _RegisterFormState extends State<RegisterForm> {
                   children: [
                     Expanded(
                       flex: 2,
-                      child: _buildTextField(_zipcodeController, '우편번호', validator: (v) => (v == null || v.isEmpty) ? '우편번호를 입력해주세요' : null),
+                      child: _buildTextField(_zipcodeController, '우편번호', readOnly: true, validator: (v) => (v == null || v.isEmpty) ? '우편번호를 입력해주세요' : null),
                     ),
                     const SizedBox(width: 8),
                     SizedBox(
                       height: 48,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey[300],
-                          foregroundColor: Colors.black,
-                          elevation: 0,
+                          backgroundColor: const Color(0xFF4CAF50),
+                          foregroundColor: Colors.white,
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
                         onPressed: () async {
                           final result = await Navigator.of(context).push(
@@ -176,13 +179,13 @@ class _RegisterFormState extends State<RegisterForm> {
                             _addressController.text = result.address ?? '';
                           }
                         },
-                        child: const Text('주소찾기'),
+                        child: const Text('주소찾기', style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 8),
-                _buildTextField(_addressController, '주소를 입력해주세요', validator: (v) => (v == null || v.isEmpty) ? '주소를 입력해주세요' : null),
+                _buildTextField(_addressController, '주소를 입력해주세요', readOnly: true, validator: (v) => (v == null || v.isEmpty) ? '주소를 입력해주세요' : null),
                 const SizedBox(height: 8),
                 _buildTextField(_addressDetailController, '상세주소를 입력해주세요', validator: (v) => (v == null || v.isEmpty) ? '상세주소를 입력해주세요' : null),
                 const SizedBox(height: 32),
@@ -191,14 +194,17 @@ class _RegisterFormState extends State<RegisterForm> {
                   height: 56,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[400],
-                      foregroundColor: Colors.black,
-                      elevation: 0,
+                      backgroundColor: const Color(0xFF4CAF50),
+                      foregroundColor: Colors.white,
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                     ),
                     onPressed: _isLoading ? null : _handleRegister,
                     child: _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text('아이디 만들기', style: TextStyle(fontSize: 18)),
+                        : const Text('아이디 만들기', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   ),
                 ),
               ],
@@ -211,7 +217,7 @@ class _RegisterFormState extends State<RegisterForm> {
 
   Widget _buildLabel(String text) => Padding(
     padding: const EdgeInsets.only(left: 2, bottom: 4),
-    child: Text(text, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+    child: Text(text, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF388E3C))),
   );
 
   Widget _buildTextField(
@@ -230,8 +236,19 @@ class _RegisterFormState extends State<RegisterForm> {
         hintText: hint,
         filled: true,
         fillColor: Colors.white,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(4), borderSide: BorderSide.none),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFF81C784), width: 1.5),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFF388E3C), width: 2),
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
       ),
     );
   }

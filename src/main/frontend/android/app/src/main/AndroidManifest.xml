@@ -5,11 +5,8 @@
     <application
         android:label="frontend"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
-        <!-- 네이버 지도 API 키 -->
-        <meta-data
-            android:name="com.naver.maps.map.CLIENT_ID"
-            android:value="6g5g6qsdkx" />
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true">
         <!-- 구글 지도 API 키 -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
