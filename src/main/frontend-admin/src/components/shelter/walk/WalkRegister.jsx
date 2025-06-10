@@ -147,58 +147,75 @@ function WalkRegister({ sheltersId }) {
   };
 
   // 경로 저장
-  const saveRoute = async () => {
-    if (linePath.length < 2) {
-      alert("두 점 이상 경로를 찍어주세요!");
-      return;
-    }
-    if (!routeName.trim()) {
-      alert("경로 이름을 입력하세요!");
-      return;
-    }
+const saveRoute = async () => {
+  if (linePath.length < 2) {
+    alert("두 점 이상 경로를 찍어주세요!");
+    return;
+  }
+  if (!routeName.trim()) {
+    alert("경로 이름을 입력하세요!");
+    return;
+  }
 
-    // 시작, 중간, 끝점 구분
-    const start = linePath[0];
-    const end = linePath[linePath.length - 1];
-    const middle = linePath.slice(1, linePath.length - 1);
-    const optimizedMiddle = optimizeMiddlePoints(middle);
+  const start = linePath[0];
+  const end = linePath[linePath.length - 1];
+  const middle = linePath.slice(1, linePath.length - 1);
+  const optimizedMiddle = optimizeMiddlePoints(middle);
 
-    // 저장 데이터 포맷
-    const routeData = {
-      routeName,
-      description,
-      points: [
-        {
-          lat: start.getLat(),
-          lng: start.getLng(),
-          sequence: 0,
-          pointType: "START",
-        },
-        ...optimizedMiddle.map((p, i) => ({
-          lat: p.getLat(),
-          lng: p.getLng(),
-          sequence: i + 1,
-          pointType: "MIDDLE",
-        })),
-        {
-          lat: end.getLat(),
-          lng: end.getLng(),
-          sequence: optimizedMiddle.length + 1,
-          pointType: "END",
-        },
-      ],
-      totalDistance: distance,
-      expectedDuration: duration,
-    };
-    try {
-      // sheltersId를 반드시 prop 등으로 받아와야 함
-      await createRoute(sheltersId, routeData);
-      alert("경로가 저장되었습니다!");
-      setIsDrawing(false);
-    } catch (err) {
-      alert("저장 오류: " + (err.response?.data?.message || err.message));
-    }
+  const routeData = {
+    routeName: routeName.trim(),
+    description: description || "",
+    totalDistance: distance,
+    expectedDuration: duration,
+    points: [
+      {
+        lat: start.getLat(),
+        lng: start.getLng(),
+        sequence: 0,
+        pointType: "START",
+      },
+      ...optimizedMiddle.map((p, i) => ({
+        lat: p.getLat(),
+        lng: p.getLng(),
+        sequence: i + 1,
+        pointType: "MIDDLE",
+      })),
+      {
+        lat: end.getLat(),
+        lng: end.getLng(),
+        sequence: optimizedMiddle.length + 1,
+        pointType: "END",
+      },
+    ],
   };
+
+  try {
+    // 카카오 Static Map URL (중앙 기준)
+    const centerLat = start.getLat();
+    const centerLng = start.getLng();
+    const kakaoUrl = `https://dapi.kakao.com/v2/maps/staticmap?center=${centerLat},${centerLng}&level=5&size=300x150&appkey=${process.env.REACT_APP_KAKAO_REST_API_KEY}`;
+
+    const imgRes = await fetch(kakaoUrl);
+    const blob = await imgRes.blob();
+    const file = new File([blob], "thumbnail.png", { type: "image/png" });
+
+    const formData = new FormData();
+    formData.append(
+      "routeData",
+      new Blob([JSON.stringify(routeData)], { type: "application/json" })
+    );
+    formData.append("thumbnail", file);
+
+    await createRoute(sheltersId, formData);
+
+    alert("경로가 저장되었습니다!");
+    setIsDrawing(false);
+    // window.resetRoute();
+  } catch (err) {
+    const msg = err.response?.data?.message || err.message;
+    alert("저장 오류: " + msg);
+  }
+};
 
   return (
     <div>

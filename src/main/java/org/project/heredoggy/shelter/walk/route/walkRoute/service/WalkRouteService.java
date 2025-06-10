@@ -25,6 +25,7 @@ public class WalkRouteService {
     private final WalkRouteRepository walkRouteRepository;
     private final WalkRouteMapper walkRouteMapper;
 
+
     public void createRoute(CustomUserDetails userDetails, Long sheltersId, WalkRouteRequestDto request) {
         Shelter shelter = SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
         long count = walkRouteRepository.countByShelterId(sheltersId);
@@ -41,15 +42,27 @@ public class WalkRouteService {
                 .shelter(shelter)
                 .build();
 
-        request.getPoints().forEach(p -> {
-            RoutePoint point = RoutePoint.builder()
-                    .lat(p.getLat())
-                    .lng(p.getLng())
-                    .sequence(p.getSequence())
-                    .pointType(p.getPointType())
-                    .build();
-            walkRoute.addPoint(point);
-        });
+//        request.getPoints().forEach(p -> {
+//            RoutePoint point = RoutePoint.builder()
+//                    .lat(p.getLat())
+//                    .lng(p.getLng())
+//                    .sequence(p.getSequence())
+//                    .pointType(p.getPointType())
+//                    .build();
+//            walkRoute.addPoint(point);
+//        });
+
+        List<RoutePoint> routePoints = request.getPoints().stream()
+                .map(point -> RoutePoint.builder()
+                        .lat(point.getLat())
+                        .lng(point.getLng())
+                        .sequence(point.getSequence())
+                        .pointType(point.getPointType())
+                        .walkRoute(walkRoute)
+                        .build())
+                .collect(Collectors.toList());
+
+        walkRoute.setPoints(routePoints);
 
         walkRouteRepository.save(walkRoute);
     }

@@ -1,70 +1,55 @@
-import { Link } from "react-router-dom";
+// WalkList.jsx
+import { useEffect, useState } from "react";
+import { fetchWalkRoutes, deleteRoute } from "../../api/shelter/route";
+import WalkRouteCard from "../../components/shelter/walk/WalkRouteCard";
+import AddRouteCard from "../../components/shelter/walk/AddRouteCard";
 
-function WalkList() {
-  // 예시 데이터 (실제로는 props, 상태, fetch 등에서 받아옴)
-  const walkRoutes = [
-    // { id: 1, name: "한강 산책로", ... }
-    // { id: 2, name: "공원 산책로", ... }
-  ];
-  const maxRoutes = 2;
+function WalkList({ sheltersId }) {
+  const [walkRoutes, setWalkRoutes] = useState([]);
+  const maxRoutes = 3;
 
-  // 2개 꽉 안 차면 빈 카드
+  useEffect(() => {
+    const loadRoutes = async () => {
+      try {
+        const data = await fetchWalkRoutes(sheltersId);
+        setWalkRoutes(Array.isArray(data) ? data : []);
+      } catch (err) {
+        alert("산책 경로를 불러오는 데 실패했습니다");
+      }
+    };
+    loadRoutes();
+  }, [sheltersId]);
+
+  const handleDelete = async (routeId) => {
+    if (!window.confirm("정말 이 산책로를 삭제하시겠습니까?")) return;
+    try {
+      await deleteRoute(sheltersId, routeId);
+      alert("삭제되었습니다.");
+      setWalkRoutes((prev) => prev.filter((r) => r.id !== routeId));
+    } catch (err) {
+      alert("삭제 실패: " + (err.response?.data?.message || err.message));
+    }
+  };
+
   const cards = [...walkRoutes];
-  while (cards.length < maxRoutes) {
-    cards.push(null);
-  }
+  while (cards.length < maxRoutes) cards.push(null);
 
   return (
     <div style={{ maxWidth: 800, margin: "0 auto", padding: 32 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h2>산책로 관리</h2>
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginTop: 32 }}>
+      <h2>산책로 관리</h2>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 24,
+          marginTop: 32,
+        }}
+      >
         {cards.map((route, idx) =>
           route ? (
-            <div
-              key={route.id}
-              style={{
-                border: "1px solid #eee",
-                borderRadius: 12,
-                padding: 24,
-                background: "#fafafa",
-                minHeight: 200,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <div style={{ fontSize: 18, fontWeight: "bold" }}>{route.name}</div>
-              {/* 기타 정보, 수정/삭제 버튼 등 */}
-            </div>
+            <WalkRouteCard key={route.id} route={route} onDelete={handleDelete} />
           ) : (
-            // 빈 카드(추가)
-            <Link
-              to="/shelter/walkregister"
-              key={idx}
-              style={{
-                border: "2px dashed #aac",
-                borderRadius: 12,
-                padding: 24,
-                background: "#f4f7fa",
-                minHeight: 200,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                textDecoration: "none",
-                color: "#888",
-                fontSize: 36,
-                fontWeight: "bold",
-                cursor: "pointer",
-                transition: "border 0.2s",
-              }}
-            >
-              <span style={{ fontSize: 60, marginBottom: 12 }}>+</span>
-              <div style={{ fontSize: 18 }}>산책로 추가</div>
-            </Link>
+            <AddRouteCard key={`add-${idx}`} />
           )
         )}
       </div>

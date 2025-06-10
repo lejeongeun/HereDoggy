@@ -27,6 +27,8 @@ function DogList() {
         // API가 배열을 바로 반환하면
         const dogsData = Array.isArray(response.data) ? response.data : response.data.dogs || [];
         console.log("처리된 강아지 데이터:", dogsData); // 처리된 데이터 확인
+        console.log("총 개수:", dogs.length);
+
 
         setDogs(dogsData);
       } catch (err) {
@@ -75,8 +77,8 @@ function DogList() {
           </tr>
         </thead>
         <tbody>
-          {dogs.map((dog) => (
-            <tr key={dog.id}>
+          {dogs.map((dog, index) => (
+            <tr key={`${dog.id}-${index}`}>
               <td>
                 {dog.images && dog.images.length > 0 ? (
                   <img

@@ -5,7 +5,7 @@ import AdminHome from './pages/admin/AdminHome';
 import Layouts from './components/shelter/layouts/Layouts';
 import NoticeBoardList from './pages/shelter/NoticeList';
 import DashBoard from './pages/shelter/DashBoard';
-import WalkReservation from './pages/shelter/WalkReservation';
+import WalkReservationList from './pages/shelter/WalkReservationList';
 import DogRegister from './components/shelter/dog/DogRegister';
 import AdoptionManager from './pages/shelter/AdoptionManager';
 import DonationManager from './pages/shelter/DonationManager';
@@ -19,6 +19,7 @@ import DogDetail from './components/shelter/dog/DogDetail';
 import DogEdit from './components/shelter/dog/DogEdit';
 import WalkList from './pages/shelter/WalkList';
 import WalkRegister from './components/shelter/walk/WalkRegister';
+import WalkReservationDetail from './components/shelter/walk/WalkReservationDetail';
 
 function App() {
   return (
@@ -33,7 +34,9 @@ function App() {
           <Route path="noticewrite" element={<NoticeWrite />} />
           <Route path="notice/detail/:id" element={<NoticeDetail />} />
           <Route path="notice/update/:id" element={<NoticeUpdate />} />
-          <Route path="walkreservation" element={<WalkReservation />} />
+          <Route path="walkreservationlist" element={<WalkReservationList />} />
+          <Route path="walk-reservations/:id" element={<WalkReservationDetail />} />
+
           <Route path="dogregister" element={<DogRegister />} />
           <Route path="doglist" element={<DogList sheltersId={localStorage.getItem('shelters_id')} />} />
           <Route path="dog/:id" element={<DogDetail />} />
@@ -41,8 +44,15 @@ function App() {
 
 
           <Route path="adoptionmanager" element={<AdoptionManager />} />
-          <Route path="walklist" element={<WalkList />} />
-          <Route path="walkregister" element={<WalkRegister />} />
+          <Route
+            path="walkregister"
+            element={<WalkRegister sheltersId={localStorage.getItem('shelters_id')} />}
+          />
+          <Route
+            path="walklist"
+            element={<WalkList sheltersId={localStorage.getItem('shelters_id')} />}
+          />
+
           <Route path="donationmanager" element={<DonationManager />} />
           <Route path="mypage" element={<MyPage />} />
         </Route>

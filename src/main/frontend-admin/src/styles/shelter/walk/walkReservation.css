@@ -1,0 +1,68 @@
+.walk-reservation-container {
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.walk-reservation-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 24px;
+  color: #333;
+}
+
+.walk-reservation-list {
+  list-style: none;
+  padding: 0;
+}
+
+.walk-reservation-item {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 18px;
+  background-color: #fafafa;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.walk-reservation-item p {
+  margin: 6px 0;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.walk-reservation-item strong {
+  color: #222;
+}
+
+.walk-reservation-actions {
+  margin-top: 12px;
+}
+
+.walk-reservation-actions button {
+  padding: 8px 16px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.walk-reservation-actions button:first-of-type {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.walk-reservation-actions button:first-of-type:hover {
+  background-color: #3e8e41;
+}
+
+.walk-reservation-actions button:last-of-type {
+  background-color: #e53935;
+  color: white;
+}
+
+.walk-reservation-actions button:last-of-type:hover {
+  background-color: #c62828;
+}
