@@ -25,6 +25,7 @@ public class MemberReservationMapper {
                 .shelterName(reservation.getShelter().getName())
                 .walkReservationStatus(reservation.getStatus())
                 .createAt(reservation.getCreatedAt())
+
                 .build();
     }
 
