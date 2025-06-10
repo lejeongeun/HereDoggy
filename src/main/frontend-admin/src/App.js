@@ -19,7 +19,6 @@ import DogDetail from './components/shelter/dog/DogDetail';
 import DogEdit from './components/shelter/dog/DogEdit';
 import WalkList from './pages/shelter/WalkList';
 import WalkRegister from './components/shelter/walk/WalkRegister';
-import Test from './components/shelter/walk/Test';
 
 function App() {
   return (
@@ -40,7 +39,6 @@ function App() {
           <Route path="dog/:id" element={<DogDetail />} />
           <Route path="/shelter/dogedit/:id" element={<DogEdit />} />
 
-          <Route path="/shelter/test" element={<Test />} />
 
           <Route path="adoptionmanager" element={<AdoptionManager />} />
           <Route path="walklist" element={<WalkList />} />

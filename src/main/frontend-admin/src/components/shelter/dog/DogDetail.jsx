@@ -87,10 +87,10 @@ function DogDetail({ initialImageId }) {
         borderRadius: '18px',
         overflow: 'hidden'
       }}>
-        <Swiper
-          modules={[Navigation]}
-          navigation
-          spaceBetween={16}
+  <Swiper
+    modules={[Navigation]}
+    navigation
+    spaceBetween={16}
           slidesPerView={1}
           style={{ 
             maxWidth: 400, 
@@ -117,32 +117,32 @@ function DogDetail({ initialImageId }) {
               </SwiperSlide>
             ))
           ) : dog.imagesUrls && dog.imagesUrls.length > 0 ? (
-            dog.imagesUrls.map((url, idx) => (
-              <SwiperSlide key={idx}>
-                <img
-                  src={BACKEND_URL + url}
-                  alt={dog.name}
-                  className="dogdetail-img"
+      dog.imagesUrls.map((url, idx) => (
+        <SwiperSlide key={idx}>
+          <img
+            src={BACKEND_URL + url}
+            alt={dog.name}
+            className="dogdetail-img"
                   style={{ 
                     width: '100%', 
                     height: 300, 
                     objectFit: 'cover', 
                     borderRadius: 18 
                   }}
-                />
-              </SwiperSlide>
-            ))
-          ) : (
-            <SwiperSlide>
+          />
+        </SwiperSlide>
+      ))
+    ) : (
+      <SwiperSlide>
               <div className="dogdetail-img dogdetail-img-placeholder" style={{ 
                 width: '100%', 
                 height: 240, 
                 borderRadius: 18 
               }}/>
-            </SwiperSlide>
-          )}
-        </Swiper>
-      </div>
+      </SwiperSlide>
+    )}
+  </Swiper>
+</div>
       <div className="dogdetail-info-table" style={{
         background: '#fff',
         borderRadius: '12px',

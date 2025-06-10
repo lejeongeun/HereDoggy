@@ -1,210 +1,292 @@
-import { useEffect, useRef, useState } from 'react';
-import '../../../styles/shelter/walk/walkRegister.css';
+import React, { useEffect, useRef, useState } from "react";
+import { createRoute } from "../../../api/shelter/route";
 
-function WalkRegister() {
+function WalkRegister({ sheltersId }) {
   const mapRef = useRef(null);
-  const markerRef = useRef(null);
-  const polylineRef = useRef(null);
+  const mapInstance = useRef(null);          // 지도 인스턴스
+  const myLocationMarker = useRef(null);     // 내 위치 마커
+  const myLocationLatLng = useRef(null);     // 내 위치 좌표
 
-  const [address, setAddress] = useState('');
-  const [zipcode, setZipcode] = useState('');
-  const [latlng, setLatlng] = useState(null);
-
-  const [path, setPath] = useState([]);
   const [distance, setDistance] = useState(0);
-  const [naverLoaded, setNaverLoaded] = useState(false);
+  const [duration, setDuration] = useState(0);
+  const [linePath, setLinePath] = useState([]);
+  const [polyline, setPolyline] = useState(null);
+  const [isDrawing, setIsDrawing] = useState(true);
 
-  // 1. 네이버 지도 및 geometry 서브모듈 동적 로드 + 지도 생성
+  const [routeName, setRouteName] = useState("");
+  const [description, setDescription] = useState("");
+
+  // 카카오맵 로드 및 초기화
   useEffect(() => {
-    let script;
-    function createMapAndListener() {
-      const { naver } = window;
-      if (!naver) return;
+    function loadKakaoMap() {
+      if (!window.kakao || !window.kakao.maps) {
+        setTimeout(loadKakaoMap, 500);
+        return;
+      }
+      window.kakao.maps.load(() => {
+        const container = mapRef.current;
+        const options = {
+          center: new window.kakao.maps.LatLng(37.5665, 126.9780),
+          level: 5,
+        };
+        const map = new window.kakao.maps.Map(container, options);
+        mapInstance.current = map;
 
-      mapRef.current = new naver.maps.Map('map', {
-        center: new naver.maps.LatLng(37.5665, 126.9780),
-        zoom: 15,
-      });
+        // 경로 그리기
+        let _linePath = [];
+        let _polyline = null;
 
-      naver.maps.Event.addListener(mapRef.current, 'click', function (e) {
-        const latlng = e.coord;
-        setPath(prev => [...prev, { lat: latlng.lat(), lng: latlng.lng() }]);
+        window.kakao.maps.event.addListener(map, "click", (mouseEvent) => {
+          if (!isDrawing) return;
+          const latlng = mouseEvent.latLng;
+          _linePath.push(latlng);
+          setLinePath([..._linePath]);
+
+          // 폴리라인 그리기
+          if (_polyline) _polyline.setMap(null);
+          _polyline = new window.kakao.maps.Polyline({
+            path: _linePath,
+            strokeWeight: 4,
+            strokeColor: "#FF0000",
+            strokeOpacity: 0.7,
+            strokeStyle: "solid",
+          });
+          _polyline.setMap(map);
+          setPolyline(_polyline);
+
+          // 거리/시간 계산
+          const length = _polyline.getLength();
+          setDistance(length);
+          setDuration(length > 0 ? Math.round(length / 67) : 0);
+        });
+
+        // 내 위치 마커/좌표 저장
+        let watchId = null;
+        if (navigator.geolocation) {
+          watchId = navigator.geolocation.watchPosition(
+            (pos) => {
+              const lat = pos.coords.latitude;
+              const lng = pos.coords.longitude;
+              const loc = new window.kakao.maps.LatLng(lat, lng);
+              myLocationLatLng.current = loc;
+              if (myLocationMarker.current) {
+                myLocationMarker.current.setPosition(loc);
+              } else {
+                myLocationMarker.current = new window.kakao.maps.Marker({
+                  map: map,
+                  position: loc,
+                  title: "내 위치",
+                });
+              }
+            },
+            () => {
+              alert("실시간 위치 정보를 사용할 수 없습니다.");
+            },
+            { enableHighAccuracy: true }
+          );
+        }
+        window.addEventListener("beforeunload", () => {
+          if (watchId) navigator.geolocation.clearWatch(watchId);
+        });
+
+        // 경로 초기화 함수
+        window.resetRoute = () => {
+          _linePath = [];
+          setLinePath([]);
+          if (_polyline) _polyline.setMap(null);
+          setPolyline(null);
+          setDistance(0);
+          setDuration(0);
+          setIsDrawing(true);
+        };
       });
-      setNaverLoaded(true); // 서브모듈까지 다 로드 후 true
     }
 
-    if (!window.naver) {
-      script = document.createElement('script');
-      script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${process.env.REACT_APP_NAVER_CLIENT_ID}&submodules=geocoder,geometry`;
-      script.async = true;
-      script.onload = createMapAndListener;
-      document.body.appendChild(script);
-    } else {
-      createMapAndListener();
+    // 스크립트 추가(geometry 없이!)
+    if (window.kakao && window.kakao.maps) {
+      loadKakaoMap();
+      return;
     }
+    const script = document.createElement("script");
+    script.src =
+      `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_MAP_API_KEY}&autoload=false&libraries=services`;
+    script.async = true;
+    script.onload = loadKakaoMap;
+    document.head.appendChild(script);
 
-    return () => {
-      if (script) document.body.removeChild(script);
-    };
+    // eslint-disable-next-line
   }, []);
 
-  // 2. path 변경시 폴리라인 생성 및 거리 계산
-useEffect(() => {
-  if (
-    !naverLoaded ||
-    !window.naver ||
-    !window.naver.maps ||
-    !window.naver.maps.Polyline ||
-    !mapRef.current
-  ) {
-    return;
-  }
-
-  // 기존 폴리라인 제거
-  if (polylineRef.current) {
-    console.log("기존 폴리라인 제거");
-    polylineRef.current.setMap(null);
-    polylineRef.current = null;
-  }
-
-  if (path.length > 1) {
-    const polyPath = path.map(p => {
-      if (typeof p.lat !== 'number' || typeof p.lng !== 'number') {
-        console.log("잘못된 좌표", p);
-      }
-      return new window.naver.maps.LatLng(p.lat, p.lng);
-    });
-
-    console.log('폴리라인 생성! polyPath:', polyPath);
-
-    polylineRef.current = new window.naver.maps.Polyline({
-      map: mapRef.current,
-      path: polyPath,
-      strokeColor: "#ff0000",
-      strokeWeight: 4,
-      strokeOpacity: 1,
-      strokeStyle: 'solid'
-    });
-
-    console.log('polylineRef.current:', polylineRef.current);
-
-    if (window.naver.maps.GeometryUtil) {
-      const len = window.naver.maps.GeometryUtil.getLength(polylineRef.current.getPath());
-      setDistance(len);
+  // "내 위치 보기" 버튼 클릭시 지도 중심 이동
+  const moveToMyLocation = () => {
+    if (mapInstance.current && myLocationLatLng.current) {
+      mapInstance.current.setCenter(myLocationLatLng.current);
     } else {
-      console.log("GeometryUtil 서브모듈이 없습니다.");
-      setDistance(0);
+      alert("아직 내 위치 정보가 없습니다!");
     }
-  } else {
-    setDistance(0);
-  }
-}, [path, naverLoaded]);
-
-
-
-  // 3. 주소 검색 및 지도 중심 이동
-  const handleAddressSearch = () => {
-    new window.daum.Postcode({
-      oncomplete: function (data) {
-        const addr = data.address;
-        setAddress(addr);
-        setZipcode(data.zonecode);
-        window.naver.maps.Service.geocode({
-          query: addr,
-        }, function(status, response) {
-          if (status === window.naver.maps.Service.Status.OK && response.v2.addresses.length > 0) {
-            const result = response.v2.addresses[0];
-            setLatlng({ lat: Number(result.y), lng: Number(result.x) });
-            if (mapRef.current) {
-              mapRef.current.setCenter(new window.naver.maps.LatLng(Number(result.y), Number(result.x)));
-            }
-          } else {
-            alert("지도를 찾을 수 없습니다.");
-          }
-        });
-      }
-    }).open();
   };
 
-  // 4. latlng이 바뀔 때마다 마커 표시
-  useEffect(() => {
-    if (!latlng || !window.naver || !mapRef.current) return;
-    const { naver } = window;
-    mapRef.current.setCenter(new naver.maps.LatLng(latlng.lat, latlng.lng));
-    if (!markerRef.current) {
-      markerRef.current = new naver.maps.Marker({
-        position: new naver.maps.LatLng(latlng.lat, latlng.lng),
-        map: mapRef.current,
-      });
-    } else {
-      markerRef.current.setPosition(new naver.maps.LatLng(latlng.lat, latlng.lng));
+  // 중간점 최적화 (10m 이상만)
+  const optimizeMiddlePoints = (points) => {
+    if (points.length <= 1) return points;
+    const minDistance = 0.0001; // 위경도 약 10m
+    const result = [points[0]];
+    for (let i = 1; i < points.length; i++) {
+      const last = result[result.length - 1];
+      if (getDistance(last, points[i]) >= minDistance) {
+        result.push(points[i]);
+      }
     }
-  }, [latlng]);
-
-  // 경로 초기화
-  const handleClearPath = () => setPath([]);
+    return result;
+  };
+  // 위경도 거리(geometry 없이)
+  const getDistance = (p1, p2) => {
+    const dx = p1.getLng() - p2.getLng();
+    const dy = p1.getLat() - p2.getLat();
+    return Math.sqrt(dx * dx + dy * dy);
+  };
 
   // 경로 저장
-  const handleSave = () => {
-    const estimatedTime = distance > 0 ? Math.round((distance / 1000) * 20) : 0;
-    const walkData = {
-      address,
-      zipcode,
-      routeCoords: path,
-      distance,
-      estimatedTime,
+  const saveRoute = async () => {
+    if (linePath.length < 2) {
+      alert("두 점 이상 경로를 찍어주세요!");
+      return;
+    }
+    if (!routeName.trim()) {
+      alert("경로 이름을 입력하세요!");
+      return;
+    }
+
+    // 시작, 중간, 끝점 구분
+    const start = linePath[0];
+    const end = linePath[linePath.length - 1];
+    const middle = linePath.slice(1, linePath.length - 1);
+    const optimizedMiddle = optimizeMiddlePoints(middle);
+
+    // 저장 데이터 포맷
+    const routeData = {
+      routeName,
+      description,
+      points: [
+        {
+          lat: start.getLat(),
+          lng: start.getLng(),
+          sequence: 0,
+          pointType: "START",
+        },
+        ...optimizedMiddle.map((p, i) => ({
+          lat: p.getLat(),
+          lng: p.getLng(),
+          sequence: i + 1,
+          pointType: "MIDDLE",
+        })),
+        {
+          lat: end.getLat(),
+          lng: end.getLng(),
+          sequence: optimizedMiddle.length + 1,
+          pointType: "END",
+        },
+      ],
+      totalDistance: distance,
+      expectedDuration: duration,
     };
-    alert('산책로가 저장됩니다! (콘솔확인)');
-    console.log(walkData);
+    try {
+      // sheltersId를 반드시 prop 등으로 받아와야 함
+      await createRoute(sheltersId, routeData);
+      alert("경로가 저장되었습니다!");
+      setIsDrawing(false);
+    } catch (err) {
+      alert("저장 오류: " + (err.response?.data?.message || err.message));
+    }
   };
 
-  const estimatedTime = distance > 0 ? Math.round((distance / 1000) * 20) : 0;
-
   return (
-    <div className="walkregister-wrap">
-      <div className="walkregister-address-area">
-        <label className="walkregister-label">보호소 주소</label>
-        <div className="walkregister-row">
-          <input
-            type="text"
-            value={address}
-            readOnly
-            placeholder="주소를 검색하세요"
-            className="walkregister-address-input"
-          />
-          <button
-            type="button"
-            onClick={handleAddressSearch}
-            className="walkregister-search-btn"
-          >
-            주소 검색
-          </button>
-        </div>
-        {zipcode && (
-          <div className="walkregister-zipcode">
-            우편번호: {zipcode}
-          </div>
-        )}
+    <div>
+      {/* 경로 이름/설명 */}
+      <div style={{ margin: "8px 0" }}>
+        <input
+          type="text"
+          placeholder="경로 이름"
+          value={routeName}
+          onChange={(e) => setRouteName(e.target.value)}
+          style={{
+            width: "100%",
+            marginBottom: "8px",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        />
+        <textarea
+          placeholder="경로 설명"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+            minHeight: "60px",
+          }}
+        />
       </div>
-      <div id="map" className="walkregister-map" />
-      <div className="walkregister-path-info">
-        <span>경로에 점을 찍어 산책로를 그려보세요!</span><br />
-        <b>총 거리:</b> {distance > 0 ? (distance / 1000).toFixed(2) + ' km' : '-'}
-        &nbsp; | &nbsp;
-        <b>예상 시간:</b> {distance > 0 ? estimatedTime + ' 분' : '-'}
+      {/* 지도 */}
+      <div
+        ref={mapRef}
+        style={{ width: "100%", height: "400px", marginBottom: "10px" }}
+      />
+      {/* "내 위치 보기" 버튼 */}
+      <div style={{ margin: "10px 0" }}>
+        <button
+          onClick={moveToMyLocation}
+          style={{
+            padding: "8px 16px",
+            background: "#2196f3",
+            color: "#fff",
+            border: "none",
+            borderRadius: "4px",
+            marginRight: "8px",
+          }}
+        >
+          내 위치 보기
+        </button>
+        <button
+          onClick={() => window.resetRoute()}
+          style={{
+            padding: "8px 16px",
+            background: "#4caf50",
+            color: "#fff",
+            border: "none",
+            borderRadius: "4px",
+            marginRight: "8px",
+          }}
+        >
+          경로 다시 그리기
+        </button>
+        <button
+          onClick={saveRoute}
+          disabled={!isDrawing || linePath.length < 2}
+          style={{
+            padding: "8px 16px",
+            background: "#f44336",
+            color: "#fff",
+            border: "none",
+            borderRadius: "4px",
+            opacity: !isDrawing || linePath.length < 2 ? 0.5 : 1,
+          }}
+        >
+          경로 저장
+        </button>
       </div>
-      <div style={{ marginTop: 8 }}>
-        <button onClick={handleClearPath} type="button" className="walkregister-btn-outline">경로 초기화</button>
-        <button onClick={handleSave} type="button" className="walkregister-btn-solid" style={{ marginLeft: 8 }}>경로 저장</button>
+      {/* 거리/시간 표시 */}
+      <div style={{ margin: "8px 0" }}>
+        <strong>총 거리:</strong> {distance.toFixed(1)} m
+        <span style={{ marginLeft: 16 }}>
+          <strong>예상 소요 시간:</strong> {duration} 분
+        </span>
       </div>
-      {address && (
-        <div className="walkregister-selected-address">
-          선택한 주소: {address}
-        </div>
-      )}
     </div>
   );
 }
 
 export default WalkRegister;
-
