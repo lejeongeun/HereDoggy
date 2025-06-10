@@ -13,6 +13,9 @@ public enum ReferenceType {
     // 신청/요청
     WALK_RESERVATION,
 
+    // 문의
+    INQUIRY,
+
     // 처리 결과
     ADOPTION,
     SYSTEM_NOTICE

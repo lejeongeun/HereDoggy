@@ -62,6 +62,7 @@ public class Dog {
         images.add(image); // dog + dogImage 연관관계 설정
         image.setDog(this); // dogimage + dog 연관 설정 (양방향 설정)
     }
+
     @OneToMany(mappedBy = "dog", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UnavailableDate> unavailableDates = new ArrayList<>();
 }

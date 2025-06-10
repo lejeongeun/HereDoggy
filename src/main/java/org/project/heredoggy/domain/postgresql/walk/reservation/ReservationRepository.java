@@ -17,5 +17,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     boolean existsByDogAndDateAndStartTime(Dog dog, LocalDate date, LocalTime startTime);
 
-    List<Reservation> findByDogIdAndDateAndStatusIn(Long dogid, LocalDate date, List<WalkReservationStatus> statuses);
+    List<Reservation> findByDogIdAndDateAndStatusIn(Long dogId, LocalDate date, List<WalkReservationStatus> statuses);
+
+    List<Reservation> findByDogIdAndStatusIn(Long dogId, List<WalkReservationStatus> statuses);
 }

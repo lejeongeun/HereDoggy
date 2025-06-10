@@ -5,6 +5,7 @@ import '../../services/auth_service.dart';
 import 'register_form.dart';
 import 'package:provider/provider.dart';
 import '../../providers/user_provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginForm extends StatefulWidget {
   final VoidCallback? onLoginSuccess;
@@ -67,7 +68,11 @@ class _LoginFormState extends State<LoginForm> {
           final profile = await _authService.getProfile();
           if (profile != null && mounted) {
             Provider.of<UserProvider>(context, listen: false).login(profile);
-            Navigator.pushReplacementNamed(context, '/mypage');
+            if (widget.onLoginSuccess != null) {
+              widget.onLoginSuccess!();
+            } else {
+              Navigator.of(context, rootNavigator: true).pop();
+            }
           } else {
             _showErrorDialog('회원 정보를 불러오지 못했습니다.');
           }
@@ -89,11 +94,9 @@ class _LoginFormState extends State<LoginForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          CustomTextField(
-            label: '이메일',
+          TextFormField(
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
-            prefixIcon: const Icon(Icons.email),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return '이메일을 입력해주세요';
@@ -103,25 +106,75 @@ class _LoginFormState extends State<LoginForm> {
               }
               return null;
             },
+            decoration: InputDecoration(
+              labelText: '이메일',
+              labelStyle: const TextStyle(color: Color(0xFF388E3C), fontWeight: FontWeight.bold),
+              prefixIcon: const Icon(Icons.email, color: Color(0xFF388E3C)),
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Color(0xFF81C784), width: 1.5),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Color(0xFF388E3C), width: 2),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+            ),
           ),
           const SizedBox(height: 16),
-          CustomTextField(
-            label: '비밀번호',
+          TextFormField(
             controller: _passwordController,
             obscureText: true,
-            prefixIcon: const Icon(Icons.lock),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return '비밀번호를 입력해주세요';
               }
               return null;
             },
+            decoration: InputDecoration(
+              labelText: '비밀번호',
+              labelStyle: const TextStyle(color: Color(0xFF388E3C), fontWeight: FontWeight.bold),
+              prefixIcon: const Icon(Icons.lock, color: Color(0xFF388E3C)),
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Color(0xFF81C784), width: 1.5),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Color(0xFF388E3C), width: 2),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+            ),
           ),
           const SizedBox(height: 24),
-          AuthButton(
-            text: '로그인',
-            onPressed: _handleLogin,
-            isLoading: _isLoading,
+          SizedBox(
+            height: 56,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF4CAF50),
+                foregroundColor: Colors.white,
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+              onPressed: _isLoading ? null : _handleLogin,
+              child: _isLoading
+                  ? const CircularProgressIndicator(color: Colors.white)
+                  : const Text('로그인', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ),
           ),
         ],
       ),
@@ -144,13 +197,13 @@ class LoginFullScreenPage extends StatelessWidget {
             children: [
               const SizedBox(height: 16),
               IconButton(
-                icon: const Icon(Icons.arrow_back, size: 32),
+                icon: const Icon(Icons.arrow_back, size: 32, color: Color(0xFF388E3C)),
                 onPressed: () => Navigator.pop(context),
               ),
               const SizedBox(height: 16),
               const Text(
                 '로그인',
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF388E3C)),
               ),
               const SizedBox(height: 32),
               // 로그인 폼
@@ -163,13 +216,21 @@ class LoginFullScreenPage extends StatelessWidget {
                   CircleAvatar(
                     backgroundColor: Colors.white,
                     radius: 28,
-                    child: const Text('Google', style: TextStyle(color: Colors.black)),
+                    child: SvgPicture.asset(
+                      'assets/icons/google.svg',
+                      width: 32,
+                      height: 32,
+                    ),
                   ),
                   const SizedBox(width: 32),
                   CircleAvatar(
-                    backgroundColor: Color(0xFFFFEB3B),
+                    backgroundColor: const Color(0xFFFFEB3B),
                     radius: 28,
-                    child: const Text('Kakao', style: TextStyle(color: Colors.black)),
+                    child: SvgPicture.asset(
+                      'assets/icons/kakao.svg',
+                      width: 32,
+                      height: 32,
+                    ),
                   ),
                 ],
               ),
