@@ -119,7 +119,7 @@ class _CommunityPageState extends State<CommunityPage> {
     // 추후 실종/입양 탭 추가 시 else if (idx == 1) ...
   }
 
-  void _handleWriteButtonPress() {
+  void _handleWriteButtonPress() async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     if (!userProvider.isLoggedIn) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -130,7 +130,15 @@ class _CommunityPageState extends State<CommunityPage> {
       );
       return;
     }
-    Navigator.pushNamed(context, '/free-post-write');
+    final result = await Navigator.pushNamed(context, '/free-post-write');
+    if (result == true) {
+      // 글 작성이 완료되면 현재 선택된 탭에 따라 새로고침
+      if (selectedTab == 0) {
+        fetchAllPosts();
+      } else if (selectedTab == 3) {
+        fetchFreeBoardPosts();
+      }
+    }
   }
 
   @override

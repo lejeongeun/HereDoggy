@@ -90,7 +90,7 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context, true),
         ),
         elevation: 0.5,
         backgroundColor: Colors.white,

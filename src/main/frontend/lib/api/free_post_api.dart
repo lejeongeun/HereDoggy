@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import '../models/free_post.dart';
 import '../utils/constants.dart';
 import '../services/auth_service.dart';
+import 'dart:convert';
 
 class FreePostApi {
   static final Dio _dio = Dio(
@@ -9,6 +10,8 @@ class FreePostApi {
       baseUrl: AppConstants.baseUrl,
       connectTimeout: const Duration(seconds: 5),
       receiveTimeout: const Duration(seconds: 5),
+      contentType: Headers.jsonContentType,
+      responseType: ResponseType.json,
     ),
   );
 
@@ -46,12 +49,18 @@ class FreePostApi {
       final token = await authService.getAccessToken();
 
       print('글 작성 요청 시작: title=$title, content=$content');
-      final response = await _dio.post(
-        '/members/free-posts',
-        data: {
+      
+      // FormData 생성
+      final formData = FormData.fromMap({
+        'info': jsonEncode({
           'title': title,
           'content': content,
-        },
+        }),
+      });
+
+      final response = await _dio.post(
+        '/members/free-posts',
+        data: formData,
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -119,12 +128,18 @@ class FreePostApi {
     try {
       final authService = AuthService();
       final token = await authService.getAccessToken();
-      final response = await _dio.put(
-        '/members/free-posts/$postId',
-        data: {
+      
+      // FormData 생성
+      final formData = FormData.fromMap({
+        'info': jsonEncode({
           'title': title,
           'content': content,
-        },
+        }),
+      });
+
+      final response = await _dio.put(
+        '/members/free-posts/$postId',
+        data: formData,
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
