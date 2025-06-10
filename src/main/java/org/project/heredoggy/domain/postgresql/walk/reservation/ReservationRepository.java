@@ -2,6 +2,7 @@ package org.project.heredoggy.domain.postgresql.walk.reservation;
 
 import org.project.heredoggy.domain.postgresql.dog.Dog;
 import org.project.heredoggy.domain.postgresql.member.Member;
+import org.project.heredoggy.domain.postgresql.walk.route.WalkRoute;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -20,4 +21,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findByDogIdAndDateAndStatusIn(Long dogId, LocalDate date, List<WalkReservationStatus> statuses);
 
     List<Reservation> findByDogIdAndStatusIn(Long dogId, List<WalkReservationStatus> statuses);
+
 }

@@ -10,14 +10,19 @@ import org.project.heredoggy.domain.postgresql.dog.DogRepository;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
 import org.project.heredoggy.domain.postgresql.walk.reservation.*;
+import org.project.heredoggy.domain.postgresql.walk.route.WalkRoute;
+import org.project.heredoggy.domain.postgresql.walk.route.WalkRouteRepository;
 import org.project.heredoggy.global.error.ErrorMessages;
 import org.project.heredoggy.global.exception.BadRequestException;
 import org.project.heredoggy.global.exception.NotFoundException;
+import org.project.heredoggy.global.exception.UnauthorizedException;
 import org.project.heredoggy.global.notification.ShelterSseNotificationFactory;
 import org.project.heredoggy.global.util.AuthUtils;
 
 import org.project.heredoggy.global.util.TimeUtil;
 import org.project.heredoggy.security.CustomUserDetails;
+import org.project.heredoggy.shelter.walk.route.walkRoute.dto.WalkRouteResponseDTO;
+import org.project.heredoggy.shelter.walk.route.walkRoute.mapper.WalkRouteMapper;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationRequestDTO;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationResponseDTO;
 import org.project.heredoggy.user.walk.reservation.dto.UnavailableTimeResponseDTO;
@@ -25,6 +30,7 @@ import org.project.heredoggy.user.walk.reservation.mapper.MemberReservationMappe
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.naming.AuthenticationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -42,19 +48,24 @@ public class MemberReservationService {
     private final ShelterSseNotificationFactory sseNotificationFactory;
     private final UnavailableDateRepository unavailableDateRepository;
     private final MemberReservationMapper reservationMapper;
+    private final WalkRouteMapper walkRouteMapper;
+    private final WalkRouteRepository walkRouteRepository;
 
-
+    @Transactional(readOnly = true)
     public List<DogResponseDTO> getAllReservationDog() {
         return dogRepository.findAll().stream()
                 .map(reservationMapper::toDogDto)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public DogResponseDTO getDetailsReservationsDog(Long dogsId) {
         Dog dog = dogRepository.findById(dogsId)
                 .orElseThrow(()-> new BadRequestException(ErrorMessages.DOG_NOT_FOUND));
         return reservationMapper.toDogDto(dog);
     }
+
+    @Transactional(readOnly = true)
     public List<LocalDate> getUnavailableList(CustomUserDetails userDetails, Long dogsId) {
         Member member = AuthUtils.getValidMember(userDetails);
 
@@ -66,6 +77,7 @@ public class MemberReservationService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<UnavailableTimeResponseDTO> getReservedUnavailableTimes(Long dogsId) {
         Dog dog = dogRepository.findById(dogsId)
                 .orElseThrow(()-> new NotFoundException(ErrorMessages.DOG_NOT_FOUND));
@@ -147,6 +159,7 @@ public class MemberReservationService {
         );
     }
 
+    @Transactional(readOnly = true)
     public List<MemberReservationResponseDTO> getAllReservation(CustomUserDetails userDetails) {
         Member member = userDetails.getMember();
 
@@ -155,6 +168,7 @@ public class MemberReservationService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public MemberReservationResponseDTO getDetailsReservation(CustomUserDetails userDetails, Long reservationsId) {
         Member member = userDetails.getMember();
         Reservation reservation = reservationRepository.findById(reservationsId)
@@ -166,6 +180,7 @@ public class MemberReservationService {
         return reservationMapper.toDto(reservation);
     }
 
+    @Transactional
     public void cancelRequestReservation(CustomUserDetails userDetails, Long reservationsId) {
         Member member = userDetails.getMember();
         Reservation reservation = reservationRepository.findById(reservationsId)
@@ -183,6 +198,43 @@ public class MemberReservationService {
                 member.getName(),
                 reservation.getId()
         );
+    }
+
+    @Transactional(readOnly = true)
+    public List<WalkRouteResponseDTO> getAllWalkRouteCheck(CustomUserDetails userDetails, Long reservationsId) {
+        Member member = AuthUtils.getValidMember(userDetails);
+
+        Reservation reservation = reservationRepository.findById(reservationsId)
+                .orElseThrow(()-> new NotFoundException(ErrorMessages.RESERVATION_NOT_FOUND));
+        if (!member.getId().equals(reservation.getMember().getId())){
+            throw new UnauthorizedException(ErrorMessages.UNAUTHORIZED_ACCESS);
+        }
+        Long shelterId = reservation.getShelter().getId();
+        // 보호소마다 기본 경로 보유 -> 보호소를 기준으로 walkRoute조회
+        List<WalkRoute> walkRoutes = walkRouteRepository.findAllByShelterId(shelterId);
+
+        return walkRoutes.stream()
+                .map(walkRouteMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public WalkRouteResponseDTO getDetailsWalkRouteCheck(CustomUserDetails userDetails, Long reservationsId, Long walkRoutesId) {
+        Member member = AuthUtils.getValidMember(userDetails);
+
+        Reservation reservation = reservationRepository.findById(reservationsId)
+                .orElseThrow(()-> new NotFoundException(ErrorMessages.RESERVATION_NOT_FOUND));
+
+        if (!member.getId().equals(reservation.getMember().getId())){
+            throw new UnauthorizedException(ErrorMessages.UNAUTHORIZED_ACCESS);
+        }
+
+        WalkRoute walkRoute = walkRouteRepository.findById(walkRoutesId)
+                .orElseThrow(()-> new NotFoundException(ErrorMessages.WALK_ROUTE_NOT_FOUND));
+        if (!walkRoute.getShelter().getId().equals(reservation.getShelter().getId())){
+            throw new UnauthorizedException("해당 보호소의 경로가 아닙니다.");
+        }
+        return walkRouteMapper.toDto(walkRoute);
     }
 
     private void validateTimeConflict(Dog dog, LocalDate date, LocalTime newStartTime){
@@ -210,4 +262,6 @@ public class MemberReservationService {
             throw new BadRequestException("해당 강아지는 오후 예약이 이미 존재합니다.");
         }
     }
+
+
 }
