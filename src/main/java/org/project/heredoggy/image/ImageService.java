@@ -55,6 +55,31 @@ public class ImageService {
     }
 
 
+    //기본 강아지 이미지 dog api 사용해서 받아오기
+    public String saveDogImageFromUrl(String imageUrl, Long shelterId, Long dogId) throws IOException {
+        // 파일명 생성
+        String fileName = UUID.randomUUID() + "-dog.jpg";
+
+        // 저장할 폴더
+        File folder = Paths.get(
+                getAbsoluteUploadDir(),
+                "shelters",
+                String.valueOf(shelterId),
+                "dogs",
+                String.valueOf(dogId)
+        ).toFile();
+
+        if (!folder.exists()) folder.mkdirs();
+
+        // 이미지 다운로드
+        Path savePath = new File(folder, fileName).toPath();
+        try (var in = new java.net.URL(imageUrl).openStream()) {
+            Files.copy(in, savePath);
+        }
+
+        return "/uploads/shelters/" + shelterId + "/dogs/" + dogId + "/" + fileName;
+    }
+
     //보호소 사진 저장
     public String saveShelterImage(MultipartFile file, Long shelterId) throws IOException {
         String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
@@ -73,12 +98,31 @@ public class ImageService {
         return "/uploads/shelters/" + shelterId + "/shelter-images/" + fileName;
     }
 
+
+    //문의하기 사진 저장
+    public String saveInquiryImage(MultipartFile image, Long inquiryId) throws IOException{
+        String fileName = UUID.randomUUID() + "-" + image.getOriginalFilename();
+        File folder = Paths.get(
+                getAbsoluteUploadDir(),
+                "inquiry",
+                String.valueOf(inquiryId),
+                "inquiry-images"
+        ).toFile();
+
+        if(!folder.exists()) folder.mkdirs();
+
+        File savePath = new File(folder, fileName);
+        image.transferTo(savePath);
+
+        return "/uploads/inquiries/" + inquiryId + "/inquiry-images/" + fileName;
+    }
+
     public String savePostImage(MultipartFile image, PostType postType, Long postId) throws IOException {
         String fileName = UUID.randomUUID() + "-" + image.getOriginalFilename();
 
         File folder = Paths.get(
                 getAbsoluteUploadDir(),
-                postType.name().toLowerCase() + "-posts",  // 예: free, review, missing
+                postType.name().toLowerCase() + "-posts",  // free, review, missing
                 String.valueOf(postId)
         ).toFile();
 
@@ -89,6 +133,8 @@ public class ImageService {
 
         return "/uploads/" + postType.name().toLowerCase() + "-posts/" + postId + "/" + fileName;
     }
+
+
 
 
 

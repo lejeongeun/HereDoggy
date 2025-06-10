@@ -8,6 +8,7 @@ import org.project.heredoggy.domain.postgresql.shelter.shelter.ShelterRepository
 import org.project.heredoggy.domain.postgresql.walk.reservation.UnavailableDate;
 import org.project.heredoggy.domain.postgresql.walk.reservation.UnavailableDateRepository;
 import org.project.heredoggy.global.error.ErrorMessages;
+import org.project.heredoggy.global.exception.BadRequestException;
 import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.util.SheltersAuthUtils;
 import org.project.heredoggy.security.CustomUserDetails;
@@ -56,4 +57,18 @@ public class UnavailableDateService {
                 .collect(Collectors.toList());
     }
 
+    public void removeUnavailableDate(CustomUserDetails userDetails, Long sheltersId, Long dogsId, Long unavailableId) {
+        Shelter shelter = SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
+        if (!shelterRepository.findById(shelter.getId()).isPresent()){
+            throw new BadRequestException(ErrorMessages.SHELTERS_NOT_FOUND);
+        }
+        Dog dog = dogRepository.findById(dogsId)
+                .orElseThrow(()-> new NotFoundException(ErrorMessages.DOG_NOT_FOUND));
+        if (!dog.getShelter().getId().equals(shelter.getId())){
+            throw new NotFoundException(ErrorMessages.NOT_YOUR_DOG);
+        }
+        UnavailableDate unavailableDate = unavailableDateRepository.findById(unavailableId)
+                .orElseThrow(()-> new NotFoundException(ErrorMessages.OPTIONS_INFO_NOT_FOUND));
+        unavailableDateRepository.delete(unavailableDate);
+    }
 }

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.dog.dto.DogResponseDTO;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationRequestDTO;
+import org.project.heredoggy.user.walk.reservation.dto.UnavailableTimeResponseDTO;
 import org.project.heredoggy.user.walk.reservation.service.MemberReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -39,11 +40,18 @@ public class MemberReservationController {
         return ResponseEntity.ok(dates);
     }
 
-    @PostMapping("/{dogs_id}/reservationsRequest")
+    @GetMapping("/{dogs_id}/unavailable-times")
+    public ResponseEntity<List<UnavailableTimeResponseDTO>> getReservedUnavailableTimes(@PathVariable("dogs_id") Long dogsId){
+        List<UnavailableTimeResponseDTO> unavailableTimes = memberReservationService.getReservedUnavailableTimes(dogsId);
+        return ResponseEntity.ok(unavailableTimes);
+    }
+
+    @PostMapping("/{dogs_id}/reservation-request")
     public ResponseEntity<Map<String, String>> requestReservation(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                   @PathVariable("dogs_id") Long dogsId,
                                                                   @Valid @RequestBody MemberReservationRequestDTO requestDTO) {
         memberReservationService.requestReservation(userDetails, dogsId, requestDTO);
         return ResponseEntity.ok(Map.of("message", "산책 예약이 신청되었습니다."));
     }
+
 }

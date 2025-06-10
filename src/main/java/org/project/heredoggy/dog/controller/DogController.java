@@ -7,7 +7,6 @@ import org.project.heredoggy.dog.dto.DogEditRequestDTO;
 import org.project.heredoggy.dog.dto.DogRequestDTO;
 import org.project.heredoggy.dog.dto.DogResponseDTO;
 import org.project.heredoggy.dog.service.DogService;
-import org.project.heredoggy.global.util.SheltersAuthUtils;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

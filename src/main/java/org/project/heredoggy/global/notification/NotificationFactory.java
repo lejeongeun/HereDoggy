@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.notification.NotificationType;
 import org.project.heredoggy.domain.postgresql.notification.ReferenceType;
+import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
 import org.project.heredoggy.user.notification.service.NotificationService;
 import org.springframework.stereotype.Component;
 
@@ -15,8 +16,8 @@ public class NotificationFactory {
     /**
      * 댓글 작성 시 수신자에게 알림전송
      *
-     * - 작성자와 수신자가 동일하지 않은 경우에만 알림을 발송합니다.
-     * - 알림 유형은 COMMENT이며, 참조 타입과 게시물 ID를 함께 전달합니다.
+     * - 작성자와 수신자가 동일하지 않은 경우에만 알림을 발송
+     * - 알림 유형은 COMMENT이며, 참조 타입과 게시물 ID를 함께 전달
      *
      * @param receiver   알림을 받을 회원
      * @param commenter  댓글을 작성한 회원
@@ -48,6 +49,43 @@ public class NotificationFactory {
                     liker.getNickname() + "님이 회원님의 게시글을 좋아합니다."
             );
         }
+    }
+
+    public void notifyWalkResult(Member receiver, boolean isApproved, Long reservationId) {
+        String title = isApproved ? "🚶 산책 예약 승인" : "🚫 산책 예약 거절";
+        String content = isApproved
+                ? "보호소에서 회원님의 산책 예약을 승인했어요! 마이페이지에서 확인해보세요."
+                : "보호소에서 회원님의 산책 예약을 거절했어요. 다른 일정을 시도해보세요.";
+
+        notificationService.sendNotification(
+                receiver,
+                NotificationType.WALK_RESULT,
+                ReferenceType.WALK_RESERVATION,
+                reservationId,
+                title,
+                content
+        );
+    }
+
+
+    /**
+     * 문의사항 답변을 수신자에게 알림전송
+     *
+     *
+     * @param receiver   알림을 받을 회원
+     * @param inquiryId  문의 id
+     * @param title      제목
+     * @param content    내용
+     */
+    public void notifyInquiry(Member receiver, Long inquiryId, String title, String content) {
+        notificationService.sendNotification(
+                receiver,
+                NotificationType.INQUIRY_RESULT,
+                ReferenceType.INQUIRY,
+                inquiryId,
+                title,
+                content
+        );
     }
 
 

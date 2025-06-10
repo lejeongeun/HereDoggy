@@ -3,6 +3,7 @@ package org.project.heredoggy.user.member.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.security.CustomUserDetails;
+import org.project.heredoggy.shelter.walk.route.walkRoute.dto.WalkRouteResponseDTO;
 import org.project.heredoggy.user.adoption.dto.MemberAdoptionResponseDTO;
 import org.project.heredoggy.user.adoption.service.MemberAdoptionService;
 import org.project.heredoggy.user.fcm.service.FcmTokenService;
@@ -44,8 +45,9 @@ public class MemberController {
     }
 
     @DeleteMapping("/removal")
-    public ResponseEntity<Map<String, String>> remove(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        fcmTokenService.deleteByMember(userDetails.getMember());
+    public ResponseEntity<Map<String, String>> remove(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                      @RequestBody String token) {
+        fcmTokenService.deleteToken(token, userDetails.getMember());
         memberService.remove(userDetails);
         return ResponseEntity.ok(Map.of("message", "회원 탈퇴 성공"));
     }
@@ -71,6 +73,20 @@ public class MemberController {
                                                                        @AuthenticationPrincipal CustomUserDetails userDetails){
         memberReservationService.cancelRequestReservation(userDetails, reservationsId);
         return ResponseEntity.ok(Map.of("message", "예약 취소 요청이 전송되었습니다."));
+    }
+
+    @GetMapping("/reservations/{reservations_id}/walk-routes")
+    public ResponseEntity<List<WalkRouteResponseDTO>> getAllWalkRouteCheck(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                           @PathVariable("reservations_id") Long reservationsId){
+        List<WalkRouteResponseDTO> walkRouteList = memberReservationService.getAllWalkRouteCheck(userDetails, reservationsId);
+        return ResponseEntity.ok(walkRouteList);
+    }
+    @GetMapping("/reservations/{reservations_id}/walk-routes/{walk_routes_id}")
+    public ResponseEntity<WalkRouteResponseDTO> getDetailsWalkRouteCheck(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                         @PathVariable("reservations_id") Long reservationsId,
+                                                                         @PathVariable("walk_routes_id") Long walkRoutesId){
+        WalkRouteResponseDTO walkRouteDetails = memberReservationService.getDetailsWalkRouteCheck(userDetails, reservationsId, walkRoutesId);
+        return ResponseEntity.ok(walkRouteDetails);
     }
 
     // ==============================
@@ -102,7 +118,6 @@ public class MemberController {
     // ==============================
     //    🗒️ 게시물 조회
     // ==============================
-
     @GetMapping("/me/posts")
     public ResponseEntity<MyPostResponseDTO> getMyPostList(@AuthenticationPrincipal CustomUserDetails userDetails) {
         MyPostResponseDTO res = memberService.getMyFreePostList(userDetails);

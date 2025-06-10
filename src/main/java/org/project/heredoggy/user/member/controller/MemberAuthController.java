@@ -69,9 +69,10 @@ public class MemberAuthController {
 
     @PostMapping("/logout")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> logout(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<?> logout(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                    @RequestBody String token) {
         redisService.deleteRefreshToken(userDetails.getMember().getId());
-        fcmTokenService.deleteByMember(userDetails.getMember());
+        fcmTokenService.deleteToken(token, userDetails.getMember());
         return ResponseEntity.ok("로그아웃 완료");
     }
 

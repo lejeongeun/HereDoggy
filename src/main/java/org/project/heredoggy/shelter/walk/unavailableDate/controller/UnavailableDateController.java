@@ -38,4 +38,16 @@ public class UnavailableDateController {
         return ResponseEntity.ok(allDates);
     }
 
+    @DeleteMapping("/{unavailable_id}")
+    public ResponseEntity<Map<String, String>> removeUnavailableDate(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                     @PathVariable("shelters_id") Long sheltersId,
+                                                                     @PathVariable("dogs_id") Long dogsId,
+                                                                     @PathVariable("unavailable_id") Long unavailableId){
+        unavailableDateService.removeUnavailableDate(userDetails, sheltersId, dogsId, unavailableId);
+        return ResponseEntity.ok(Map.of("message", "예약 불가 날짜가 취소되었습니다."));
+
+    }
+
+
+
 }
