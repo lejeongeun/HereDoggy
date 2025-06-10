@@ -2,16 +2,14 @@ package org.project.heredoggy.user.walk.reservation.service;
 
 import com.sun.jdi.request.InvalidRequestStateException;
 import lombok.RequiredArgsConstructor;
-import org.project.heredoggy.dog.dto.DogImageResponseDTO;
 import org.project.heredoggy.dog.dto.DogResponseDTO;
 import org.project.heredoggy.domain.postgresql.dog.Dog;
-import org.project.heredoggy.domain.postgresql.dog.DogImage;
 import org.project.heredoggy.domain.postgresql.dog.DogRepository;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
 import org.project.heredoggy.domain.postgresql.walk.reservation.*;
-import org.project.heredoggy.domain.postgresql.walk.route.WalkRoute;
-import org.project.heredoggy.domain.postgresql.walk.route.WalkRouteRepository;
+import org.project.heredoggy.domain.postgresql.walk.walkRoute.WalkRoute;
+import org.project.heredoggy.domain.postgresql.walk.walkRoute.WalkRouteRepository;
 import org.project.heredoggy.global.error.ErrorMessages;
 import org.project.heredoggy.global.exception.BadRequestException;
 import org.project.heredoggy.global.exception.NotFoundException;
@@ -30,7 +28,6 @@ import org.project.heredoggy.user.walk.reservation.mapper.MemberReservationMappe
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.naming.AuthenticationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;

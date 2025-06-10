@@ -2,9 +2,9 @@ package org.project.heredoggy.shelter.walk.route.walkRoute.service;
 
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
-import org.project.heredoggy.domain.postgresql.walk.route.RoutePoint;
-import org.project.heredoggy.domain.postgresql.walk.route.WalkRouteRepository;
-import org.project.heredoggy.domain.postgresql.walk.route.WalkRoute;
+import org.project.heredoggy.domain.postgresql.walk.walkRoute.RoutePoint;
+import org.project.heredoggy.domain.postgresql.walk.walkRoute.WalkRouteRepository;
+import org.project.heredoggy.domain.postgresql.walk.walkRoute.WalkRoute;
 import org.project.heredoggy.global.error.ErrorMessages;
 import org.project.heredoggy.global.exception.BadRequestException;
 import org.project.heredoggy.global.exception.NotFoundException;
