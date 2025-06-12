@@ -7,8 +7,9 @@ import NoticeBoardList from './pages/shelter/NoticeList';
 import DashBoard from './pages/shelter/DashBoard';
 import WalkReservationList from './pages/shelter/WalkReservationList';
 import DogRegister from './components/shelter/dog/DogRegister';
-import AdoptionManager from './pages/shelter/AdoptionManager';
-import DonationManager from './pages/shelter/DonationManager';
+import AdoptionList from './pages/shelter/AdoptionList';
+import AdoptionDetail from './components/shelter/adoption/AdoptionDetail';
+import DonationList from './pages/shelter/DonationList';
 import MyPage from './pages/shelter/MyPage';
 import DogList from './pages/shelter/DogList';
 import NoticeWrite from './components/shelter/notice/NoticeWrite';
@@ -43,8 +44,8 @@ function App() {
           <Route path="dog/:id" element={<DogDetail />} />
           <Route path="/shelter/dogedit/:id" element={<DogEdit />} />
 
-
-          <Route path="adoptionmanager" element={<AdoptionManager />} />
+          <Route path="adoptionlist" element={<AdoptionList />} />
+          <Route path="/shelter/adoptions/:id" element={<AdoptionDetail />} />
           <Route
             path="walkmanager"
             element={<WalkManager sheltersId={localStorage.getItem('shelters_id')} />}
@@ -59,7 +60,7 @@ function App() {
             element={<WalkList sheltersId={localStorage.getItem('shelters_id')} />}
           /> */}
 
-          <Route path="donationmanager" element={<DonationManager />} />
+          <Route path="donationlist" element={<DonationList />} />
           <Route path="mypage" element={<MyPage />} />
         </Route>
 
