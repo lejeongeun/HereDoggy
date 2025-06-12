@@ -5,11 +5,19 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
 import 'package:http/http.dart' as http;
+import '../../services/auth_service.dart';
+import '../../utils/constants.dart';
 
 class WalkRouteMapPage extends StatefulWidget {
   final int shelterId;
   final int walkRouteId;
-  const WalkRouteMapPage({Key? key, required this.shelterId, required this.walkRouteId}) : super(key: key);
+  final int reservationId;
+  const WalkRouteMapPage({
+    Key? key, 
+    required this.shelterId, 
+    required this.walkRouteId,
+    required this.reservationId,
+  }) : super(key: key);
 
   @override
   State<WalkRouteMapPage> createState() => _WalkRouteMapPageState();
@@ -26,6 +34,7 @@ class _WalkRouteMapPageState extends State<WalkRouteMapPage> {
   String? _error;
   int _seconds = 0;
   Timer? _timer;
+  final _authService = AuthService();
 
   @override
   void initState() {
@@ -52,7 +61,12 @@ class _WalkRouteMapPageState extends State<WalkRouteMapPage> {
   Future<void> _fetchWalkRoute() async {
     setState(() { _isLoading = true; _error = null; });
     try {
-      final response = await http.get(Uri.parse('http://10.0.2.2:8080/api/shelters/${widget.shelterId}/walk-routes/${widget.walkRouteId}'));
+      final token = await _authService.getAccessToken();
+      final response = await http.get(
+        Uri.parse('${AppConstants.baseUrl}/members/reservations/${widget.reservationId}/walk-routes/${widget.walkRouteId}'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      
       if (response.statusCode == 200) {
         final data = json.decode(utf8.decode(response.bodyBytes));
         final points = data['points'] as List;
@@ -61,13 +75,13 @@ class _WalkRouteMapPageState extends State<WalkRouteMapPage> {
         _determinePosition();
       } else {
         setState(() {
-          _error = '경로 정보를 불러오지 못했습니다.';
+          _error = '경로 정보를 불러오지 못했습니다. (${response.statusCode})';
           _isLoading = false;
         });
       }
     } catch (e) {
       setState(() {
-        _error = '네트워크 오류가 발생했습니다.';
+        _error = '네트워크 오류가 발생했습니다: ${e.toString()}';
         _isLoading = false;
       });
     }
@@ -84,9 +98,15 @@ class _WalkRouteMapPageState extends State<WalkRouteMapPage> {
       if (permission == LocationPermission.denied) return;
     }
     if (permission == LocationPermission.deniedForever) return;
+    // LocationAccuracy.high: 약 10-20m 정확도
     Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     _updatePosition(position);
-    _positionStream = Geolocator.getPositionStream(locationSettings: const LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: 1)).listen((Position pos) {
+    _positionStream = Geolocator.getPositionStream(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,  // 약 10-20m 정확도
+        distanceFilter: 10,  // 10m 이상 이동 시에만 위치 업데이트
+      )
+    ).listen((Position pos) {
       _updatePosition(pos);
     });
   }
@@ -101,7 +121,8 @@ class _WalkRouteMapPageState extends State<WalkRouteMapPage> {
         infoWindow: const InfoWindow(title: '내 위치'),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
       );
-      if (_myPath.isEmpty || _calculateDistance(_myPath.last, newLatLng) >= 1.0) {
+      // 10미터 이상 이동했을 때만 경로에 추가 (LocationAccuracy.high는 약 10-20m 정확도)
+      if (_myPath.isEmpty || _calculateDistance(_myPath.last, newLatLng) >= 10.0) {
         _myPath.add(newLatLng);
       }
     });

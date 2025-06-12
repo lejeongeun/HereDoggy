@@ -7,10 +7,12 @@ class DogProvider with ChangeNotifier {
   List<Dog> _dogs = [];
   bool _isLoading = false;
   String? _error;
+  int _displayCount = 4;
 
   List<Dog> get dogs => _dogs;
   bool get isLoading => _isLoading;
   String? get error => _error;
+  int get displayCount => _displayCount;
 
   Future<void> fetchDogs() async {
     _isLoading = true;
@@ -19,6 +21,7 @@ class DogProvider with ChangeNotifier {
 
     try {
       _dogs = await _dogService.getAllDogs();
+      _displayCount = _dogs.length < 4 ? _dogs.length : 4;
     } catch (e) {
       _error = e.toString();
     } finally {
@@ -34,6 +37,16 @@ class DogProvider with ChangeNotifier {
       _error = e.toString();
       notifyListeners();
       return null;
+    }
+  }
+
+  void loadMoreDogs({int count = 4}) {
+    if (_displayCount < _dogs.length) {
+      final nextCount = (_displayCount + count).clamp(0, _dogs.length);
+      if (nextCount != _displayCount) {
+        _displayCount = nextCount;
+        notifyListeners();
+      }
     }
   }
 } 

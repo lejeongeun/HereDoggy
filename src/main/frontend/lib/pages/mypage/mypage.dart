@@ -10,6 +10,8 @@ import '../walk_route/walk_route_select_page.dart';
 import '../../services/dog_service.dart';
 import '../../components/common/cards/dog_card.dart';
 import '../../components/common/cards/dog_card_reservation.dart';
+import '../../utils/constants.dart';
+import '../mypage/my_posts_tab.dart';
 
 
 class MyPage extends StatelessWidget {
@@ -93,7 +95,12 @@ class MyPage extends StatelessWidget {
                 ListTile(
                   title: Text('내 게시글', style: TextStyle(fontSize: 16)),
                   trailing: Icon(Icons.chevron_right),
-                  onTap: null,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const MyPostsTab()),
+                    );
+                  },
                 ),
                 ListTile(
                   title: Text('입양신청 내역', style: TextStyle(fontSize: 16)),
@@ -343,7 +350,7 @@ class _WalkReservationHistoryPageState extends State<WalkReservationHistoryPage>
     try {
       final token = await _authService.getAccessToken();
       final response = await http.get(
-        Uri.parse('http://10.0.2.2:8080/api/members/reservations'),
+        Uri.parse('${AppConstants.baseUrl}/members/reservations'),
         headers: {'Authorization': 'Bearer $token'},
       );
       if (response.statusCode == 200) {
@@ -482,12 +489,15 @@ class _WalkReservationHistoryPageState extends State<WalkReservationHistoryPage>
                                     shelterName: dog.shelterName,
                                     reservationDate: r['date'] ?? '-',
                                     reservationTime: '${r['startTime'] ?? '-'} ~ ${r['endTime'] ?? '-'}',
-                                    onTap: status == 'APPROVED'
+                                    onTap: status == 'APPROVED' || status == 'PENDING'
                                         ? () {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (_) => WalkRouteSelectPage(shelterId: r['shelterId']),
+                                                builder: (_) => WalkRouteSelectPage(
+                                                  shelterId: r['shelterId'],
+                                                  reservationId: r['id'],
+                                                ),
                                               ),
                                             );
                                           }

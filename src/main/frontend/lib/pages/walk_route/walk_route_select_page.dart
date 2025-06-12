@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'walk_route_map_page.dart';
+import '../../services/auth_service.dart';
+import '../../utils/constants.dart';
 
 class WalkRouteSelectPage extends StatefulWidget {
   final int shelterId;
-  const WalkRouteSelectPage({Key? key, required this.shelterId}) : super(key: key);
+  final int reservationId;
+  const WalkRouteSelectPage({
+    Key? key, 
+    required this.shelterId,
+    required this.reservationId,
+  }) : super(key: key);
 
   @override
   State<WalkRouteSelectPage> createState() => _WalkRouteSelectPageState();
@@ -16,6 +23,7 @@ class _WalkRouteSelectPageState extends State<WalkRouteSelectPage> {
   String? _error;
   List<dynamic> _routes = [];
   int? _selectedRouteId;
+  final _authService = AuthService();
 
   @override
   void initState() {
@@ -26,7 +34,12 @@ class _WalkRouteSelectPageState extends State<WalkRouteSelectPage> {
   Future<void> _fetchRoutes() async {
     setState(() { _isLoading = true; _error = null; });
     try {
-      final response = await http.get(Uri.parse('http://10.0.2.2:8080/api/shelters/${widget.shelterId}/walk-routes'));
+      final token = await _authService.getAccessToken();
+      final response = await http.get(
+        Uri.parse('${AppConstants.baseUrl}/members/reservations/${widget.reservationId}/walk-routes'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      
       if (response.statusCode == 200) {
         setState(() {
           _routes = json.decode(utf8.decode(response.bodyBytes));
@@ -34,13 +47,13 @@ class _WalkRouteSelectPageState extends State<WalkRouteSelectPage> {
         });
       } else {
         setState(() {
-          _error = '산책 경로를 불러오지 못했습니다.';
+          _error = '산책 경로를 불러오지 못했습니다. (${response.statusCode})';
           _isLoading = false;
         });
       }
     } catch (e) {
       setState(() {
-        _error = '네트워크 오류가 발생했습니다.';
+        _error = '네트워크 오류가 발생했습니다: ${e.toString()}';
         _isLoading = false;
       });
     }
@@ -136,6 +149,7 @@ class _WalkRouteSelectPageState extends State<WalkRouteSelectPage> {
                                 builder: (_) => WalkRouteMapPage(
                                   shelterId: widget.shelterId,
                                   walkRouteId: _selectedRouteId!,
+                                  reservationId: widget.reservationId,
                                 ),
                               ),
                             );

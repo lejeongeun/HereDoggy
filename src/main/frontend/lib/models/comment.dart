@@ -1,49 +1,43 @@
-class FreePost {
+class Comment {
   final int id;
-  final String title;
   final String content;
-  final int viewCount;
   final String email;
   final String nickname;
   final String createdAt;
-  final List<String> imagesUrls;
+  final String postType;
+  final int postId;
 
-  FreePost({
+  Comment({
     required this.id,
-    required this.title,
     required this.content,
-    required this.viewCount,
     required this.email,
     required this.nickname,
     required this.createdAt,
-    this.imagesUrls = const [],
+    required this.postType,
+    required this.postId,
   });
 
-  factory FreePost.fromJson(Map<String, dynamic> json) {
-    return FreePost(
+  factory Comment.fromJson(Map<String, dynamic> json) {
+    return Comment(
       id: json['id'] as int,
-      title: json['title'] as String,
       content: json['content'] as String,
-      viewCount: json['viewCount'] as int,
       email: json['email'] as String,
       nickname: json['nickname'] as String,
       createdAt: json['createdAt'] as String,
-      imagesUrls: json['imagesUrls'] != null 
-          ? List<String>.from(json['imagesUrls'])
-          : [],
+      postType: json['postType'] as String,
+      postId: json['postId'] as int,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'title': title,
       'content': content,
-      'viewCount': viewCount,
       'email': email,
       'nickname': nickname,
       'createdAt': createdAt,
-      'imagesUrls': imagesUrls,
+      'postType': postType,
+      'postId': postId,
     };
   }
 } 

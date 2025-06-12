@@ -18,6 +18,7 @@ class _WalkTimeSelectPageState extends State<WalkTimeSelectPage> {
   String? _selectedTimeSlot;
   String _memo = '';
   List<DateTime> _unavailableDates = [];
+  Map<String, Map<String, bool>> _unavailableTimeMap = {}; // { 'YYYY-MM-DD': { 'morning': bool, 'afternoon': bool } }
   bool _isLoading = true;
   String? _error;
   final _authService = AuthService();
@@ -30,10 +31,14 @@ class _WalkTimeSelectPageState extends State<WalkTimeSelectPage> {
   @override
   void initState() {
     super.initState();
-    _fetchUnavailableDates();
+    _fetchReservationData();
   }
 
-  Future<void> _fetchUnavailableDates() async {
+  Future<void> _fetchReservationData() async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
     try {
       final token = await _authService.getAccessToken();
       if (token == null) {
@@ -43,23 +48,50 @@ class _WalkTimeSelectPageState extends State<WalkTimeSelectPage> {
         });
         return;
       }
-
-      final response = await http.get(
+      // 보호소 지정 예약 불가 날짜
+      final datesResponse = await http.get(
         Uri.parse('http://10.0.2.2:8080/api/reservations/dogs/${widget.dogId}/unavailable-dates'),
         headers: {
           'Authorization': 'Bearer $token',
         },
       );
-
-      if (response.statusCode == 200) {
-        final List<dynamic> dates = json.decode(utf8.decode(response.bodyBytes));
+      // 예약 현황 (오전/오후)
+      final timesResponse = await http.get(
+        Uri.parse('http://10.0.2.2:8080/api/reservations/dogs/${widget.dogId}/unavailable-times'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (datesResponse.statusCode == 200 && timesResponse.statusCode == 200) {
+        final List<dynamic> dates = json.decode(utf8.decode(datesResponse.bodyBytes));
+        final List<dynamic> times = json.decode(utf8.decode(timesResponse.bodyBytes));
+        // 보호소 지정 예약 불가 날짜
+        List<DateTime> unavailableDates = dates.map((date) => DateTime.parse(date)).toList();
+        // 오전/오후 예약 현황
+        Map<String, Map<String, bool>> unavailableTimeMap = {};
+        for (var t in times) {
+          final date = t['date'];
+          final morning = t['morningUnavailable'] ?? false;
+          final afternoon = t['afternoonUnavailable'] ?? false;
+          unavailableTimeMap[date] = {
+            'morning': morning,
+            'afternoon': afternoon,
+          };
+          // 오전/오후 모두 예약이면 날짜 자체를 비활성화
+          if (morning && afternoon) {
+            if (!unavailableDates.any((d) => d.toIso8601String().substring(0, 10) == date)) {
+              unavailableDates.add(DateTime.parse(date));
+            }
+          }
+        }
         setState(() {
-          _unavailableDates = dates.map((date) => DateTime.parse(date)).toList();
+          _unavailableDates = unavailableDates;
+          _unavailableTimeMap = unavailableTimeMap;
           _isLoading = false;
         });
       } else {
         setState(() {
-          _error = '예약 불가능 날짜를 불러오는데 실패했습니다.';
+          _error = '예약 정보를 불러오는데 실패했습니다.';
           _isLoading = false;
         });
       }
@@ -72,10 +104,71 @@ class _WalkTimeSelectPageState extends State<WalkTimeSelectPage> {
   }
 
   bool _isDateUnavailable(DateTime date) {
+    // 보호소 지정 예약 불가 날짜 + 예약 현황(오전/오후 모두 예약된 날짜)
     return _unavailableDates.any((unavailableDate) =>
-        unavailableDate.year == date.year &&
-        unavailableDate.month == date.month &&
-        unavailableDate.day == date.day);
+      unavailableDate.year == date.year &&
+      unavailableDate.month == date.month &&
+      unavailableDate.day == date.day
+    );
+  }
+
+  bool _isTimeSlotUnavailable(String timeSlot) {
+    final dateStr = '${_selectedDay.year}-${_selectedDay.month.toString().padLeft(2, '0')}-${_selectedDay.day.toString().padLeft(2, '0')}';
+    final unavailableInfo = _unavailableTimeMap[dateStr];
+    if (unavailableInfo == null) return false;
+    // 오전 시간대 체크
+    if (timeSlot.startsWith('10:') || timeSlot.startsWith('11:')) {
+      return unavailableInfo['morning'] ?? false;
+    }
+    // 오후 시간대 체크
+    if (timeSlot.startsWith('14:') || timeSlot.startsWith('15:') || timeSlot.startsWith('16:')) {
+      return unavailableInfo['afternoon'] ?? false;
+    }
+    return false;
+  }
+
+  Widget _buildTimeSlotSelection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: _timeSlots.entries.map((entry) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              entry.key,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              children: entry.value.map((timeSlot) {
+                final isUnavailable = _isTimeSlotUnavailable(timeSlot);
+                return ChoiceChip(
+                  label: Text(timeSlot),
+                  selected: _selectedTimeSlot == timeSlot,
+                  onSelected: isUnavailable ? null : (selected) {
+                    if (selected) {
+                      setState(() {
+                        _selectedTimeSlot = timeSlot;
+                      });
+                    }
+                  },
+                  backgroundColor: isUnavailable ? Colors.grey[300] : Colors.grey[200],
+                  selectedColor: Colors.green[100],
+                  labelStyle: TextStyle(
+                    color: isUnavailable ? Colors.grey[600] : null,
+                  ),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 16),
+          ],
+        );
+      }).toList(),
+    );
   }
 
   Future<void> _submitReservation() async {
@@ -105,7 +198,7 @@ class _WalkTimeSelectPageState extends State<WalkTimeSelectPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:8080/api/reservations/dogs/${widget.dogId}/reservationsRequest'),
+        Uri.parse('http://10.0.2.2:8080/api/reservations/dogs/${widget.dogId}/reservation-request'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -204,6 +297,7 @@ class _WalkTimeSelectPageState extends State<WalkTimeSelectPage> {
                   if (!_isDateUnavailable(selectedDay)) {
                     setState(() {
                       _selectedDay = selectedDay;
+                      _selectedTimeSlot = null; // 날짜 바뀌면 시간대 선택 초기화
                     });
                   }
                 },
@@ -236,39 +330,7 @@ class _WalkTimeSelectPageState extends State<WalkTimeSelectPage> {
               const SizedBox(height: 24),
 
               // 시간대 선택
-              ..._timeSlots.entries.map((entry) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      entry.key,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 8,
-                      children: entry.value.map((time) {
-                        final isSelected = _selectedTimeSlot == time;
-                        return ChoiceChip(
-                          label: Text(time),
-                          selected: isSelected,
-                          onSelected: (selected) {
-                            setState(() {
-                              _selectedTimeSlot = selected ? time : null;
-                            });
-                          },
-                          backgroundColor: Colors.grey[200],
-                          selectedColor: Colors.green[100],
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(height: 16),
-                  ],
-                );
-              }).toList(),
+              _buildTimeSlotSelection(),
 
               // 메모 입력 필드 추가
               const SizedBox(height: 16),

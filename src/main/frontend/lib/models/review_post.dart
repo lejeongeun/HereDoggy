@@ -1,36 +1,40 @@
-class FreePost {
+class ReviewPost {
   final int id;
   final String title;
   final String content;
+  final String type; // WALK, ADOPTION
+  final int rank; // 별점(1~5)
   final int viewCount;
   final String email;
   final String nickname;
   final String createdAt;
-  final List<String> imagesUrls;
+  final List<String> imageUrls;
 
-  FreePost({
+  ReviewPost({
     required this.id,
     required this.title,
     required this.content,
+    required this.type,
+    required this.rank,
     required this.viewCount,
     required this.email,
     required this.nickname,
     required this.createdAt,
-    this.imagesUrls = const [],
+    this.imageUrls = const [],
   });
 
-  factory FreePost.fromJson(Map<String, dynamic> json) {
-    return FreePost(
+  factory ReviewPost.fromJson(Map<String, dynamic> json) {
+    return ReviewPost(
       id: json['id'] as int,
       title: json['title'] as String,
       content: json['content'] as String,
-      viewCount: json['viewCount'] as int,
+      type: json['type'] as String,
+      rank: json['rank'] as int,
+      viewCount: json['viewCount'] is int ? json['viewCount'] : int.tryParse(json['viewCount'].toString()) ?? 0,
       email: json['email'] as String,
       nickname: json['nickname'] as String,
       createdAt: json['createdAt'] as String,
-      imagesUrls: json['imagesUrls'] != null 
-          ? List<String>.from(json['imagesUrls'])
-          : [],
+      imageUrls: json['imageUrls'] != null ? List<String>.from(json['imageUrls']) : [],
     );
   }
 
@@ -39,11 +43,13 @@ class FreePost {
       'id': id,
       'title': title,
       'content': content,
+      'type': type,
+      'rank': rank,
       'viewCount': viewCount,
       'email': email,
       'nickname': nickname,
       'createdAt': createdAt,
-      'imagesUrls': imagesUrls,
+      'imageUrls': imageUrls,
     };
   }
 } 

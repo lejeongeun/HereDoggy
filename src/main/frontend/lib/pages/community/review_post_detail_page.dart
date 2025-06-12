@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../models/review_post.dart';
+import '../../api/review_post_api.dart';
 import '../../providers/user_provider.dart';
-import '../../api/free_post_api.dart';
 import '../../api/comment_api.dart';
-import '../../models/free_post.dart';
 import '../../models/comment.dart';
-import '../../utils/constants.dart';
 
-class FreePostDetailPage extends StatefulWidget {
+class ReviewPostDetailPage extends StatefulWidget {
   final int postId;
-  const FreePostDetailPage({Key? key, required this.postId}) : super(key: key);
+  const ReviewPostDetailPage({Key? key, required this.postId}) : super(key: key);
 
   @override
-  State<FreePostDetailPage> createState() => _FreePostDetailPageState();
+  State<ReviewPostDetailPage> createState() => _ReviewPostDetailPageState();
 }
 
-class _FreePostDetailPageState extends State<FreePostDetailPage> {
-  FreePost? post;
-  List<Comment> comments = [];
+class _ReviewPostDetailPageState extends State<ReviewPostDetailPage> {
+  ReviewPost? post;
   bool isLoading = true;
-  bool isLoadingComments = false;
   String? errorMessage;
+  List<Comment> comments = [];
+  bool isLoadingComments = false;
   final TextEditingController _commentController = TextEditingController();
   int? editingCommentId;
   final TextEditingController _editCommentController = TextEditingController();
@@ -45,7 +44,7 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
       errorMessage = null;
     });
     try {
-      final detail = await FreePostApi.fetchFreePostDetail(widget.postId);
+      final detail = await ReviewPostApi.fetchReviewPostDetail(widget.postId);
       setState(() {
         post = detail;
         isLoading = false;
@@ -63,7 +62,7 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
       isLoadingComments = true;
     });
     try {
-      final fetchedComments = await CommentApi.fetchComments('free', widget.postId);
+      final fetchedComments = await CommentApi.fetchComments('review', widget.postId);
       setState(() {
         comments = fetchedComments;
         isLoadingComments = false;
@@ -82,7 +81,6 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
 
   Future<void> _createComment() async {
     if (_commentController.text.trim().isEmpty) return;
-
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     if (!userProvider.isLoggedIn) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -93,9 +91,8 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
       );
       return;
     }
-
     try {
-      await CommentApi.createComment('free', widget.postId, _commentController.text.trim());
+      await CommentApi.createComment('review', widget.postId, _commentController.text.trim());
       _commentController.clear();
       fetchComments();
     } catch (e) {
@@ -174,42 +171,16 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
     });
   }
 
-  void _showDeleteDialog() async {
-    final result = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('게시글 삭제'),
-        content: const Text('정말 삭제하시겠습니까?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('취소'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('확인'),
-          ),
-        ],
-      ),
-    );
-    if (result == true) {
-      _deletePost();
-    }
-  }
-
-  Future<void> _deletePost() async {
-    try {
-      await FreePostApi.deleteFreePost(widget.postId);
-      if (mounted) {
-        Navigator.pop(context, true); // true 반환(삭제됨)
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('삭제 실패: $e'), backgroundColor: Colors.red),
+  Widget _buildStarRating(int rank) {
+    return Row(
+      children: List.generate(5, (index) {
+        return Icon(
+          index < rank ? Icons.star : Icons.star_border,
+          color: Colors.amber,
+          size: 24,
         );
-      }
-    }
+      }),
+    );
   }
 
   @override
@@ -218,7 +189,7 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
     final isMine = post != null && userProvider.user?['email'] == post!.email;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('자유게시판'),
+        title: const Text('입양/산책 후기'),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -286,6 +257,25 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
                               ],
                             ),
                             const SizedBox(height: 24),
+                            // 타입/별점
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    post!.type == 'WALK' ? '산책 후기' : '입양 후기',
+                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                _buildStarRating(post!.rank),
+                              ],
+                            ),
+                            const SizedBox(height: 18),
                             // 제목
                             Text(
                               post!.title,
@@ -299,12 +289,12 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
                             ),
                             const SizedBox(height: 16),
                             // 이미지 표시
-                            if (post!.imagesUrls.isNotEmpty)
+                            if (post!.imageUrls.isNotEmpty)
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const SizedBox(height: 16),
-                                  ...post!.imagesUrls.map((imageUrl) => Padding(
+                                  ...post!.imageUrls.map((imageUrl) => Padding(
                                     padding: const EdgeInsets.only(bottom: 16),
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
@@ -318,15 +308,6 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
                                             color: Colors.grey[200],
                                             child: const Center(
                                               child: CircularProgressIndicator(),
-                                            ),
-                                          );
-                                        },
-                                        errorBuilder: (context, error, stackTrace) {
-                                          return Container(
-                                            height: 200,
-                                            color: Colors.grey[200],
-                                            child: const Center(
-                                              child: Icon(Icons.error_outline, color: Colors.red),
                                             ),
                                           );
                                         },
@@ -352,14 +333,16 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
                                     onPressed: () async {
                                       final result = await Navigator.pushNamed(
                                         context,
-                                        '/free-post-edit/${post!.id}',
+                                        '/review-post-edit/${post!.id}',
                                         arguments: {
                                           'title': post!.title,
                                           'content': post!.content,
+                                          'type': post!.type,
+                                          'rank': post!.rank,
                                         },
                                       );
                                       if (result == true) {
-                                        fetchDetail(); // 수정 후 상세페이지 새로고침
+                                        fetchDetail();
                                       }
                                     },
                                     child: const Text('수정', style: TextStyle(fontSize: 15)),
@@ -373,7 +356,29 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                                       padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
                                     ),
-                                    onPressed: _showDeleteDialog,
+                                    onPressed: () async {
+                                      final result = await showDialog<bool>(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: const Text('게시글 삭제'),
+                                          content: const Text('정말 삭제하시겠습니까?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () => Navigator.pop(context, false),
+                                              child: const Text('취소'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () => Navigator.pop(context, true),
+                                              child: const Text('확인'),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                      if (result == true) {
+                                        await ReviewPostApi.deleteReviewPost(post!.id);
+                                        if (mounted) Navigator.pop(context, true);
+                                      }
+                                    },
                                     child: const Text('삭제', style: TextStyle(fontSize: 15)),
                                   ),
                                 ],
@@ -406,7 +411,7 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
                                 itemCount: comments.length,
                                 itemBuilder: (context, index) {
                                   final comment = comments[index];
-                                  final isCommentMine = userProvider.user?['email'] == comment.email;
+                                  final isCommentMine = Provider.of<UserProvider>(context, listen: false).user?['email'] == comment.email;
                                   return Padding(
                                     padding: const EdgeInsets.only(bottom: 16),
                                     child: Column(
@@ -495,48 +500,47 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
                         ),
                       ),
                     ),
-                    // 댓글 입력 섹션
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 10,
-                            offset: const Offset(0, -5),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: _commentController,
-                              decoration: const InputDecoration(
-                                hintText: '댓글을 입력하세요',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(24)),
-                                  borderSide: BorderSide.none,
-                                ),
-                                filled: true,
-                                fillColor: Color(0xFFF5F5F5),
-                                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                              ),
-                              maxLines: null,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          IconButton(
-                            onPressed: _createComment,
-                            icon: const Icon(Icons.send),
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ],
-                      ),
-                    ),
                   ],
                 ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, -5),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _commentController,
+                decoration: const InputDecoration(
+                  hintText: '댓글을 입력하세요',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(24)),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Color(0xFFF5F5F5),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                ),
+                maxLines: null,
+              ),
+            ),
+            const SizedBox(width: 8),
+            IconButton(
+              onPressed: _createComment,
+              icon: const Icon(Icons.send),
+              color: Theme.of(context).primaryColor,
+            ),
+          ],
+        ),
+      ),
     );
   }
 } 

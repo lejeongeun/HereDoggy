@@ -1,22 +1,38 @@
 import 'package:flutter/material.dart';
-import '../../api/free_post_api.dart';
+import '../../api/review_post_api.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:permission_handler/permission_handler.dart';
 
-class FreePostWritePage extends StatefulWidget {
-  const FreePostWritePage({Key? key}) : super(key: key);
+class ReviewPostEditPage extends StatefulWidget {
+  final int postId;
+  final String initialTitle;
+  final String initialContent;
+  final String initialType;
+  final int initialRank;
+  const ReviewPostEditPage({Key? key, required this.postId, required this.initialTitle, required this.initialContent, required this.initialType, required this.initialRank}) : super(key: key);
 
   @override
-  State<FreePostWritePage> createState() => _FreePostWritePageState();
+  State<ReviewPostEditPage> createState() => _ReviewPostEditPageState();
 }
 
-class _FreePostWritePageState extends State<FreePostWritePage> {
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _contentController = TextEditingController();
+class _ReviewPostEditPageState extends State<ReviewPostEditPage> {
+  late TextEditingController _titleController;
+  late TextEditingController _contentController;
   bool _isLoading = false;
   final List<XFile> _images = [];
   final ImagePicker _picker = ImagePicker();
+  String _selectedType = 'WALK';
+  int _rank = 5;
+  List<int> _deleteImageIds = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController = TextEditingController(text: widget.initialTitle);
+    _contentController = TextEditingController(text: widget.initialContent);
+    _selectedType = widget.initialType;
+    _rank = widget.initialRank;
+  }
 
   @override
   void dispose() {
@@ -32,24 +48,6 @@ class _FreePostWritePageState extends State<FreePostWritePage> {
       );
       return;
     }
-    // 권한 요청
-    if (source == ImageSource.camera) {
-      final status = await Permission.camera.request();
-      if (!status.isGranted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('카메라 권한이 필요합니다.')),
-        );
-        return;
-      }
-    } else if (source == ImageSource.gallery) {
-      final status = await Permission.photos.request();
-      if (!status.isGranted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('갤러리 접근 권한이 필요합니다.')),
-        );
-        return;
-      }
-    }
     final XFile? pickedFile = await _picker.pickImage(source: source, imageQuality: 85);
     if (pickedFile != null) {
       setState(() {
@@ -58,81 +56,47 @@ class _FreePostWritePageState extends State<FreePostWritePage> {
     }
   }
 
-  void _showImageSourceActionSheet() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => SafeArea(
-        child: Wrap(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.camera_alt),
-              title: const Text('카메라로 촬영'),
-              onTap: () {
-                Navigator.pop(context);
-                _pickImage(ImageSource.camera);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: const Text('갤러리에서 선택'),
-              onTap: () {
-                Navigator.pop(context);
-                _pickImage(ImageSource.gallery);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   void _removeImage(int index) {
     setState(() {
       _images.removeAt(index);
     });
   }
 
-  Future<void> _submitPost() async {
+  Future<void> _submitEdit() async {
     final title = _titleController.text.trim();
     final content = _contentController.text.trim();
-
-
-    // 유효성 검사
     if (title.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('제목을 입력해주세요')),
       );
       return;
     }
-
     if (content.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('내용을 입력해주세요')),
       );
       return;
     }
-
     setState(() {
       _isLoading = true;
     });
-
     try {
-      await FreePostApi.createFreePost(
+      await ReviewPostApi.editReviewPost(
+        postId: widget.postId,
         title: title,
         content: content,
+        type: _selectedType,
+        rank: _rank,
         images: _images,
+        deleteImageIds: _deleteImageIds,
       );
-      
       if (mounted) {
-        Navigator.pop(context, true); // 글 작성 성공 시 true 반환
+        Navigator.pop(context, true);
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('글 작성 실패: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('수정 실패: $e'), backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -142,6 +106,25 @@ class _FreePostWritePageState extends State<FreePostWritePage> {
         });
       }
     }
+  }
+
+  Widget _buildStarRating() {
+    return Row(
+      children: List.generate(5, (index) {
+        return IconButton(
+          icon: Icon(
+            index < _rank ? Icons.star : Icons.star_border,
+            color: Colors.amber,
+            size: 32,
+          ),
+          onPressed: () {
+            setState(() {
+              _rank = index + 1;
+            });
+          },
+        );
+      }),
+    );
   }
 
   @override
@@ -159,7 +142,7 @@ class _FreePostWritePageState extends State<FreePostWritePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    '자유게시판',
+                    '입양/산책 후기 수정',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   IconButton(
@@ -170,6 +153,41 @@ class _FreePostWritePageState extends State<FreePostWritePage> {
               ),
             ),
             const Divider(height: 1),
+            // 타입 선택
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                children: [
+                  const Text('유형', style: TextStyle(fontWeight: FontWeight.bold)),
+                  const SizedBox(width: 12),
+                  DropdownButton<String>(
+                    value: _selectedType,
+                    items: const [
+                      DropdownMenuItem(value: 'WALK', child: Text('산책 후기')),
+                      DropdownMenuItem(value: 'ADOPTION', child: Text('입양 후기')),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() {
+                          _selectedType = value;
+                        });
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+            // 별점
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                children: [
+                  const Text('별점', style: TextStyle(fontWeight: FontWeight.bold)),
+                  const SizedBox(width: 12),
+                  _buildStarRating(),
+                ],
+              ),
+            ),
             // 제목 입력란
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -247,7 +265,33 @@ class _FreePostWritePageState extends State<FreePostWritePage> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.image, color: Colors.grey),
-                    onPressed: _showImageSourceActionSheet,
+                    onPressed: () async {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) => SafeArea(
+                          child: Wrap(
+                            children: [
+                              ListTile(
+                                leading: const Icon(Icons.camera_alt),
+                                title: const Text('카메라로 촬영'),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  _pickImage(ImageSource.camera);
+                                },
+                              ),
+                              ListTile(
+                                leading: const Icon(Icons.photo_library),
+                                title: const Text('갤러리에서 선택'),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  _pickImage(ImageSource.gallery);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
                   const Text('사진', style: TextStyle(color: Colors.grey)),
                   const Spacer(),
@@ -258,7 +302,7 @@ class _FreePostWritePageState extends State<FreePostWritePage> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : TextButton(
-                          onPressed: _submitPost,
+                          onPressed: _submitEdit,
                           child: const Text('완료', style: TextStyle(fontSize: 16)),
                         ),
                 ],

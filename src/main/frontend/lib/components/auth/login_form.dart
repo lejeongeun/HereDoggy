@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../components/common/inputs/text_field.dart';
 import 'auth_button.dart';
 import '../../services/auth_service.dart';
 import 'register_form.dart';

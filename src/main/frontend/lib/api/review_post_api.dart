@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
-import '../models/free_post.dart';
+import '../models/review_post.dart';
 import '../utils/constants.dart';
 import '../services/auth_service.dart';
 import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 
-class FreePostApi {
+class ReviewPostApi {
   static final Dio _dio = Dio(
     BaseOptions(
       baseUrl: AppConstants.baseUrl,
@@ -16,23 +16,21 @@ class FreePostApi {
     ),
   );
 
-  static Future<List<FreePost>> fetchFreePosts() async {
+  static Future<List<ReviewPost>> fetchReviewPosts() async {
     try {
       final authService = AuthService();
       final token = await authService.getAccessToken();
-
       final response = await _dio.get(
-        '/members/free-posts',
+        '/members/review-posts',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
           },
         ),
       );
-      print('게시글 목록 API 응답: ${response.data}');
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
-        return data.map((json) => FreePost.fromJson(json)).toList();
+        return data.map((json) => ReviewPost.fromJson(json)).toList();
       } else {
         throw Exception('서버 오류: ${response.statusCode}');
       }
@@ -41,34 +39,32 @@ class FreePostApi {
     }
   }
 
-  static Future<void> createFreePost({
+  static Future<void> createReviewPost({
     required String title,
     required String content,
+    required String type,
+    required int rank,
     List<XFile>? images,
   }) async {
     try {
       final authService = AuthService();
       final token = await authService.getAccessToken();
-
-      print('글 작성 요청 시작: title=$title, content=$content');
-      
       final Map<String, dynamic> formDataMap = {
         'info': jsonEncode({
           'title': title,
           'content': content,
+          'type': type,
+          'rank': rank,
         }),
       };
-
       if (images != null && images.isNotEmpty) {
         formDataMap['images'] = await Future.wait(
           images.map((img) => MultipartFile.fromFile(img.path, filename: img.name)),
         );
       }
-
       final formData = FormData.fromMap(formDataMap);
-
       final response = await _dio.post(
-        '/members/free-posts',
+        '/members/review-posts',
         data: formData,
         options: Options(
           headers: {
@@ -76,46 +72,42 @@ class FreePostApi {
           },
         ),
       );
-      print('글 작성 응답: ${response.statusCode}');
-      
       if (response.statusCode != 200 && response.statusCode != 201) {
         throw Exception('글 작성 실패: ${response.statusCode}');
       }
     } catch (e) {
-      print('글 작성 에러: $e');
       throw Exception('글 작성 중 오류가 발생했습니다: $e');
     }
   }
 
-  static Future<FreePost> fetchFreePostDetail(int postId) async {
+  static Future<ReviewPost> fetchReviewPostDetail(int postId) async {
     try {
       final authService = AuthService();
       final token = await authService.getAccessToken();
       final response = await _dio.get(
-        '/members/free-posts/$postId',
+        '/members/review-posts/$postId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
           },
         ),
       );
-      print('게시글 상세 API 응답: ${response.data}');
       if (response.statusCode == 200) {
-        return FreePost.fromJson(response.data);
+        return ReviewPost.fromJson(response.data);
       } else {
-        throw Exception('서버 오류: $response.statusCode');
+        throw Exception('서버 오류: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('게시글 상세 정보를 불러오지 못했습니다: $e');
     }
   }
 
-  static Future<void> deleteFreePost(int postId) async {
+  static Future<void> deleteReviewPost(int postId) async {
     try {
       final authService = AuthService();
       final token = await authService.getAccessToken();
       final response = await _dio.delete(
-        '/members/free-posts/$postId',
+        '/members/review-posts/$postId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -130,25 +122,35 @@ class FreePostApi {
     }
   }
 
-  static Future<void> editFreePost({
+  static Future<void> editReviewPost({
     required int postId,
     required String title,
     required String content,
+    required String type,
+    required int rank,
+    List<XFile>? images,
+    List<int>? deleteImageIds,
   }) async {
     try {
       final authService = AuthService();
       final token = await authService.getAccessToken();
-      
-      // FormData 생성
-      final formData = FormData.fromMap({
+      final Map<String, dynamic> formDataMap = {
         'info': jsonEncode({
           'title': title,
           'content': content,
+          'type': type,
+          'rank': rank,
+          'deleteImageIds': deleteImageIds ?? [],
         }),
-      });
-
+      };
+      if (images != null && images.isNotEmpty) {
+        formDataMap['images'] = await Future.wait(
+          images.map((img) => MultipartFile.fromFile(img.path, filename: img.name)),
+        );
+      }
+      final formData = FormData.fromMap(formDataMap);
       final response = await _dio.put(
-        '/members/free-posts/$postId',
+        '/members/review-posts/$postId',
         data: formData,
         options: Options(
           headers: {
