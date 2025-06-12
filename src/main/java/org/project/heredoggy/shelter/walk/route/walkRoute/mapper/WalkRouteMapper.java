@@ -1,7 +1,7 @@
 package org.project.heredoggy.shelter.walk.route.walkRoute.mapper;
 
-import org.project.heredoggy.domain.postgresql.walk.route.RoutePoint;
-import org.project.heredoggy.domain.postgresql.walk.route.WalkRoute;
+import org.project.heredoggy.domain.postgresql.walk.walkRoute.RoutePoint;
+import org.project.heredoggy.domain.postgresql.walk.walkRoute.WalkRoute;
 import org.project.heredoggy.shelter.walk.route.walkRoute.dto.RoutePointResponseDTO;
 import org.project.heredoggy.shelter.walk.route.walkRoute.dto.WalkRouteResponseDTO;
 import org.springframework.stereotype.Component;

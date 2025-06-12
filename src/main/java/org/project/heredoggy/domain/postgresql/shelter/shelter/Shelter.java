@@ -5,7 +5,7 @@ import lombok.*;
 import org.project.heredoggy.domain.postgresql.adoption.Adoption;
 import org.project.heredoggy.domain.postgresql.dog.Dog;
 import org.project.heredoggy.domain.postgresql.member.Member;
-import org.project.heredoggy.domain.postgresql.walk.route.WalkRoute;
+import org.project.heredoggy.domain.postgresql.walk.walkRoute.WalkRoute;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
