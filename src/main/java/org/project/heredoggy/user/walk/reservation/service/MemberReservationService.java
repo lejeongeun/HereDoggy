@@ -227,7 +227,7 @@ public class MemberReservationService {
         }
 
         WalkRoute walkRoute = walkRouteRepository.findById(walkRoutesId)
-                .orElseThrow(()-> new NotFoundException(ErrorMessages.WALK_ROUTE_NOT_FOUND));
+                .orElseThrow(()-> new NotFoundException(ErrorMessages.WALK_NOT_FOUND));
         if (!walkRoute.getShelter().getId().equals(reservation.getShelter().getId())){
             throw new UnauthorizedException("해당 보호소의 경로가 아닙니다.");
         }
@@ -259,6 +259,4 @@ public class MemberReservationService {
             throw new BadRequestException("해당 강아지는 오후 예약이 이미 존재합니다.");
         }
     }
-
-
 }

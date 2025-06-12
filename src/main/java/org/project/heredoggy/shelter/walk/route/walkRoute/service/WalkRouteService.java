@@ -70,7 +70,7 @@ public class WalkRouteService {
     public WalkRouteResponseDTO getDetailsWalkRoute(CustomUserDetails userDetails, Long sheltersId, Long walkRoutesId) {
         SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
         WalkRoute walkRoute = walkRouteRepository.findById(walkRoutesId)
-                .orElseThrow(()-> new NotFoundException(ErrorMessages.WALK_ROUTE_NOT_FOUND));
+                .orElseThrow(()-> new NotFoundException(ErrorMessages.WALK_NOT_FOUND));
         return walkRouteMapper.toDto(walkRoute);
 
     }
@@ -79,7 +79,7 @@ public class WalkRouteService {
     public void deleteWalkRoute(CustomUserDetails userDetails, Long sheltersId, Long walkRoutesId) {
         Shelter shelter = SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
         WalkRoute walkRoute = walkRouteRepository.findById(walkRoutesId)
-                .orElseThrow(()-> new NotFoundException(ErrorMessages.WALK_ROUTE_NOT_FOUND));
+                .orElseThrow(()-> new NotFoundException(ErrorMessages.WALK_NOT_FOUND));
         if (!walkRoute.getShelter().getId().equals(shelter.getId())){
             throw new BadRequestException("해당 보호소의 산책 경로가 아닙니다.");
         }

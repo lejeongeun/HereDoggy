@@ -8,4 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WalkRecordStartRequestDTO {
+    private Long reservationId;
+    private Long walkRouteId;
+
 }
