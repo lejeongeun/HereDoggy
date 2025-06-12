@@ -2,16 +2,14 @@ package org.project.heredoggy.user.walk.reservation.service;
 
 import com.sun.jdi.request.InvalidRequestStateException;
 import lombok.RequiredArgsConstructor;
-import org.project.heredoggy.dog.dto.DogImageResponseDTO;
 import org.project.heredoggy.dog.dto.DogResponseDTO;
 import org.project.heredoggy.domain.postgresql.dog.Dog;
-import org.project.heredoggy.domain.postgresql.dog.DogImage;
 import org.project.heredoggy.domain.postgresql.dog.DogRepository;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
 import org.project.heredoggy.domain.postgresql.walk.reservation.*;
-import org.project.heredoggy.domain.postgresql.walk.route.WalkRoute;
-import org.project.heredoggy.domain.postgresql.walk.route.WalkRouteRepository;
+import org.project.heredoggy.domain.postgresql.walk.walkRoute.WalkRoute;
+import org.project.heredoggy.domain.postgresql.walk.walkRoute.WalkRouteRepository;
 import org.project.heredoggy.global.error.ErrorMessages;
 import org.project.heredoggy.global.exception.BadRequestException;
 import org.project.heredoggy.global.exception.NotFoundException;
@@ -30,7 +28,6 @@ import org.project.heredoggy.user.walk.reservation.mapper.MemberReservationMappe
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.naming.AuthenticationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -230,7 +227,7 @@ public class MemberReservationService {
         }
 
         WalkRoute walkRoute = walkRouteRepository.findById(walkRoutesId)
-                .orElseThrow(()-> new NotFoundException(ErrorMessages.WALK_ROUTE_NOT_FOUND));
+                .orElseThrow(()-> new NotFoundException(ErrorMessages.WALK_NOT_FOUND));
         if (!walkRoute.getShelter().getId().equals(reservation.getShelter().getId())){
             throw new UnauthorizedException("해당 보호소의 경로가 아닙니다.");
         }
@@ -262,6 +259,4 @@ public class MemberReservationService {
             throw new BadRequestException("해당 강아지는 오후 예약이 이미 존재합니다.");
         }
     }
-
-
 }

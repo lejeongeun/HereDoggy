@@ -12,7 +12,7 @@ public class ErrorMessages {
     public static final String RESERVATION_NOT_FOUND = "예약 정보가 없습니다.";
     public static final String UNAUTHORIZED_ACCESS = "접근 권한이 없습니다.";
     public static final String OPTIONS_INFO_NOT_FOUND = "해당 옵션 정보가 존재하지 않습니다.";
-    public static final String WALK_ROUTE_NOT_FOUND = "해당 정보가 존재하지 않습니다.";
+    public static final String WALK_NOT_FOUND = "해당 정보가 존재하지 않습니다.";
     public static final String WALK_ROUTE_LIMIT = "기본 산책경로는 보호소당 최대 3개까지만 등록할 수 있습니다.";
     public static final String MEMBER_NOT_FOUND = "회원 정보가 없습니다. 다시 확인하여 주세요";
     public static final String ADOPTION_DOG_INVALID = "이미 입양된 강아지입니다.";
