@@ -1,11 +1,9 @@
-// components/shelter/walk/AddRouteCard.jsx
-
 import { Link } from "react-router-dom";
 
-function AddRouteCard() {
+function AddRouteCard({ onAddNewRoute }) {
   return (
-    <Link
-      to="/shelter/walkregister"
+    <div
+      onClick={onAddNewRoute}
       style={{
         border: "2px dashed #aac",
         borderRadius: 12,
@@ -20,12 +18,14 @@ function AddRouteCard() {
         color: "#888",
         fontSize: 36,
         fontWeight: "bold",
+        cursor: "pointer",
       }}
     >
       <span style={{ fontSize: 60, marginBottom: 12 }}>+</span>
       <div style={{ fontSize: 18 }}>산책로 추가</div>
-    </Link>
+    </div>
   );
 }
 
 export default AddRouteCard;
+

@@ -34,7 +34,7 @@ function NoticeList() {
   return (
     <div className="notice-list-wrap">
       <div className="notice-list-header">
-        <h3 className="notice-list-title">공지사항</h3>
+        <h2 className="notice-list-title">공지사항</h2>
         <Link to="/shelter/noticewrite" className="notice-list-btn">
           작성하기
         </Link>
@@ -45,37 +45,21 @@ function NoticeList() {
         ) : (
           notices.map((notice) => (
             <div className="notice-item" key={notice.id}>
-              <div className={`notice-head${openId === notice.id ? " open" : ""}`}>
-                <Link
-                  to={`/shelter/notice/detail/${notice.id}`}
-                  className="notice-title-link"
-                  style={{
-                    flex: 1,
-                    textDecoration: "none",
-                    color: "#2a2a2a",
-                    fontWeight: 500,
-                    fontSize: "1.11rem",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    marginRight: "17px",
-                  }}
-                >
-                  {notice.title}
-                </Link>
-                <span className="notice-date" style={{marginRight:'19px'}}>
-                  {(notice.createdAt || notice.date || "").slice(0, 10)}
-                </span>
-                <span
+              <div className="notice-head" onClick={(e) => handleToggle(e, notice.id)}>
+                <div className="notice-title-date">
+                  <Link to={`/shelter/notice/detail/${notice.id}`} className="notice-title-link">
+                    {notice.title}
+                  </Link>
+                  <span className="notice-date">
+                    {(notice.createdAt || "").slice(0, 10)}
+                  </span>
+                </div>
+                <button
                   className="notice-toggle"
-                  onClick={(e) => handleToggle(e, notice.id)}
-                  style={{ cursor: "pointer" }}
-                  tabIndex={0}
                   aria-label="내용 열기/닫기"
-                  role="button"
                 >
                   {openId === notice.id ? "–" : "+"}
-                </span>
+                </button>
               </div>
               {openId === notice.id && (
                 <div className="notice-content">

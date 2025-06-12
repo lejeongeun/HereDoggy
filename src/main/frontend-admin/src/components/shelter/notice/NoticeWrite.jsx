@@ -1,16 +1,24 @@
 import React, { useState } from "react";
 import { createNotice } from "../../../api/shelter/notice";
 import { useNavigate } from "react-router-dom";
-import "../../../styles/shelter/notice/noticeWrite.css"; // 경로 맞게!
+import "../../../styles/shelter/notice/noticeWrite.css";
 
 function NoticeWrite() {
   const [form, setForm] = useState({ title: "", content: "" });
+  const [images, setImages] = useState([]);
+  const [previewUrls, setPreviewUrls] = useState([]);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    setImages(files);
+    setPreviewUrls(files.map(file => URL.createObjectURL(file)));
   };
 
   const handleSubmit = async (e) => {
@@ -20,8 +28,9 @@ function NoticeWrite() {
       setError("제목과 내용을 모두 입력해 주세요.");
       return;
     }
+
     try {
-      await createNotice(form);
+      await createNotice({ ...form, images });
       alert("공지 작성이 완료되었습니다!");
       navigate("/shelter/noticelist");
     } catch (err) {
@@ -42,11 +51,11 @@ function NoticeWrite() {
               className="nw-input"
               value={form.title}
               onChange={handleChange}
-              required
               placeholder="공지 제목 입력"
               maxLength={100}
             />
           </label>
+
           <label className="nw-label">
             내용
             <textarea
@@ -54,13 +63,34 @@ function NoticeWrite() {
               className="nw-textarea"
               value={form.content}
               onChange={handleChange}
-              required
               placeholder="공지 내용 입력"
               rows={8}
               maxLength={2000}
             />
           </label>
+
+          <label className="nw-label">
+            이미지 첨부 (선택)
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleImageChange}
+              className="nw-input"
+              style={{ padding: "10px" }}
+            />
+          </label>
+
+          {previewUrls.length > 0 && (
+            <div className="nw-image-preview">
+              {previewUrls.map((url, idx) => (
+                <img key={idx} src={url} alt={`미리보기 ${idx}`} className="nw-preview-img" />
+              ))}
+            </div>
+          )}
+
           {error && <div className="nw-error">{error}</div>}
+
           <div className="nw-btns">
             <button type="submit" className="nw-btn nw-btn-main">등록</button>
             <button

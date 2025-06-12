@@ -1,123 +1,121 @@
-.notice-list-wrap {
-  width: 100%;
-  margin: 0 auto;
-  padding: 10px;
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 2px 12px rgba(24,76,36,0.08);
+:root {
+  --primary-color: #0f8a5f;
+  --primary-hover: #0c6e4c;
+  --text-color: #222;
+  --muted-color: #777;
+  --bg-color: #f9fafb;
+  --card-bg: #ffffff;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --radius: 12px;
 }
+
+.notice-list-wrap {
+  max-width: 840px;
+  margin: 40px auto;
+  padding: 0 20px;
+  background: var(--bg-color);
+}
+
 .notice-list-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 18px;
+  align-items: center;
+  margin-bottom: 24px;
 }
+
 .notice-list-title {
-  font-size: 1.22rem;
+  font-size: 26px;
   font-weight: 700;
-  color: #21573d;
+  color: var(--text-color);
 }
+
 .notice-list-btn {
-  background: #26a869;
+  background-color: var(--primary-color);
   color: #fff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  text-decoration: none;
   font-weight: 600;
-  text-decoration: none;
-  border: none;
-  padding: 8px 22px;
-  border-radius: 10px;
-  box-shadow: 0 1px 7px rgba(44,190,120,0.09);
-  transition: background 0.17s, box-shadow 0.13s, transform 0.13s;
-  letter-spacing: 0.2px;
-  cursor: pointer;
-  display: inline-block;
+  transition: background 0.2s ease;
 }
-.notice-list-btn:hover, .notice-list-btn:focus {
-  background: #1c8050;
-  box-shadow: 0 3px 12px rgba(44,190,120,0.14);
-  color: #fff;
-  transform: translateY(-2px) scale(1.04);
-  text-decoration: none;
+.notice-list-btn:hover {
+  background-color: var(--primary-hover);
 }
+
 .notice-list {
-  border-top: 1.5px solid #e4ebe5;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
+
 .notice-item {
-  border-bottom: 1px solid #f0f3f3;
-  background: #fff;
-  transition: background 0.18s;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px 24px;
+  transition: transform 0.2s ease;
 }
-.notice-item.empty {
-  color: #a2b2a7;
-  font-size: 1.09rem;
-  padding: 38px 0 30px 0 !important;
-  text-align: center;
+.notice-item:hover {
+  transform: translateY(-3px);
 }
+
 .notice-head {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: 18px 14px;
   cursor: pointer;
-  position: relative;
-  background: #fff;
-  transition: background 0.16s;
 }
-.notice-head.open,
-.notice-head:hover {
-  background: #f4faf6;
+
+.notice-title-date {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
+
 .notice-title-link {
-  flex: 1;
-  font-size: 1.11rem;
-  font-weight: 500;
-  color: #233523;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-right: 17px;
-  letter-spacing: -0.5px;
-  transition: color 0.18s;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-color);
+  text-decoration: none;
 }
 .notice-title-link:hover {
   text-decoration: underline;
-  color: #238f64;
 }
+
 .notice-date {
-  color: #99a7a2;
-  font-size: 1.01rem;
-  font-weight: 400;
-  margin-right: 16px;
-  min-width: 86px;
-  text-align: right;
+  font-size: 14px;
+  color: var(--muted-color);
 }
+
 .notice-toggle {
-  width: 30px;
-  text-align: center;
-  font-size: 1.35rem;
-  color: #3fc382;
-  font-weight: 900;
-  transition: color 0.14s;
-  margin-left: 3px;
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-weight: bold;
   cursor: pointer;
+  transition: transform 0.2s ease;
 }
-.notice-head.open .notice-toggle {
-  color: #226943;
+.notice-toggle:hover {
+  transform: scale(1.2);
 }
-.notice-toggle:hover,
-.notice-toggle:focus {
-  color: #176140;
-  outline: none;
-}
+
 .notice-content {
-  background: #fafdfe;
-  padding: 23px 22px 20px 28px;
-  font-size: 1.04rem;
-  color: #255838;
-  border-top: 1px solid #f1f2f6;
-  border-radius: 0 0 14px 14px;
-  animation: fadeInAcco 0.21s;
-  line-height: 1.65;
+  margin-top: 16px;
+  padding: 16px;
+  background: #f3f4f6;
+  border-radius: 8px;
+  font-size: 15px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  color: #333;
 }
-@keyframes fadeInAcco {
-  from { opacity: 0; transform: translateY(-12px);}
-  to   { opacity: 1; transform: none;}
+
+.notice-item.empty {
+  padding: 40px;
+  text-align: center;
+  color: var(--muted-color);
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }

@@ -1,55 +1,50 @@
+import '../../../styles/shelter/walk/walkRouteCard.css';
 
+function WalkRouteCard({ route, onDelete, onSelect }) {
+  // 썸네일: route.thumbnailUrl 또는 카카오 Static Map url로 fallback
+  const appkey = process.env.REACT_APP_KAKAO_REST_API_KEY;
+  const thumbnail =
+    route.thumbnailUrl ||
+    getStaticMapUrl(route.points, appkey);
 
-import { Link } from "react-router-dom";
-
-function WalkRouteCard({ route, onDelete }) {
-  const handleDelete = (e) => {
-    e.preventDefault(); // 카드 클릭 방지
-    if (window.confirm("정말 삭제하시겠습니까?")) {
-      onDelete(route.id);
-    }
-  };
-
-  return (
-    <Link
-      to={`/shelter/walkregister?lat=${route.centerLat}&lng=${route.centerLng}`}
-      style={{
-        border: "1px solid #eee",
-        borderRadius: 12,
-        padding: 24,
-        background: "#fafafa",
-        minHeight: 200,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        textDecoration: "none",
-        color: "#333",
-      }}
-    >
+   return (
+    <div className="walk-route-card" onClick={onSelect}>
       <img
-        src={route.thumbnailUrl}
-        alt="미리보기"
-        style={{ width: "100%", height: 120, objectFit: "cover", marginBottom: 12 }}
+        src={thumbnail}
+        alt={"지도 썸네일"}
+        className="walk-route-thumb"
       />
-      <div style={{ fontSize: 18, fontWeight: "bold" }}>{route.routeName}</div>
-      <div style={{ marginTop: 12 }}>
-        <div><strong>거리:</strong> {route.totalDistance.toFixed(1)} m</div>
-        <div><strong>시간:</strong> {route.expectedDuration} 분</div>
+      <div className="walk-route-info">
+        <div className="walk-route-title-row">
+          <div className="walk-route-title">{route.routeName}</div>
+          <button
+            className="walk-route-del-btn"
+            onClick={e => {
+              e.stopPropagation();
+              onDelete(route.id);
+            }}
+          >삭제</button>
+        </div>
+        <div className="walk-route-desc">{route.description}</div>
+        <div className="walk-route-meta">
+          <strong>총 거리:</strong> {(route.totalDistance || 0).toFixed(1)} m
+          <span>
+            <strong>예상 시간:</strong> {route.expectedDuration || 0}분
+          </span>
+        </div>
       </div>
-      <button onClick={handleDelete} style={{
-        marginTop: 12,
-        background: "#f44336",
-        color: "#fff",
-        border: "none",
-        padding: "6px 12px",
-        borderRadius: 4,
-        cursor: "pointer"
-      }}>
-        삭제
-      </button>
-    </Link>
+    </div>
   );
+
+}
+
+function getStaticMapUrl(points, appkey) {
+  if (!points?.length) return `https://dapi.kakao.com/v2/maps/staticmap?center=37.5665,126.9780&level=5&size=300x150&appkey=${appkey}`;
+  const center = `${points[0].lng},${points[0].lat}`;
+  const path = points
+    .map(p => `${p.lng},${p.lat}`)
+    .join('|');
+  return `https://dapi.kakao.com/v2/maps/staticmap?center=${center}&level=5&size=300x150&appkey=${appkey}&path=lw:4|lc:0F8A5F|${path}`;
 }
 
 export default WalkRouteCard;

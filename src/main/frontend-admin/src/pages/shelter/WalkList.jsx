@@ -1,22 +1,29 @@
-// WalkList.jsx
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, forwardRef, useImperativeHandle } from "react";
 import { fetchWalkRoutes, deleteRoute } from "../../api/shelter/route";
 import WalkRouteCard from "../../components/shelter/walk/WalkRouteCard";
 import AddRouteCard from "../../components/shelter/walk/AddRouteCard";
+import '../../styles/shelter/walk/walkList.css';
 
-function WalkList({ sheltersId }) {
+const WalkList = forwardRef(({ sheltersId, onRouteSelect, onAddNewRoute }, ref) => {
   const [walkRoutes, setWalkRoutes] = useState([]);
   const maxRoutes = 3;
 
+  // ✅ 외부에서 호출할 수 있도록 함수로 분리
+  const loadRoutes = async () => {
+    try {
+      const data = await fetchWalkRoutes(sheltersId);
+      setWalkRoutes(Array.isArray(data) ? data : []);
+    } catch (err) {
+      alert("산책 경로를 불러오는 데 실패했습니다");
+    }
+  };
+
+  // ✅ 부모에서 loadRoutes를 호출할 수 있게 함
+  useImperativeHandle(ref, () => ({
+    fetchRoutes: loadRoutes,
+  }));
+
   useEffect(() => {
-    const loadRoutes = async () => {
-      try {
-        const data = await fetchWalkRoutes(sheltersId);
-        setWalkRoutes(Array.isArray(data) ? data : []);
-      } catch (err) {
-        alert("산책 경로를 불러오는 데 실패했습니다");
-      }
-    };
     loadRoutes();
   }, [sheltersId]);
 
@@ -35,26 +42,24 @@ function WalkList({ sheltersId }) {
   while (cards.length < maxRoutes) cards.push(null);
 
   return (
-    <div style={{ maxWidth: 800, margin: "0 auto", padding: 32 }}>
-      <h2>산책로 관리</h2>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 24,
-          marginTop: 32,
-        }}
-      >
+    <div className="walk-list-wrap">
+      <h2 className="walk-list-title">산책로 관리</h2>
+      <div className="walk-list-grid">
         {cards.map((route, idx) =>
           route ? (
-            <WalkRouteCard key={route.id} route={route} onDelete={handleDelete} />
+            <WalkRouteCard
+              key={route.id}
+              route={route}
+              onDelete={handleDelete}
+              onSelect={() => onRouteSelect(route)}
+            />
           ) : (
-            <AddRouteCard key={`add-${idx}`} />
+            <AddRouteCard key={`add-${idx}`} onAddNewRoute={onAddNewRoute} />
           )
         )}
       </div>
     </div>
   );
-}
+});
 
 export default WalkList;

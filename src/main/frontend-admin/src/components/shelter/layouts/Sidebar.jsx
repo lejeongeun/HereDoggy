@@ -6,7 +6,7 @@ const menuList = [
  { name: '공지사항', path: '/shelter/noticelist' },
  { name: '동물 관리 및 등록', path: '/shelter/doglist' },
  { name: '산책예약 관리', path: '/shelter/walkreservationlist' },
- { name: '산책로 관리', path: '/shelter/walklist' },
+ { name: '산책로 관리', path: '/shelter/walkmanager' },
  { name: '입양 관리', path: '/shelter/adoptionmanager' },
  { name: '후원 관리', path: '/shelter/donationmanager' },
 ];

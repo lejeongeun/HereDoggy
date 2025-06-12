@@ -43,11 +43,4 @@ public class WalkRoute {
     @OneToMany(mappedBy = "walkRoute", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoutePoint> points = new ArrayList<>();
 
-//    public void addPoint(RoutePoint point){
-//        if (this.points == null) {
-//            this.points = new ArrayList<>();
-//        }
-//        this.points.add(point);
-//        point.setWalkRoute(this);
-//    }
 }

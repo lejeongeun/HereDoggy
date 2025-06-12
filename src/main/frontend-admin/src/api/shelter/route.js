@@ -1,9 +1,7 @@
 import api from "./api";
 
-export const createRoute = (sheltersId, formData) =>
-  api.post(`/api/shelters/${sheltersId}/walk-routes`, formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+export const createRoute = (sheltersId, data) =>
+  api.post(`/api/shelters/${sheltersId}/walk-routes`, data);
 
 export const updateRoute = (sheltersId, routesId, data) =>
   api.put(`/api/shelters/${sheltersId}/walk-routes/${routesId}`, data);

@@ -1,68 +1,96 @@
-.walk-reservation-container {
-  padding: 24px;
-  max-width: 800px;
-  margin: 0 auto;
+.walk-container {
+  max-width: 520px;
+  margin: 40px auto 0;
+  padding: 28px 28px 18px 28px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px 0 rgba(0,0,0,0.09);
 }
 
-.walk-reservation-title {
-  font-size: 1.8rem;
+.walk-title {
+  font-size: 1.45rem;
   font-weight: bold;
-  margin-bottom: 24px;
-  color: #333;
+  margin-bottom: 28px;
+  text-align: center;
+  color: #26996f;
+  letter-spacing: 0.5px;
 }
 
-.walk-reservation-list {
+.walk-list {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
-.walk-reservation-item {
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 18px;
-  background-color: #fafafa;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+.walk-item {
+  background: #f7f7fa;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  padding: 18px 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  transition: transform 0.12s;
 }
 
-.walk-reservation-item p {
-  margin: 6px 0;
-  color: #333;
-  font-size: 0.95rem;
+.walk-item:hover {
+  transform: scale(1.018);
+  background: #e7ffe5;
 }
 
-.walk-reservation-item strong {
-  color: #222;
+.walk-link {
+  text-decoration: none;
+  color: #242424;
+  font-size: 1.08rem;
+  display: block;
 }
 
-.walk-reservation-actions {
-  margin-top: 12px;
+.walk-status {
+  float: right;
+  font-size: 0.96rem;
+  color: #26996f;
+  font-weight: 600;
 }
-
-.walk-reservation-actions button {
-  padding: 8px 16px;
-  margin-right: 10px;
-  border: none;
+.walk-empty {
+  text-align: center;
+  color: #aaa;
+  padding: 40px 0 24px;
+  font-size: 1.1rem;
+}
+.walk-member {
+  font-weight: 600;
+}
+.walk-dot {
+  margin: 0 8px;
+  color: #aaa;
+  font-size: 1.1em;
+}
+.walk-dog {
+  color: #26996f;
+  font-weight: 500;
+}
+.walk-date {
+  font-size: 0.98rem;
+  color: #555;
+  margin: 6px 0 0 2px;
+}
+.walk-status {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 0.96rem;
+  font-weight: 600;
+  padding: 2px 8px;
   border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  background: #eee;
 }
-
-.walk-reservation-actions button:first-of-type {
-  background-color: #4CAF50;
-  color: white;
+.walk-status--pending {
+  color: #f09e00;
+  background: #fff6e3;
 }
-
-.walk-reservation-actions button:first-of-type:hover {
-  background-color: #3e8e41;
+.walk-status--approved {
+  color: #26996f;
+  background: #e4f8ef;
 }
-
-.walk-reservation-actions button:last-of-type {
-  background-color: #e53935;
-  color: white;
-}
-
-.walk-reservation-actions button:last-of-type:hover {
-  background-color: #c62828;
+.walk-status--rejected,
+.walk-status--canceled {
+  color: #e45a5a;
+  background: #fde7e7;
 }

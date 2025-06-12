@@ -8,6 +8,15 @@ function NoticeUpdate() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const { id } = useParams();
+  const [images, setImages] = useState([]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   useEffect(() => {
     async function fetchNotice() {
@@ -21,26 +30,26 @@ function NoticeUpdate() {
     if (id) fetchNotice();
   }, [id]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!form.title.trim() || !form.content.trim()) {
+    setError("제목과 내용을 모두 입력해 주세요.");
+    return;
+  }
+  try {
+    const formData = new FormData();
+    formData.append("info", JSON.stringify({ title: form.title, content: form.content }));
+    images.forEach((file) => formData.append("images", file));
+    await updateNotice(id, formData);
+    alert("공지 수정이 완료되었습니다!");
+    navigate("/shelter/noticelist");
+  } catch (err) {
+    setError(
+      err?.response?.data?.message || "공지 수정에 실패했습니다. 다시 시도해 주세요."
+    );
+  }
+};
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
-    if (!form.title.trim() || !form.content.trim()) {
-      setError("제목과 내용을 모두 입력해 주세요.");
-      return;
-    }
-    try {
-      await updateNotice({ id, ...form });
-      alert("공지 수정이 완료되었습니다!");
-      navigate("/shelter/noticelist");
-    } catch {
-      setError("공지 수정에 실패했습니다. 다시 시도해 주세요.");
-    }
-  };
 
   return (
     <div className="notice-edit-wrap">
@@ -69,6 +78,14 @@ function NoticeUpdate() {
             rows={8}
             maxLength={2000}
           />
+          <input
+            type="file"
+            name="images"
+            accept="image/*"
+            multiple
+            onChange={e => setImages([...e.target.files])}
+          />
+
           {error && <div className="notice-edit-error">{error}</div>}
           <div className="notice-edit-btns">
             <button type="submit" className="ne-btn ne-btn-main">수정</button>

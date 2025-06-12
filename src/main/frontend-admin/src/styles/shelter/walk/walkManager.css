@@ -1,0 +1,55 @@
+/* 전체 레이아웃 */
+.walk-manager-wrap {
+  display: flex;
+  height: calc(100vh - 140px); /* 상단바 높이 고려 */
+  overflow: hidden;
+  position: relative;
+  background-color: #f9fafb; /* 전체 배경 흐리게 */
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+}
+
+/* 왼쪽 리스트 패널 */
+.walk-list-panel {
+  width: 360px;
+  min-width: 320px;
+  max-width: 400px;
+  overflow-y: auto;
+  height: 100%;
+  padding: 32px 20px 15px;
+  box-sizing: border-box;
+  border-right: 1px solid #e0e4e8;
+  background-color: #ffffff;
+  scrollbar-width: thin;
+}
+.walk-list-panel::-webkit-scrollbar {
+  width: 6px;
+}
+.walk-list-panel::-webkit-scrollbar-thumb {
+  background: #ccd3dc;
+  border-radius: 3px;
+}
+
+/* 오른쪽 지도 등록 고정 패널 */
+.walk-register-fixed {
+  position: fixed;
+  right: 32px;
+  width: calc(100% - 650px); /* 좌측 360px + 여백 48px (좌우합 440) */
+  height: calc(100vh - 96px); /* 상하 여백 고려 */
+  overflow-y: auto;
+  padding: 36px 40px;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e0e6ea;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  z-index: 10;
+  transition: all 0.2s ease-in-out;
+  scrollbar-width: thin;
+}
+.walk-register-fixed::-webkit-scrollbar {
+  width: 6px;
+}
+.walk-register-fixed::-webkit-scrollbar-thumb {
+  background: #ccd3dc;
+  border-radius: 3px;
+}

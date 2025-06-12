@@ -17,9 +17,10 @@ import NoticeUpdate from './components/shelter/notice/NoticeUpdate';
 import ShelterRegister from './pages/user/ShelterRequest';
 import DogDetail from './components/shelter/dog/DogDetail';
 import DogEdit from './components/shelter/dog/DogEdit';
-import WalkList from './pages/shelter/WalkList';
-import WalkRegister from './components/shelter/walk/WalkRegister';
+// import WalkList from './pages/shelter/WalkList';
+// import WalkRegister from './components/shelter/walk/WalkRegister';
 import WalkReservationDetail from './components/shelter/walk/WalkReservationDetail';
+import WalkManager from './components/shelter/walk/WalkManager';
 
 function App() {
   return (
@@ -45,13 +46,18 @@ function App() {
 
           <Route path="adoptionmanager" element={<AdoptionManager />} />
           <Route
+            path="walkmanager"
+            element={<WalkManager sheltersId={localStorage.getItem('shelters_id')} />}
+          />
+
+          {/* <Route
             path="walkregister"
             element={<WalkRegister sheltersId={localStorage.getItem('shelters_id')} />}
           />
           <Route
             path="walklist"
             element={<WalkList sheltersId={localStorage.getItem('shelters_id')} />}
-          />
+          /> */}
 
           <Route path="donationmanager" element={<DonationManager />} />
           <Route path="mypage" element={<MyPage />} />
