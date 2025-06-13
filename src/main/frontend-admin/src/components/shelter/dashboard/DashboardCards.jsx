@@ -1,9 +1,12 @@
 import '../../../styles/shelter/main/dashboardcards.css'
+import DogCount from './DogCount';
+import AdoptionCount from './AdoptedCount';
 
-function DashboardCards({ stats ={todayReservation: 6,
-   protecting: 25,
-   thisMonthAdoption: 12,
-   thisWeekWalk: 28} }) {
+function DashboardCards({ stats ={
+   todayReservation: 0,
+   currentDogsCount: 0,
+   thisMonthAdoption: 0,
+   thisWeekWalk: 0} }) {
   // stats: { 예약, 보호중, 입양, 산책 } 등 객체로 받음
   return (
     <div className="dashboard-cards">
@@ -12,12 +15,11 @@ function DashboardCards({ stats ={todayReservation: 6,
         <div className="card-label">오늘 예약</div>
       </div>
       <div className="dashboard-card">
-        <div className="card-value">{stats.protecting}</div>
-        <div className="card-label">보호 중인 동물</div>
+        <DogCount count={stats.currentDogsCount} />
       </div>
+
       <div className="dashboard-card">
-        <div className="card-value">{stats.thisMonthAdoption}</div>
-        <div className="card-label">이달 입양</div>
+        <AdoptionCount count={stats.currentDogsCount} />
       </div>
       <div className="dashboard-card">
         <div className="card-value">{stats.thisWeekWalk}</div>

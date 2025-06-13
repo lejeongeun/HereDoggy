@@ -14,9 +14,8 @@ import org.project.heredoggy.shelter.walk.route.walkRoute.dto.WalkRouteRequestDt
 import org.project.heredoggy.shelter.walk.route.walkRoute.dto.WalkRouteResponseDTO;
 import org.project.heredoggy.shelter.walk.route.walkRoute.mapper.WalkRouteMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +25,7 @@ public class WalkRouteService {
     private final WalkRouteRepository walkRouteRepository;
     private final WalkRouteMapper walkRouteMapper;
 
-    @Transactional
+
     public void createRoute(CustomUserDetails userDetails, Long sheltersId, WalkRouteRequestDto request) {
         Shelter shelter = SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
         long count = walkRouteRepository.countByShelterId(sheltersId);
@@ -43,22 +42,31 @@ public class WalkRouteService {
                 .shelter(shelter)
                 .build();
 
-        walkRouteRepository.save(walkRoute);
+//        request.getPoints().forEach(p -> {
+//            RoutePoint point = RoutePoint.builder()
+//                    .lat(p.getLat())
+//                    .lng(p.getLng())
+//                    .sequence(p.getSequence())
+//                    .pointType(p.getPointType())
+//                    .build();
+//            walkRoute.addPoint(point);
+//        });
 
         List<RoutePoint> routePoints = request.getPoints().stream()
-                        .map(point -> RoutePoint.builder()
-                                .lat(point.getLat())
-                                .lng(point.getLng())
-                                .sequence(point.getSequence())
-                                .pointType(point.getPointType())
-                                .walkRoute(walkRoute)
-                                .build())
+                .map(point -> RoutePoint.builder()
+                        .lat(point.getLat())
+                        .lng(point.getLng())
+                        .sequence(point.getSequence())
+                        .pointType(point.getPointType())
+                        .walkRoute(walkRoute)
+                        .build())
                 .collect(Collectors.toList());
 
         walkRoute.setPoints(routePoints);
+
+        walkRouteRepository.save(walkRoute);
     }
 
-    @Transactional(readOnly = true)
     public List<WalkRouteResponseDTO> getAllWalkRoute(CustomUserDetails userDetails, Long sheltersId) {
         SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
         return walkRouteRepository.findAllByShelterId(sheltersId).stream()
@@ -66,7 +74,6 @@ public class WalkRouteService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
     public WalkRouteResponseDTO getDetailsWalkRoute(CustomUserDetails userDetails, Long sheltersId, Long walkRoutesId) {
         SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
         WalkRoute walkRoute = walkRouteRepository.findById(walkRoutesId)
@@ -75,7 +82,6 @@ public class WalkRouteService {
 
     }
 
-    @Transactional
     public void deleteWalkRoute(CustomUserDetails userDetails, Long sheltersId, Long walkRoutesId) {
         Shelter shelter = SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
         WalkRoute walkRoute = walkRouteRepository.findById(walkRoutesId)

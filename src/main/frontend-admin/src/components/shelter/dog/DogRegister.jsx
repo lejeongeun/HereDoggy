@@ -1,16 +1,15 @@
 import { useState } from "react";
-import '../../styles/shelter/pages/dogRegister.css';
-import api from "../../api/shelter/api";
+import '../../../styles/shelter/pages/dogRegister.css';
+import api from "../../../api/shelter/api";
+import { useNavigate } from "react-router-dom";
 
 function DogRegister() {
-  // localStorage에서 shelters_id 동적으로 가져오기
-  // const shelters_id = localStorage.getItem('shelters_id'); 실제 로그인 후 저장된 shelter_id 사용 시
-
-  const shelters_id = '1'; // 하드코딩으로 동물등록 테스트 (현재 db에 id : 1 보호소 더미로 넣어둠)
+  // localStorage에서 sheltersId 동적으로 가져오기
+  const sheltersId = localStorage.getItem("shelters_id");
 
   const [images, setImages] = useState([]);
-  const [previewUrls, setPreviewUrls] = useState(Array(5).fill(null)); // 5칸 고정
-
+  const [previewUrls, setPreviewUrls] = useState(Array(5).fill(null));
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     name: "",
     age: "",
@@ -19,14 +18,13 @@ function DogRegister() {
     personality: "",
     isNeutered: "",
     foundLocation: "",
-    status: "AVAILABLE",
+    status: "",
   });
 
   // 이미지 최대 5장, 미리보기, 5칸 고정
   const handleImageChange = (e) => {
     let files = Array.from(e.target.files);
 
-    // 기존 업로드 + 새 파일
     let newFiles = [...images, ...files];
     if (newFiles.length > 5) {
       alert("이미지는 최대 5장까지 등록할 수 있습니다.");
@@ -34,18 +32,15 @@ function DogRegister() {
     }
     setImages(newFiles);
 
-    // 5칸 고정 미리보기
     const preview = Array(5).fill(null);
     newFiles.forEach((file, idx) => {
       preview[idx] = URL.createObjectURL(file);
     });
     setPreviewUrls(preview);
 
-    // input 리셋 (같은 파일 다시 첨부 가능하게)
     e.target.value = "";
   };
 
-  // 입력값 변경
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm(prev => ({
@@ -53,38 +48,44 @@ function DogRegister() {
       [name]: value,
     }));
   };
+// 새 이미지 삭제
+const handleImageDelete = (idx) => {
+  // idx번째 이미지와 미리보기 제거
+  const newImages = images.filter((_, i) => i !== idx);
+  const newPreview = previewUrls.filter((_, i) => i !== idx);
 
-  // ...DogRegister 함수 컴포넌트 내부...
+  // 5칸 고정(비어있는 칸 null로 채우기)
+  while (newPreview.length < 5) newPreview.push(null);
+
+  setImages(newImages);
+  setPreviewUrls(newPreview);
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!shelters_id) {
+    if (!sheltersId) {
       alert("쉘터 정보가 없습니다. 다시 로그인 해주세요.");
       return;
     }
-    // JSON.stringify로 dog 정보 직렬화
     const dog = {
       ...form,
-      isNeutered: form.isNeutered === "true",  // Boolean 처리
+      isNeutered: form.isNeutered === "true",
       age: Number(form.age),
       weight: Number(form.weight),
     };
-    console.log("폼 데이터:", dog);
-    console.log("이미지:", images);
-    console.log("🐶 sheltersId:", shelters_id);
+
     if (images.length === 0) {
       alert("이미지는 1장 이상 첨부해주세요.");
       return;
     }
 
     const formData = new FormData();
-    formData.append("dog", JSON.stringify(dog));  // 반드시 JSON string
-    images.forEach(file => formData.append("images", file)); // 여러 파일 가능
+    formData.append("dog", JSON.stringify(dog));
+    images.forEach(file => formData.append("images", file));
 
     try {
-      // shelters_id는 실제 값으로 치환 필요
       const res = await api.post(
-        `/api/shelters/${shelters_id}/dogs`,
+        `/api/shelters/${sheltersId}/dogs`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -92,7 +93,7 @@ function DogRegister() {
         }
       );
       alert("등록이 완료되었습니다!");
-      // 등록 후 페이지 이동 등 처리
+      navigate("/shelter/doglist");
     } catch (err) {
       alert("등록 중 오류가 발생했습니다.");
       console.error(err);
@@ -106,23 +107,53 @@ function DogRegister() {
           url ? (
             <div className="dog-img-thumb" key={i}>
               <img src={url} alt={`preview${i}`} />
+              <button
+                type="button"
+                className="dog-img-del-btn"
+                onClick={() => handleImageDelete(i)}
+                tabIndex={-1}
+                title="삭제"
+              >x</button>
             </div>
           ) : (
             <div className="dog-img-thumb" key={i} />
           )
         )}
       </div>
+
       <div style={{ marginBottom: "16px" }}>
         <input
           type="file"
-          name="images"
+          id="dog-file"
           accept="image/*"
           multiple
+          style={{ display: "none" }}
           onChange={handleImageChange}
-          style={{ marginTop: 4, marginBottom: 12 }}
         />
-        <span style={{ fontSize: "0.96rem", color: "#6a757a" }}>최대 5장</span>
+        <label
+          htmlFor="dog-file"
+          style={{
+            display: "inline-block",
+            background: "#fff",
+            color: "#4AB071",
+            border: "2px solid #4AB071",
+            borderRadius: 8,
+            padding: "8px 18px",
+            fontWeight: 600,
+            cursor: "pointer",
+            marginRight: 12,
+            fontSize: "1rem"
+          }}
+        >
+          이미지 선택
+        </label>
+        <span style={{ fontSize: "0.96rem", color: "#6a757a" }}>
+          {images.length > 0
+            ? `${images.length}개 파일 선택됨`
+            : "최대 5장"}
+        </span>
       </div>
+
       <div className="dog-info-grid">
         <div className="dog-info-col">
           <div className="info-row">
@@ -200,8 +231,8 @@ function DogRegister() {
               required
             >
               <option value="">선택</option>
-              <option value="AVAILABLE">분양대기</option>
-              <option value="RESERVED">예약중</option>
+              <option value="AVAILABLE">예약가능</option>
+              <option value="RESERVED">예약완료</option>
               <option value="ADOPTED">입양완료</option>
             </select>
           </div>

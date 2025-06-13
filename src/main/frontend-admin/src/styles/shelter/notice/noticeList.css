@@ -1,0 +1,121 @@
+:root {
+  --primary-color: #0f8a5f;
+  --primary-hover: #0c6e4c;
+  --text-color: #222;
+  --muted-color: #777;
+  --bg-color: #f9fafb;
+  --card-bg: #ffffff;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --radius: 12px;
+}
+
+.notice-list-wrap {
+  max-width: 100%;
+  margin: 40px auto;
+  padding: 0 20px;
+  background: var(--bg-color);
+}
+
+.notice-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.notice-list-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.notice-list-btn {
+  background-color: var(--primary-color);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+.notice-list-btn:hover {
+  background-color: var(--primary-hover);
+}
+
+.notice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.notice-item {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px 24px;
+  transition: transform 0.2s ease;
+}
+.notice-item:hover {
+  transform: translateY(-3px);
+}
+
+.notice-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.notice-title-date {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.notice-title-link {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-color);
+  text-decoration: none;
+}
+.notice-title-link:hover {
+  text-decoration: underline;
+}
+
+.notice-date {
+  font-size: 14px;
+  color: var(--muted-color);
+}
+
+.notice-toggle {
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.notice-toggle:hover {
+  transform: scale(1.2);
+}
+
+.notice-content {
+  margin-top: 16px;
+  padding: 16px;
+  background: #f3f4f6;
+  border-radius: 8px;
+  font-size: 15px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  color: #333;
+}
+
+.notice-item.empty {
+  padding: 40px;
+  text-align: center;
+  color: var(--muted-color);
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}

@@ -14,18 +14,35 @@ function Login() {
 
     try {
       const response = await shelterLogin(useremail, password);
+      const { nextAction, message, role, shelterId } = response.data;
 
-      console.log("로그인 응답:", response.data);
+      alert(message || "로그인 성공");
 
-      // 백엔드가 세션 기반이므로 별도의 토큰 저장 X
-      alert(response.data || "로그인 성공");
+      // 로그인 성공 후 shelterId 저장
+      if (role === "SHELTER_ADMIN") {
+        localStorage.setItem("shelters_id", shelterId);
+      }
 
-      // 역할에 따라 라우팅 예시 (response.data에 role 정보가 없으면 직접 API 호출 필요)
-      // 여기서는 일단 쉘터 관리자 페이지로 이동
-      navigate("/shelter/dashboard");
+      setTimeout(() => {
+        if (nextAction) {
+          navigate(nextAction);
+        } else if (role === "SHELTER_ADMIN") {
+          navigate("/shelter/dashboard");
+        } else {
+          navigate("/");
+        }
+      }, 100);
     } catch (error) {
       if (error.response) {
-        alert("로그인 실패: " + (error.response.data || error.message));
+        const { nextAction, message } = error.response.data || {};
+        alert(message || "로그인 실패");
+        setTimeout(() => {
+          if (nextAction) {
+            navigate(nextAction);
+          } else {
+            navigate("/");
+          }
+        }, 100);
       } else {
         alert("서버 연결 실패");
       }
@@ -36,7 +53,7 @@ function Login() {
     <div className="login-container">
       <form className="login-form" onSubmit={handleSubmit}>
         <h2 className="login-title">어서오개</h2>
-        <div className="form-group">
+        <div className="login-form-group">
           <label>아이디</label>
           <input
             type="text"
@@ -46,7 +63,7 @@ function Login() {
             placeholder="이메일 입력"
           />
         </div>
-        <div className="form-group">
+        <div className="login-form-group">
           <label>비밀번호</label>
           <input
             type="password"

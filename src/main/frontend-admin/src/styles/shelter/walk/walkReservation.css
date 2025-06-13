@@ -1,0 +1,213 @@
+body {
+  background: #f6fcf7;
+}
+
+/* 컨테이너 */
+.walk-container {
+  max-width: 800px;
+  margin: 48px auto 0;
+  padding: 38px 32px 24px 32px;
+  background: #fff;
+  border-radius: 28px;
+  box-shadow: 0 12px 36px 0 rgba(38,153,111,0.10), 0 1.5px 5px 0 rgba(0,0,0,0.02);
+}
+
+/* 제목 */
+.walk-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 36px;
+  text-align: center;
+  color: #26996f;
+  letter-spacing: 0.7px;
+}
+
+.walk-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* 카드 효과 */
+.walk-item {
+  background: #fff;
+  border-radius: 18px;
+  margin-bottom: 22px;
+  box-shadow: 0 2px 12px rgba(38,153,111,0.08), 0 0.5px 2px rgba(0,0,0,0.03);
+  border: 2px solid transparent;
+  transition: box-shadow 0.22s cubic-bezier(.16,1,.32,1), border-color 0.17s, transform 0.22s cubic-bezier(.16,1,.32,1);
+  cursor: pointer;
+  min-height: 88px;
+  /* 카드 등장 애니메이션 */
+  animation: fadeUp 0.55s cubic-bezier(.21,1.02,.73,1) both;
+}
+
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(22px) scale(0.98);}
+  100% { opacity: 1; transform: none;}
+}
+
+/* Hover 효과 */
+.walk-item:hover,
+.walk-item:focus-within {
+  border-color: #24c279;
+  box-shadow: 0 12px 36px 0 rgba(38,153,111,0.20);
+  transform: translateY(-5px) scale(1.022);
+  z-index: 2;
+}
+
+/* 링크 전체 커버 */
+.walk-link {
+  display: block;
+  padding: 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 행 레이아웃 */
+.walk-main-row {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 16px 22px 15px 16px;
+}
+
+/* 썸네일 */
+.walk-thumb {
+  min-width: 54px;
+  height: 54px;
+  border-radius: 13px;
+  overflow: hidden;
+  background: #e8f8ef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #e2f4e5;
+  box-shadow: 0 1.5px 8px rgba(36,153,111,0.08);
+  transition: box-shadow 0.18s;
+}
+
+.walk-item:hover .walk-thumb {
+  box-shadow: 0 6px 16px rgba(36,153,111,0.13);
+}
+
+.walk-thumb img {
+  width: 54px;
+  height: 54px;
+  object-fit: cover;
+  border-radius: 13px;
+}
+
+/* 정보 그룹 */
+.walk-info {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 상단 라인 (이름/멤버/상태) */
+.walk-info-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.walk-dog {
+  color: #25b376;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-size: 1.12em;
+  text-shadow: 0 1px 3px rgba(38,153,111,0.03);
+}
+
+.walk-member {
+  font-weight: 600;
+  color: #25624c;
+  letter-spacing: 0.01em;
+}
+
+.walk-dot {
+  margin: 0 7px;
+  color: #c5e1d2;
+  font-size: 1.18em;
+  font-weight: bold;
+}
+
+.walk-status {
+  display: inline-block;
+  margin-left: auto;
+  padding: 3px 16px;
+  border-radius: 8px;
+  font-size: 1.01rem;
+  font-weight: 700;
+  background: #ecfdf6;
+  color: #26996f;
+  min-width: 80px;
+  text-align: center;
+  border: none;
+  box-shadow: 0 1.5px 4px rgba(36,153,111,0.04);
+  animation: bounceIn 0.5s cubic-bezier(.56,.01,.5,1.36);
+}
+
+@keyframes bounceIn {
+  0% { opacity: 0; transform: scale(0.7);}
+  80% { transform: scale(1.07);}
+  100% { opacity: 1; transform: scale(1);}
+}
+
+.walk-status--pending {
+  color: #e0a20b;
+  background: #fffbe8;
+  animation-delay: 0.1s;
+}
+.walk-status--approved {
+  color: #25b376;
+  background: #e4f8ef;
+  animation-delay: 0.15s;
+}
+.walk-status--rejected,
+.walk-status--canceled {
+  color: #e55c5c;
+  background: #fde7e7;
+  animation-delay: 0.1s;
+}
+
+/* 메타 정보 */
+.walk-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.99rem;
+  color: #71a38d;
+  letter-spacing: 0.01em;
+  font-weight: 500;
+}
+
+.walk-date {
+  color: #39966d;
+  font-size: 1.01rem;
+  font-weight: 500;
+}
+
+.walk-shelter {
+  color: #1e975e;
+  font-weight: 600;
+}
+
+/* 빈 상태 */
+.walk-empty {
+  text-align: center;
+  color: #b4b4b4;
+  padding: 48px 0 24px;
+  font-size: 1.16rem;
+  letter-spacing: 0.2px;
+  animation: fadeIn 0.6s both;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0;}
+  100% { opacity: 1;}
+}

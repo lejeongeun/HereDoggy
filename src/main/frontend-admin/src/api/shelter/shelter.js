@@ -1,8 +1,8 @@
 import api from "./api";
 
 // 보호소 생성 요청
-export const requestShelter = (data) =>
-   api.post("/api/shelters/requests", data);
+export const requestShelter = (form) =>
+  api.post("/api/shelter-request", form);
 
 // 보호소 프로필 조회
 export const getShelterProfile = () =>

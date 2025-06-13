@@ -62,7 +62,7 @@ public class ShelterNoticePostController {
 
     @DeleteMapping("/{post_id}")
     public ResponseEntity<Map<String, String>> removeNoticePost(@PathVariable("post_id") Long postId,
-                                                              @AuthenticationPrincipal CustomUserDetails userDetails) {
+                                                                @AuthenticationPrincipal CustomUserDetails userDetails) {
         noticePostService.removeNoticePost(postId, userDetails);
         return ResponseEntity.ok(Map.of("message", "보호소 공지게시판 삭제 완료"));
     }

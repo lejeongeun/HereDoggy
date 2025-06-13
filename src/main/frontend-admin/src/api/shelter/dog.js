@@ -19,14 +19,18 @@ export const getDogDetail = (sheltersId, dogId) =>
   api.get(`/api/shelters/${sheltersId}/dogs/${dogId}`);
 
 // 유기견 정보 수정
-export const updateDog = (sheltersId, dogId, dogData, images) => {
+export const updateDog = (sheltersId, dogId, dogData, newImages = [], deleteImageIds = []) => {
   const formData = new FormData();
   formData.append("dog", JSON.stringify(dogData));
-  images.forEach(img => formData.append("images", img));
+  // 새 이미지
+  (newImages || []).forEach(img => formData.append("newImages", img));
+  // 삭제할 이미지 id
+  (deleteImageIds || []).forEach(id => formData.append("deleteImageIds", id));
   return api.put(`/api/shelters/${sheltersId}/dogs/${dogId}`, formData, {
     headers: { "Content-Type": "multipart/form-data" }
   });
 };
+
 
 // 유기견 삭제
 export const deleteDog = (sheltersId, dogId) =>
