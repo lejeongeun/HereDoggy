@@ -1,6 +1,7 @@
 package org.project.heredoggy.user.posts.freePost.service;
 
 import lombok.RequiredArgsConstructor;
+import org.project.heredoggy.domain.postgresql.comment.CommentCountProjection;
 import org.project.heredoggy.domain.postgresql.comment.CommentRepository;
 import org.project.heredoggy.domain.postgresql.comment.PostType;
 import org.project.heredoggy.domain.postgresql.member.Member;
@@ -8,6 +9,7 @@ import org.project.heredoggy.domain.postgresql.post.PostImage;
 import org.project.heredoggy.domain.postgresql.post.PostImageRepository;
 import org.project.heredoggy.domain.postgresql.post.free.FreePost;
 import org.project.heredoggy.domain.postgresql.post.free.FreePostRepository;
+import org.project.heredoggy.domain.postgresql.post.like.LikeCountProjection;
 import org.project.heredoggy.domain.postgresql.post.like.LikeRepository;
 import org.project.heredoggy.global.exception.BadRequestException;
 import org.project.heredoggy.global.exception.ConflictException;
@@ -15,10 +17,13 @@ import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.util.AuthUtils;
 import org.project.heredoggy.image.ImageService;
 import org.project.heredoggy.security.CustomUserDetails;
+import org.project.heredoggy.user.comment.service.CommentService;
+import org.project.heredoggy.user.like.service.LikeService;
 import org.project.heredoggy.user.posts.freePost.dto.FreePostEditRequestDTO;
 import org.project.heredoggy.user.posts.freePost.dto.FreePostRequestDTO;
 import org.project.heredoggy.user.posts.freePost.dto.FreePostResponseDTO;
 import org.project.heredoggy.user.posts.freePost.dto.FreePostSummaryResponseDTO;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -27,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,6 +43,8 @@ public class FreePostService {
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
     private final ImageService imageService;
+    private final LikeService likeService;
+    private final CommentService commentService;
 
     @Transactional
     public void createFreePost(FreePostRequestDTO request, CustomUserDetails userDetails, List<MultipartFile> images) {
@@ -140,19 +148,26 @@ public class FreePostService {
 
 
     public Slice<FreePostSummaryResponseDTO> getFreePostsSlice(Pageable pageable) {
-
         Slice<FreePost> slice = freePostRepository.findAllBy(pageable);
+
+        List<Long> postIds = slice.getContent().stream()
+                .map(FreePost::getId)
+                .toList();
+
+        Map<Long, Long> likeCountMap = likeService.getLikeCountsBatch(PostType.FREE, postIds);
+        Map<Long, Long> commentCountMap = commentService.getCommentCountsBatch(PostType.FREE, postIds);
 
         return slice.map(post -> {
             String preview = post.getContent().length() > 20
                     ? post.getContent().substring(0, 20) + "..."
                     : post.getContent();
+
             String thumbnail = post.getPostImages().isEmpty()
                     ? "DEFAULT_IMG_URL"
                     : post.getPostImages().get(0).getImageUrl();
 
-            Long commentCount = commentRepository.countByPostIdAndPostType(post.getId(), PostType.FREE);
-            Long likeCount = likeRepository.countByFreePostId(post.getId());
+            Long likeCount = likeCountMap.getOrDefault(post.getId(), 0L);
+            Long commentCount = commentCountMap.getOrDefault(post.getId(), 0L);
 
             return FreePostSummaryResponseDTO.builder()
                     .id(post.getId())
@@ -165,9 +180,9 @@ public class FreePostService {
                     .thumbnailImageUrl(thumbnail)
                     .createdAt(post.getCreatedAt())
                     .build();
-
         });
     }
+
 
 
     @Transactional

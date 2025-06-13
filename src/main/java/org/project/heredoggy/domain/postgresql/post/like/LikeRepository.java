@@ -1,12 +1,17 @@
 package org.project.heredoggy.domain.postgresql.post.like;
 
+import org.project.heredoggy.domain.postgresql.comment.PostType;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.notice.NoticePost;
 import org.project.heredoggy.domain.postgresql.post.free.FreePost;
 import org.project.heredoggy.domain.postgresql.post.missing.MissingPost;
 import org.project.heredoggy.domain.postgresql.post.review.ReviewPost;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface LikeRepository extends JpaRepository<Like, Long> {
@@ -21,8 +26,14 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     void deleteByMemberAndReviewPost(Member member, ReviewPost reviewPost);
     void deleteByMemberAndNoticePost(Member member, NoticePost noticePost);
 
-    Long countByFreePostId(Long postId);
-    Long countByMissingPost(MissingPost missingPost);
-    Long countByReviewPost(ReviewPost reviewPost);
-    Long countByNoticePost(NoticePost noticePost);
+
+    Long countByFreePostId(Long freePostId);
+    @Query("SELECT l.freePost.id AS postId, COUNT(l) AS cnt " +
+            "FROM Like l WHERE l.freePost.id IN :postIds GROUP BY l.freePost.id")
+    List<LikeCountProjection> countLikesByPostIds(@Param("postIds") List<Long> postIds);
+    Long countByReviewPostId(Long reviewPostId);
+    Long countByMissingPostId(Long missingPostId);
+    Long countByNoticePostId(Long noticePostId);
+
+
 }

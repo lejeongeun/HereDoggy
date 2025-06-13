@@ -2,7 +2,9 @@ package org.project.heredoggy.domain.postgresql.post.free;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnDefault;
+import org.project.heredoggy.domain.postgresql.comment.Comment;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.post.PostImage;
 import org.project.heredoggy.domain.postgresql.post.like.Like;
@@ -48,9 +50,11 @@ public class FreePost {
     @JoinColumn(name = "writer_id", nullable = false)
     private Member writer;
 
-    @OneToMany(mappedBy = "freePost", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "freePost", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @BatchSize(size = 20)
     private List<Like> likes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "freePost", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "freePost", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @BatchSize(size = 20)
     private List<PostImage> postImages = new ArrayList<>();
 }

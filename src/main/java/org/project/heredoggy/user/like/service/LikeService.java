@@ -18,8 +18,16 @@ import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.notification.NotificationFactory;
 import org.project.heredoggy.global.util.AuthUtils;
 import org.project.heredoggy.security.CustomUserDetails;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -30,8 +38,10 @@ public class LikeService {
     private final MissingPostRepository missingPostRepository;
     private final NoticePostRepository noticePostRepository;
     private final NotificationFactory notificationFactory;
+    private final RedisTemplate redisTemplate;
 
     @Transactional
+    @CacheEvict(value = "likeCount", key = "#postId + '_' + #postType")
     public boolean toggleLike(PostType postType, Long postId, CustomUserDetails userDetails) {
         Member member = AuthUtils.getValidMember(userDetails);
         Object post = getPostByType(postType, postId);
@@ -100,20 +110,57 @@ public class LikeService {
         throw new IllegalArgumentException("지원하지 않는 게시글 타입입니다.");
     }
 
+    @Cacheable(value = "likeCount", key = "#postId + '_' + #postType")
     public Long getLikeCount(PostType postType, Long postId) {
-        Object post = getPostByType(postType, postId);
-
-        if(post instanceof FreePost freePost) {
-            return likeRepository.countByFreePostId(freePost.getId());
-        } else if (post instanceof ReviewPost reviewPost) {
-            return likeRepository.countByReviewPost(reviewPost);
-        } else if (post instanceof MissingPost missingPost) {
-            return likeRepository.countByMissingPost(missingPost);
-        } else if (post instanceof NoticePost noticePost) {
-            return likeRepository.countByNoticePost(noticePost);
-        }
-        throw new IllegalArgumentException("지원하지 않는 게시글 타입입니다.");
+        System.out.println("🔥 캐시 미스! DB에서 직접 조회: " + postId + "_" + postType);
+        return switch (postType) {
+            case FREE -> likeRepository.countByFreePostId(postId);
+            case REVIEW -> likeRepository.countByReviewPostId(postId);
+            case MISSING -> likeRepository.countByMissingPostId(postId);
+            case NOTICE -> likeRepository.countByNoticePostId(postId);
+            default -> throw new IllegalArgumentException("지원하지 않는 게시글 타입입니다.");
+        };
     }
+    public Map<Long, Long> getLikeCountsBatch(PostType postType, List<Long> postIds) {
+        Map<Long, Long> result = new HashMap<>();
+
+        // 캐시 key 생성
+        List<String> keys = postIds.stream()
+                .map(id -> id + "_" + postType)
+                .toList();
+
+        // 캐시에서 일괄 조회
+        List<Object> cached = redisTemplate.opsForValue().multiGet(keys.stream()
+                .map(k -> "heredoggy::cache::likeCount::" + k)
+                .toList());
+
+        List<Long> missedIds = new ArrayList<>();
+
+        for (int i = 0; i < postIds.size(); i++) {
+            Object value = cached.get(i);
+            Long postId = postIds.get(i);
+            if (value != null) {
+                result.put(postId, Long.valueOf(value.toString()));
+            } else {
+                missedIds.add(postId);
+            }
+        }
+
+        // 캐시 미스 항목은 DB 조회 후 캐싱
+        for (Long missedId : missedIds) {
+            Long count = switch (postType) {
+                case FREE -> likeRepository.countByFreePostId(missedId);
+                case REVIEW -> likeRepository.countByReviewPostId(missedId);
+                case MISSING -> likeRepository.countByMissingPostId(missedId);
+                case NOTICE -> likeRepository.countByNoticePostId(missedId);
+            };
+            redisTemplate.opsForValue().set("heredoggy::cache::likeCount::" + missedId + "_" + postType, count);
+            result.put(missedId, count);
+        }
+
+        return result;
+    }
+
 
     private Object getPostByType(PostType type, Long postId) {
         return switch (type) {

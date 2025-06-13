@@ -1,6 +1,7 @@
 package org.project.heredoggy.user.comment.service;
 
 import lombok.RequiredArgsConstructor;
+import org.project.heredoggy.domain.postgresql.comment.CommentCountProjection;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.notice.NoticePostRepository;
 import org.project.heredoggy.domain.postgresql.comment.Comment;
@@ -8,16 +9,23 @@ import org.project.heredoggy.domain.postgresql.comment.CommentRepository;
 import org.project.heredoggy.domain.postgresql.comment.PostType;
 import org.project.heredoggy.domain.postgresql.notification.ReferenceType;
 import org.project.heredoggy.domain.postgresql.post.free.FreePostRepository;
+import org.project.heredoggy.domain.postgresql.post.like.LikeRepository;
 import org.project.heredoggy.domain.postgresql.post.missing.MissingPostRepository;
 import org.project.heredoggy.domain.postgresql.post.review.ReviewPostRepository;
 import org.project.heredoggy.global.exception.ConflictException;
 import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.notification.NotificationFactory;
 import org.project.heredoggy.user.comment.dto.CommentResponseDTO;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,8 +37,11 @@ public class CommentService {
     private final MissingPostRepository missingPostRepository;
     private final NoticePostRepository noticePostRepository;
     private final NotificationFactory notificationFactory;
+    private final RedisTemplate redisTemplate;
+
 
     @Transactional
+    @CacheEvict(value = "commentCount", key = "#postId + '_' + #postType")
     public void createComment(PostType postType, Long postId, String content, Member writer) {
         validatePostExistence(postType, postId);
         Comment comment = Comment.builder()
@@ -81,6 +92,7 @@ public class CommentService {
     }
 
     @Transactional
+    @CacheEvict(value = "commentCount", key = "#postId + '_' + #postType")
     public void deleteComments(Long commentId, Member writer) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException("해당 댓글은 존재 하지 않습니다."));
@@ -93,6 +105,67 @@ public class CommentService {
 
         commentRepository.deleteById(commentId);
     }
+
+    @Cacheable(value = "commentCount", key = "#postId + '_' + #postType")
+    public Long getCommentCount(PostType postType, Long postId) {
+        System.out.println("🔥 댓글 수 캐시 미스 - postId = " + postId + ", type = " + postType);
+        return commentRepository.countByPostTypeAndPostId(postType, postId);
+    }
+
+    public Map<Long, Long> getCommentCountsBatch(PostType postType, List<Long> postIds) {
+        Map<Long, Long> result = new HashMap<>();
+
+        List<String> keys = postIds.stream()
+                .map(id -> id + "_" + postType)
+                .toList();
+
+        // 캐시에서 일괄 조회
+        List<Object> cached = redisTemplate.opsForValue().multiGet(
+                keys.stream()
+                        .map(k -> "heredoggy::cache::commentCount::" + k)
+                        .toList()
+        );
+
+        List<Long> missedIds = new ArrayList<>();
+
+        for (int i = 0; i < postIds.size(); i++) {
+            Object value = cached.get(i);
+            Long postId = postIds.get(i);
+            if (value != null) {
+                result.put(postId, Long.valueOf(value.toString()));
+            } else {
+                missedIds.add(postId);
+            }
+        }
+
+        // DB에서 미스 항목 일괄 조회
+        if (!missedIds.isEmpty()) {
+            List<CommentCountProjection> dbResults =
+                    commentRepository.countCommentsByPostIds(missedIds, postType);
+
+            for (CommentCountProjection row : dbResults) {
+                Long postId = row.getPostId();
+                Long count = row.getCnt();
+                String key = "heredoggy::cache::commentCount::" + postId + "_" + postType;
+                redisTemplate.opsForValue().set(key, count);
+                result.put(postId, count);
+            }
+
+            // 미스된 것 중 실제 댓글 없는 ID는 count 0 처리
+            for (Long id : missedIds) {
+                if (!result.containsKey(id)) {
+                    String key = "heredoggy::cache::commentCount::" + id + "_" + postType;
+                    redisTemplate.opsForValue().set(key, 0L);
+                    result.put(id, 0L);
+                }
+            }
+        }
+
+        return result;
+    }
+
+
+
 
     private void validatePostExistence(PostType postType, Long postId) {
         boolean exists = switch (postType) {
