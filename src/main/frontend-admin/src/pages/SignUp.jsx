@@ -4,7 +4,7 @@ import '../styles/signup.css';
 import { useNavigate } from 'react-router-dom';
 
 function SignUp() {
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -83,6 +83,9 @@ function SignUp() {
         <div className="form-group">
           <label htmlFor="passwordCheck">비밀번호 확인</label>
           <input id="passwordCheck" name="passwordCheck" type="password" value={form.passwordCheck} onChange={handleChange} required />
+          {form.passwordCheck && form.password !== form.passwordCheck && (
+            <span style={{color: "red"}}>비밀번호가 일치하지 않습니다.</span>
+          )}
         </div>
         <div className="form-group">
           <label htmlFor="name">이름</label>

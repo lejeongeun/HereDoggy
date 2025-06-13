@@ -8,7 +8,7 @@ const WalkList = forwardRef(({ sheltersId, onRouteSelect, onAddNewRoute }, ref) 
   const [walkRoutes, setWalkRoutes] = useState([]);
   const maxRoutes = 3;
 
-  // ✅ 외부에서 호출할 수 있도록 함수로 분리
+  // 외부에서 호출할 수 있도록 함수로 분리
   const loadRoutes = async () => {
     try {
       const data = await fetchWalkRoutes(sheltersId);
@@ -18,7 +18,7 @@ const WalkList = forwardRef(({ sheltersId, onRouteSelect, onAddNewRoute }, ref) 
     }
   };
 
-  // ✅ 부모에서 loadRoutes를 호출할 수 있게 함
+  // 부모에서 loadRoutes를 호출할 수 있게 함
   useImperativeHandle(ref, () => ({
     fetchRoutes: loadRoutes,
   }));

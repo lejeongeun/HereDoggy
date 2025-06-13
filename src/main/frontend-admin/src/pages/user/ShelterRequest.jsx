@@ -12,7 +12,6 @@ function ShelterRequest() {
     address1: "",
     address2: "",
     description: "",
-    imageUrl: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -55,18 +54,8 @@ function ShelterRequest() {
 
     setLoading(true);
 
-    const payload = {
-      shelterName: form.shelterName,
-      phone: form.phone,
-      zipcode: form.zipcode,
-      address1: form.address1,
-      address2: form.address2,
-      description: form.description,
-      imageUrl: form.imageUrl || "",
-    };
-
     try {
-      await requestShelter(payload);
+      await requestShelter(form); // form 그대로 JSON 전송
       alert("보호소 생성 요청이 접수되었습니다.\n관리자의 승인을 기다려주세요.");
       navigate("/");
     } catch (error) {
@@ -80,7 +69,7 @@ function ShelterRequest() {
   return (
     <div className="shelter-request-container">
       <form className="shelter-request-form" onSubmit={handleSubmit}>
-       <h2>보호소 생성 요청</h2>
+        <h2>보호소 생성 요청</h2>
         <div className="form-group">
           <label htmlFor="shelterName">보호소 이름</label>
           <input
@@ -163,16 +152,7 @@ function ShelterRequest() {
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="imageUrl">이미지 URL</label>
-          <input
-            id="imageUrl"
-            name="imageUrl"
-            value={form.imageUrl}
-            onChange={handleChange}
-            placeholder="대표 이미지 URL (선택)"
-          />
-        </div>
+        {/* 이미지 업로드 부분은 제거됨 */}
 
         <button type="submit" className="signupbtn" disabled={loading}>
           {loading ? "요청 중..." : "생성 요청 제출"}
