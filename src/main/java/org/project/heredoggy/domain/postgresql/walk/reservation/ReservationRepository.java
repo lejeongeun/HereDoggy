@@ -20,4 +20,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findByDogIdAndDateAndStatusIn(Long dogId, LocalDate date, List<WalkReservationStatus> statuses);
 
     List<Reservation> findByDogIdAndStatusIn(Long dogId, List<WalkReservationStatus> statuses);
+
 }

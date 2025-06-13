@@ -1,7 +1,7 @@
 package org.project.heredoggy.shelter.walk.route.walkRoute.dto;
 
 import lombok.*;
-import org.project.heredoggy.domain.postgresql.walk.route.PointType;
+import org.project.heredoggy.domain.postgresql.walk.walkRoute.PointType;
 
 @Getter
 @Setter

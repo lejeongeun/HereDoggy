@@ -1,4 +1,4 @@
-package org.project.heredoggy.domain.postgresql.walk.route;
+package org.project.heredoggy.domain.postgresql.walk.walkRoute;
 
 import jakarta.persistence.*;
 import lombok.*;

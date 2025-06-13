@@ -46,7 +46,7 @@ public class MemberReservationController {
         return ResponseEntity.ok(unavailableTimes);
     }
 
-    @PostMapping("/{dogs_id}/reservationsRequest")
+    @PostMapping("/{dogs_id}/reservation-request")
     public ResponseEntity<Map<String, String>> requestReservation(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                   @PathVariable("dogs_id") Long dogsId,
                                                                   @Valid @RequestBody MemberReservationRequestDTO requestDTO) {

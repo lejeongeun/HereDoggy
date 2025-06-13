@@ -2,10 +2,12 @@ package org.project.heredoggy.user.walk.reservation.dto;
 
 import lombok.*;
 import org.project.heredoggy.domain.postgresql.walk.reservation.WalkReservationStatus;
+import org.project.heredoggy.shelter.walk.route.walkRoute.dto.WalkRouteResponseDTO;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,5 +30,6 @@ public class MemberReservationResponseDTO {
 
     private WalkReservationStatus walkReservationStatus;
     private LocalDateTime createAt;
+    private List<WalkRouteResponseDTO> walkRoutes;
 
 }
