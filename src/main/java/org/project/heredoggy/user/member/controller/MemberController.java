@@ -14,6 +14,7 @@ import org.project.heredoggy.user.member.service.MemberService;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationResponseDTO;
 import org.project.heredoggy.user.walk.reservation.service.MemberReservationService;
 import org.project.heredoggy.user.walk.walkRecord.dto.WalkRecordResponseDTO;
+import org.project.heredoggy.user.walk.walkRecord.dto.WalkSimpleStatisticDTO;
 import org.project.heredoggy.user.walk.walkRecord.service.MemberWalkRecordService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -106,6 +107,12 @@ public class MemberController {
                                                                    @PathVariable("walk_records_id") Long walkRecordsId){
         WalkRecordResponseDTO walkRecordDetails = recordService.getDetailsWalkRecords(userDetails, walkRecordsId);
         return ResponseEntity.ok(walkRecordDetails);
+    }
+    // 누적 통계
+    @GetMapping("/statistics")
+    public ResponseEntity<WalkSimpleStatisticDTO> getWalkStatistics(@AuthenticationPrincipal CustomUserDetails userDetails){
+        WalkSimpleStatisticDTO statisticDTO = recordService.getWalkStatistics(userDetails);
+        return ResponseEntity.ok(statisticDTO);
     }
 
     // ==============================

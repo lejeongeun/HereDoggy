@@ -58,6 +58,7 @@ public class MemberWalkRecordService {
         recordRepository.save(walkRecord);
         return recordMapper.toWalkRecordDto(walkRecord);
     }
+
     @Transactional
     public WalkRecordResponseDTO endWalk(CustomUserDetails userDetails, WalkRecordEndRequestDTO endRequestDTO, Long walkRecordsId) {
         Member member = AuthUtils.getValidMember(userDetails);
@@ -83,6 +84,7 @@ public class MemberWalkRecordService {
 
         return recordMapper.toWalkRecordDto(walkRecord);
     }
+
     @Transactional(readOnly = true)
     public WalkRecordEndStatisticDTO getEndWalkStatistic(CustomUserDetails userDetails, Long walkRecordsId) {
         Member member = AuthUtils.getValidMember(userDetails);
@@ -98,6 +100,7 @@ public class MemberWalkRecordService {
                 .actualDuration(walkRecord.getActualDuration())
                 .build();
     }
+
     @Transactional(readOnly = true)
     public List<WalkRecordResponseDTO> getAllWalkRecords(CustomUserDetails userDetails) {
         Member member = AuthUtils.getValidMember(userDetails);
@@ -105,9 +108,8 @@ public class MemberWalkRecordService {
         return recordRepository.findAll().stream()
                 .map(recordMapper::toWalkRecordDto)
                 .collect(Collectors.toList());
-
-
     }
+
     @Transactional(readOnly = true)
     public WalkRecordResponseDTO getDetailsWalkRecords(CustomUserDetails userDetails, Long walkRecordsId) {
         Member member = AuthUtils.getValidMember(userDetails);
@@ -115,5 +117,10 @@ public class MemberWalkRecordService {
                 .orElseThrow(()-> new NotFoundException(ErrorMessages.WALK_NOT_FOUND));
 
         return recordMapper.toWalkRecordDto(walkRecord);
+    }
+
+    public WalkSimpleStatisticDTO getWalkStatistics(CustomUserDetails userDetails) {
+        Member member = AuthUtils.getValidMember(userDetails);
+        return recordRepository.getSimpleStatisticByMemberId(member.getId());
     }
 }
