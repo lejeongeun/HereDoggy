@@ -18,6 +18,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final MemberRepository memberRepository;
 
+    /**
+     * Google/Kakao 로그인 성공 시 사용자 정보 조회
+     */
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) {
         OAuth2User oAuth2User = super.loadUser(userRequest);
@@ -31,6 +34,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 ? "User_" + UUID.randomUUID().toString().substring(0, 8)
                 : originalNickname;
 
+        /**
+         * 자동 회원 가입 처리
+         */
         // 사용자 DB 조회
         Member member = memberRepository.findByEmail(email)
                 .orElseGet(() -> {
