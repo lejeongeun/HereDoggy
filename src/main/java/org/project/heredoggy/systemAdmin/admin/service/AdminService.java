@@ -1,4 +1,4 @@
-package org.project.heredoggy.systemAdmin.service;
+package org.project.heredoggy.systemAdmin.admin.service;
 
 import org.project.heredoggy.global.exception.ConflictException;
 import org.project.heredoggy.global.exception.NotFoundException;
@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.member.MemberRepository;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.systemAdmin.dto.AdminEditRequestDTO;
-import org.project.heredoggy.systemAdmin.dto.AdminProfileResponseDTO;
+import org.project.heredoggy.systemAdmin.admin.dto.AdminEditRequestDTO;
+import org.project.heredoggy.systemAdmin.admin.dto.AdminProfileResponseDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

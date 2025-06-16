@@ -1,4 +1,4 @@
-package org.project.heredoggy.systemAdmin.controller;
+package org.project.heredoggy.systemAdmin.admin.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;

@@ -1,4 +1,4 @@
-package org.project.heredoggy.systemAdmin.service;
+package org.project.heredoggy.systemAdmin.admin.service;
 
 import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.util.AdminAuthUtils;
@@ -11,7 +11,7 @@ import org.project.heredoggy.domain.postgresql.shelter.shelterRequest.RequestSta
 import org.project.heredoggy.domain.postgresql.shelter.shelterRequest.ShelterRequest;
 import org.project.heredoggy.domain.postgresql.shelter.shelterRequest.ShelterRequestRepository;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.systemAdmin.dto.ShelterRequestResponseDTO;
+import org.project.heredoggy.systemAdmin.admin.dto.ShelterRequestResponseDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

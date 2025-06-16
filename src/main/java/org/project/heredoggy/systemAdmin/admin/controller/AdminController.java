@@ -1,12 +1,12 @@
-package org.project.heredoggy.systemAdmin.controller;
+package org.project.heredoggy.systemAdmin.admin.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.systemAdmin.dto.AdminEditRequestDTO;
-import org.project.heredoggy.systemAdmin.dto.AdminProfileResponseDTO;
-import org.project.heredoggy.systemAdmin.service.AdminService;
+import org.project.heredoggy.systemAdmin.admin.dto.AdminEditRequestDTO;
+import org.project.heredoggy.systemAdmin.admin.dto.AdminProfileResponseDTO;
+import org.project.heredoggy.systemAdmin.admin.service.AdminService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;

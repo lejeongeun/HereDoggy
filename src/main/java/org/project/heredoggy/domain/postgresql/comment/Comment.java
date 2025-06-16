@@ -3,11 +3,15 @@ package org.project.heredoggy.domain.postgresql.comment;
 import jakarta.persistence.*;
 import lombok.*;
 import org.project.heredoggy.domain.postgresql.member.Member;
+import org.project.heredoggy.domain.postgresql.report.comment.CommentReport;
+import org.project.heredoggy.domain.postgresql.report.shelter.ShelterReport;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -42,5 +46,8 @@ public class Comment {
     @LastModifiedDate
     @Column(name = "update_at")
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentReport> commentReports = new ArrayList<>();
 
 }

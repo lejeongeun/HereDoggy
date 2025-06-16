@@ -1,9 +1,9 @@
-package org.project.heredoggy.systemAdmin.controller;
+package org.project.heredoggy.systemAdmin.admin.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.systemAdmin.dto.ShelterRequestResponseDTO;
-import org.project.heredoggy.systemAdmin.service.AdminShelterRequestService;
+import org.project.heredoggy.systemAdmin.admin.dto.ShelterRequestResponseDTO;
+import org.project.heredoggy.systemAdmin.admin.service.AdminShelterRequestService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

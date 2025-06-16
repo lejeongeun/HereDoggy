@@ -1,4 +1,4 @@
-package org.project.heredoggy.systemAdmin.dto;
+package org.project.heredoggy.systemAdmin.admin.dto;
 
 import lombok.Builder;
 import lombok.Getter;
