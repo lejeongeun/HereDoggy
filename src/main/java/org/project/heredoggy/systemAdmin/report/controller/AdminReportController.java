@@ -18,5 +18,31 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminReportController {
     private final AdminReportService adminReportService;
 
+    @GetMapping("/posts")
+    public Page<AdminPostReportResponseDTO> getPostsReports(@RequestParam(required = false) String status,
+                                                            @AuthenticationPrincipal CustomUserDetails userDetails,
+                                                            Pageable pageable) {
+        return adminReportService.getAllPostReports(status, pageable, userDetails);
+    }
 
+    @GetMapping("/comments")
+    public Page<AdminPostReportResponseDTO> getCommentsReports(@RequestParam(required = false) String status,
+                                                               @AuthenticationPrincipal CustomUserDetails userDetails,
+                                                               Pageable pageable) {
+        return adminReportService.getAllCommentReports(status, pageable, userDetails);
+    }
+
+    @GetMapping("/members")
+    public Page<AdminPostReportResponseDTO> getMembersReports(@RequestParam(required = false) String status,
+                                                              @AuthenticationPrincipal CustomUserDetails userDetails,
+                                                              Pageable pageable) {
+        return adminReportService.getAllMemberReports(status, pageable, userDetails);
+    }
+
+    @GetMapping("/shelters")
+    public Page<AdminPostReportResponseDTO> getSheltersReports(@RequestParam(required = false) String status,
+                                                            @AuthenticationPrincipal CustomUserDetails userDetails,
+                                                            Pageable pageable) {
+        return adminReportService.getAllShelterReports(status, pageable, userDetails);
+    }
 }

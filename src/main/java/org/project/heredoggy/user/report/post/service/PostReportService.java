@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,12 +42,47 @@ public class PostReportService {
     @Transactional
     public void reportPost(CustomUserDetails userDetails, PostReportRequestDTO request) {
         Member reporter = AuthUtils.getValidMember(userDetails);
-        boolean exists = switch (request.getPostType()) {
-            case FREE -> freePostRepository.existsById(request.getPostId());
-            case MISSING -> missingPostRepository.existsById(request.getPostId());
-            case REVIEW -> reviewPostRepository.existsById(request.getPostId());
-            case NOTICE -> noticePostRepository.existsById(request.getPostId());
-        };
+
+        AtomicReference<String> titleSnapshot = new AtomicReference<>("[삭제됨]");
+        AtomicReference<String> contentSnapshot = new AtomicReference<>("[삭제됨]");
+        AtomicReference<String> nicknameSnapshot = new AtomicReference<>("[알 수 없음]");
+
+        boolean exists = false;
+
+        switch (request.getPostType()) {
+            case FREE -> {
+                exists = freePostRepository.findById(request.getPostId()).map(post -> {
+                    titleSnapshot.set(post.getTitle());
+                    contentSnapshot.set(post.getContent());
+                    nicknameSnapshot.set(post.getWriter().getNickname());
+                    return true;
+                }).orElse(false);
+            }
+            case MISSING -> {
+                exists = missingPostRepository.findById(request.getPostId()).map(post -> {
+                    titleSnapshot.set(post.getTitle());
+                    contentSnapshot.set(post.getDescription());
+                    nicknameSnapshot.set(post.getWriter().getNickname());
+                    return true;
+                }).orElse(false);
+            }
+            case REVIEW -> {
+                exists = reviewPostRepository.findById(request.getPostId()).map(post -> {
+                    titleSnapshot.set(post.getTitle());
+                    contentSnapshot.set(post.getContent());
+                    nicknameSnapshot.set(post.getWriter().getNickname());
+                    return true;
+                }).orElse(false);
+            }
+            case NOTICE -> {
+                exists = noticePostRepository.findById(request.getPostId()).map(post -> {
+                    titleSnapshot.set(post.getTitle());
+                    contentSnapshot.set(post.getContent());
+                    nicknameSnapshot.set(post.getWriter().getNickname());
+                    return true;
+                }).orElse(false);
+            }
+        }
 
         if (!exists) {
             throw new NotFoundException("해당 게시글이 존재하지 않습니다.");
@@ -64,6 +100,9 @@ public class PostReportService {
                 .postId(request.getPostId())
                 .postType(request.getPostType())
                 .reason(reason)
+                .postTitleSnapshot(titleSnapshot.get())
+                .postContentSnapshot(contentSnapshot.get())
+                .writerNicknameSnapshot(nicknameSnapshot.get())
                 .status(ReportStatus.UNRESOLVED)
                 .build();
 

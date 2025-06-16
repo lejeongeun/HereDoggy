@@ -1,6 +1,7 @@
 package org.project.heredoggy.systemAdmin.report.dto;
 
 import lombok.*;
+import org.project.heredoggy.domain.postgresql.comment.PostType;
 
 import java.time.LocalDateTime;
 
@@ -10,12 +11,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class AdminPostReportResponseDTO {
-    private Long reportId;
-    private Long reportedCommentId;
+    private Long id;
+    private String postTitle;
     private String reporterNickname;
-    private String commentContent;
-    private String commentWriterNickname;
-    private String reason;
+    private String reportedNickname;
+    private String reasonContent;
     private String status;
+    private PostType type;
     private LocalDateTime reportedAt;
 }
