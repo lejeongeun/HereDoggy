@@ -88,7 +88,7 @@ function WalkReservationDetail() {
           <div>
             <div className="walk-detail-dogname">{data.dogName}</div>
             <div className="walk-detail-doginfo">
-              {data.dogStatus && <span>상태: {data.dogStatus}</span>}
+              {/* {data.dogStatus && <span>상태: {data.dogStatus}</span>} */}
               {data.breed && <span>· 견종: {data.breed}</span>}
               {data.age && <span>· 나이: {data.age}</span>}
             </div>

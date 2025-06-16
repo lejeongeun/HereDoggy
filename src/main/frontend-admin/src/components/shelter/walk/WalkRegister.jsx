@@ -8,6 +8,7 @@ function WalkRegister({ sheltersId, selectedRoute, setIsDrawing, onRouteSaved })
   const myLocationMarker = useRef(null);
   const myLocationLatLng = useRef(null);
 
+  const [hasLocation, setHasLocation] = useState(false);
   const [distance, setDistance] = useState(0);
   const [duration, setDuration] = useState(0);
   const [linePath, setLinePath] = useState([]);
@@ -15,6 +16,7 @@ function WalkRegister({ sheltersId, selectedRoute, setIsDrawing, onRouteSaved })
   const [routeName, setRouteName] = useState(selectedRoute ? selectedRoute.routeName : "");
   const [description, setDescription] = useState(selectedRoute ? selectedRoute.description : "");
 
+  // 최초 1회 지도 로딩만 실행
   useEffect(() => {
     function loadKakaoMap() {
       if (!window.kakao || !window.kakao.maps) {
@@ -82,8 +84,17 @@ function WalkRegister({ sheltersId, selectedRoute, setIsDrawing, onRouteSaved })
                 });
               }
             },
-            () => {
-              alert("실시간 위치 정보를 사용할 수 없습니다.");
+            (error) => {
+              console.error("위치 오류:", error);  // 콘솔에 상세 정보 출력
+              if (error.code === error.PERMISSION_DENIED) {
+                alert("위치 권한이 거부되었습니다. 브라우저 설정을 확인해주세요.");
+              } else if (error.code === error.POSITION_UNAVAILABLE) {
+                alert("위치 정보를 찾을 수 없습니다. GPS나 인터넷 상태를 확인해주세요.");
+              } else if (error.code === error.TIMEOUT) {
+                alert("위치 정보를 받아오지 못했습니다. 다시 시도해주세요.");
+              } else {
+                alert("알 수 없는 위치 오류가 발생했습니다.");
+              }
             },
             { enableHighAccuracy: true }
           );
@@ -117,55 +128,54 @@ function WalkRegister({ sheltersId, selectedRoute, setIsDrawing, onRouteSaved })
     script.async = true;
     script.onload = loadKakaoMap;
     document.head.appendChild(script);
+  }, []); // selectedRoute 넣지 마세요! 최초 1회만 실행
 
-  }, [selectedRoute]);
-
+  // selectedRoute가 바뀌었을 때만 경로 표시 또는 초기화
   useEffect(() => {
-  if (selectedRoute && mapInstance.current && window.kakao && window.kakao.maps) {
-    // 1. selectedRoute 있을 때: 경로 표시
-    const points = selectedRoute.points.map(
-      p => new window.kakao.maps.LatLng(p.lat, p.lng)
-    );
+    if (selectedRoute && mapInstance.current && window.kakao && window.kakao.maps) {
+      // 1. selectedRoute 있을 때: 경로 표시
+      const points = selectedRoute.points.map(
+        p => new window.kakao.maps.LatLng(p.lat, p.lng)
+      );
 
-    if (points.length > 0) {
-      mapInstance.current.setCenter(points[0]);
+      if (points.length > 0) {
+        mapInstance.current.setCenter(points[0]);
+      }
+
+      if (polyline) polyline.setMap(null);
+
+      if (points.length > 1) {
+        const newPolyline = new window.kakao.maps.Polyline({
+          path: points,
+          strokeWeight: 4,
+          strokeColor: "#FF0000",
+          strokeOpacity: 0.7,
+          strokeStyle: "solid",
+        });
+        newPolyline.setMap(mapInstance.current);
+        setPolyline(newPolyline);
+
+        const length = newPolyline.getLength();
+        setDistance(length);
+        setDuration(length > 0 ? Math.round(length / 67) : 0);
+        setLinePath(points);
+      }
+
+      setRouteName(selectedRoute.routeName || "");
+      setDescription(selectedRoute.description || "");
+      setIsDrawing(false);
+    } else {
+      // 2. selectedRoute가 null일 때: 초기화
+      setRouteName("");
+      setDescription("");
+      setDistance(0);
+      setDuration(0);
+      setLinePath([]);
+      if (polyline) polyline.setMap(null);
+      setPolyline(null);
+      setIsDrawing(true);
     }
-
-    if (polyline) polyline.setMap(null);
-
-    if (points.length > 1) {
-      const newPolyline = new window.kakao.maps.Polyline({
-        path: points,
-        strokeWeight: 4,
-        strokeColor: "#FF0000",
-        strokeOpacity: 0.7,
-        strokeStyle: "solid",
-      });
-      newPolyline.setMap(mapInstance.current);
-      setPolyline(newPolyline);
-
-      const length = newPolyline.getLength();
-      setDistance(length);
-      setDuration(length > 0 ? Math.round(length / 67) : 0);
-      setLinePath(points);
-    }
-
-    setRouteName(selectedRoute.routeName || "");
-    setDescription(selectedRoute.description || "");
-    setIsDrawing(false);
-  } else {
-    // 2. selectedRoute가 null일 때: 초기화
-    setRouteName("");
-    setDescription("");
-    setDistance(0);
-    setDuration(0);
-    setLinePath([]);
-    if (polyline) polyline.setMap(null);
-    setPolyline(null);
-    setIsDrawing(true);
-  }
-}, [selectedRoute]);
-
+  }, [selectedRoute]);
 
   const saveRoute = async () => {
     if (linePath.length < 2) {
@@ -259,55 +269,55 @@ function WalkRegister({ sheltersId, selectedRoute, setIsDrawing, onRouteSaved })
     return Math.sqrt(dx * dx + dy * dy);
   };
 
- return (
-  <div className="walk-register-wrap">
-    <div className="walk-input-group">
-      <input
-        type="text"
-        placeholder="경로 이름"
-        value={routeName}
-        onChange={e => setRouteName(e.target.value)}
-        className="walk-input"
-        disabled={!!selectedRoute}  // 기존 경로는 수정 불가
-      />
-      <textarea
-        placeholder="경로 설명"
-        value={description}
-        onChange={e => setDescription(e.target.value)}
-        className="walk-textarea"
-        disabled={!!selectedRoute}  // 기존 경로는 수정 불가
-      />
-    </div>
-
-    <div ref={mapRef} className="walk-map" />
-
-    <div className="walk-btn-group">
-      {/* `selectedRoute`가 없을 때만 버튼 보이기 */}
-      {!selectedRoute ? (
-        <>
-          <button onClick={moveToMyLocation} className="walk-btn walk-btn-blue">내 위치 보기</button>
-          <button onClick={() => window.resetRoute()} className="walk-btn walk-btn-green">경로 다시 그리기</button>
-          <button onClick={saveRoute} disabled={linePath.length < 2} className="walk-btn walk-btn-red">경로 저장</button>
-        </>
-      ) : null}
-    </div>
-
-    {/* 총 거리와 예상 소요 시간 */}
-    <div className="walk-info-row">
-      <strong>총 거리:</strong> {distance.toFixed(1)} m
-      <span style={{ marginLeft: 16 }}>
-        <strong>예상 소요 시간:</strong> {duration} 분
-      </span>
-    </div>
-
-    {/* 경로 수정 안내 메시지 - 총 거리와 예상 소요 시간 아래에 표시 */}
-    {selectedRoute && (
-      <div style={{ textAlign: "center", fontSize: "12px", color: "#f44336" }}>
-        <span>경로를 수정하시려면 기존 경로를 삭제 후 다시 만들어주세요.</span>
+  return (
+    <div className="walk-register-wrap">
+      <div className="walk-input-group">
+        <input
+          type="text"
+          placeholder="경로 이름"
+          value={routeName}
+          onChange={e => setRouteName(e.target.value)}
+          className="walk-input"
+          disabled={!!selectedRoute}  // 기존 경로는 수정 불가
+        />
+        <textarea
+          placeholder="경로 설명"
+          value={description}
+          onChange={e => setDescription(e.target.value)}
+          className="walk-textarea"
+          disabled={!!selectedRoute}  // 기존 경로는 수정 불가
+        />
       </div>
-    )}
-  </div>
-);
+
+      <div ref={mapRef} className="walk-map" />
+
+      <div className="walk-btn-group">
+        {/* `selectedRoute`가 없을 때만 버튼 보이기 */}
+        {!selectedRoute ? (
+          <>
+            <button onClick={moveToMyLocation} className="walk-btn walk-btn-blue">내 위치 보기</button>
+            <button onClick={() => window.resetRoute()} className="walk-btn walk-btn-green">경로 다시 그리기</button>
+            <button onClick={saveRoute} disabled={linePath.length < 2} className="walk-btn walk-btn-red">경로 저장</button>
+          </>
+        ) : null}
+      </div>
+
+      {/* 총 거리와 예상 소요 시간 */}
+      <div className="walk-info-row">
+        <strong>총 거리:</strong> {distance.toFixed(1)} m
+        <span style={{ marginLeft: 16 }}>
+          <strong>예상 소요 시간:</strong> {duration} 분
+        </span>
+      </div>
+
+      {/* 경로 수정 안내 메시지 - 총 거리와 예상 소요 시간 아래에 표시 */}
+      {selectedRoute && (
+        <div style={{ textAlign: "center", fontSize: "12px", color: "#f44336" }}>
+          <span>경로를 수정하시려면 기존 경로를 삭제 후 다시 만들어주세요.</span>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default WalkRegister;

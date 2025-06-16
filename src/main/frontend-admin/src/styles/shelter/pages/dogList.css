@@ -1,40 +1,50 @@
+/* 컨테이너 */
 .doglist-container {
   width: 100%;
   margin: 0 auto;
   background: #f8f8f8;
-  padding: 24px 18px 32px 18px;
+  padding: 32px 24px;
   border-radius: 14px;
-  box-shadow: 0 2px 8px #0001;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
 }
 
+/* 상단 버튼 영역 */
 .doglist-header {
   text-align: right;
   margin-bottom: 14px;
 }
 
+/* 등록 버튼 */
 .doglist-register-btn {
-  background: #4f6854;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 22px;
-  font-size: 1rem;
+  background: #fff;
+  color: #4AB071;
+  border: 2px solid #4AB071;
+  border-radius: 9px;
+  padding: 6px 18px;
+  font-weight: 600;
+  font-size: 1.08rem;
+  cursor: pointer;
+  margin-left: 7px;
+  box-shadow: 0 2px 8px #e5f4ec;
+  transition: background 0.15s, color 0.13s, border 0.14s;
+  outline: none;
   text-decoration: none;
-  font-weight: bold;
-  transition: background 0.2s;
-}
-.doglist-register-btn:hover {
-  background: #3d5142;
 }
 
+.doglist-register-btn:hover {
+  background: #e8f6ed;
+  color: #357c4c;
+  border-color: #357c4c;
+}
+
+/* 테이블 */
 .doglist-table {
   width: 100%;
-  background: #fff;
+  max-width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
-  border-radius: 12px;
-  overflow: hidden;
   font-size: 1.02rem;
-  box-shadow: 0 2px 8px #0001;
 }
 
 .doglist-table th,
@@ -42,35 +52,54 @@
   padding: 14px 10px;
   border-bottom: 1px solid #eee;
   text-align: left;
+  word-wrap: break-word;
+  word-break: keep-all;
 }
 
 .doglist-table th {
-  background: #f6f6f6;
-  font-weight: bold;
-  font-size: 1.07rem;
+  background: #f0f0f0;
+  font-weight: 600;
+  font-size: 1.06rem;
+  border-bottom: 1px solid #ddd;
 }
 
-.doglist-img {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  object-fit: cover;
-  background: #eee;
-  display: inline-block;
+.doglist-table td {
+  color: #333;
+  line-height: 1.45;
 }
 
-.doglist-link {
-  text-decoration: none;
-  color: black;
-}
-
-.doglist-img-placeholder {
-  background: #ccc;
+.doglist-table tbody tr:hover {
+  background-color: #f5faf7;
 }
 
 .doglist-table tbody tr:last-child td {
   border-bottom: none;
 }
+
+/* 이미지 */
+.doglist-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  object-fit: cover;
+  background: #eee;
+  display: inline-block;
+}
+
+.doglist-img-placeholder {
+  background: #ccc;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+}
+
+/* 링크 */
+.doglist-link {
+  text-decoration: none;
+  color: black;
+}
+
+/* 빈 상태 화면 */
 .doglist-empty {
   min-height: 340px;
   display: flex;
@@ -86,6 +115,7 @@
   padding: 42px 10px 38px 10px;
 }
 
+/* 큰 버튼 */
 .doglist-register-btn.big {
   margin-top: 28px;
   background: linear-gradient(90deg, #185a36 70%, #246f48 100%);
@@ -100,6 +130,7 @@
   transition: background 0.15s, transform 0.09s;
   display: inline-block;
 }
+
 .doglist-register-btn.big:hover {
   background: linear-gradient(90deg, #14402a 90%, #20713f 100%);
   transform: translateY(-2px) scale(1.03);

@@ -1,135 +1,167 @@
 .walk-detail-container {
-  max-width: 540px;
-  margin: 46px auto 0;
-  padding: 38px 28px 24px 28px;
+  max-width: 720px;
+  margin: 48px auto;
+  padding: 36px 28px;
   background: #fff;
-  border-radius: 28px;
-  box-shadow: 0 10px 40px 0 rgba(36,153,111,0.09);
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-  animation: fadeIn 0.6s both;
+  border-radius: 24px;
+  box-shadow: 0 12px 36px rgba(38,153,111,0.08), 0 2px 4px rgba(0,0,0,0.03);
+  color: #222;
+  font-size: 1.01rem;
+  line-height: 1.6;
 }
-@keyframes fadeIn {
-  0% {opacity: 0; transform: translateY(12px);}
-  100% {opacity: 1; transform: none;}
+
+.walk-detail-loading {
+  text-align: center;
+  padding: 64px 0;
+  font-size: 1.18rem;
+  color: #666;
 }
+
 .walk-detail-header {
   display: flex;
   align-items: center;
-  gap: 18px;
-  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+  font-weight: 600;
+  color: #333;
 }
+
 .walk-detail-status {
-  padding: 6px 18px;
-  border-radius: 14px;
-  font-weight: bold;
-  font-size: 1.06rem;
-  background: #e8f8ef;
-  color: #26996f;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  background: #f4f4f4;
+  border: 1px solid #ccc;
+  color: #333;
 }
 .walk-status--pending {
-  background: #fff6e3; color: #f09e00;
+  background: #fffbe8;
+  border-color: #f4e6a1;
+  color: #d38700;
 }
 .walk-status--approved {
-  background: #e4f8ef; color: #26996f;
+  background: #e4f8ef;
+  border-color: #b9e7d4;
+  color: #2b9064;
 }
 .walk-status--rejected,
 .walk-status--canceled {
-  background: #fde7e7; color: #e45a5a;
+  background: #fde7e7;
+  border-color: #f2b6b6;
+  color: #d33;
 }
+
 .walk-detail-dday {
-  color: #199b5d;
   font-weight: 700;
-  font-size: 1.06rem;
-}
-.walk-detail-date {
   color: #444;
-  font-size: 1.04rem;
-  font-weight: 500;
-  margin-left: auto;
 }
+
+.walk-detail-date {
+  color: #555;
+  font-size: 0.98rem;
+}
+
 .walk-detail-main {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 24px;
 }
+
 .walk-detail-dog {
   display: flex;
   align-items: center;
-  gap: 20px;
-  background: #f7faf8;
-  border-radius: 13px;
-  padding: 14px 18px;
+  gap: 18px;
 }
+
 .walk-detail-dog img {
-  width: 66px; height: 66px;
+  width: 64px;
+  height: 64px;
   object-fit: cover;
-  border-radius: 12px;
-  background: #e8f8ef;
-  border: 1.5px solid #e1efe7;
+  border-radius: 14px;
+  border: 1.5px solid #e0e6e3;
 }
+
 .walk-detail-dogname {
+  font-weight: 700;
   font-size: 1.25rem;
-  color: #189366;
-  font-weight: bold;
-  margin-bottom: 2px;
+  color: #111;
 }
+
 .walk-detail-doginfo {
-  color: #479b79;
-  font-size: 1rem;
-  font-weight: 500;
-  display: flex; gap: 8px; flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: #555;
+  font-size: 0.96rem;
 }
-.walk-detail-member {
-  background: #f8fcf7;
-  border-radius: 12px;
-  padding: 13px 18px;
-  font-size: 1.08rem;
-  color: #25624c;
-  display: flex; flex-direction: column; gap: 3px;
-}
+
+.walk-detail-member,
 .walk-detail-meta {
-  background: #f5f7f6;
-  border-radius: 10px;
-  padding: 13px 18px;
-  color: #426d52;
-  font-size: 1.03rem;
-  display: flex; flex-direction: column; gap: 4px;
+  background: #f9fbfa;
+  padding: 16px 18px;
+  border-radius: 14px;
+  border: 1px solid #e5eeea;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
+
+.walk-detail-member b,
+.walk-detail-meta b {
+  color: #111;
+}
+
 .walk-detail-note {
-  background: #e9f7ef;
-  border-radius: 6px;
-  padding: 8px 11px;
-  margin-top: 7px;
-  color: #189366;
-  font-weight: 600;
-  font-size: 1.01rem;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed #ccc;
+  color: #444;
 }
+
 .walk-detail-actions {
   display: flex;
-  gap: 14px;
   justify-content: flex-end;
-  margin-top: 16px;
+  gap: 14px;
+  margin-top: 6px;
 }
-.walk-detail-actions button {
-  padding: 8px 22px;
-  border: none;
-  border-radius: 9px;
-  font-size: 1.05rem;
-  font-weight: bold;
+
+.walk-approve-btn,
+.walk-reject-btn,
+.walk-cancel-btn {
+  padding: 10px 24px;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 10px;
   cursor: pointer;
-  background: #e8f8ef;
-  color: #189366;
-  transition: background 0.16s, color 0.14s;
+  border: none;
+  transition: background 0.15s ease;
 }
-.walk-approve-btn { background: #25b376; color: #fff; }
-.walk-approve-btn:hover { background: #159563; }
-.walk-reject-btn { background: #fde7e7; color: #e45a5a;}
-.walk-reject-btn:hover { background: #fbcbcb;}
-.walk-cancel-btn { background: #f0f2f0; color: #356a57;}
-.walk-cancel-btn:hover { background: #e0ece7;}
-.walk-detail-loading {
-  text-align: center;
-  color: #bbb;
-  font-size: 1.14rem;
-  padding: 48px 0 24px;
+
+.walk-approve-btn {
+  background: #4ab071;
+  color: #fff;
+}
+
+.walk-approve-btn:hover {
+  background: #3a935c;
+}
+
+.walk-reject-btn {
+  background: #e67a7a;
+  color: #fff;
+}
+
+.walk-reject-btn:hover {
+  background: #c05757;
+}
+
+.walk-cancel-btn {
+  background: #f0f0f0;
+  color: #444;
+}
+
+.walk-cancel-btn:hover {
+  background: #ddd;
 }
