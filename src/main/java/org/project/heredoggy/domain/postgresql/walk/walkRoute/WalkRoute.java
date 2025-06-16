@@ -31,6 +31,8 @@ public class WalkRoute {
     private Double totalDistance; // 총 거리
     private Integer expectedDuration; // 분 단위
 
+    private String thumbnailUrl; // 이미지
+
     @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime createdAt;

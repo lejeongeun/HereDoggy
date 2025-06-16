@@ -1,4 +1,4 @@
-package org.project.heredoggy.shelter.walk.route.walkRoute.dto;
+package org.project.heredoggy.shelter.walk.walkRoute.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;

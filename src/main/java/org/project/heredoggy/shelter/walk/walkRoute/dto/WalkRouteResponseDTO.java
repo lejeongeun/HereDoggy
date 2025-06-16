@@ -1,4 +1,4 @@
-package org.project.heredoggy.shelter.walk.route.walkRoute.dto;
+package org.project.heredoggy.shelter.walk.walkRoute.dto;
 
 import lombok.*;
 
@@ -18,4 +18,5 @@ public class WalkRouteResponseDTO {
     private Integer expectedDuration;
     private LocalDateTime createdAt;
     private List<RoutePointResponseDTO> points;
+    private String thumbnailUrl;
 }

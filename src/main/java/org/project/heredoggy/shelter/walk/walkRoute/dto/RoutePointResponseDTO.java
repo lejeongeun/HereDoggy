@@ -1,4 +1,4 @@
-package org.project.heredoggy.shelter.walk.route.walkRoute.dto;
+package org.project.heredoggy.shelter.walk.walkRoute.dto;
 
 import lombok.*;
 import org.project.heredoggy.domain.postgresql.walk.walkRoute.PointType;
@@ -8,7 +8,8 @@ import org.project.heredoggy.domain.postgresql.walk.walkRoute.PointType;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RoutePointRequestDTO {
+public class RoutePointResponseDTO {
+    private Long id;
     private Double lat;
     private Double lng;
     private int sequence;

@@ -1,4 +1,4 @@
-package org.project.heredoggy.shelter.walk.route.walkRoute.service;
+package org.project.heredoggy.shelter.walk.walkRoute.service;
 
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
@@ -7,15 +7,18 @@ import org.project.heredoggy.domain.postgresql.walk.walkRoute.WalkRouteRepositor
 import org.project.heredoggy.domain.postgresql.walk.walkRoute.WalkRoute;
 import org.project.heredoggy.global.error.ErrorMessages;
 import org.project.heredoggy.global.exception.BadRequestException;
+import org.project.heredoggy.global.exception.FileStorageException;
 import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.util.SheltersAuthUtils;
+import org.project.heredoggy.image.ImageService;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.shelter.walk.route.walkRoute.dto.WalkRouteRequestDto;
-import org.project.heredoggy.shelter.walk.route.walkRoute.dto.WalkRouteResponseDTO;
-import org.project.heredoggy.shelter.walk.route.walkRoute.mapper.WalkRouteMapper;
+import org.project.heredoggy.shelter.walk.walkRoute.dto.WalkRouteRequestDto;
+import org.project.heredoggy.shelter.walk.walkRoute.dto.WalkRouteResponseDTO;
+import org.project.heredoggy.shelter.walk.walkRoute.mapper.WalkRouteMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,15 +27,16 @@ import java.util.stream.Collectors;
 public class WalkRouteService {
     private final WalkRouteRepository walkRouteRepository;
     private final WalkRouteMapper walkRouteMapper;
-
-
-    public void createRoute(CustomUserDetails userDetails, Long sheltersId, WalkRouteRequestDto request) {
+    private final ImageService imageService;
+    
+    public void createRoute(CustomUserDetails userDetails, Long sheltersId, WalkRouteRequestDto request, MultipartFile image) {
         Shelter shelter = SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
         long count = walkRouteRepository.countByShelterId(sheltersId);
 
         if (count >= 3){
             throw new BadRequestException(ErrorMessages.WALK_ROUTE_LIMIT);
         }
+
         // 경로 제공 컴포넌트 제공
         WalkRoute walkRoute = WalkRoute.builder()
                 .routeName(request.getRouteName())
@@ -41,16 +45,6 @@ public class WalkRouteService {
                 .expectedDuration(request.getExpectedDuration())
                 .shelter(shelter)
                 .build();
-
-//        request.getPoints().forEach(p -> {
-//            RoutePoint point = RoutePoint.builder()
-//                    .lat(p.getLat())
-//                    .lng(p.getLng())
-//                    .sequence(p.getSequence())
-//                    .pointType(p.getPointType())
-//                    .build();
-//            walkRoute.addPoint(point);
-//        });
 
         List<RoutePoint> routePoints = request.getPoints().stream()
                 .map(point -> RoutePoint.builder()
@@ -64,6 +58,12 @@ public class WalkRouteService {
 
         walkRoute.setPoints(routePoints);
 
+        try{
+            String imageUrl = imageService.saveWalkRoute(image, walkRoute.getId());
+            walkRoute.setThumbnailUrl(imageUrl);
+        } catch (IOException e){
+            throw new FileStorageException("썸네일 이미지 실패", e);
+        }
         walkRouteRepository.save(walkRoute);
     }
 

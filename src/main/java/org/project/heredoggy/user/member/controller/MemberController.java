@@ -3,7 +3,7 @@ package org.project.heredoggy.user.member.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.shelter.walk.route.walkRoute.dto.WalkRouteResponseDTO;
+import org.project.heredoggy.shelter.walk.walkRoute.dto.WalkRouteResponseDTO;
 import org.project.heredoggy.user.adoption.dto.MemberAdoptionResponseDTO;
 import org.project.heredoggy.user.adoption.service.MemberAdoptionService;
 import org.project.heredoggy.user.fcm.service.FcmTokenService;

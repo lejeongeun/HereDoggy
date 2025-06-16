@@ -1,9 +1,9 @@
-package org.project.heredoggy.shelter.walk.route.walkRoute.mapper;
+package org.project.heredoggy.shelter.walk.walkRoute.mapper;
 
 import org.project.heredoggy.domain.postgresql.walk.walkRoute.RoutePoint;
 import org.project.heredoggy.domain.postgresql.walk.walkRoute.WalkRoute;
-import org.project.heredoggy.shelter.walk.route.walkRoute.dto.RoutePointResponseDTO;
-import org.project.heredoggy.shelter.walk.route.walkRoute.dto.WalkRouteResponseDTO;
+import org.project.heredoggy.shelter.walk.walkRoute.dto.RoutePointResponseDTO;
+import org.project.heredoggy.shelter.walk.walkRoute.dto.WalkRouteResponseDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,6 +20,7 @@ public class WalkRouteMapper {
                 .expectedDuration(walkRoute.getExpectedDuration())
                 .createdAt(walkRoute.getCreatedAt())
                 .points(toPointDtoList(walkRoute.getPoints()))
+                .thumbnailUrl(walkRoute.getThumbnailUrl())
                 .build();
     }
 

@@ -1,14 +1,19 @@
-package org.project.heredoggy.shelter.walk.route.walkRoute.controller;
+package org.project.heredoggy.shelter.walk.walkRoute.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.project.heredoggy.global.exception.BadRequestException;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.shelter.walk.route.walkRoute.dto.WalkRouteRequestDto;
-import org.project.heredoggy.shelter.walk.route.walkRoute.dto.WalkRouteResponseDTO;
-import org.project.heredoggy.shelter.walk.route.walkRoute.service.WalkRouteService;
+import org.project.heredoggy.shelter.walk.walkRoute.dto.WalkRouteRequestDto;
+import org.project.heredoggy.shelter.walk.walkRoute.dto.WalkRouteResponseDTO;
+import org.project.heredoggy.shelter.walk.walkRoute.service.WalkRouteService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -18,12 +23,21 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class WalkRouteController {
     private final WalkRouteService walkRouteService;
+    private final ObjectMapper objectMapper;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, String>> createRoute(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                            @PathVariable("shelters_id") Long sheltersId,
-                                                           @Valid @RequestBody WalkRouteRequestDto request){
-        walkRouteService.createRoute(userDetails, sheltersId, request);
+                                                           @RequestPart("request") String requestJson,
+                                                           @RequestPart("image") MultipartFile image){
+        WalkRouteRequestDto requestDto;
+        try{
+            requestDto = objectMapper.readValue(requestJson, WalkRouteRequestDto.class);
+        } catch (JsonProcessingException e){
+            throw new BadRequestException("JSON 파싱에 실패하셨습니다.");
+        }
+
+        walkRouteService.createRoute(userDetails, sheltersId, requestDto, image);
         return ResponseEntity.ok(Map.of("message", "기본 경로가 생성되었습니다."));
     }
 

@@ -2,7 +2,7 @@ package org.project.heredoggy.user.walk.reservation.dto;
 
 import lombok.*;
 import org.project.heredoggy.domain.postgresql.walk.reservation.WalkReservationStatus;
-import org.project.heredoggy.shelter.walk.route.walkRoute.dto.WalkRouteResponseDTO;
+import org.project.heredoggy.shelter.walk.walkRoute.dto.WalkRouteResponseDTO;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
