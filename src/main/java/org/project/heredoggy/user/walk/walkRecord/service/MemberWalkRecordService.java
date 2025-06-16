@@ -15,10 +15,7 @@ import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.exception.UnauthorizedException;
 import org.project.heredoggy.global.util.AuthUtils;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.user.walk.walkRecord.dto.WalkRecordEndRequestDTO;
-import org.project.heredoggy.user.walk.walkRecord.dto.WalkRecordPointDTO;
-import org.project.heredoggy.user.walk.walkRecord.dto.WalkRecordResponseDTO;
-import org.project.heredoggy.user.walk.walkRecord.dto.WalkRecordStartRequestDTO;
+import org.project.heredoggy.user.walk.walkRecord.dto.*;
 import org.project.heredoggy.user.walk.walkRecord.mapper.WalkRecordMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -60,6 +58,7 @@ public class MemberWalkRecordService {
         recordRepository.save(walkRecord);
         return recordMapper.toWalkRecordDto(walkRecord);
     }
+
     @Transactional
     public WalkRecordResponseDTO endWalk(CustomUserDetails userDetails, WalkRecordEndRequestDTO endRequestDTO, Long walkRecordsId) {
         Member member = AuthUtils.getValidMember(userDetails);
@@ -86,4 +85,42 @@ public class MemberWalkRecordService {
         return recordMapper.toWalkRecordDto(walkRecord);
     }
 
+    @Transactional(readOnly = true)
+    public WalkRecordEndStatisticDTO getEndWalkStatistic(CustomUserDetails userDetails, Long walkRecordsId) {
+        Member member = AuthUtils.getValidMember(userDetails);
+        WalkRecord walkRecord = recordRepository.findById(walkRecordsId)
+                .orElseThrow(()-> new NotFoundException(ErrorMessages.WALK_NOT_FOUND));
+
+        if (!walkRecord.getReservation().getMember().getId().equals(member.getId())){
+            throw new UnauthorizedException(ErrorMessages.UNAUTHORIZED_ACCESS);
+        }
+
+        return WalkRecordEndStatisticDTO.builder()
+                .actualDistance(walkRecord.getActualDistance())
+                .actualDuration(walkRecord.getActualDuration())
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public List<WalkRecordResponseDTO> getAllWalkRecords(CustomUserDetails userDetails) {
+        Member member = AuthUtils.getValidMember(userDetails);
+
+        return recordRepository.findAll().stream()
+                .map(recordMapper::toWalkRecordDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public WalkRecordResponseDTO getDetailsWalkRecords(CustomUserDetails userDetails, Long walkRecordsId) {
+        Member member = AuthUtils.getValidMember(userDetails);
+        WalkRecord walkRecord = recordRepository.findById(walkRecordsId)
+                .orElseThrow(()-> new NotFoundException(ErrorMessages.WALK_NOT_FOUND));
+
+        return recordMapper.toWalkRecordDto(walkRecord);
+    }
+
+    public WalkSimpleStatisticDTO getWalkStatistics(CustomUserDetails userDetails) {
+        Member member = AuthUtils.getValidMember(userDetails);
+        return recordRepository.getSimpleStatisticByMemberId(member.getId());
+    }
 }

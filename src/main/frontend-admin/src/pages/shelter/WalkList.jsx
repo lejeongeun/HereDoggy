@@ -51,7 +51,7 @@ const WalkList = forwardRef(({ sheltersId, onRouteSelect, onAddNewRoute }, ref) 
               key={route.id}
               route={route}
               onDelete={handleDelete}
-              onSelect={() => onRouteSelect(route)}
+              onSelect={() => onRouteSelect({...route})}
             />
           ) : (
             <AddRouteCard key={`add-${idx}`} onAddNewRoute={onAddNewRoute} />

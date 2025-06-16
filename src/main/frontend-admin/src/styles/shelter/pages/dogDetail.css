@@ -1,9 +1,46 @@
 .dogdetail-container {
-  padding: 24px;
-  max-width: 1200px;
-  margin: 0 auto;
   position: relative;
   z-index: 1;
+  max-width: 1200px;
+  margin: 42px auto 60px auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 24px #e5ebf4cc;
+  padding: 48px 50px 36px 50px;
+  border: 2px solid #ecf1f5;
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+}
+
+.dogdetail-content-row {
+  display: flex;
+  gap: 48px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.dogdetail-images-slider {
+  flex: 1 1 360px;
+  max-width: 400px;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.dogdetail-info-table {
+  flex: 1 1 480px;
+}
+
+@media (max-width: 950px) {
+  .dogdetail-content-row {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .dogdetail-images-slider,
+  .dogdetail-info-table {
+    max-width: 100%;
+    flex: 1 1 auto;
+  }
 }
 
 .dogdetail-back-btn {
@@ -18,22 +55,54 @@
   cursor: pointer;
   transition: background 0.15s, border 0.13s;
 }
+
 .dogdetail-back-btn:hover {
   background: #e5f4ec;
   border: 1.2px solid #7ccca1;
+}
+
+.dogdetail-images-slider {
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 1;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.dogdetail-swiper {
+  max-width: 400px;
+  border-radius: 18px;
+  position: relative;
+  z-index: 1;
+}
+
+.dogdetail-slide-img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 18px;
+}
+
+.dogdetail-images-slider .swiper {
+  z-index: 1;
+}
+
+.dogdetail-images-slider .swiper-button-next,
+.dogdetail-images-slider .swiper-button-prev {
+  z-index: 2;
 }
 
 .dogdetail-images-row {
   display: flex;
   gap: 26px;
   margin-bottom: 36px;
-  flex-wrap: wrap;           /* 이미지가 많으면 줄바꿈 */
+  flex-wrap: wrap;
   justify-content: flex-start;
 }
 
 .dogdetail-img {
   width: 360px;
-  height: 200px;
+  height: 400px;
   border-radius: 18px;
   background: #e3e7eb;
   object-fit: cover;
@@ -52,6 +121,9 @@
     #e9eef3 24px
   );
   border: 2.3px dashed #dbe6f2;
+  height: 240px;
+  width: 100%;
+  border-radius: 18px;
 }
 
 .dogdetail-info-table {
@@ -70,15 +142,18 @@
   font-size: 1.07rem;
   border-bottom: 1px solid #f0f3f7;
 }
+
 .dogdetail-info-row:last-child {
   border-bottom: none;
 }
+
 .dogdetail-name-row {
+  justify-content: flex-start;
   font-size: 1.23rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   margin-bottom: 14px;
-  color: #437d55;
+  gap: 30px;
 }
 
 .dogdetail-info-cols-wrap {
@@ -111,17 +186,21 @@
   box-shadow: 0 3px 12px #e5f4ec;
   transition: background 0.13s;
 }
+
 .dogdetail-btn.edit {
   background: #4ab071;
   color: #fff;
 }
+
 .dogdetail-btn.edit:hover {
   background: #357c4c;
 }
+
 .dogdetail-btn.delete {
   background: #e67a7a;
   color: #fff;
 }
+
 .dogdetail-btn.delete:hover {
   background: #be3a3a;
 }
@@ -134,45 +213,35 @@
   margin: 54px 0;
 }
 
-/* 모바일/작은 화면 대응 */
+/* 모바일 대응 */
 @media (max-width: 950px) {
   .dogdetail-container {
     max-width: 99vw;
     padding: 18px 1vw 24px 1vw;
   }
+
   .dogdetail-images-row {
     gap: 12px;
     flex-wrap: wrap;
   }
+
   .dogdetail-img {
     width: 180px;
     height: 100px;
     min-width: 80px;
   }
+
   .dogdetail-info-table {
     padding: 14px 7px 14px 7px;
   }
+
   .dogdetail-info-cols-wrap {
     flex-direction: column;
     gap: 18px;
   }
+
   .dogdetail-btn-row {
     flex-direction: column;
     gap: 10px;
   }
-}
-
-.dogdetail-images-slider {
-  margin-bottom: 32px;
-  position: relative;
-  z-index: 1;
-}
-
-.dogdetail-images-slider .swiper {
-  z-index: 1;
-}
-
-.dogdetail-images-slider .swiper-button-next,
-.dogdetail-images-slider .swiper-button-prev {
-  z-index: 2;
 }

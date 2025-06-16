@@ -3,6 +3,7 @@ package org.project.heredoggy.user.walk.walkRecord.controller;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.user.walk.walkRecord.dto.WalkRecordEndRequestDTO;
+import org.project.heredoggy.user.walk.walkRecord.dto.WalkRecordEndStatisticDTO;
 import org.project.heredoggy.user.walk.walkRecord.dto.WalkRecordResponseDTO;
 import org.project.heredoggy.user.walk.walkRecord.dto.WalkRecordStartRequestDTO;
 import org.project.heredoggy.user.walk.walkRecord.service.MemberWalkRecordService;
@@ -31,6 +32,18 @@ public class MemberWalkRecordController {
         WalkRecordResponseDTO recordRes = walkRecordService.endWalk(userDetails, endRequestDTO, walkRecordsId);
         return ResponseEntity.ok(recordRes);
     }
+
+    // 산책 페이지 종료 후 통
+    @GetMapping("/{walk_records_id}/end/statistic")
+    public ResponseEntity<WalkRecordEndStatisticDTO> getEndWalkStatistic(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                         @PathVariable("walk_records_id") Long walkRecordsId){
+        WalkRecordEndStatisticDTO statistic = walkRecordService.getEndWalkStatistic(userDetails, walkRecordsId);
+        return ResponseEntity.ok(statistic);
+    }
+
+
+
+
 
 
 }

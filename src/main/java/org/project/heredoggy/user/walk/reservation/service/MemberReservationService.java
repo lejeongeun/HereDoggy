@@ -19,8 +19,8 @@ import org.project.heredoggy.global.util.AuthUtils;
 
 import org.project.heredoggy.global.util.TimeUtil;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.shelter.walk.route.walkRoute.dto.WalkRouteResponseDTO;
-import org.project.heredoggy.shelter.walk.route.walkRoute.mapper.WalkRouteMapper;
+import org.project.heredoggy.shelter.walk.walkRoute.dto.WalkRouteResponseDTO;
+import org.project.heredoggy.shelter.walk.walkRoute.mapper.WalkRouteMapper;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationRequestDTO;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationResponseDTO;
 import org.project.heredoggy.user.walk.reservation.dto.UnavailableTimeResponseDTO;

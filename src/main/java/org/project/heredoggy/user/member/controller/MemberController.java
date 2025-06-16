@@ -3,7 +3,7 @@ package org.project.heredoggy.user.member.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.shelter.walk.route.walkRoute.dto.WalkRouteResponseDTO;
+import org.project.heredoggy.shelter.walk.walkRoute.dto.WalkRouteResponseDTO;
 import org.project.heredoggy.user.adoption.dto.MemberAdoptionResponseDTO;
 import org.project.heredoggy.user.adoption.service.MemberAdoptionService;
 import org.project.heredoggy.user.fcm.service.FcmTokenService;
@@ -13,6 +13,9 @@ import org.project.heredoggy.user.member.dto.response.MyPostResponseDTO;
 import org.project.heredoggy.user.member.service.MemberService;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationResponseDTO;
 import org.project.heredoggy.user.walk.reservation.service.MemberReservationService;
+import org.project.heredoggy.user.walk.walkRecord.dto.WalkRecordResponseDTO;
+import org.project.heredoggy.user.walk.walkRecord.dto.WalkSimpleStatisticDTO;
+import org.project.heredoggy.user.walk.walkRecord.service.MemberWalkRecordService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +31,7 @@ public class MemberController {
     private final MemberReservationService memberReservationService;
     private final FcmTokenService fcmTokenService;
     private final MemberAdoptionService adoptionService;
+    private final MemberWalkRecordService recordService;
 
     // ==============================
     //    👤 내 정보 CRUD
@@ -87,6 +91,28 @@ public class MemberController {
                                                                          @PathVariable("walk_routes_id") Long walkRoutesId){
         WalkRouteResponseDTO walkRouteDetails = memberReservationService.getDetailsWalkRouteCheck(userDetails, reservationsId, walkRoutesId);
         return ResponseEntity.ok(walkRouteDetails);
+    }
+    // ==============================
+    //    📅 실제 산책 경로
+    // ==============================
+
+    // 실제 산책 내역 조회
+    @GetMapping("/walk-records")
+    public ResponseEntity<List<WalkRecordResponseDTO>> getAllWalkRecords(@AuthenticationPrincipal CustomUserDetails userDetails){
+        List<WalkRecordResponseDTO> walkRecordList = recordService.getAllWalkRecords(userDetails);
+        return ResponseEntity.ok(walkRecordList);
+    }
+    @GetMapping("/walk-records/{walk_records_id}")
+    public ResponseEntity<WalkRecordResponseDTO> getDetailWalkRecords(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                   @PathVariable("walk_records_id") Long walkRecordsId){
+        WalkRecordResponseDTO walkRecordDetails = recordService.getDetailsWalkRecords(userDetails, walkRecordsId);
+        return ResponseEntity.ok(walkRecordDetails);
+    }
+    // 누적 통계
+    @GetMapping("/statistics")
+    public ResponseEntity<WalkSimpleStatisticDTO> getWalkStatistics(@AuthenticationPrincipal CustomUserDetails userDetails){
+        WalkSimpleStatisticDTO statisticDTO = recordService.getWalkStatistics(userDetails);
+        return ResponseEntity.ok(statisticDTO);
     }
 
     // ==============================
