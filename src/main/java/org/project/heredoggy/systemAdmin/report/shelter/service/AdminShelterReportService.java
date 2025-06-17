@@ -1,11 +1,13 @@
 package org.project.heredoggy.systemAdmin.report.shelter.service;
 
 import lombok.RequiredArgsConstructor;
+import org.project.heredoggy.domain.postgresql.notification.ReferenceType;
 import org.project.heredoggy.domain.postgresql.report.ReportStatus;
 import org.project.heredoggy.domain.postgresql.report.member.MemberReport;
 import org.project.heredoggy.domain.postgresql.report.shelter.ShelterReport;
 import org.project.heredoggy.domain.postgresql.report.shelter.ShelterReportRepository;
 import org.project.heredoggy.global.exception.NotFoundException;
+import org.project.heredoggy.global.notification.NotificationFactory;
 import org.project.heredoggy.global.util.AdminAuthUtils;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.systemAdmin.report.post.dto.ReportActionRequestDTO;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AdminShelterReportService {
     private final ShelterReportRepository shelterReportRepository;
+    private final NotificationFactory notificationFactory;
     public Page<AdminShelterReportResponseDTO> getAllShelterReports(String status, Pageable pageable, CustomUserDetails userDetails) {
         AdminAuthUtils.getValidMember(userDetails);
         ReportStatus reportStatus = null;
@@ -73,5 +76,11 @@ public class AdminShelterReportService {
 
         report.setAdminMemo(request.getAdminMemo());
         report.setStatus(ReportStatus.RESOLVED);
+
+        notificationFactory.notifyReportResolved(
+                report.getReporter(),
+                report.getId(),
+                ReferenceType.SHELTER
+        );
     }
 }

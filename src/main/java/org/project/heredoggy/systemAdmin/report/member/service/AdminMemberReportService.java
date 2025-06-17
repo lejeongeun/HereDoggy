@@ -1,11 +1,13 @@
 package org.project.heredoggy.systemAdmin.report.member.service;
 
 import lombok.RequiredArgsConstructor;
+import org.project.heredoggy.domain.postgresql.notification.ReferenceType;
 import org.project.heredoggy.domain.postgresql.report.ReportStatus;
 import org.project.heredoggy.domain.postgresql.report.member.MemberReport;
 import org.project.heredoggy.domain.postgresql.report.member.MemberReportRepository;
 import org.project.heredoggy.domain.postgresql.report.post.PostReport;
 import org.project.heredoggy.global.exception.NotFoundException;
+import org.project.heredoggy.global.notification.NotificationFactory;
 import org.project.heredoggy.global.util.AdminAuthUtils;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.systemAdmin.report.member.dto.AdminMemberReportDetailDTO;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AdminMemberReportService {
     private final MemberReportRepository memberReportRepository;
+    private final NotificationFactory notificationFactory;
 
     public Page<AdminMemberReportResponseDTO> getAllMemberReports(String status, Pageable pageable, CustomUserDetails userDetails) {
         AdminAuthUtils.getValidMember(userDetails);
@@ -48,10 +51,10 @@ public class AdminMemberReportService {
         );
     }
 
-    public AdminMemberReportDetailDTO getMemberReportDetail(CustomUserDetails userDetails, Long memberId) {
+    public AdminMemberReportDetailDTO getMemberReportDetail(CustomUserDetails userDetails, Long reportId) {
         AdminAuthUtils.getValidMember(userDetails);
 
-        MemberReport report = memberReportRepository.findById(memberId)
+        MemberReport report = memberReportRepository.findById(reportId)
                 .orElseThrow(() -> new NotFoundException("해당 신고 내역이 존재하지 않습니다."));
 
         return AdminMemberReportDetailDTO.builder()
@@ -74,5 +77,11 @@ public class AdminMemberReportService {
 
         report.setAdminMemo(request.getAdminMemo());
         report.setStatus(ReportStatus.RESOLVED);
+
+        notificationFactory.notifyReportResolved(
+                report.getReporter(),
+                report.getId(),
+                ReferenceType.MEMBER
+        );
     }
 }

@@ -1,11 +1,13 @@
 package org.project.heredoggy.systemAdmin.report.comment.service;
 
 import lombok.RequiredArgsConstructor;
+import org.project.heredoggy.domain.postgresql.notification.ReferenceType;
 import org.project.heredoggy.domain.postgresql.report.ReportStatus;
 import org.project.heredoggy.domain.postgresql.report.comment.CommentReport;
 import org.project.heredoggy.domain.postgresql.report.comment.CommentReportRepository;
 import org.project.heredoggy.domain.postgresql.report.shelter.ShelterReport;
 import org.project.heredoggy.global.exception.NotFoundException;
+import org.project.heredoggy.global.notification.NotificationFactory;
 import org.project.heredoggy.global.util.AdminAuthUtils;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.systemAdmin.report.comment.dto.AdminCommentReportDetailDTO;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AdminCommentReportService {
     private final CommentReportRepository commentReportRepository;
+    private final NotificationFactory notificationFactory;
     public Page<AdminCommentReportResponseDTO> getAllCommentReports(String status, Pageable pageable, CustomUserDetails userDetails) {
         AdminAuthUtils.getValidMember(userDetails);
         ReportStatus reportStatus = null;
@@ -75,5 +78,11 @@ public class AdminCommentReportService {
 
         report.setAdminMemo(request.getAdminMemo());
         report.setStatus(ReportStatus.RESOLVED);
+
+        notificationFactory.notifyReportResolved(
+                report.getReporter(),
+                report.getId(),
+                ReferenceType.COMMENT
+        );
     }
 }

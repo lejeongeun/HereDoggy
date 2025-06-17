@@ -1,10 +1,12 @@
 package org.project.heredoggy.systemAdmin.report.post.service;
 
 import lombok.RequiredArgsConstructor;
+import org.project.heredoggy.domain.postgresql.notification.ReferenceType;
 import org.project.heredoggy.domain.postgresql.report.ReportStatus;
 import org.project.heredoggy.domain.postgresql.report.post.PostReport;
 import org.project.heredoggy.domain.postgresql.report.post.PostReportRepository;
 import org.project.heredoggy.global.exception.NotFoundException;
+import org.project.heredoggy.global.notification.NotificationFactory;
 import org.project.heredoggy.global.util.AdminAuthUtils;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.systemAdmin.report.post.dto.AdminPostReportDetailDTO;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AdminPostReportService {
     private final PostReportRepository postReportRepository;
+    private final NotificationFactory notificationFactory;
 
     public Page<AdminPostReportResponseDTO> getAllPostReports(String status, Pageable pageable, CustomUserDetails userDetails) {
         AdminAuthUtils.getValidMember(userDetails);
@@ -80,5 +83,20 @@ public class AdminPostReportService {
 
         report.setAdminMemo(request.getAdminMemo());
         report.setStatus(ReportStatus.RESOLVED);
+
+        ReferenceType referenceType;
+        switch (report.getPostType()) {
+            case FREE -> referenceType = ReferenceType.FREE_POST;
+            case MISSING -> referenceType = ReferenceType.MISSING_POST;
+            case REVIEW -> referenceType = ReferenceType.REVIEW_POST;
+            case NOTICE -> referenceType = ReferenceType.NOTICE_POST;
+            default -> throw new IllegalStateException("Unknown post type");
+        }
+
+        notificationFactory.notifyReportResolved(
+                report.getReporter(),
+                report.getId(),
+                referenceType
+        );
     }
 }

@@ -17,21 +17,21 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/admin/reports")
+@RequestMapping("/api/admin/reports/members")
 public class AdminMemberReportController {
     private final AdminMemberReportService adminMemberReportService;
 
-    @GetMapping("/members")
+    @GetMapping
     public Page<AdminMemberReportResponseDTO> getMembersReports(@RequestParam(required = false) String status,
                                                                 @AuthenticationPrincipal CustomUserDetails userDetails,
                                                                 Pageable pageable) {
         return adminMemberReportService.getAllMemberReports(status, pageable, userDetails);
     }
 
-    @GetMapping("/{member_id}")
+    @GetMapping("/{report_id}")
     public ResponseEntity<AdminMemberReportDetailDTO> getCommentDetailReport(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                                              @PathVariable("member_id") Long memberId) {
-        AdminMemberReportDetailDTO res = adminMemberReportService.getMemberReportDetail(userDetails, memberId);
+                                                                              @PathVariable("report_id") Long reportId) {
+        AdminMemberReportDetailDTO res = adminMemberReportService.getMemberReportDetail(userDetails, reportId);
         return ResponseEntity.ok(res);
     }
 
