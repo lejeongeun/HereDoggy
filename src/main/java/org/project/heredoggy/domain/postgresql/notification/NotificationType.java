@@ -18,6 +18,7 @@ public enum NotificationType {
     INQUIRY_RESULT,         // 보호소 -> 유저 (답변 완료)
 
     // 신고, 시스템
+    REPORT,
     REPORT_RESULT,
     SYSTEM_NOTICE
 }

@@ -1,0 +1,55 @@
+package org.project.heredoggy.domain.postgresql.report.shelter;
+
+import jakarta.persistence.*;
+import lombok.*;
+import org.project.heredoggy.domain.postgresql.member.Member;
+import org.project.heredoggy.domain.postgresql.report.ReportReason;
+import org.project.heredoggy.domain.postgresql.report.ReportStatus;
+import org.project.heredoggy.domain.postgresql.report.ReportTargetType;
+import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@EntityListeners(AuditingEntityListener.class)
+public class ShelterReport {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reporter_id", nullable = false)
+    private Member reporter;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shelter_id", nullable = false)
+    private Shelter shelter;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reason_id", nullable = false)
+    private ReportReason reason;
+
+    @Enumerated(EnumType.STRING)
+    private ReportStatus status;
+
+    private String shelterNameSnapshot;
+
+    private String adminMemo;
+
+    @CreatedDate
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+}

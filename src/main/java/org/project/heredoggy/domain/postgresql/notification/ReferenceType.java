@@ -16,6 +16,10 @@ public enum ReferenceType {
     // 문의
     INQUIRY,
 
+    //신고
+    SHELTER,
+    MEMBER,
+
     // 처리 결과
     ADOPTION,
     SYSTEM_NOTICE

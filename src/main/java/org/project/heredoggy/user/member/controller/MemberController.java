@@ -102,12 +102,7 @@ public class MemberController {
         List<WalkRecordResponseDTO> walkRecordList = recordService.getAllWalkRecords(userDetails);
         return ResponseEntity.ok(walkRecordList);
     }
-    @GetMapping("/walk-records/{walk_records_id}")
-    public ResponseEntity<WalkRecordResponseDTO> getDetailWalkRecords(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                                   @PathVariable("walk_records_id") Long walkRecordsId){
-        WalkRecordResponseDTO walkRecordDetails = recordService.getDetailsWalkRecords(userDetails, walkRecordsId);
-        return ResponseEntity.ok(walkRecordDetails);
-    }
+
     // 누적 통계
     @GetMapping("/statistics")
     public ResponseEntity<WalkSimpleStatisticDTO> getWalkStatistics(@AuthenticationPrincipal CustomUserDetails userDetails){

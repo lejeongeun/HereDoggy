@@ -14,12 +14,15 @@ import org.project.heredoggy.global.error.ErrorMessages;
 import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.exception.UnauthorizedException;
 import org.project.heredoggy.global.util.AuthUtils;
+import org.project.heredoggy.image.ImageService;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.user.walk.walkRecord.dto.*;
 import org.project.heredoggy.user.walk.walkRecord.mapper.WalkRecordMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +35,8 @@ public class MemberWalkRecordService {
     private final ReservationRepository reservationRepository;
     private final WalkRouteRepository walkRouteRepository;
     private final WalkRecordMapper recordMapper;
+    private final ImageService imageService;
+
 
     @Transactional
     public WalkRecordResponseDTO startWalk(CustomUserDetails userDetails, WalkRecordStartRequestDTO startRequestDTO) {
@@ -60,7 +65,7 @@ public class MemberWalkRecordService {
     }
 
     @Transactional
-    public WalkRecordResponseDTO endWalk(CustomUserDetails userDetails, WalkRecordEndRequestDTO endRequestDTO, Long walkRecordsId) {
+    public WalkRecordResponseDTO endWalk(CustomUserDetails userDetails, WalkRecordEndRequestDTO endRequestDTO, MultipartFile image, Long walkRecordsId) {
         Member member = AuthUtils.getValidMember(userDetails);
         WalkRecord walkRecord = recordRepository.findById(walkRecordsId)
                 .orElseThrow(()-> new NotFoundException(ErrorMessages.WALK_NOT_FOUND));
@@ -82,6 +87,15 @@ public class MemberWalkRecordService {
         walkRecord.setEndTime(LocalDateTime.now());
         walkRecord.setStatus(WalkRecordStatus.COMPLETED);
 
+        if (image != null && !image.isEmpty()){
+            try{
+                String imageUrl = imageService.saveWalkRecordImage(image, walkRecord.getId());
+                walkRecord.setThumbnailUrl(imageUrl);
+            } catch (IOException e){
+                throw new RuntimeException("WalkRecord 썸네일 저장 실패", e);
+            }
+        }
+
         return recordMapper.toWalkRecordDto(walkRecord);
     }
 
@@ -98,6 +112,7 @@ public class MemberWalkRecordService {
         return WalkRecordEndStatisticDTO.builder()
                 .actualDistance(walkRecord.getActualDistance())
                 .actualDuration(walkRecord.getActualDuration())
+                .thumbnailUrl(walkRecord.getThumbnailUrl())
                 .build();
     }
 
@@ -108,15 +123,6 @@ public class MemberWalkRecordService {
         return recordRepository.findAll().stream()
                 .map(recordMapper::toWalkRecordDto)
                 .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public WalkRecordResponseDTO getDetailsWalkRecords(CustomUserDetails userDetails, Long walkRecordsId) {
-        Member member = AuthUtils.getValidMember(userDetails);
-        WalkRecord walkRecord = recordRepository.findById(walkRecordsId)
-                .orElseThrow(()-> new NotFoundException(ErrorMessages.WALK_NOT_FOUND));
-
-        return recordMapper.toWalkRecordDto(walkRecord);
     }
 
     public WalkSimpleStatisticDTO getWalkStatistics(CustomUserDetails userDetails) {
