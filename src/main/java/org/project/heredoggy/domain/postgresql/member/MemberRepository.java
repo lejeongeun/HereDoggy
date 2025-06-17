@@ -20,4 +20,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findAllByRole(RoleType role);
 
     Optional<Member> findFirstByRole(RoleType role);
+
+    void deleteByEmail(String email);
 }

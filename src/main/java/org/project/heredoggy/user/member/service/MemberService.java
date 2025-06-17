@@ -68,10 +68,10 @@ public class MemberService {
     }
 
     public void remove(CustomUserDetails userDetails) {
-        Long memberId = AuthUtils.getValidMember(userDetails).getId();
+        String email = AuthUtils.getValidMember(userDetails).getEmail();
 
-        redisService.deleteRefreshToken(memberId);
-        memberRepository.deleteById(memberId);
+        redisService.deleteRefreshToken(email);
+        memberRepository.deleteByEmail(email);
     }
 
     public void updateNotificationSetting(CustomUserDetails userDetails, boolean isEnabled) {

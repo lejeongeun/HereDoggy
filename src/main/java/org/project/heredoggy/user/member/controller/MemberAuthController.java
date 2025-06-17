@@ -45,24 +45,24 @@ public class MemberAuthController {
         );
 
         Member member = ((CustomUserDetails)authentication.getPrincipal()).getMember();
-        String accessToken = jwtTokenProvider.generateAccessToken(member.getId());
+        String accessToken = jwtTokenProvider.generateAccessToken(member.getEmail());
 
-        String refreshToken = jwtTokenProvider.generateRefreshToken(member.getId());
-            redisService.saveRefreshToken(member.getId(), refreshToken, jwtTokenProvider.getRefreshTokenExpiration());
+        String refreshToken = jwtTokenProvider.generateRefreshToken(member.getEmail());
+            redisService.saveRefreshToken(member.getEmail(), refreshToken, jwtTokenProvider.getRefreshTokenExpiration());
 
         return ResponseEntity.ok(new TokenResponseDTO(accessToken, refreshToken));
     }
     @PostMapping("/reissue")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> reissue(@RequestBody ReissueRequestDTO request) {
-        Long memberId = jwtTokenProvider.getMemberIdFromToken(request.getRefreshToken());
+        String email = jwtTokenProvider.getEmailFromToken(request.getRefreshToken());
 
-        String storedRefreshToken = redisService.getRefreshToken(memberId);
+        String storedRefreshToken = redisService.getRefreshToken(email);
         if (!storedRefreshToken.equals(request.getRefreshToken())) {
             throw new IllegalArgumentException("RefreshToken이 유효하지 않습니다.");
         }
 
-        String newAccessToken = jwtTokenProvider.generateAccessToken(memberId);
+        String newAccessToken = jwtTokenProvider.generateAccessToken(email);
 
         return ResponseEntity.ok(new ReissueResponseDTO(newAccessToken));
     }
@@ -71,7 +71,7 @@ public class MemberAuthController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> logout(@AuthenticationPrincipal CustomUserDetails userDetails,
                                     @RequestBody String token) {
-        redisService.deleteRefreshToken(userDetails.getMember().getId());
+        redisService.deleteRefreshToken(userDetails.getMember().getEmail());
         fcmTokenService.deleteToken(token, userDetails.getMember());
         return ResponseEntity.ok("로그아웃 완료");
     }

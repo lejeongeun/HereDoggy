@@ -29,38 +29,37 @@ public class JwtTokenProvider {
 
     private SecretKey secretKey;
 
-    /** ✅ 시크릿 키 초기화 (Base64 인코딩 + 강도 보장) */
     @PostConstruct
     public void init() {
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateAccessToken(Long memberId) {
-        return generateToken(memberId, accessTokenExpiration);
+    public String generateAccessToken(String email) {
+        return generateToken(email, accessTokenExpiration);
     }
 
-    public String generateRefreshToken(Long memberId) {
-        return generateToken(memberId, refreshTokenExpiration);
+    public String generateRefreshToken(String email) {
+        return generateToken(email, refreshTokenExpiration);
     }
 
-    private String generateToken(Long memberId, long expiration) {
+    private String generateToken(String email, long expiration) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + expiration);
 
         return Jwts.builder()
-                .setSubject(String.valueOf(memberId))
+                .setSubject(email)  // 여기!
                 .setIssuedAt(now)
                 .setExpiration(expiry)
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public Long getMemberIdFromToken(String token) {
-        return Long.parseLong(Jwts.parserBuilder()
+    public String getEmailFromToken(String token) {
+        return Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .getSubject());
+                .getSubject();  // subject에 email이 들어있음
     }
 }
