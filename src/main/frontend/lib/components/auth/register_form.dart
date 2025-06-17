@@ -3,7 +3,20 @@ import 'package:daum_postcode_search/daum_postcode_search.dart';
 import '../../services/auth_service.dart';
 
 class RegisterForm extends StatefulWidget {
-  const RegisterForm({Key? key}) : super(key: key);
+  final String? preFilledEmail;
+  final String? preFilledName;
+  final String? preFilledBirth;
+  final bool isSocialLogin;
+  final String? provider;
+
+  const RegisterForm({
+    Key? key,
+    this.preFilledEmail,
+    this.preFilledName,
+    this.preFilledBirth,
+    this.isSocialLogin = false,
+    this.provider,
+  }) : super(key: key);
 
   @override
   State<RegisterForm> createState() => _RegisterFormState();
@@ -23,6 +36,21 @@ class _RegisterFormState extends State<RegisterForm> {
   final _addressDetailController = TextEditingController();
   bool _isLoading = false;
   final _authService = AuthService();
+
+  @override
+  void initState() {
+    super.initState();
+    // 카카오에서 받은 정보 미리 채우기
+    if (widget.preFilledEmail != null) {
+      _emailController.text = widget.preFilledEmail!;
+    }
+    if (widget.preFilledName != null) {
+      _nameController.text = widget.preFilledName!;
+    }
+    if (widget.preFilledBirth != null) {
+      _birthController.text = widget.preFilledBirth!;
+    }
+  }
 
   @override
   void dispose() {
@@ -61,8 +89,8 @@ class _RegisterFormState extends State<RegisterForm> {
       try {
         final result = await _authService.register(
           email: _emailController.text,
-          password: _passwordController.text,
-          passwordCheck: _passwordCheckController.text,
+          password: widget.isSocialLogin ? null : _passwordController.text,
+          passwordCheck: widget.isSocialLogin ? null : _passwordCheckController.text,
           name: _nameController.text,
           nickname: _nicknameController.text,
           birth: _birthController.text,
@@ -70,6 +98,7 @@ class _RegisterFormState extends State<RegisterForm> {
           zipcode: _zipcodeController.text,
           address1: _addressController.text,
           address2: _addressDetailController.text,
+          provider: widget.isSocialLogin ? (widget.provider ?? 'kakao') : 'local',
         );
 
         if (!result['success']) {
@@ -107,7 +136,10 @@ class _RegisterFormState extends State<RegisterForm> {
                       onPressed: () => Navigator.pop(context),
                     ),
                     const SizedBox(width: 8),
-                    const Text('회원가입', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF388E3C))),
+                    Text(
+                      widget.isSocialLogin ? '추가 정보 입력' : '회원가입',
+                      style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF388E3C))
+                    ),
                   ],
                 ),
                 const SizedBox(height: 24),
@@ -126,25 +158,27 @@ class _RegisterFormState extends State<RegisterForm> {
                 const SizedBox(height: 16),
                 _buildLabel('닉네임'),
                 _buildTextField(_nicknameController, '닉네임을 입력해주세요', validator: (v) => (v == null || v.isEmpty) ? '닉네임을 입력해주세요' : null),
-                const SizedBox(height: 16),
-                _buildLabel('비밀번호'),
-                _buildTextField(_passwordController, '숫자, 영문을 포함하여 8자리 이상',
-                  obscureText: true,
-                  validator: (v) {
-                    if (v == null || v.isEmpty) return '비밀번호를 입력해주세요';
-                    if (v.length < 8) return '8자리 이상 입력해주세요';
-                    if (!RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$').hasMatch(v)) return '숫자, 영문을 포함해야 합니다';
-                    return null;
-                  }),
-                const SizedBox(height: 16),
-                _buildLabel('비밀번호 재확인'),
-                _buildTextField(_passwordCheckController, '숫자, 영문을 포함하여 8자리 이상',
-                  obscureText: true,
-                  validator: (v) {
-                    if (v == null || v.isEmpty) return '비밀번호를 재입력해주세요';
-                    if (v != _passwordController.text) return '비밀번호가 일치하지 않습니다';
-                    return null;
-                  }),
+                if (!widget.isSocialLogin) ...[
+                  const SizedBox(height: 16),
+                  _buildLabel('비밀번호'),
+                  _buildTextField(_passwordController, '숫자, 영문을 포함하여 8자리 이상',
+                    obscureText: true,
+                    validator: (v) {
+                      if (v == null || v.isEmpty) return '비밀번호를 입력해주세요';
+                      if (v.length < 8) return '8자리 이상 입력해주세요';
+                      if (!RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$').hasMatch(v)) return '숫자, 영문을 포함해야 합니다';
+                      return null;
+                    }),
+                  const SizedBox(height: 16),
+                  _buildLabel('비밀번호 재확인'),
+                  _buildTextField(_passwordCheckController, '숫자, 영문을 포함하여 8자리 이상',
+                    obscureText: true,
+                    validator: (v) {
+                      if (v == null || v.isEmpty) return '비밀번호를 재입력해주세요';
+                      if (v != _passwordController.text) return '비밀번호가 일치하지 않습니다';
+                      return null;
+                    }),
+                ],
                 const SizedBox(height: 16),
                 _buildLabel('전화번호'),
                 _buildTextField(_phoneController, '전화번호를 입력해주세요', validator: (v) => (v == null || v.isEmpty) ? '전화번호를 입력해주세요' : null),
@@ -204,7 +238,10 @@ class _RegisterFormState extends State<RegisterForm> {
                     onPressed: _isLoading ? null : _handleRegister,
                     child: _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text('아이디 만들기', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        : Text(
+                            widget.isSocialLogin ? '추가 정보 입력 완료' : '아이디 만들기',
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+                          ),
                   ),
                 ),
               ],
@@ -230,7 +267,7 @@ class _RegisterFormState extends State<RegisterForm> {
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
-      readOnly: readOnly,
+      readOnly: readOnly || (controller == _emailController && widget.isSocialLogin),
       validator: validator,
       decoration: InputDecoration(
         hintText: hint,

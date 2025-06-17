@@ -25,6 +25,9 @@ public class WalkRecord {
     private LocalDateTime startTime; // 산책 시작 시간
     private LocalDateTime endTime; // 산책 종료 시간
 
+    @Column(name = "thumbnail_url")
+    private String thumbnailUrl; // 경로 스크린샷 썸네일 이미지
+
     @Enumerated(EnumType.STRING)
     private WalkRecordStatus status;
 

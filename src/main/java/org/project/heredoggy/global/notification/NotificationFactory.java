@@ -88,5 +88,23 @@ public class NotificationFactory {
         );
     }
 
+    /**
+     * 신고 조치 완료 알림 전송
+     *
+     * @param receiver    신고한 유저 (알림 받을 사람)
+     * @param reportId    신고 ID
+     * @param type        신고 대상 타입 (예: POST, COMMENT 등)
+     */
+    public void notifyReportResolved(Member receiver, Long reportId, ReferenceType type) {
+        notificationService.sendNotification(
+                receiver,
+                NotificationType.REPORT,
+                type,
+                reportId,
+                "🚨 신고 조치 완료",
+                "신고하신 내용이 관리자에 의해 조치되었습니다. 확인해주세요."
+        );
+    }
+
 
 }

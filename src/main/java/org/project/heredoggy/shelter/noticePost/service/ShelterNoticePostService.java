@@ -7,6 +7,8 @@ import org.project.heredoggy.domain.postgresql.notice.NoticePost;
 import org.project.heredoggy.domain.postgresql.notice.NoticePostRepository;
 import org.project.heredoggy.domain.postgresql.post.PostImage;
 import org.project.heredoggy.domain.postgresql.post.PostImageRepository;
+import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
+import org.project.heredoggy.domain.postgresql.shelter.shelter.ShelterRepository;
 import org.project.heredoggy.global.exception.BadRequestException;
 import org.project.heredoggy.global.exception.ConflictException;
 import org.project.heredoggy.global.exception.NotFoundException;
@@ -16,6 +18,7 @@ import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.shelter.noticePost.dto.ShelterNoticePostEditRequestDTO;
 import org.project.heredoggy.shelter.noticePost.dto.ShelterNoticePostRequestDTO;
 import org.project.heredoggy.shelter.noticePost.dto.ShelterNoticePostResponseDTO;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,19 +33,23 @@ public class ShelterNoticePostService {
     private final NoticePostRepository noticePostRepository;
     private final PostImageRepository postImageRepository;
     private final ImageService imageService;
+    private final ShelterRepository shelterRepository;
 
     @Transactional
     public void createNoticePost(ShelterNoticePostRequestDTO request, CustomUserDetails userDetails, List<MultipartFile> images) {
         if(images != null && images.size() > 5) {
             throw new BadRequestException("이미지는 최대 5장까지 업로드 가능합니다.");
         }
-        Member shelterAdmin = AuthUtils.getValidMember(userDetails);
+        Member admin = AuthUtils.getValidMember(userDetails);
+        Shelter shelter = shelterRepository.findByShelterAdmin(admin)
+                .orElseThrow(() -> new NotFoundException("해당 보호소는 존재하지 않습니다."));
 
         NoticePost post = NoticePost.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
-                .writer(shelterAdmin)
+                .writer(admin)
                 .viewCount(0L)
+                .shelter(shelter)
                 .build();
 
         noticePostRepository.save(post);
@@ -85,20 +92,31 @@ public class ShelterNoticePostService {
     }
 
 
-    public List<ShelterNoticePostResponseDTO> getAllNoticePost() {
-        List<NoticePost> lists = noticePostRepository.findAllOrderByCreatedAtDesc();
+    public List<ShelterNoticePostResponseDTO> getAllNoticePost(CustomUserDetails userDetails) {
+        Member member = AuthUtils.getValidMember(userDetails);
+        Shelter shelter = shelterRepository.findByShelterAdmin(member)
+                .orElseThrow(() -> new NotFoundException("보호소 정보 없음"));
 
-        return lists.stream()
+        List<NoticePost> posts = noticePostRepository.findAllByShelterIdOrderByCreatedAtDesc(shelter.getId());
+
+        return posts.stream()
                 .map(post -> convertToDTO(post, List.of()))
                 .collect(Collectors.toList());
     }
 
 
     @Transactional
-    public ShelterNoticePostResponseDTO getDetailNoticePost(Long postId) {
+    public ShelterNoticePostResponseDTO getDetailNoticePost(Long postId, CustomUserDetails userDetails) {
+        Member member = AuthUtils.getValidMember(userDetails);
+        Shelter shelter = shelterRepository.findByShelterAdmin(member)
+                .orElseThrow(() -> new NotFoundException("보호소 정보 없음"));
 
         NoticePost post = noticePostRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException("찾을 수 없는 게시물입니다."));
+
+        if (!post.getShelter().getId().equals(shelter.getId())) {
+            throw new AccessDeniedException("본인 보호소의 공지만 조회할 수 있습니다.");
+        }
 
         post.setViewCount(post.getViewCount() + 1);
         noticePostRepository.save(post);
@@ -145,8 +163,8 @@ public class ShelterNoticePostService {
             if(!image.getNoticePost().getId().equals(post.getId())) {
                 throw new IllegalArgumentException("해당 게시글의 이미지가 아닙니다.");
             }
-            imageService.deleteImage(image.getImageUrl());
             postImageRepository.delete(image);
+            imageService.deleteImage(image.getImageUrl());
         }
     }
     private ShelterNoticePostResponseDTO convertToDTO(NoticePost post, List<String> imageUrls) {

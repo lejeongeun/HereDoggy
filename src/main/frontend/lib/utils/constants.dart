@@ -1,6 +1,7 @@
 class AppConstants {
   // API 관련 상수
-  static const String baseUrl = 'http://10.0.2.2:8080/api';
+  // static const String baseUrl = 'http://10.0.2.2:8080/api'; // 에뮬레이터용
+  static const String baseUrl = 'http://192.168.10.128:8080/api'; // 실제 기기용
   
   // 라우트 이름
   static const String homeRoute = '/';
@@ -14,7 +15,6 @@ class AppConstants {
   static const String shelterListRoute = '/shelter';
   static const String walkReservationRoute = '/walk';
   static const String myPageRoute = '/mypage';
-  static const String mapTest2Route = '/map-test2';
 
   // 로컬 스토리지 키
   static const String tokenKey = 'auth_token';

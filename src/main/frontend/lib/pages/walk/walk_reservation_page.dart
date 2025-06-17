@@ -35,11 +35,7 @@ class _WalkReservationPageState extends State<WalkReservationPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (_) => LoginFullScreenPage(
-              onLoginSuccess: () {
-                Navigator.pushReplacementNamed(context, AppConstants.walkReservationRoute);
-              },
-            ),
+            builder: (_) => const LoginFullScreenPage(),
           ),
         );
       });
@@ -89,88 +85,6 @@ class _WalkReservationPageState extends State<WalkReservationPage> {
             },
           );
         },
-      ),
-    );
-  }
-}
-
-class LoginFullScreenPage extends StatelessWidget {
-  final VoidCallback? onLoginSuccess;
-  const LoginFullScreenPage({Key? key, this.onLoginSuccess}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 16),
-              IconButton(
-                icon: const Icon(Icons.arrow_back, size: 32),
-                onPressed: () => Navigator.pop(context),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                '로그인',
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 32),
-              LoginForm(
-                onLoginSuccess: () {
-                  Navigator.of(context, rootNavigator: true).pop();
-                  Navigator.pushNamed(context, AppConstants.walkReservationRoute);
-                },
-              ),
-              const SizedBox(height: 32),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 28,
-                    child: const Text('Google', style: TextStyle(color: Colors.black)),
-                  ),
-                  const SizedBox(width: 32),
-                  CircleAvatar(
-                    backgroundColor: Color(0xFFFFEB3B),
-                    radius: 28,
-                    child: const Text('Kakao', style: TextStyle(color: Colors.black)),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 8,
-                    children: [
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text('회원가입', style: TextStyle(color: Colors.black54)),
-                      ),
-                      const Text('|', style: TextStyle(color: Colors.black54)),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text('아이디 찾기', style: TextStyle(color: Colors.black54)),
-                      ),
-                      const Text('|', style: TextStyle(color: Colors.black54)),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text('비밀번호 재설정', style: TextStyle(color: Colors.black54)),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

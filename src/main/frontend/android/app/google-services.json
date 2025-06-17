@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "728754467180",
+    "project_id": "psychic-cycling-461908-u1",
+    "storage_bucket": "psychic-cycling-461908-u1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:728754467180:android:82244771d9fdb955458349",
+        "android_client_info": {
+          "package_name": "com.example.frontend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "728754467180-tuvak6m9u9k7pr9i4la8pbuum7ng7qta.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.frontend",
+            "certificate_hash": "c0d568ec3689945bdf6f9d21964112c6a8e1b664"
+          }
+        },
+        {
+          "client_id": "728754467180-df7u27sojli1h5g5ofdlrpb9lqco96lq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCryBKPOrtcbh2goCTYfQNpTsJtanc-Nqg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "728754467180-df7u27sojli1h5g5ofdlrpb9lqco96lq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

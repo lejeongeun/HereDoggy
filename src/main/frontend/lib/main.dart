@@ -12,14 +12,33 @@ import 'pages/community/free_post_write_page.dart';
 import 'pages/community/free_post_detail_page.dart';
 import 'pages/community/free_post_edit_page.dart';
 import 'pages/walk/dog_detail_page.dart';
-import 'pages/map_test/map_test_page2.dart';
+import 'pages/missing/missing_post_write_page.dart';
+import 'pages/missing/missing_post_detail_page.dart';
+import 'pages/community/review_post_write_page.dart';
+import 'pages/community/review_post_detail_page.dart';
+import 'pages/community/review_post_edit_page.dart';
 import 'utils/theme.dart';
 import 'utils/constants.dart';
 import 'providers/user_provider.dart';
 import 'providers/dog_provider.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // 카카오 SDK 초기화
+  KakaoSdk.init(nativeAppKey: '3f758e2c33c5d676feaae7f717f42d2c');
+  
+  // 구글 로그인 초기화
+  final GoogleSignIn googleSignIn = GoogleSignIn(
+    scopes: ['profile', 'email'],
+    serverClientId: '728754467180-df7u27sojli1h5g5ofdlrpb9lqco96lq.apps.googleusercontent.com',
+  );
+  
+  // 이전 로그인 세션 정리
+  await googleSignIn.signOut();
+  
   runApp(
     MultiProvider(
       providers: [
@@ -60,7 +79,8 @@ class MyApp extends StatelessWidget {
         AppConstants.adoptionRoute: (context) => const AdoptionPage(),
         AppConstants.notificationRoute: (context) => const NotificationPage(),
         '/free-post-write': (context) => const FreePostWritePage(),
-        AppConstants.mapTest2Route: (context) => const MapTestPage2(),
+        '/missing-post-write': (context) => const MissingPostWritePage(),
+        '/review-post-write': (context) => const ReviewPostWritePage(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/dog-detail') {
@@ -94,6 +114,44 @@ class MyApp extends StatelessWidget {
                 postId: postId,
                 initialTitle: title,
                 initialContent: content,
+              ),
+            );
+          }
+        }
+        if (settings.name != null && settings.name!.startsWith('/missing-post-detail/')) {
+          final idStr = settings.name!.split('/').last;
+          final postId = int.tryParse(idStr);
+          if (postId != null) {
+            return MaterialPageRoute(
+              builder: (context) => MissingPostDetailPage(postId: postId),
+            );
+          }
+        }
+        if (settings.name != null && settings.name!.startsWith('/review-post-detail/')) {
+          final idStr = settings.name!.split('/').last;
+          final postId = int.tryParse(idStr);
+          if (postId != null) {
+            return MaterialPageRoute(
+              builder: (context) => ReviewPostDetailPage(postId: postId),
+            );
+          }
+        }
+        if (settings.name != null && settings.name!.startsWith('/review-post-edit/')) {
+          final idStr = settings.name!.split('/').last;
+          final postId = int.tryParse(idStr);
+          if (postId != null) {
+            final args = settings.arguments as Map<String, dynamic>?;
+            final title = args?['title'] as String? ?? '';
+            final content = args?['content'] as String? ?? '';
+            final type = args?['type'] as String? ?? 'WALK';
+            final rank = args?['rank'] as int? ?? 5;
+            return MaterialPageRoute(
+              builder: (context) => ReviewPostEditPage(
+                postId: postId,
+                initialTitle: title,
+                initialContent: content,
+                initialType: type,
+                initialRank: rank,
               ),
             );
           }

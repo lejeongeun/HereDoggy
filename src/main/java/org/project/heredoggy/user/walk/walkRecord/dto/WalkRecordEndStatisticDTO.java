@@ -10,4 +10,5 @@ import lombok.*;
 public class WalkRecordEndStatisticDTO {
     private Double actualDistance;
     private Integer actualDuration;
+    private String thumbnailUrl;
 }

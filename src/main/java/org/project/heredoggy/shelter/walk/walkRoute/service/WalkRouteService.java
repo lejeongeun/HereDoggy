@@ -28,8 +28,8 @@ public class WalkRouteService {
     private final WalkRouteRepository walkRouteRepository;
     private final WalkRouteMapper walkRouteMapper;
     private final ImageService imageService;
-    
-    public void createRoute(CustomUserDetails userDetails, Long sheltersId, WalkRouteRequestDto request, MultipartFile image) {
+
+    public void createRoute(CustomUserDetails userDetails, Long sheltersId, WalkRouteRequestDto request) {
         Shelter shelter = SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
         long count = walkRouteRepository.countByShelterId(sheltersId);
 
@@ -43,6 +43,7 @@ public class WalkRouteService {
                 .description(request.getDescription())
                 .totalDistance(request.getTotalDistance())
                 .expectedDuration(request.getExpectedDuration())
+                .thumbnailUrl(request.getThumbnailUrl())
                 .shelter(shelter)
                 .build();
 
@@ -57,12 +58,11 @@ public class WalkRouteService {
                 .collect(Collectors.toList());
 
         walkRoute.setPoints(routePoints);
+        walkRouteRepository.save(walkRoute); // 먼저 id 필요
 
-        try{
-            String imageUrl = imageService.saveWalkRoute(image, walkRoute.getId());
-            walkRoute.setThumbnailUrl(imageUrl);
-        } catch (IOException e){
-            throw new FileStorageException("썸네일 이미지 실패", e);
+        if (request.getThumbnailUrl() != null && !request.getThumbnailUrl().isBlank()){
+            String savedImageUrl = imageService.saveWalkRouteImage(request.getThumbnailUrl(), walkRoute.getId());
+            walkRoute.setThumbnailUrl(savedImageUrl);
         }
         walkRouteRepository.save(walkRoute);
     }
@@ -92,4 +92,5 @@ public class WalkRouteService {
 
         walkRouteRepository.delete(walkRoute);
     }
+
 }

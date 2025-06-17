@@ -23,21 +23,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class WalkRouteController {
     private final WalkRouteService walkRouteService;
-    private final ObjectMapper objectMapper;
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping
     public ResponseEntity<Map<String, String>> createRoute(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                            @PathVariable("shelters_id") Long sheltersId,
-                                                           @RequestPart("request") String requestJson,
-                                                           @RequestPart("image") MultipartFile image){
-        WalkRouteRequestDto requestDto;
-        try{
-            requestDto = objectMapper.readValue(requestJson, WalkRouteRequestDto.class);
-        } catch (JsonProcessingException e){
-            throw new BadRequestException("JSON 파싱에 실패하셨습니다.");
-        }
+                                                           @RequestBody @Valid WalkRouteRequestDto requestDto){
 
-        walkRouteService.createRoute(userDetails, sheltersId, requestDto, image);
+        walkRouteService.createRoute(userDetails, sheltersId, requestDto);
         return ResponseEntity.ok(Map.of("message", "기본 경로가 생성되었습니다."));
     }
 

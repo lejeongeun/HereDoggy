@@ -8,6 +8,10 @@ import org.project.heredoggy.domain.postgresql.post.free.FreePost;
 import org.project.heredoggy.domain.postgresql.post.like.Like;
 import org.project.heredoggy.domain.postgresql.post.missing.MissingPost;
 import org.project.heredoggy.domain.postgresql.post.review.ReviewPost;
+import org.project.heredoggy.domain.postgresql.report.comment.CommentReport;
+import org.project.heredoggy.domain.postgresql.report.member.MemberReport;
+import org.project.heredoggy.domain.postgresql.report.post.PostReport;
+import org.project.heredoggy.domain.postgresql.report.shelter.ShelterReport;
 import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
 import org.project.heredoggy.domain.postgresql.walk.reservation.Reservation;
 import org.springframework.data.annotation.CreatedDate;
@@ -79,7 +83,7 @@ public class Member {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToOne(mappedBy = "shelterAdmin")
+    @OneToOne(mappedBy = "shelterAdmin", fetch = FetchType.LAZY)
     private Shelter shelter;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -102,4 +106,19 @@ public class Member {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Like> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reporter", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberReport> memberReports = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reported", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberReport> memberReported = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reporter", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostReport> postReports = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reporter", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentReport> commentReports = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reporter", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ShelterReport> shelterReports = new ArrayList<>();
 }

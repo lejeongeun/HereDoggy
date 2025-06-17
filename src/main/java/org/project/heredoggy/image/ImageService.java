@@ -8,9 +8,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 @Service
@@ -115,14 +118,37 @@ public class ImageService {
         return "/uploads/inquiries/" + inquiryId + "/inquiry-images/" + fileName;
     }
     // 기본 경로 이미지 저장
-    public String saveWalkRoute(MultipartFile image, Long walkRouteId) throws IOException{
+    public String saveWalkRouteImage(String imageUrl, Long walkRouteId){
+        try(InputStream in = new URL(imageUrl).openStream()) {
+            String fileName = UUID.randomUUID() + ".png";
+
+            File folder = Paths.get(
+                    getAbsoluteUploadDir(),
+                    "walk-route",
+                    String.valueOf(walkRouteId),
+                    "walk-route-images"
+            ).toFile();
+
+            if (!folder.exists()) folder.mkdirs();
+
+            File saveFile = new File(folder, fileName);
+            Files.copy(in, saveFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+            return "/uploads/walk-route/" + walkRouteId + "/" + fileName;
+        }catch (IOException e){
+            throw new RuntimeException("Kakao 이미지 다운로드 실패");
+        }
+    }
+
+    // 실제 경로 이미지 저장
+    public String saveWalkRecordImage(MultipartFile image, Long walkRecordId) throws IOException{
         String fileName = UUID.randomUUID() + "-" + image.getOriginalFilename();
 
         File folder = Paths.get(
                 getAbsoluteUploadDir(),
-                "walk-route",
-                String.valueOf(walkRouteId),
-                "walk-route-images"
+                "walk-record",
+                String.valueOf(walkRecordId),
+                "walk-record-images"
         ).toFile();
 
         if (!folder.exists()) folder.mkdirs();
@@ -130,7 +156,7 @@ public class ImageService {
         File savePath = new File(folder, fileName);
         image.transferTo(savePath);
 
-        return "/uploads/walk-route/" + walkRouteId + "/walk-route-images" + fileName;
+        return "/uploads/walk-record/" + walkRecordId + "/walk-record-images/" + fileName;
     }
 
     public String savePostImage(MultipartFile image, PostType postType, Long postId) throws IOException {

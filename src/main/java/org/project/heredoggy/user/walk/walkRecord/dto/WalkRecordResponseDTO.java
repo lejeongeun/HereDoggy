@@ -21,4 +21,5 @@ public class WalkRecordResponseDTO {
     private LocalDateTime endTime;
     private List<WalkRecordPointDTO> actualPath;
     private WalkRecordStatus status;
+    private String thumbnailUrl;
 }

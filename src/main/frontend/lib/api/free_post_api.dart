@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import '../models/free_post.dart';
 import '../utils/constants.dart';
 import '../services/auth_service.dart';
+import 'dart:convert';
+import 'package:image_picker/image_picker.dart';
 
 class FreePostApi {
   static final Dio _dio = Dio(
@@ -9,6 +11,8 @@ class FreePostApi {
       baseUrl: AppConstants.baseUrl,
       connectTimeout: const Duration(seconds: 5),
       receiveTimeout: const Duration(seconds: 5),
+      contentType: Headers.jsonContentType,
+      responseType: ResponseType.json,
     ),
   );
 
@@ -25,33 +29,47 @@ class FreePostApi {
           },
         ),
       );
-      print('서버 응답 데이터: \\${response.data}');
+      print('게시글 목록 API 응답: ${response.data}');
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
         return data.map((json) => FreePost.fromJson(json)).toList();
       } else {
-        throw Exception('서버 오류: \\${response.statusCode}');
+        throw Exception('서버 오류: ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('게시글 목록을 불러오지 못했습니다: \\${e}');
+      throw Exception('게시글 목록을 불러오지 못했습니다: $e');
     }
   }
 
   static Future<void> createFreePost({
     required String title,
     required String content,
+    List<XFile>? images,
   }) async {
     try {
       final authService = AuthService();
       final token = await authService.getAccessToken();
 
       print('글 작성 요청 시작: title=$title, content=$content');
-      final response = await _dio.post(
-        '/members/free-posts',
-        data: {
+      
+      final Map<String, dynamic> formDataMap = {
+        'info': jsonEncode({
           'title': title,
           'content': content,
-        },
+        }),
+      };
+
+      if (images != null && images.isNotEmpty) {
+        formDataMap['images'] = await Future.wait(
+          images.map((img) => MultipartFile.fromFile(img.path, filename: img.name)),
+        );
+      }
+
+      final formData = FormData.fromMap(formDataMap);
+
+      final response = await _dio.post(
+        '/members/free-posts',
+        data: formData,
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -81,6 +99,7 @@ class FreePostApi {
           },
         ),
       );
+      print('게시글 상세 API 응답: ${response.data}');
       if (response.statusCode == 200) {
         return FreePost.fromJson(response.data);
       } else {
@@ -119,12 +138,18 @@ class FreePostApi {
     try {
       final authService = AuthService();
       final token = await authService.getAccessToken();
-      final response = await _dio.put(
-        '/members/free-posts/$postId',
-        data: {
+      
+      // FormData 생성
+      final formData = FormData.fromMap({
+        'info': jsonEncode({
           'title': title,
           'content': content,
-        },
+        }),
+      });
+
+      final response = await _dio.put(
+        '/members/free-posts/$postId',
+        data: formData,
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',

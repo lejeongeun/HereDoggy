@@ -17,4 +17,5 @@ public class WalkRouteRequestDto {
     private Double totalDistance; // 총 거리
     private Integer expectedDuration; // 누적 시간
     private List<RoutePointRequestDTO> points;
+    private String thumbnailUrl;
 }

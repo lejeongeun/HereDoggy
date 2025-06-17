@@ -21,11 +21,11 @@ public class MemberNoticePostService {
     private final NoticePostRepository noticePostRepository;
     private final PostImageRepository postImageRepository;
 
-    public List<ShelterNoticePostResponseDTO> getAllNoticePost() {
+    public List<ShelterNoticePostResponseDTO> getNoticePostsByShelter(Long shelterId) {
 
-        List<NoticePost> lists = noticePostRepository.findAllOrderByCreatedAtDesc();
+        List<NoticePost> posts = noticePostRepository.findAllByShelterIdOrderByCreatedAtDesc(shelterId);
 
-        return lists.stream()
+        return posts.stream()
                 .map(post -> convertToDTO(post, List.of()))
                 .collect(Collectors.toList());
     }

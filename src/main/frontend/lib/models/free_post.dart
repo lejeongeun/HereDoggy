@@ -6,6 +6,7 @@ class FreePost {
   final String email;
   final String nickname;
   final String createdAt;
+  final List<String> imagesUrls;
 
   FreePost({
     required this.id,
@@ -15,6 +16,7 @@ class FreePost {
     required this.email,
     required this.nickname,
     required this.createdAt,
+    this.imagesUrls = const [],
   });
 
   factory FreePost.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,9 @@ class FreePost {
       email: json['email'] as String,
       nickname: json['nickname'] as String,
       createdAt: json['createdAt'] as String,
+      imagesUrls: json['imagesUrls'] != null 
+          ? List<String>.from(json['imagesUrls'])
+          : [],
     );
   }
 
@@ -38,6 +43,7 @@ class FreePost {
       'email': email,
       'nickname': nickname,
       'createdAt': createdAt,
+      'imagesUrls': imagesUrls,
     };
   }
 } 

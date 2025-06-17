@@ -68,14 +68,15 @@ public class ShelterNoticePostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ShelterNoticePostResponseDTO>> getNoticePostByCreatedAt() {
-        List<ShelterNoticePostResponseDTO> res = noticePostService.getAllNoticePost();
+    public ResponseEntity<List<ShelterNoticePostResponseDTO>> getNoticePostByCreatedAt(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        List<ShelterNoticePostResponseDTO> res = noticePostService.getAllNoticePost(userDetails);
         return ResponseEntity.ok(res);
     }
 
     @GetMapping("/{post_id}")
-    public ResponseEntity<ShelterNoticePostResponseDTO> getDetailNoticePost(@PathVariable("post_id") Long postId) {
-        ShelterNoticePostResponseDTO res = noticePostService.getDetailNoticePost(postId);
+    public ResponseEntity<ShelterNoticePostResponseDTO> getDetailNoticePost(@PathVariable("post_id") Long postId,
+                                                                            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        ShelterNoticePostResponseDTO res = noticePostService.getDetailNoticePost(postId, userDetails);
         return ResponseEntity.ok(res);
     }
 }

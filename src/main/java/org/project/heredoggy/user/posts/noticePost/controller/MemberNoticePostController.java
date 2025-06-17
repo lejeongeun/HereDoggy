@@ -18,8 +18,10 @@ public class MemberNoticePostController {
     private final MemberNoticePostService noticePostService;
 
     @GetMapping
-    public ResponseEntity<List<ShelterNoticePostResponseDTO>> getNoticePostByCreatedAt() {
-        List<ShelterNoticePostResponseDTO> res = noticePostService.getAllNoticePost();
+    public ResponseEntity<List<ShelterNoticePostResponseDTO>> getNoticePostByShelter(
+            @RequestParam("shelterId") Long shelterId) {
+
+        List<ShelterNoticePostResponseDTO> res = noticePostService.getNoticePostsByShelter(shelterId);
         return ResponseEntity.ok(res);
     }
 

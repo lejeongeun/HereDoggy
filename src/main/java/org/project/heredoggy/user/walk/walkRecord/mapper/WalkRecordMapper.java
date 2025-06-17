@@ -1,7 +1,4 @@
 package org.project.heredoggy.user.walk.walkRecord.mapper;
-
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.walk.walkRecord.WalkRecord;
 import org.project.heredoggy.domain.postgresql.walk.walkRecord.WalkRecordPoint;
@@ -27,6 +24,7 @@ public class WalkRecordMapper {
                 .actualPath(walkRecord.getActualPath().stream()
                         .map(this::toWalkRecordPointDto)
                         .collect(Collectors.toList()))
+                .thumbnailUrl(walkRecord.getThumbnailUrl())
                 .build();
     }
 
