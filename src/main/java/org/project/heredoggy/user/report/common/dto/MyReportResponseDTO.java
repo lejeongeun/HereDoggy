@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class MyReportResponseDTO {
     private Long id;
+    private Long reportedId;
     private String nickname;
     private String reasonContent;
     private String status;
@@ -19,6 +20,7 @@ public class MyReportResponseDTO {
 
     public static MyReportResponseDTO fromCommentReport(CommentReport report) {
         return new MyReportResponseDTO(
+                report.getId(),
                 report.getComment().getId(),
                 report.getComment().getWriter().getNickname(),
                 report.getReason().getContent(),
@@ -29,6 +31,7 @@ public class MyReportResponseDTO {
 
     public static MyReportResponseDTO fromShelterReport(ShelterReport report) {
         return new MyReportResponseDTO(
+                report.getId(),
                 report.getShelter().getId(),
                 report.getShelter().getName(),
                 report.getReason().getContent(),
@@ -39,6 +42,7 @@ public class MyReportResponseDTO {
 
     public static MyReportResponseDTO fromMemberReport(MemberReport report) {
         return new MyReportResponseDTO(
+                report.getId(),
                 report.getReported().getId(),
                 report.getReported().getNickname(),
                 report.getReason().getContent(),

@@ -14,19 +14,19 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/members/reports")
+@RequestMapping("/api/reports")
 public class MyReportController {
     private final ReportQueryService reportQueryService;
 
-    @GetMapping("/comments")
+    @GetMapping("/comments/me")
     public ResponseEntity<List<MyReportResponseDTO>> getMyCommentReports(@AuthenticationPrincipal CustomUserDetails userDetails) {
         return ResponseEntity.ok(reportQueryService.getMyCommentReports(userDetails));
     }
-    @GetMapping("/shelters")
+    @GetMapping("/members/me")
     public ResponseEntity<List<MyReportResponseDTO>> getMyMemberReports(@AuthenticationPrincipal CustomUserDetails userDetails) {
         return ResponseEntity.ok(reportQueryService.getMyMemberReports(userDetails));
     }
-    @GetMapping("/members")
+    @GetMapping("/shelters/me")
     public ResponseEntity<List<MyReportResponseDTO>> getMyShelterReports(@AuthenticationPrincipal CustomUserDetails userDetails) {
         return ResponseEntity.ok(reportQueryService.getMyShelterReports(userDetails));
     }

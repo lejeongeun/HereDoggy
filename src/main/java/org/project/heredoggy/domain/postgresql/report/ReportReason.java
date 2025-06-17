@@ -32,13 +32,13 @@ public class ReportReason {
 
 
 
-    @OneToMany(mappedBy = "reporter", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "reason", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostReport> postReports = new ArrayList<>();
 
-    @OneToMany(mappedBy = "reporter", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "reason", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommentReport> commentReports = new ArrayList<>();
 
-    @OneToMany(mappedBy = "reporter", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "reason", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ShelterReport> shelterReports = new ArrayList<>();
 
     public ReportReason(String content, ReportTargetType targetType) {

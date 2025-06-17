@@ -34,11 +34,11 @@ public class AdminPostReportController {
         return ResponseEntity.ok(res);
     }
 
-    @PatchMapping("/{report_id}")
-    public ResponseEntity<Map<String, String>> handlePostReportAction(@PathVariable("report_id") Long reportId,
-                                                                      @RequestBody ReportActionRequestDTO request,
-                                                                      @AuthenticationPrincipal CustomUserDetails userDetails) {
-        adminPostReportService.handlePostReportAction(reportId, request, userDetails);
-        return ResponseEntity.ok(Map.of("message", "조치 완료"));
-    }
+        @PatchMapping("/{report_id}")
+        public ResponseEntity<Map<String, String>> handlePostReportAction(@PathVariable("report_id") Long reportId,
+                                                                          @RequestBody ReportActionRequestDTO request,
+                                                                          @AuthenticationPrincipal CustomUserDetails userDetails) {
+            adminPostReportService.handlePostReportAction(reportId, request, userDetails);
+            return ResponseEntity.ok(Map.of("message", "조치 완료"));
+        }
 }

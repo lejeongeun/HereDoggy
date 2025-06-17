@@ -26,7 +26,7 @@ public class PostReportController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<List<PostReportResponseDTO>> getMyPostReports(CustomUserDetails userDetails) {
+    public ResponseEntity<List<PostReportResponseDTO>> getMyPostReports(@AuthenticationPrincipal CustomUserDetails userDetails) {
         List<PostReportResponseDTO> reports = postReportService.getMyPostReports(userDetails);
         return ResponseEntity.ok(reports);
     }

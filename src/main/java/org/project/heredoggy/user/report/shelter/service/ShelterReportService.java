@@ -10,6 +10,7 @@ import org.project.heredoggy.domain.postgresql.report.ReportStatus;
 import org.project.heredoggy.domain.postgresql.report.shelter.ShelterReport;
 import org.project.heredoggy.domain.postgresql.report.shelter.ShelterReportRepository;
 import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
+import org.project.heredoggy.domain.postgresql.shelter.shelter.ShelterRepository;
 import org.project.heredoggy.global.exception.ConflictException;
 import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.notification.AdminSseNotificationFactory;
@@ -26,6 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ShelterReportService {
     private final ShelterReportRepository shelterReportRepository;
+    private final ShelterRepository shelterRepository;
     private final ReportReasonRepository reportReasonRepository;
     private final AdminSseNotificationFactory sseNotificationFactory;
     private final MemberRepository memberRepository;
@@ -34,7 +36,8 @@ public class ShelterReportService {
     public void reportShelter(CustomUserDetails userDetails, ShelterReportRequestDTO request) {
         Member reporter = AuthUtils.getValidMember(userDetails);
 
-        Shelter shelter = SheltersAuthUtils.validateShelterAccess(userDetails, request.getShelterId());
+        Shelter shelter = shelterRepository.findById(request.getShelterId())
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 보호소입니다."));
 
         ReportReason reason = reportReasonRepository.findById(request.getReasonId())
                 .orElseThrow(() -> new NotFoundException("신고 사유가 존재하지 않습니다."));

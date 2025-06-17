@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostReportResponseDTO {
+    private Long id;
     private Long postId;
     private String postType;
     private String reasonContent;
@@ -20,6 +21,7 @@ public class PostReportResponseDTO {
 
     public static PostReportResponseDTO fromEntity(PostReport report) {
         return new PostReportResponseDTO(
+                report.getId(),
                 report.getPostId(),
                 report.getPostType().name(),
                 report.getReason().getContent(),
