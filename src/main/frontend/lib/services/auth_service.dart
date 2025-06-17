@@ -202,15 +202,17 @@ class AuthService {
 
   Future<Map<String, dynamic>> loginWithGoogle(String idToken) async {
     try {
-      print('구글 로그인 시도: $_baseUrl/auth/oauth/google'); // 디버그 로그
+      print('구글 로그인 시도: $_baseUrl/auth/oauth/google');
+      print('구글 idToken: $idToken');  // idToken 로깅 추가
+      
       final response = await http.post(
         Uri.parse('$_baseUrl/auth/oauth/google'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'token': idToken}),
       );
       
-      print('구글 로그인 응답 상태: ${response.statusCode}'); // 디버그 로그
-      print('구글 로그인 응답 내용: ${response.body}'); // 디버그 로그
+      print('구글 로그인 응답 상태: ${response.statusCode}');
+      print('구글 로그인 응답 내용: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -218,10 +220,28 @@ class AuthService {
         await _storage.write(key: 'refreshToken', value: data['refreshToken']);
         return {'success': true};
       } else {
-        final data = jsonDecode(response.body);
+        // 에러 응답 처리 개선
+        String errorMessage;
+        try {
+          final data = jsonDecode(response.body);
+          errorMessage = data['message'] ?? '구글 로그인에 실패했습니다.';
+        } catch (e) {
+          // JSON 파싱 실패 시 원본 메시지 사용
+          errorMessage = response.body;
+        }
+        
+        // 신규 사용자 체크
+        if (response.statusCode == 404 || errorMessage.contains('회원가입이 필요합니다')) {
+          return {
+            'success': false,
+            'message': '회원가입이 필요합니다',
+            'isNewUser': true
+          };
+        }
+        
         return {
           'success': false,
-          'message': data['message'] ?? '구글 로그인에 실패했습니다.',
+          'message': errorMessage,
         };
       }
     } catch (e) {

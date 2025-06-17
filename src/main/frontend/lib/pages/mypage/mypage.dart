@@ -323,7 +323,7 @@ class ProfileEditPage extends StatelessWidget {
   }
 }
 
-// 예약내역 임시 페이지 리팩토링
+// 예약내역
 class WalkReservationHistoryPage extends StatefulWidget {
   const WalkReservationHistoryPage({Key? key}) : super(key: key);
 

@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 import 'dart:math' as math;
 import 'package:http/http.dart' as http;
 import '../../services/auth_service.dart';
@@ -11,6 +12,7 @@ import '../../models/walk_record_point_dto.dart';
 import '../../models/walk_record_start_request_dto.dart';
 import '../../models/walk_record_end_request_dto.dart';
 import '../../utils/constants.dart';
+import '../../pages/walk_route/walk_result_page.dart';
 
 class WalkRouteMapPage extends StatefulWidget {
   final int shelterId;
@@ -197,22 +199,49 @@ class _WalkRouteMapPageState extends State<WalkRouteMapPage> {
   }
 
   Future<void> _endWalk() async {
+    if (_walkRecordId == null) return;
+    
     try {
-      if (_walkRecordId == null) return;
-
-      final request = WalkRecordEndRequestDTO(
+      // 타이머 정지
+      _timer?.cancel();
+      
+      // 스크린샷 캡처
+      final Uint8List? screenshot = await _mapController?.takeSnapshot();
+      if (screenshot == null) throw Exception('스크린샷 캡처 실패');
+      
+      // MultipartFile 생성
+      final imageFile = http.MultipartFile.fromBytes(
+        'image',
+        screenshot,
+        filename: 'walk_route_${_walkRecordId}_${DateTime.now().millisecondsSinceEpoch}.png',
+      );
+      
+      // 산책 종료 요청 데이터 생성
+      final endRequest = WalkRecordEndRequestDTO(
         actualDistance: _myTotalDistance,
         actualDuration: _seconds,
         actualPath: _actualPath,
       );
       
-      await _walkRecordService.endWalk(_walkRecordId!, request);
+      // 산책 종료 요청
+      final response = await _walkRecordService.endWalk(
+        walkRecordId: _walkRecordId!,
+        request: endRequest,
+        image: imageFile,
+      );
       
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('산책이 종료되었습니다.')),
+        // 산책 결과 페이지로 이동
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WalkResultPage(
+              distance: _myTotalDistance,
+              duration: _seconds,
+              imageUrl: response.thumbnailUrl ?? '',
+            ),
+          ),
         );
-        Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {

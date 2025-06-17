@@ -11,6 +11,7 @@ class WalkRecordResponseDTO {
   final String? endTime;
   final List<WalkRecordPointDTO>? actualPath;
   final String status;
+  final String? thumbnailUrl;
 
   WalkRecordResponseDTO({
     required this.id,
@@ -22,6 +23,7 @@ class WalkRecordResponseDTO {
     this.endTime,
     this.actualPath,
     required this.status,
+    this.thumbnailUrl,
   });
 
   factory WalkRecordResponseDTO.fromJson(Map<String, dynamic> json) {
@@ -41,6 +43,7 @@ class WalkRecordResponseDTO {
             )
           : null,
       status: json['status'] as String,
+      thumbnailUrl: json['thumbnailUrl'] as String?,
     );
   }
 } 

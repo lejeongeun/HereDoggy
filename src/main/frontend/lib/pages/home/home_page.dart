@@ -166,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                     if (index < dogsToShow.length) {
                       final dog = dogsToShow[index];
                       return _DogInfoCard(
-                        imageUrl: dog.imagesUrls.isNotEmpty ? 'http://10.0.2.2:8080${dog.imagesUrls.first}' : '',
+                        imageUrl: dog.imagesUrls.isNotEmpty ? 'http://192.168.10.128:8080${dog.imagesUrls.first}' : '',
                         name: dog.name,
                         breed: '', // 품종 정보가 없으므로 빈 문자열
                         age: '${dog.age}살',
