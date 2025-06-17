@@ -133,6 +133,25 @@ public class ImageService {
         return "/uploads/walk-route/" + walkRouteId + "/walk-route-images" + fileName;
     }
 
+    // 실제 경로 이미지 저장
+    public String saveWalkRecordImage(MultipartFile image, Long walkRecordId) throws IOException{
+        String fileName = UUID.randomUUID() + "-" + image.getOriginalFilename();
+
+        File folder = Paths.get(
+                getAbsoluteUploadDir(),
+                "walk-record",
+                String.valueOf(walkRecordId),
+                "walk-record-images"
+        ).toFile();
+
+        if (!folder.exists()) folder.mkdirs();
+
+        File savePath = new File(folder, fileName);
+        image.transferTo(savePath);
+
+        return "/uploads/walk-record/" + walkRecordId + "/walk-record-images/" + fileName;
+    }
+
     public String savePostImage(MultipartFile image, PostType postType, Long postId) throws IOException {
         String fileName = UUID.randomUUID() + "-" + image.getOriginalFilename();
 
