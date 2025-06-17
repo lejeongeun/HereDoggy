@@ -48,6 +48,7 @@ public class MemberReportService {
                 .reporter(reporter)
                 .reported(reported)
                 .reason(reason)
+                .writerNicknameSnapshot(reported.getNickname())
                 .status(ReportStatus.UNRESOLVED)
                 .build();
 

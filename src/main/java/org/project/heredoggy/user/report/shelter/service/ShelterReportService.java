@@ -46,6 +46,7 @@ public class ShelterReportService {
                 .reporter(reporter)
                 .reason(reason)
                 .shelter(shelter)
+                .shelterNameSnapshot(shelter.getName())
                 .status(ReportStatus.UNRESOLVED)
                 .build();
 

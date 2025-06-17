@@ -50,6 +50,8 @@ public class CommentReportService {
                 .comment(comment)
                 .reason(reason)
                 .status(ReportStatus.UNRESOLVED)
+                .commentContentSnapshot(comment.getContent())
+                .writerNicknameSnapshot(comment.getWriter().getNickname())
                 .build();
 
         commentReportRepository.save(report);

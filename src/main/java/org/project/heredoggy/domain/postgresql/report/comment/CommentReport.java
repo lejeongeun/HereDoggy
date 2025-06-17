@@ -41,6 +41,9 @@ public class CommentReport {
 
     private String adminMemo;
 
+    private String commentContentSnapshot;
+    private String writerNicknameSnapshot;
+
     @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime createdAt;

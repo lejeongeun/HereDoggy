@@ -40,6 +40,10 @@ public class ShelterReport {
     @Enumerated(EnumType.STRING)
     private ReportStatus status;
 
+    private String shelterNameSnapshot;
+
+    private String adminMemo;
+
     @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime createdAt;

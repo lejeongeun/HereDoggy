@@ -1,6 +1,7 @@
-package org.project.heredoggy.systemAdmin.report.dto;
+package org.project.heredoggy.systemAdmin.report.shelter.dto;
 
 import lombok.*;
+import org.project.heredoggy.domain.postgresql.report.ReportStatus;
 
 import java.time.LocalDateTime;
 
@@ -10,12 +11,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class AdminShelterReportResponseDTO {
-    private Long reportId;
-    private Long reportedCommentId;
+    private Long id;
+    private Long shelterId;
+    private String shelterNameSnapshot;
     private String reporterNickname;
-    private String commentContent;
-    private String commentWriterNickname;
     private String reason;
-    private String status;
+    private ReportStatus status;
     private LocalDateTime reportedAt;
 }

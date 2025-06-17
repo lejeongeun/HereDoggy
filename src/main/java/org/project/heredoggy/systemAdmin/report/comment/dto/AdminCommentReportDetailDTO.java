@@ -1,9 +1,10 @@
-package org.project.heredoggy.systemAdmin.report.dto;
+package org.project.heredoggy.systemAdmin.report.comment.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.project.heredoggy.domain.postgresql.report.ReportStatus;
 
 import java.time.LocalDateTime;
 
@@ -12,12 +13,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class AdminCommentReportDetailDTO {
-    private Long reportId;
-    private Long reportedCommentId;
+    private Long id;
+    private Long commentId;
+    private String commentContentSnapshot;
     private String reporterNickname;
-    private String commentContent;
-    private String commentWriterNickname;
+    private String writerNickname;
     private String reason;
-    private String status;
+    private ReportStatus status;
+    private String adminMemo;
     private LocalDateTime reportedAt;
 }

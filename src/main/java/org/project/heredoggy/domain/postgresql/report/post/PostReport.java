@@ -43,7 +43,6 @@ public class PostReport {
     private String postTitleSnapshot;
     private String postContentSnapshot;
     private String writerNicknameSnapshot;
-    private boolean wasPostDeleted;
 
 
     @CreatedDate

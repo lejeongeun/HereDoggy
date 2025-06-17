@@ -40,6 +40,8 @@ public class MemberReport {
 
     private String adminMemo;
 
+    private String writerNicknameSnapshot;
+
     @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime createdAt;
