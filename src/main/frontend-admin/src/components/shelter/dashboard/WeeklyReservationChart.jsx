@@ -15,7 +15,7 @@ function WeeklyReservationChart() {
   return (
     <div className="dashboard-widget">
       <div className="chart-title">주간 예약 현황</div>
-      <ResponsiveContainer width="100%" height={230}>
+      <ResponsiveContainer width="100%" height={343}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e4efe6" />
           <XAxis dataKey="name" />

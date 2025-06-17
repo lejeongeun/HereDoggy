@@ -15,43 +15,35 @@
   max-height: 100vh; /* 화면 내에서 폼이 고정될 수 있게 설정 */
   overflow-y: auto; /* 폼 내용이 많을 경우 스크롤 가능 */
 }
-/* 입력 영역 */
+/* 입력 그룹 */
 .walk-input-group {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
-/* 경로 이름 입력 */
-.walk-input {
-  padding: 12px 16px;
-  font-size: 16px;
-  border: 1px solid #d6dbe0;
-  border-radius: 8px;
-  background: #fafafa;
-  outline: none;
-  transition: border-color 0.2s;
-}
-.walk-input:focus {
-  border-color: #1976d2;
-  background: #fff;
-}
-
-/* 경로 설명 입력 */
+/* 공통 입력 스타일 */
+.walk-input,
 .walk-textarea {
   padding: 12px 16px;
-  font-size: 14px;
-  border: 1px solid #d6dbe0;
+  font-size: 15px;
+  border: 1px solid #d9dee3;
   border-radius: 8px;
-  background: #fafafa;
+  background: #f8fafc;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.walk-input:focus,
+.walk-textarea:focus {
+  border-color: #26996f;
+  background: #ffffff;
+}
+
+/* 설명 텍스트 */
+.walk-textarea {
   min-height: 100px;
   resize: vertical;
-  outline: none;
-  transition: border-color 0.2s;
-}
-.walk-textarea:focus {
-  border-color: #1976d2;
-  background: #fff;
 }
 
 /* 지도 영역 */
@@ -61,7 +53,7 @@
   border-radius: 14px;
   overflow: hidden;
   border: 1px solid #e0e4e8;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 
 /* 버튼 그룹 */
@@ -71,7 +63,7 @@
   flex-wrap: wrap;
 }
 
-/* 버튼 공통 */
+/* 공통 버튼 스타일 */
 .walk-btn {
   flex: 1;
   min-width: 120px;
@@ -84,45 +76,57 @@
   transition: background 0.2s ease, opacity 0.2s ease;
 }
 
-/* 버튼 색상 */
+/* 기본 네이비 버튼 */
 .walk-btn-blue {
-  background: #1976d2;
+  background: #234E70;
   color: white;
 }
 .walk-btn-blue:hover {
-  background: #1565c0;
+  background: #193E5A;
 }
 
+/* 강조용 민트 버튼 (예: 경로 다시 그리기) */
 .walk-btn-green {
-  background: #43a047;
+  background: #3EB489;
   color: white;
 }
 .walk-btn-green:hover {
-  background: #388e3c;
+  background: #36A17B;
 }
 
+/* 삭제/취소용 레드 버튼 */
 .walk-btn-red {
-  background: #f44336;
+  background: #D64545;
   color: white;
 }
 .walk-btn-red:hover {
-  background: #d32f2f;
+  background: #B93838;
 }
 
+/* 비활성화 */
 .walk-btn-disabled {
   opacity: 0.5;
   pointer-events: none;
 }
 
-/* 거리/시간 표시 */
+
+/* 거리/시간 정보 */
 .walk-info-row {
   font-size: 15px;
   color: #204355;
   background: #f4f7fa;
   padding: 12px 16px;
   border-radius: 8px;
+  border: 1px solid #e1e6eb;
   display: flex;
   align-items: center;
   gap: 16px;
-  border: 1px solid #e1e6eb;
+}
+
+/* 경로 수정 안내 메시지 */
+.walk-edit-warning {
+  text-align: center;
+  font-size: 12px;
+  color: #d93025;
+  margin-top: 6px;
 }

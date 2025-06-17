@@ -6,8 +6,9 @@ function AnimalRankingTable() {
     { name: "두부", count: 6, photo: "/img/dubu.jpg" },
     { name: "초코", count: 4, photo: "/img/choco.jpg" }
   ];
+
   return (
-    <div className="dashboard-widget" style={{ minWidth: 300, maxWidth: 400 }}>
+    <div className="dashboard-widget">
       <div className="table-title">동물별 인기 순위</div>
       <table className="animal-ranking-table">
         <thead>
@@ -18,26 +19,28 @@ function AnimalRankingTable() {
           </tr>
         </thead>
         <tbody>
-          {animals.map((animal, i) => (
-            <tr key={animal.name}>
-              <td style={{fontWeight: 700, color: i === 0 ? "#184c24" : "#497a5c"}}>{i + 1}</td>
-              <td style={{display: 'flex', alignItems: 'center', gap: 7}}>
-                <img
-                  src={animal.photo}
-                  alt={animal.name}
-                  style={{
-                    width: 32,
-                    height: 32,
-                    objectFit: 'cover',
-                    borderRadius: '50%',
-                    border: '2px solid #effaf3',
-                  }}
-                />
-                <span>{animal.name}</span>
-              </td>
-              <td>{animal.count}</td>
-            </tr>
-          ))}
+          {animals.map((animal, i) => {
+            return (
+              <tr key={animal.name}>
+                <td style={{ fontWeight: 700, color: 'black' }}>{i + 1}</td>
+                <td style={{ display: 'flex', alignItems: 'center',  justifyContent: 'center', gap: 7 }}>
+                  <img
+                    src={animal.photo}
+                    alt={animal.name}
+                    style={{
+                      width: 32,
+                      height: 32,
+                      objectFit: 'cover',
+                      borderRadius: '50%',
+                      border: '2px solid #effaf3',
+                    }}
+                  />
+                  <span>{animal.name}</span>
+                </td>
+                <td>{animal.count}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

@@ -1,137 +1,99 @@
-/* 컨테이너 */
 .doglist-container {
-  width: 100%;
-  margin: 0 auto;
-  background: #f8f8f8;
-  padding: 32px 24px;
-  border-radius: 14px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  box-sizing: border-box;
-}
-
-/* 상단 버튼 영역 */
-.doglist-header {
-  text-align: right;
-  margin-bottom: 14px;
-}
-
-/* 등록 버튼 */
-.doglist-register-btn {
+  max-width: 900px;
+  margin: 48px auto;
+  padding: 36px 28px;
   background: #fff;
-  color: #4AB071;
-  border: 2px solid #4AB071;
-  border-radius: 9px;
-  padding: 6px 18px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(38, 153, 111, 0.12);
+  animation: fadeIn 0.4s ease;
+}
+
+.doglist-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.doglist-register-btn {
+  padding: 8px 16px;
+  font-size: 0.95rem;
   font-weight: 600;
-  font-size: 1.08rem;
-  cursor: pointer;
-  margin-left: 7px;
-  box-shadow: 0 2px 8px #e5f4ec;
-  transition: background 0.15s, color 0.13s, border 0.14s;
-  outline: none;
+  background: #24c279;
+  color: #fff;
+  border-radius: 8px;
   text-decoration: none;
+  transition: background 0.2s ease;
 }
 
 .doglist-register-btn:hover {
-  background: #e8f6ed;
-  color: #357c4c;
-  border-color: #357c4c;
+  background: #1fa16a;
 }
 
-/* 테이블 */
+.doglist-register-btn.big {
+  padding: 12px 20px;
+  font-size: 1rem;
+}
+
 .doglist-table {
   width: 100%;
-  max-width: 100%;
-  table-layout: fixed;
   border-collapse: collapse;
-  font-size: 1.02rem;
+  font-size: 0.95rem;
 }
 
 .doglist-table th,
 .doglist-table td {
-  padding: 14px 10px;
-  border-bottom: 1px solid #eee;
-  text-align: left;
-  word-wrap: break-word;
-  word-break: keep-all;
+  padding: 14px 12px;
+  text-align: center;
+  border-bottom: 1px solid #e2e2e2;
 }
 
 .doglist-table th {
-  background: #f0f0f0;
-  font-weight: 600;
-  font-size: 1.06rem;
-  border-bottom: 1px solid #ddd;
+  background: #f5fdf8;
+  color: #2c2c2c;
+  font-weight: 700;
 }
 
-.doglist-table td {
-  color: #333;
-  line-height: 1.45;
+.doglist-table tr:hover {
+  background: #f7fefb;
 }
 
-.doglist-table tbody tr:hover {
-  background-color: #f5faf7;
-}
-
-.doglist-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-/* 이미지 */
 .doglist-img {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+  width: 54px;
+  height: 54px;
   object-fit: cover;
-  background: #eee;
-  display: inline-block;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
 
 .doglist-img-placeholder {
-  background: #ccc;
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-}
-
-/* 링크 */
-.doglist-link {
-  text-decoration: none;
-  color: black;
-}
-
-/* 빈 상태 화면 */
-.doglist-empty {
-  min-height: 340px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: #185a36;
-  font-size: 1.1rem;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 6px 36px rgba(39, 60, 46, 0.08);
-  margin: 44px auto 0 auto;
-  padding: 42px 10px 38px 10px;
-}
-
-/* 큰 버튼 */
-.doglist-register-btn.big {
-  margin-top: 28px;
-  background: linear-gradient(90deg, #185a36 70%, #246f48 100%);
-  color: #fff;
-  font-weight: 800;
-  font-size: 1.13rem;
-  border: none;
-  border-radius: 12px;
-  padding: 16px 40px;
-  box-shadow: 0 2px 16px rgba(18, 54, 35, 0.10);
-  text-decoration: none;
-  transition: background 0.15s, transform 0.09s;
+  background: #f0f0f0;
   display: inline-block;
 }
 
-.doglist-register-btn.big:hover {
-  background: linear-gradient(90deg, #14402a 90%, #20713f 100%);
-  transform: translateY(-2px) scale(1.03);
+.doglist-link {
+  color: #222;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.doglist-link:hover {
+  color: #24c279;
+}
+
+.doglist-empty {
+  max-width: 600px;
+  margin: 60px auto;
+  padding: 40px;
+  background: #f9f9f9;
+  border-radius: 16px;
+  text-align: center;
+  font-size: 1.1rem;
+  color: #777;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: none; }
 }

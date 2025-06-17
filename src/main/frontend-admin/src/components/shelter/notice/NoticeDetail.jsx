@@ -14,6 +14,7 @@ function NoticeDetail() {
     const fetchDetail = async () => {
       try {
         const res = await getNoticeDetail(id);
+         console.log('응답:', res.data);
         setNotice(res.data);
       } catch (err) {
         setError("공지사항을 불러오는 데 실패했습니다.");
