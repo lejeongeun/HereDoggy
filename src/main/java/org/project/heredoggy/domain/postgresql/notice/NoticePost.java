@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.post.like.Like;
+import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -45,6 +46,10 @@ public class NoticePost {
     @ManyToOne
     @JoinColumn(name = "writer_id", nullable = false)
     private Member writer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shelter_id", nullable = false)
+    private Shelter shelter;
 
     @OneToMany(mappedBy = "noticePost", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Like> likes = new ArrayList<>();

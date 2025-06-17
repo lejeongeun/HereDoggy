@@ -83,7 +83,7 @@ public class Member {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToOne(mappedBy = "shelterAdmin")
+    @OneToOne(mappedBy = "shelterAdmin", fetch = FetchType.LAZY)
     private Shelter shelter;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
