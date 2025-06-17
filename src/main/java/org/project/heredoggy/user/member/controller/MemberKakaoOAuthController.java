@@ -34,6 +34,8 @@ public class MemberKakaoOAuthController {
         Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
 
         String email = (String) kakaoAccount.get("email");
+        String name = (String) kakaoAccount.get("name");
+        String phone = (String) kakaoAccount.get("phone_number");
         String nickname = profile != null ? (String) profile.get("nickname") : null;
 
         if (nickname == null || nickname.isBlank()) {
@@ -45,9 +47,13 @@ public class MemberKakaoOAuthController {
         Member member = memberRepository.findByEmail(email)
                 .orElseGet(() -> memberRepository.save(Member.builder()
                         .email(email)
+                        .name(name)
                         .nickname(finalNickname)
                         .password("SOCIAL_LOGIN")
                         .role(RoleType.USER)
+                        .phone(phone)
+                        .address("소셜 주소")
+                        .profileImageUrl("DEFAULT_IMAGE")
                         .isActive(true)
                         .build()));
 

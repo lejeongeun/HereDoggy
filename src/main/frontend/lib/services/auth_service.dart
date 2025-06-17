@@ -73,8 +73,8 @@ class AuthService {
   // 회원가입
   Future<Map<String, dynamic>> register({
     required String email,
-    required String password,
-    required String passwordCheck,
+    String? password,
+    String? passwordCheck,
     required String name,
     required String nickname,
     required String birth,
@@ -82,6 +82,7 @@ class AuthService {
     required String zipcode,
     required String address1,
     required String address2,
+    String provider = 'local',
   }) async {
     try {
       final response = await http.post(
@@ -98,6 +99,7 @@ class AuthService {
           'zipcode': zipcode,
           'address1': address1,
           'address2': address2,
+          'provider': provider,
         }),
       );
 
@@ -118,6 +120,31 @@ class AuthService {
     }
   }
 
+  // 소셜 로그인 회원가입
+  Future<Map<String, dynamic>> registerSocial({
+    required String email,
+    required String name,
+    required String nickname,
+    required String birth,
+    required String phone,
+    required String zipcode,
+    required String address1,
+    required String address2,
+    required String provider,
+  }) async {
+    return register(
+      email: email,
+      name: name,
+      nickname: nickname,
+      birth: birth,
+      phone: phone,
+      zipcode: zipcode,
+      address1: address1,
+      address2: address2,
+      provider: provider,
+    );
+  }
+
   // 회원 프로필 정보 가져오기
   Future<Map<String, dynamic>?> getProfile() async {
     final accessToken = await getAccessToken();
@@ -133,6 +160,76 @@ class AuthService {
       return jsonDecode(response.body);
     } else {
       return null;
+    }
+  }
+
+  Future<Map<String, dynamic>> loginWithKakao(String kakaoToken) async {
+    try {
+      print('카카오 로그인 시도: $_baseUrl/auth/oauth/kakao'); // 디버그 로그
+      
+      final response = await http.post(
+        Uri.parse('$_baseUrl/auth/oauth/kakao'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'token': kakaoToken,
+        }),
+      );
+
+      print('카카오 로그인 응답 상태: ${response.statusCode}'); // 디버그 로그
+      print('카카오 로그인 응답 내용: ${response.body}'); // 디버그 로그
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        await _storage.write(key: AppConstants.tokenKey, value: data['accessToken']);
+        await _storage.write(key: 'refreshToken', value: data['refreshToken']);
+        return {'success': true};
+      }
+
+      return {
+        'success': false,
+        'message': '카카오 로그인에 실패했습니다.',
+      };
+    } catch (e) {
+      print('카카오 로그인 에러: $e'); // 디버그 로그
+      return {
+        'success': false,
+        'message': '서버 연결에 실패했습니다.',
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> loginWithGoogle(String idToken) async {
+    try {
+      print('구글 로그인 시도: $_baseUrl/auth/oauth/google'); // 디버그 로그
+      final response = await http.post(
+        Uri.parse('$_baseUrl/auth/oauth/google'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'token': idToken}),
+      );
+      
+      print('구글 로그인 응답 상태: ${response.statusCode}'); // 디버그 로그
+      print('구글 로그인 응답 내용: ${response.body}'); // 디버그 로그
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        await _storage.write(key: AppConstants.tokenKey, value: data['accessToken']);
+        await _storage.write(key: 'refreshToken', value: data['refreshToken']);
+        return {'success': true};
+      } else {
+        final data = jsonDecode(response.body);
+        return {
+          'success': false,
+          'message': data['message'] ?? '구글 로그인에 실패했습니다.',
+        };
+      }
+    } catch (e) {
+      print('구글 로그인 에러: $e');
+      return {
+        'success': false,
+        'message': '서버 연결에 실패했습니다.',
+      };
     }
   }
 } 

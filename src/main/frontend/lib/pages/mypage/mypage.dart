@@ -542,6 +542,184 @@ class WalkTabPage extends StatelessWidget {
               );
             },
           ),
+          const Divider(thickness: 1, height: 1),
+          ListTile(
+            title: const Text('산책 내역'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const WalkHistoryPage(),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// 산책 내역 페이지
+class WalkHistoryPage extends StatefulWidget {
+  const WalkHistoryPage({Key? key}) : super(key: key);
+
+  @override
+  State<WalkHistoryPage> createState() => _WalkHistoryPageState();
+}
+
+class _WalkHistoryPageState extends State<WalkHistoryPage> {
+  final _authService = AuthService();
+  bool _isLoading = true;
+  String? _error;
+  List<dynamic> _walkRecords = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchWalkRecords();
+  }
+
+  Future<void> _fetchWalkRecords() async {
+    try {
+      final token = await _authService.getAccessToken();
+      // 종료된 산책 기록만 필터링
+      final response = await http.get(
+        Uri.parse('${AppConstants.baseUrl}/walk-records?status=COMPLETED'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      if (response.statusCode == 200) {
+        final records = json.decode(utf8.decode(response.bodyBytes));
+        setState(() {
+          _walkRecords = records;
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _error = '산책 내역을 불러오지 못했습니다.';
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _error = '네트워크 오류가 발생했습니다.';
+        _isLoading = false;
+      });
+    }
+  }
+
+  String _formatDateTime(String? dateTimeStr) {
+    if (dateTimeStr == null) return '-';
+    try {
+      final dateTime = DateTime.parse(dateTimeStr);
+      return '${dateTime.year}.${dateTime.month.toString().padLeft(2, '0')}.${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+    } catch (e) {
+      return '-';
+    }
+  }
+
+  String _formatDuration(int? seconds) {
+    if (seconds == null) return '-';
+    final hours = seconds ~/ 3600;
+    final minutes = (seconds % 3600) ~/ 60;
+    return '${hours}시간 ${minutes}분';
+  }
+
+  String _formatDistance(double? meters) {
+    if (meters == null) return '-';
+    return '${(meters / 1000).toStringAsFixed(1)}km';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('산책 내역'),
+        backgroundColor: const Color(0xFF4CAF50),
+        foregroundColor: Colors.white,
+      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _error != null
+              ? Center(child: Text(_error!))
+              : _walkRecords.isEmpty
+                  ? const Center(child: Text('산책 내역이 없습니다.'))
+                  : ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: _walkRecords.length,
+                      itemBuilder: (context, index) {
+                        final record = _walkRecords[index];
+                        return Card(
+                          margin: const EdgeInsets.only(bottom: 16),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '산책 #${record['id']}',
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.green[100],
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Text(
+                                        record['status'] ?? 'UNKNOWN',
+                                        style: TextStyle(
+                                          color: Colors.green[800],
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                                _buildInfoRow('시작 시간', _formatDateTime(record['startTime'])),
+                                _buildInfoRow('종료 시간', _formatDateTime(record['endTime'])),
+                                _buildInfoRow('소요 시간', _formatDuration(record['actualDuration'])),
+                                _buildInfoRow('이동 거리', _formatDistance(record['actualDistance'])),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.black54,
+              fontSize: 14,
+            ),
+          ),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         ],
       ),
     );

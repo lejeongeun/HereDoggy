@@ -21,9 +21,24 @@ import 'utils/theme.dart';
 import 'utils/constants.dart';
 import 'providers/user_provider.dart';
 import 'providers/dog_provider.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // 카카오 SDK 초기화
+  KakaoSdk.init(nativeAppKey: '3f758e2c33c5d676feaae7f717f42d2c');
+  
+  // 구글 로그인 초기화
+  final GoogleSignIn googleSignIn = GoogleSignIn(
+    scopes: ['profile', 'email'],
+    serverClientId: '728754467180-df7u27sojli1h5g5ofdlrpb9lqco96lq.apps.googleusercontent.com',
+  );
+  
+  // 이전 로그인 세션 정리
+  await googleSignIn.signOut();
+  
   runApp(
     MultiProvider(
       providers: [

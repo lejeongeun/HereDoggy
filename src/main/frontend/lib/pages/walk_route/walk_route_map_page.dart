@@ -6,6 +6,10 @@ import 'dart:convert';
 import 'dart:math' as math;
 import 'package:http/http.dart' as http;
 import '../../services/auth_service.dart';
+import '../../services/walk_record_service.dart';
+import '../../models/walk_record_point_dto.dart';
+import '../../models/walk_record_start_request_dto.dart';
+import '../../models/walk_record_end_request_dto.dart';
 import '../../utils/constants.dart';
 
 class WalkRouteMapPage extends StatefulWidget {
@@ -29,18 +33,21 @@ class _WalkRouteMapPageState extends State<WalkRouteMapPage> {
   Marker? _myLocationMarker;
   List<LatLng> _walkRoutePath = [];
   List<LatLng> _myPath = [];
+  List<WalkRecordPointDTO> _actualPath = [];
   StreamSubscription<Position>? _positionStream;
   bool _isLoading = true;
   String? _error;
   int _seconds = 0;
   Timer? _timer;
   final _authService = AuthService();
+  final _walkRecordService = WalkRecordService();
+  int? _walkRecordId;
+  bool _isWalking = false;
 
   @override
   void initState() {
     super.initState();
     _fetchWalkRoute();
-    _startTimer();
   }
 
   @override
@@ -121,9 +128,14 @@ class _WalkRouteMapPageState extends State<WalkRouteMapPage> {
         infoWindow: const InfoWindow(title: '내 위치'),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
       );
-      // 10미터 이상 이동했을 때만 경로에 추가 (LocationAccuracy.high는 약 10-20m 정확도)
+      // 10미터 이상 이동했을 때만 경로에 추가
       if (_myPath.isEmpty || _calculateDistance(_myPath.last, newLatLng) >= 10.0) {
         _myPath.add(newLatLng);
+        _actualPath.add(WalkRecordPointDTO(
+          latitude: position.latitude,
+          longitude: position.longitude,
+          recordedAt: DateTime.now().toIso8601String(),
+        ));
       }
     });
   }
@@ -152,6 +164,63 @@ class _WalkRouteMapPageState extends State<WalkRouteMapPage> {
     final min = (_seconds ~/ 60).toString().padLeft(2, '0');
     final sec = (_seconds % 60).toString().padLeft(2, '0');
     return '$min:$sec';
+  }
+
+  Future<void> _startWalk() async {
+    try {
+      final request = WalkRecordStartRequestDTO(
+        reservationId: widget.reservationId,
+        walkRouteId: widget.walkRouteId,
+      );
+      
+      final response = await _walkRecordService.startWalk(request);
+      setState(() {
+        _walkRecordId = response.id;
+        _isWalking = true;
+      });
+      
+      _startTimer();
+      _determinePosition();
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('산책이 시작되었습니다.')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('산책 시작 실패: ${e.toString()}')),
+        );
+      }
+    }
+  }
+
+  Future<void> _endWalk() async {
+    try {
+      if (_walkRecordId == null) return;
+
+      final request = WalkRecordEndRequestDTO(
+        actualDistance: _myTotalDistance,
+        actualDuration: _seconds,
+        actualPath: _actualPath,
+      );
+      
+      await _walkRecordService.endWalk(_walkRecordId!, request);
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('산책이 종료되었습니다.')),
+        );
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('산책 종료 실패: ${e.toString()}')),
+        );
+      }
+    }
   }
 
   @override
@@ -211,8 +280,24 @@ class _WalkRouteMapPageState extends State<WalkRouteMapPage> {
                                 Text(_myTotalDistance.toStringAsFixed(0)),
                               ],
                             ),
-                            const Icon(Icons.play_arrow, size: 32),
-                            const Icon(Icons.stop, size: 32),
+                            if (!_isWalking)
+                              ElevatedButton(
+                                onPressed: _startWalk,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                ),
+                                child: const Text('산책 시작'),
+                              )
+                            else
+                              ElevatedButton(
+                                onPressed: _endWalk,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red,
+                                  foregroundColor: Colors.white,
+                                ),
+                                child: const Text('산책 종료'),
+                              ),
                             Column(
                               children: [
                                 const Text('시간', style: TextStyle(fontWeight: FontWeight.bold)),
