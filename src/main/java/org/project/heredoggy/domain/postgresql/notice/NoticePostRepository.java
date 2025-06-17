@@ -10,4 +10,6 @@ import java.util.List;
 public interface NoticePostRepository extends JpaRepository<NoticePost, Long> {
     @Query("SELECT n FROM NoticePost n ORDER BY n.createdAt DESC")
     List<NoticePost> findAllOrderByCreatedAtDesc();
+
+    List<NoticePost> findAllByShelterIdOrderByCreatedAtDesc(Long shelterId);
 }

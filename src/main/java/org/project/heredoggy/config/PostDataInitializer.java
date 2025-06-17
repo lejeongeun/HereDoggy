@@ -10,6 +10,7 @@ import org.project.heredoggy.domain.postgresql.post.free.*;
 import org.project.heredoggy.domain.postgresql.post.like.*;
 import org.project.heredoggy.domain.postgresql.post.missing.*;
 import org.project.heredoggy.domain.postgresql.post.review.*;
+import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -117,6 +118,11 @@ public class PostDataInitializer {
     }
 
     private void generateNoticePosts(Member shelterAdmin) {
+        Shelter shelter = shelterAdmin.getShelter();
+        if (shelter == null) {
+            throw new RuntimeException("❌ shelterAdmin과 연결된 Shelter가 존재하지 않습니다.");
+        }
+
         IntStream.rangeClosed(1, 20).forEach(i -> {
             NoticePost post = noticePostRepository.save(
                     NoticePost.builder()
@@ -124,6 +130,7 @@ public class PostDataInitializer {
                             .content("공지사항 내용입니다.")
                             .viewCount(0L)
                             .writer(shelterAdmin)
+                            .shelter(shelter) // ✅ Shelter 연결 추가
                             .build()
             );
 

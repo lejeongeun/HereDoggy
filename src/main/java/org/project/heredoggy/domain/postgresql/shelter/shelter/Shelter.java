@@ -5,6 +5,7 @@ import lombok.*;
 import org.project.heredoggy.domain.postgresql.adoption.Adoption;
 import org.project.heredoggy.domain.postgresql.dog.Dog;
 import org.project.heredoggy.domain.postgresql.member.Member;
+import org.project.heredoggy.domain.postgresql.notice.NoticePost;
 import org.project.heredoggy.domain.postgresql.report.shelter.ShelterReport;
 import org.project.heredoggy.domain.postgresql.walk.walkRoute.WalkRoute;
 import org.springframework.data.annotation.CreatedDate;
@@ -66,6 +67,8 @@ public class Shelter {
     @OneToMany(mappedBy = "shelter", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ShelterImage> images = new ArrayList<>();
 
+    @OneToMany(mappedBy = "shelter", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<NoticePost> noticePosts = new ArrayList<>();
 
     @OneToMany(mappedBy = "shelter", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Adoption> adoptions = new ArrayList<>();
