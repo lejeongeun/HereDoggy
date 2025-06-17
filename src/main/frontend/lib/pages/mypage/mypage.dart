@@ -480,7 +480,7 @@ class _WalkReservationHistoryPageState extends State<WalkReservationHistoryPage>
                                   }
                                   return DogCardReservation(
                                     imageUrl: dog.imagesUrls.isNotEmpty
-                                        ? 'http://10.0.2.2:8080${dog.imagesUrls.first}'
+                                        ? 'http://192.168.10.128:8080${dog.imagesUrls.first}'
                                         : '',
                                     name: dog.name,
                                     age: dog.age,
@@ -586,7 +586,7 @@ class _WalkHistoryPageState extends State<WalkHistoryPage> {
       final token = await _authService.getAccessToken();
       // 종료된 산책 기록만 필터링
       final response = await http.get(
-        Uri.parse('${AppConstants.baseUrl}/walk-records?status=COMPLETED'),
+        Uri.parse('${AppConstants.baseUrl}/members/walk-records?status=COMPLETED'),
         headers: {'Authorization': 'Bearer $token'},
       );
       if (response.statusCode == 200) {
