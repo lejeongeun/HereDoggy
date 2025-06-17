@@ -1,5 +1,5 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-// npm install recharts
+import '../../../styles/shelter/main/dashBoard.css';
 
 const data = [
   { name: '월', reservations: 12 },
@@ -13,15 +13,15 @@ const data = [
 
 function WeeklyReservationChart() {
   return (
-    <div className="card p-3" style={{ maxWidth: 400 }}>
-      <h5>주간 예약 현황</h5>
+    <div className="dashboard-widget">
+      <div className="chart-title">주간 예약 현황</div>
       <ResponsiveContainer width="100%" height={230}>
         <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e4efe6" />
           <XAxis dataKey="name" />
           <YAxis allowDecimals={false}/>
-          <Tooltip />
-          <Bar dataKey="reservations" fill="#26a869" radius={[6, 6, 0, 0]} />
+          <Tooltip contentStyle={{ borderRadius: 10, border: 'none', background: "#effaf3" }}/>
+          <Bar dataKey="reservations" fill="#184c24" radius={[6, 6, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

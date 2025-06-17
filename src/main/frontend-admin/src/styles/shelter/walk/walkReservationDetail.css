@@ -1,0 +1,167 @@
+.walk-detail-container {
+  max-width: 720px;
+  margin: 48px auto;
+  padding: 36px 28px;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 12px 36px rgba(38,153,111,0.08), 0 2px 4px rgba(0,0,0,0.03);
+  color: #222;
+  font-size: 1.01rem;
+  line-height: 1.6;
+}
+
+.walk-detail-loading {
+  text-align: center;
+  padding: 64px 0;
+  font-size: 1.18rem;
+  color: #666;
+}
+
+.walk-detail-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+  font-weight: 600;
+  color: #333;
+}
+
+.walk-detail-status {
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  background: #f4f4f4;
+  border: 1px solid #ccc;
+  color: #333;
+}
+.walk-status--pending {
+  background: #fffbe8;
+  border-color: #f4e6a1;
+  color: #d38700;
+}
+.walk-status--approved {
+  background: #e4f8ef;
+  border-color: #b9e7d4;
+  color: #2b9064;
+}
+.walk-status--rejected,
+.walk-status--canceled {
+  background: #fde7e7;
+  border-color: #f2b6b6;
+  color: #d33;
+}
+
+.walk-detail-dday {
+  font-weight: 700;
+  color: #444;
+}
+
+.walk-detail-date {
+  color: #555;
+  font-size: 0.98rem;
+}
+
+.walk-detail-main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.walk-detail-dog {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.walk-detail-dog img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1.5px solid #e0e6e3;
+}
+
+.walk-detail-dogname {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #111;
+}
+
+.walk-detail-doginfo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: #555;
+  font-size: 0.96rem;
+}
+
+.walk-detail-member,
+.walk-detail-meta {
+  background: #f9fbfa;
+  padding: 16px 18px;
+  border-radius: 14px;
+  border: 1px solid #e5eeea;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.walk-detail-member b,
+.walk-detail-meta b {
+  color: #111;
+}
+
+.walk-detail-note {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed #ccc;
+  color: #444;
+}
+
+.walk-detail-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.walk-approve-btn,
+.walk-reject-btn,
+.walk-cancel-btn {
+  padding: 10px 24px;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s ease;
+}
+
+.walk-approve-btn {
+  background: #4ab071;
+  color: #fff;
+}
+
+.walk-approve-btn:hover {
+  background: #3a935c;
+}
+
+.walk-reject-btn {
+  background: #e67a7a;
+  color: #fff;
+}
+
+.walk-reject-btn:hover {
+  background: #c05757;
+}
+
+.walk-cancel-btn {
+  background: #f0f0f0;
+  color: #444;
+}
+
+.walk-cancel-btn:hover {
+  background: #ddd;
+}

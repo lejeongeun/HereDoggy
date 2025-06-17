@@ -1,0 +1,156 @@
+.dashboard-main-bg {
+  background: #fafbfa;
+  min-height: 100vh;
+  padding: 32px 48px;
+}
+
+.dashboard-cards-row {
+  margin-bottom: 36px;
+}
+
+/* 공지/차트/표 줄 간격 넓히기 */
+.dashboard-widget + .dashboard-widgets-row {
+  margin-top: 36px;
+}
+
+.dashboard-widgets-row {
+  display: flex;
+  gap: 24px;
+}
+
+.dashboard-widgets-row > div {
+  flex: 1;
+  min-width: 0;
+}
+.dashboard-widgets-row > div:not(:last-child) {
+  margin-right: 24px;
+}
+
+/* ----- 공통 위젯/박스 ----- */
+.dashboard-widget {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 3px 16px rgba(44, 69, 67, 0.07);
+  padding: 1.4rem 1.1rem 1.1rem 1.1rem;
+  margin-bottom: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.18s;
+}
+.dashboard-widget:hover {
+  box-shadow: 0 6px 20px rgba(24, 76, 36, 0.13);
+}
+
+/* ----- 차트 스타일 ----- */
+.chart-title {
+  font-size: 1.12rem;
+  font-weight: 600;
+  color: #184c24;
+  margin-bottom: 12px;
+  letter-spacing: -1px;
+  text-align: left;
+}
+
+/* X,Y축 텍스트 컬러 통일 */
+.recharts-cartesian-axis-tick-value {
+  font-size: 0.97rem;
+  fill: #447054;
+  font-family: inherit;
+}
+
+/* Y축 숫자 컬러 */
+.recharts-cartesian-axis-tick-value tspan {
+  fill: #447054;
+}
+
+/* 바 둥글게 처리 */
+.recharts-bar-rectangle path {
+  rx: 6px !important;
+  ry: 6px !important;
+}
+
+/* Tooltip */
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  box-shadow: 0 2px 12px rgba(24, 76, 36, 0.09);
+  border-radius: 10px;
+  background: #effaf3 !important;
+  color: #184c24;
+  font-size: 0.98rem;
+  border: none !important;
+  padding: 0.65rem 1rem !important;
+}
+
+/* 차트와 위젯 간격용 */
+.recharts-wrapper {
+  margin-bottom: 0;
+}
+
+/* ----- 테이블 스타일 ----- */
+.table-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #184c24;
+  margin-bottom: 14px;
+  letter-spacing: -0.5px;
+}
+
+/* 공지사항 표와 동물순위 표 모두에 적용 (class 맞게 수정) */
+.notice-table,
+.animal-ranking-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;          /* 위젯과 똑같이 */
+  font-size: 1rem;
+  border: none;              /* 박스 보더X */
+  /* border-radius/overflow 삭제! */
+}
+.notice-table th, .notice-table td,
+.animal-ranking-table th, .animal-ranking-table td {
+  padding: 11px 8px;
+  text-align: center;
+}
+
+.notice-table th,
+.animal-ranking-table th {
+  background: #effaf3;
+  color: #184c24;
+  font-weight: 600;
+  font-size: 1.01rem;
+  border-bottom: 2px solid #e4efe6;
+}
+
+.notice-table td,
+.animal-ranking-table td {
+  border-bottom: 1px solid #edf3ef;
+  color: #344e3f;
+  background: #fff;
+  font-size: 0.98rem;
+}
+
+.notice-table tr:last-child td,
+.animal-ranking-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Hover 효과 */
+.animal-ranking-table tbody tr:hover,
+.notice-table tbody tr:hover {
+  background: #f3faf6;
+  transition: background 0.2s;
+}
+
+/* ----- 반응형 (선택) ----- */
+@media (max-width: 900px) {
+  .dashboard-main-bg {
+    padding: 16px 4px;
+  }
+  .dashboard-widgets-row {
+    flex-direction: column;
+    gap: 18px;
+  }
+  .dashboard-widgets-row > div {
+    margin-right: 0 !important;
+    max-width: 100% !important;
+  }
+}

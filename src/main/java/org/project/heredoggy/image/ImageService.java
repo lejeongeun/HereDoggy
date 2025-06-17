@@ -54,7 +54,6 @@ public class ImageService {
         return "/uploads/shelters/" + shelterId + "/dogs/" + dogId + "/" + fileName;
     }
 
-
     //기본 강아지 이미지 dog api 사용해서 받아오기
     public String saveDogImageFromUrl(String imageUrl, Long shelterId, Long dogId) throws IOException {
         // 파일명 생성
@@ -98,7 +97,6 @@ public class ImageService {
         return "/uploads/shelters/" + shelterId + "/shelter-images/" + fileName;
     }
 
-
     //문의하기 사진 저장
     public String saveInquiryImage(MultipartFile image, Long inquiryId) throws IOException{
         String fileName = UUID.randomUUID() + "-" + image.getOriginalFilename();
@@ -115,6 +113,24 @@ public class ImageService {
         image.transferTo(savePath);
 
         return "/uploads/inquiries/" + inquiryId + "/inquiry-images/" + fileName;
+    }
+    // 기본 경로 이미지 저장
+    public String saveWalkRoute(MultipartFile image, Long walkRouteId) throws IOException{
+        String fileName = UUID.randomUUID() + "-" + image.getOriginalFilename();
+
+        File folder = Paths.get(
+                getAbsoluteUploadDir(),
+                "walk-route",
+                String.valueOf(walkRouteId),
+                "walk-route-images"
+        ).toFile();
+
+        if (!folder.exists()) folder.mkdirs();
+
+        File savePath = new File(folder, fileName);
+        image.transferTo(savePath);
+
+        return "/uploads/walk-route/" + walkRouteId + "/walk-route-images" + fileName;
     }
 
     public String savePostImage(MultipartFile image, PostType postType, Long postId) throws IOException {
@@ -134,10 +150,6 @@ public class ImageService {
         return "/uploads/" + postType.name().toLowerCase() + "-posts/" + postId + "/" + fileName;
     }
 
-
-
-
-
     public void deleteImage(String imageUrl) {
         if (imageUrl == null || imageUrl.isBlank()) {
             return;
@@ -155,6 +167,5 @@ public class ImageService {
             System.err.println("❌ 이미지 삭제 실패: " + e.getMessage());
         }
     }
-
 
 }

@@ -1,0 +1,131 @@
+.notice-detail-wrap {
+  min-height: 100vh;
+  background-color: #f7f9fc;
+  display: flex;
+  justify-content: center;
+  padding: 60px 16px 100px;
+  box-sizing: border-box;
+}
+
+.notice-detail-box {
+  width: 100%;
+  max-width: 720px;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 28px 24px;
+  box-sizing: border-box;
+}
+
+.notice-detail-header {
+  border-bottom: 1px solid #e4e9f0;
+  padding-bottom: 18px;
+  margin-bottom: 24px;
+}
+
+.notice-detail-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+  word-break: break-word;
+}
+
+.notice-detail-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.notice-detail-author {
+  font-weight: 500;
+  color: #444;
+}
+
+.notice-detail-content {
+  font-size: 1.07rem;
+  color: #222;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-bottom: 32px;
+}
+
+.notice-detail-images {
+  display: flex;
+  flex-wrap: wrap;     /* 여러 장 자동 줄바꿈 */
+  gap: 8px;            /* 이미지 사이 여백 */
+  margin-top: 16px;
+}
+
+.notice-detail-image {
+  max-width: 220px;     /* 한 장당 최대 가로폭 */
+  max-height: 220px;
+  width: auto;
+  height: auto;
+  border-radius: 12px;  /* 모서리 둥글게 */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  object-fit: cover;
+}
+.notice-detail-btns {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.nd-btn {
+  background: #21764c;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.nd-btn:hover {
+  background: #1a5d3b;
+}
+
+.nd-btn-edit {
+  background: #f3f3f3;
+  color: #21764c;
+  border: 1px solid #d2e3d6;
+}
+
+.nd-btn-edit:hover {
+  background: #e4f0ea;
+  color: #194b33;
+}
+
+.notice-detail-error {
+  color: #d03232;
+  font-weight: 600;
+  text-align: center;
+  padding: 30px 0;
+  font-size: 1.08rem;
+}
+
+@media (max-width: 600px) {
+  .notice-detail-box {
+    padding: 20px;
+  }
+
+  .notice-detail-title {
+    font-size: 1.25rem;
+  }
+
+  .nd-btn {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  .notice-detail-image {
+    max-width: 100%;
+  }
+}

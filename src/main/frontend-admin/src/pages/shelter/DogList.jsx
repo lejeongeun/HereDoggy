@@ -3,10 +3,10 @@ import { getDogs } from "../../api/shelter/dog";
 import '../../styles/shelter/pages/dogList.css';
 import { Link } from "react-router-dom";
 
-const sheltersId = 1; // 보호소가 등록한 유기견리스트 직접 지정 -> api필요함
-const BACKEND_URL = "http://localhost:8080"; // 현재는 이미지 경로에 추가해야 이미지 뜸
-function DogList() { // {sheltersId}
-  
+const BACKEND_URL = "http://localhost:8080";
+
+function DogList() {
+  const sheltersId = localStorage.getItem("shelters_id");
   const [dogs, setDogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -16,27 +16,50 @@ function DogList() { // {sheltersId}
       setError("보호소 정보가 없습니다.");
       return;
     }
-
     const fetchDogs = async () => {
       setLoading(true);
+      setError(null); // 초기화
       try {
         const response = await getDogs(sheltersId);
-        setDogs(response.data);
+        console.log("API 응답:", response.data);
+        console.log("첫 번째 강아지 데이터 전체 구조:", JSON.stringify(response.data[0], null, 2)); // 전체 구조 확인
+
+        // API가 배열을 바로 반환하면
+        const dogsData = Array.isArray(response.data) ? response.data : response.data.dogs || [];
+        console.log("처리된 강아지 데이터:", dogsData); // 처리된 데이터 확인
+        console.log("총 개수:", dogs.length);
+
+
+        setDogs(dogsData);
       } catch (err) {
-        setError("유기견 목록을 불러오는 중 오류가 발생했습니다.");
+        console.error("유기견 목록 조회 실패:", err);
+        setError("유기견을 불러오는 중 오류가 발생했습니다.");
       } finally {
         setLoading(false);
       }
     };
-
     fetchDogs();
-  }, []); 
+  }, [sheltersId]);
 
   if (loading) return <p>로딩 중...</p>;
-  if (error) return <p>{error}</p>;
-  if (dogs.length === 0) return <p>등록된 유기견이 없습니다.</p>;
+  if (error) return (
+    <div className="doglist-empty">
+      <p>{error}</p>
+      <Link to="/shelter/dogregister" className="doglist-register-btn big">
+        유기견 등록하기
+      </Link>
+    </div>
+  );
+  if (dogs.length === 0) return (
+    <div className="doglist-empty">
+      <p>등록된 유기견이 없습니다.</p>
+      <Link to="/shelter/dogregister" className="doglist-register-btn big">
+        유기견 등록하기
+      </Link>
+    </div>
+  );
 
-    return (
+  return (
     <div className="doglist-container">
       <div className="doglist-header">
         <Link to="/shelter/dogregister" className="doglist-register-btn">
@@ -54,24 +77,28 @@ function DogList() { // {sheltersId}
           </tr>
         </thead>
         <tbody>
-          {dogs.map((dog) => (
-            <tr key={dog.id}>
+          {dogs.map((dog, index) => (
+            <tr key={`${dog.id}-${index}`}>
               <td>
-                {dog.imagesUrls && dog.imagesUrls.length > 0 ? (
+                {dog.images && dog.images.length > 0 ? (
                   <img
-                    src={BACKEND_URL + dog.imagesUrls[0]}
+                    src={BACKEND_URL + dog.images[0].imageUrl}
                     alt={dog.name}
                     className="doglist-img"
+                    data-image-id={dog.images[0].id}
                   />
                 ) : (
                   <div className="doglist-img doglist-img-placeholder" />
                 )}
               </td>
-
-              <td>{dog.name}</td>
-              <td>{dog.gender}</td>
+              <td>
+                <Link to={`/shelter/dog/${dog.id}`} className="doglist-link">
+                  {dog.name}
+                </Link>
+              </td>
+              <td>{dog.gender === "MALE" ? "수컷" : dog.gender === "FEMALE" ? "암컷" : dog.gender}</td>
               <td>{dog.age}살</td>
-              <td>{dog.status}</td>
+              <td>{dog.status === "AVAILABLE" ? "예약가능" : dog.status === "RESERVED" ? "예약완료" : dog.status === "ADOPTED" ? "입양완료" : dog.status}</td>
             </tr>
           ))}
         </tbody>
@@ -79,6 +106,5 @@ function DogList() { // {sheltersId}
     </div>
   );
 }
-
 
 export default DogList;

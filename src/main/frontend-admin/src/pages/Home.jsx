@@ -1,12 +1,12 @@
-import Layouts from "../layouts/Layouts";
+// import Layouts from "../layouts/Layouts";
 
 
-function Home() {
-    return(
-        <Layouts/>
-    )
+// function Home() {
+//     return(
+//         <Layouts/>
+//     )
 
-}
+// }
 
 
-export default Home;
+// export default Home;

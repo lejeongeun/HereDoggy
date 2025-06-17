@@ -1,0 +1,133 @@
+.adoption-container {
+  max-width: 600px;
+  margin: 48px auto 0;
+  padding: 38px 32px 24px 32px;
+  background: #fff;
+  border-radius: 28px;
+  box-shadow: 0 12px 36px 0 rgba(36,153,111,0.09);
+}
+
+.adoption-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 36px;
+  text-align: center;
+  color: #26996f;
+  letter-spacing: 0.7px;
+}
+
+.adoption-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.adoption-item {
+  background: #fff;
+  border-radius: 16px;
+  margin-bottom: 22px;
+  box-shadow: 0 2px 12px rgba(36,153,111,0.08);
+  border: 2px solid transparent;
+  transition: box-shadow 0.18s, border-color 0.15s, transform 0.13s;
+  cursor: pointer;
+  min-height: 80px;
+}
+
+.adoption-item:hover {
+  border-color: #26996f;
+  box-shadow: 0 10px 32px 0 rgba(36,153,111,0.16);
+  transform: translateY(-2px) scale(1.013);
+}
+
+.adoption-link {
+  display: block;
+  padding: 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+.adoption-main-row {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 16px 22px 15px 16px;
+}
+
+.adoption-info {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.adoption-info-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.adoption-dog {
+  color: #25b376;
+  font-weight: 700;
+  font-size: 1.11em;
+}
+
+.adoption-member {
+  font-weight: 600;
+  color: #3c4765;
+}
+
+.adoption-dot {
+  margin: 0 7px;
+  color: #c3c8cf;
+  font-size: 1.18em;
+  font-weight: bold;
+}
+
+.adoption-status {
+  display: inline-block;
+  margin-left: auto;
+  padding: 3px 14px;
+  border-radius: 8px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  background: #eef5ff;
+  color: #26996f;
+  min-width: 76px;
+  text-align: center;
+}
+
+.adoption-status--pending {
+  color: #f09e00;
+  background: #fff6e3;
+}
+.adoption-status--approved {
+  color: #26996f;
+  background: #e4f8ef;
+}
+.adoption-status--rejected {
+  color: #e45a5a;
+  background: #fde7e7;
+}
+
+.adoption-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.99rem;
+  color: #81879a;
+  font-weight: 500;
+}
+
+.adoption-date { color: #39966d; }
+.adoption-phone { color: #33745e; }
+.adoption-dday { color: #26996f; font-weight: 600; }
+
+.adoption-empty {
+  text-align: center;
+  color: #b4b4b4;
+  padding: 48px 0 24px;
+  font-size: 1.16rem;
+}

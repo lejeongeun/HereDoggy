@@ -1,41 +1,110 @@
 .topbar {
+  width: 100%;
+  height: 64px;
+  background: #fff;
+  border-bottom: 2px solid #e9eee6;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 56px;
-  background: #ededed;
-  border-bottom: 1.5px solid #d3d3d3;
-  padding: 0 24px;
-  font-size: 1.1rem;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  padding: 0 32px;
+  box-sizing: border-box;
 }
 
 .topbar-left .logo {
-  font-weight: bold;
-  color: #3ec081;
-  font-size: 1.3rem;
-  letter-spacing: 2px;
+  font-size: 16px;
+  font-weight: 900;
+  color: #4AB071;
+  letter-spacing: -1px;
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
 }
 
-.mypage-btn {
-  display: inline-block;
-  background-color: #4CAF50; 
-  color: white !important;
-  text-decoration: none !important;
-  border: none; /* bootstrap으로 인해 보더 생김*/
-  padding: 5px 16px;
-  font-size: 1rem;
-  border-radius: 8px;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.mypage-btn:hover {
-  background-color: #45a049;
-  transform: translateY(-2px);
+/* 알림(벨) 버튼 */
+.notif-btn {
+  background: none;
+  border: none;
+  color: #4AB071;
+  font-size: 1.19rem;
+  cursor: pointer;
+  padding: 7px 14px;
+  border-radius: 7px;
+  margin-right: 4px;
+  margin-left: 2px;
+  position: relative;
+  transition: background 0.14s, color 0.13s;
 }
 
-.mypage-btn:active {
-  background-color: #3e8e41;
-  transform: translateY(0);
+.notif-btn:hover,
+.notif-btn:focus {
+  background: #e8f6ed;
+  color: #357c4c;
 }
 
+/* 알림 갯수 뱃지 */
+.notif-badge {
+  position: absolute;
+  top: 7px;
+  right: 10px;
+  background: #ea4545;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.92rem;
+  padding: 2.5px 6px;
+  font-weight: 800;
+  min-width: 16px;
+  text-align: center;
+  box-shadow: 0 1px 4px #be3a3a33;
+}
+
+/* 마이페이지/로그아웃 버튼 - 아웃라인(Outline) 스타일 */
+.mypage-btn, .logout-btn {
+  background: #fff;
+  color: #4AB071;
+  border: 2px solid #4AB071;
+  border-radius: 9px;
+  padding: 6px 18px;
+  font-weight: 600;
+  font-size: 1.08rem;
+  cursor: pointer;
+  margin-left: 7px;
+  margin-right: 0;
+  box-shadow: 0 2px 8px #e5f4ec;
+  transition: background 0.15s, color 0.13s, border 0.14s;
+  outline: none;
+}
+
+.mypage-btn:hover, .logout-btn:hover,
+.mypage-btn:focus, .logout-btn:focus {
+  background: #e8f6ed;
+  color: #357c4c;
+  border-color: #357c4c;
+}
+
+/* 반응형: 모바일에서는 폰트·패딩 축소, 여백 줄이기 */
+@media (max-width: 700px) {
+  .topbar {
+    padding: 0 10px;
+    height: 52px;
+  }
+  .topbar-left .logo {
+    font-size: 1.08rem;
+  }
+  .mypage-btn, .logout-btn {
+    font-size: 0.93rem;
+    padding: 7px 13px;
+    margin-left: 5px;
+  }
+  .notif-btn {
+    font-size: 1.05rem;
+    padding: 6px 7px;
+  }
+}

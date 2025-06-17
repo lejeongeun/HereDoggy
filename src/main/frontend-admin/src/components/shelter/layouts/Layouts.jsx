@@ -3,17 +3,55 @@ import Topbar from "./Topbar";
 import { Outlet } from 'react-router-dom';
 
 function Layouts() {
-    return(
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
-      <Sidebar />  {/* 좌측 고정 */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <Topbar />  {/* 상단 고정 */}
-        <main style={{ flex: 1, background: '#fafafa', padding: '24px' }}>
-          <Outlet />  {/* 메인 컨텐츠 */}
+  const sidebarWidth = 220;
+  return (
+    <div style={{ display: 'flex' }}>
+      {/* 고정 sidebar */}
+      <div style={{
+        width: sidebarWidth,
+        position: 'fixed',
+        height: '100vh',
+        zIndex: 100,
+        background: '#fff',
+        borderRight: '2px solid #e9eee6'
+      }}>
+        <Sidebar />
+      </div>
+      {/* 오른쪽 메인 */}
+      <div style={{
+        marginLeft: sidebarWidth,
+        flex: 1,
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column'
+      }}>
+        {/* 고정 탑바 */}
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          right: 0,
+          left: sidebarWidth,
+          background: '#fff',
+          zIndex: 90,
+          borderBottom: '2px solid #e9eee6',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+        }}>
+          <Topbar />
+        </div>
+        {/* 본문 스크롤 */}
+        <main style={{
+          flex: 1,
+          overflowY: 'auto',
+          padding: '88px 24px 24px 24px',
+          background: '#fafbfa',
+          position: 'relative',
+          zIndex: 1
+        }}>
+          <Outlet />
         </main>
       </div>
     </div>
-    );
+  );
 }
 
 export default Layouts;
