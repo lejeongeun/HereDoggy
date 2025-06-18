@@ -222,8 +222,8 @@ function WalkRegister({ sheltersId, selectedRoute, setIsDrawing, onRouteSaved })
     const path = routeData.points.map(p => `${p.lng},${p.lat}`).join('|');
     const centerLat = routeData.points[0].lat;
     const centerLng = routeData.points[0].lng;
-    const kakaoUrl = `https://dapi.kakao.com/v2/maps/staticmap?center=${centerLat},${centerLng}&level=5&size=300x150&appkey=${process.env.REACT_APP_KAKAO_REST_API_KEY}&path=lw:4|lc:0F8A5F|${path}`;
-
+    const kakaoUrl = `https://dapi.kakao.com/v2/maps/staticmap?center=${centerLat},${centerLng}&level=4&size=300x150&appkey=${process.env.REACT_APP_KAKAO_REST_API_KEY}&path=lw:4|lc:0F8A5F|${path}`;
+  console.log("카카오 썸네일 URL:", kakaoUrl); 
     const routeDataWithThumbnail = {
       ...routeData,
       thumbnailUrl: kakaoUrl
