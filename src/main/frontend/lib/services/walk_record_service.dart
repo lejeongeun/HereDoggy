@@ -5,6 +5,7 @@ import '../models/walk_record_start_request_dto.dart';
 import '../models/walk_record_end_request_dto.dart';
 import '../utils/constants.dart';
 import 'auth_service.dart';
+import '../models/walk_simple_statistic_dto.dart';
 
 class WalkRecordService {
   final AuthService _authService = AuthService();
@@ -57,6 +58,19 @@ class WalkRecordService {
       return WalkRecordResponseDTO.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
     } else {
       throw Exception('Failed to end walk: ${response.statusCode}');
+    }
+  }
+
+  Future<WalkSimpleStatisticDTO> getWalkStatistics() async {
+    final token = await _authService.getAccessToken();
+    final response = await http.get(
+      Uri.parse('${AppConstants.baseUrl}/members/statistics'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+    if (response.statusCode == 200) {
+      return WalkSimpleStatisticDTO.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+    } else {
+      throw Exception('Failed to fetch walk statistics: \\${response.statusCode}');
     }
   }
 } 
