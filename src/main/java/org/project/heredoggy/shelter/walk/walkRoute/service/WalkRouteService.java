@@ -27,7 +27,8 @@ import java.util.stream.Collectors;
 public class WalkRouteService {
     private final WalkRouteRepository walkRouteRepository;
     private final WalkRouteMapper walkRouteMapper;
-    
+    private final ImageService imageService;
+
     public void createRoute(CustomUserDetails userDetails, Long sheltersId, WalkRouteRequestDto request) {
         Shelter shelter = SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
         long count = walkRouteRepository.countByShelterId(sheltersId);
@@ -57,6 +58,12 @@ public class WalkRouteService {
                 .collect(Collectors.toList());
 
         walkRoute.setPoints(routePoints);
+        walkRouteRepository.save(walkRoute); // 먼저 id 필요
+
+        if (request.getThumbnailUrl() != null && !request.getThumbnailUrl().isBlank()){
+            String savedImageUrl = imageService.saveWalkRouteImage(request.getThumbnailUrl(), walkRoute.getId());
+            walkRoute.setThumbnailUrl(savedImageUrl);
+        }
         walkRouteRepository.save(walkRoute);
     }
 

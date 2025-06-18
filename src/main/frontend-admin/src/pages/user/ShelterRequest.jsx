@@ -152,8 +152,6 @@ function ShelterRequest() {
           />
         </div>
 
-        {/* 이미지 업로드 부분은 제거됨 */}
-
         <button type="submit" className="signupbtn" disabled={loading}>
           {loading ? "요청 중..." : "생성 요청 제출"}
         </button>
