@@ -1,6 +1,7 @@
 package org.project.heredoggy.dog.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.project.heredoggy.dog.dto.DogResponseDTO;
 import org.project.heredoggy.dog.dto.MainDogResponseDTO;
 import org.project.heredoggy.dog.service.DogService;
 import org.springframework.http.ResponseEntity;
@@ -28,5 +29,13 @@ public class MainDogController {
         MainDogResponseDTO response = dogService.getDetailsDogMain(dogsId);
         return ResponseEntity.ok(response);
     }
+
+    // 해당 보호소의 강아지 목록 조회 (사용자)
+    @GetMapping("/shelters/{shelters_id}/another-shelters")
+    public ResponseEntity<List<DogResponseDTO>> getAnotherShelterDogs(@PathVariable("shelters_id") Long sheltersId){
+        List<DogResponseDTO> dogList = dogService.getAnotherShelterDogs(sheltersId);
+        return ResponseEntity.ok(dogList);
+    }
+
 
 }
