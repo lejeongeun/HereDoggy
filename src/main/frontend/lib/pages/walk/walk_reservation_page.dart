@@ -69,7 +69,7 @@ class _WalkReservationPageState extends State<WalkReservationPage> {
               final dog = dogProvider.dogs[index];
               return DogCard(
                 imageUrl: dog.imagesUrls.isNotEmpty
-                  ? 'http://10.0.2.2:8080${dog.imagesUrls.first}'
+                  ? '${AppConstants.baseUrl.replaceAll('/api', '')}${dog.imagesUrls.first}'
                   : '',
                 name: dog.name,
                 age: dog.age,

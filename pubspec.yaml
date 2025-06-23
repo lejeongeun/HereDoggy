@@ -1,0 +1,7 @@
+flutter:
+  assets:
+    - assets/images/
+    - assets/images/puppy.png
+    - uploads/images/dogImage1.jpeg
+    - uploads/images/dogImage2.jpg
+    - uploads/images/dogImage3.jpg 

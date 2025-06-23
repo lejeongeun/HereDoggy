@@ -1,21 +1,21 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
-import '../shelter/shelter_detail_page.dart';
+import 'dart:convert';
 import '../../utils/constants.dart';
-import 'walk_time_select_page.dart';
+import '../../providers/user_provider.dart';
+import '../adoption/adoption_form.dart';
+import 'package:provider/provider.dart';
+import '../shelter/shelter_detail_page.dart';
 
-class DogDetailPage extends StatefulWidget {
+class AdoptionDogDetailPage extends StatefulWidget {
   final int dogId;
-  const DogDetailPage({Key? key, required this.dogId}) : super(key: key);
+  const AdoptionDogDetailPage({Key? key, required this.dogId}) : super(key: key);
 
   @override
-  State<DogDetailPage> createState() => _DogDetailPageState();
+  State<AdoptionDogDetailPage> createState() => _AdoptionDogDetailPageState();
 }
 
-class _DogDetailPageState extends State<DogDetailPage> {
+class _AdoptionDogDetailPageState extends State<AdoptionDogDetailPage> {
   Map<String, dynamic>? dog;
   bool isLoading = true;
   String? error;
@@ -64,6 +64,11 @@ class _DogDetailPageState extends State<DogDetailPage> {
     }
   }
 
+  String neuteredToKor(bool? isNeutered) {
+    if (isNeutered == null) return '-';
+    return isNeutered ? 'O' : 'X';
+  }
+
   String statusToKor(String status) {
     switch (status) {
       case 'AVAILABLE':
@@ -75,11 +80,6 @@ class _DogDetailPageState extends State<DogDetailPage> {
       default:
         return '-';
     }
-  }
-
-  String neuteredToKor(bool? isNeutered) {
-    if (isNeutered == null) return '-';
-    return isNeutered ? 'O' : 'X';
   }
 
   // 보호소 목록 조회 및 id 찾기
@@ -177,7 +177,7 @@ class _DogDetailPageState extends State<DogDetailPage> {
                                     itemBuilder: (context, idx) {
                                       final url = dog!["imagesUrls"][idx];
                                       return Image.network(
-                                        '${AppConstants.baseUrl.replaceAll('/api', '')}$url',
+                                        AppConstants.baseUrl.replaceAll('/api', '') + url,
                                         fit: BoxFit.cover,
                                         width: double.infinity,
                                         errorBuilder: (c, e, s) => const Center(child: Icon(Icons.broken_image)),
@@ -246,34 +246,33 @@ class _DogDetailPageState extends State<DogDetailPage> {
                             ),
                           ),
                           const SizedBox(height: 32),
-                          // 산책신청 버튼
+                          // 입양신청 버튼
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
                             child: ElevatedButton(
-                              onPressed: dog!["status"] == "AVAILABLE" 
-                                ? () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => WalkTimeSelectPage(dogId: dog!["id"]),
-                                      ),
-                                    );
-                                  }
-                                : null,
+                              onPressed: () {
+                                final isLoggedIn = Provider.of<UserProvider>(context, listen: false).isLoggedIn;
+                                if (!isLoggedIn) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('로그인이 필요한 서비스입니다')),
+                                  );
+                                  return;
+                                }
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const AdoptionFormPage(),
+                                  ),
+                                );
+                              },
                               style: ElevatedButton.styleFrom(
                                 minimumSize: const Size.fromHeight(48),
-                                backgroundColor: dog!["status"] == "AVAILABLE" 
-                                  ? Colors.green[300]
-                                  : Colors.grey[300],
-                                foregroundColor: Colors.black,
-                                disabledBackgroundColor: Colors.grey[300],
-                                disabledForegroundColor: Colors.grey[600],
+                                backgroundColor: Color(0xFFFF9800),
+                                foregroundColor: Colors.white,
                               ),
-                              child: Text(
-                                dog!["status"] == "AVAILABLE" 
-                                  ? "산책신청" 
-                                  : statusToKor(dog!["status"] ?? ''),
-                                style: const TextStyle(fontSize: 20),
+                              child: const Text(
+                                '입양 신청',
+                                style: TextStyle(fontSize: 20),
                               ),
                             ),
                           ),

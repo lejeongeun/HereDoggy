@@ -254,47 +254,60 @@ class _HomeBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color green = const Color(0xFF4CAF50);
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      selectedItemColor: green,
-      unselectedItemColor: Colors.black,
-      showSelectedLabels: true,
-      showUnselectedLabels: true,
-      currentIndex: currentIndex,
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: '홈',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.pets),
-          label: '산책예약',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.forum),
-          label: '커뮤니티',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.account_circle),
-          label: 'MY',
-        ),
-      ],
-      onTap: (index) {
-        switch (index) {
-          case 0:
-            Navigator.pushReplacementNamed(context, '/');
-            break;
-          case 1:
-            Navigator.pushReplacementNamed(context, '/walkReservation');
-            break;
-          case 2:
-            Navigator.pushReplacementNamed(context, '/community');
-            break;
-          case 3:
-            Navigator.pushReplacementNamed(context, '/mypage');
-            break;
-        }
-      },
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            offset: Offset(0, -2),
+            blurRadius: 12,
+          ),
+        ],
+      ),
+      child: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: green,
+        unselectedItemColor: Colors.black,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        backgroundColor: Colors.white,
+        currentIndex: currentIndex,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: '홈',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.pets),
+            label: '산책예약',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.forum),
+            label: '커뮤니티',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle),
+            label: 'MY',
+          ),
+        ],
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              Navigator.pushReplacementNamed(context, '/');
+              break;
+            case 1:
+              Navigator.pushReplacementNamed(context, '/walkReservation');
+              break;
+            case 2:
+              Navigator.pushReplacementNamed(context, '/community');
+              break;
+            case 3:
+              Navigator.pushReplacementNamed(context, '/mypage');
+              break;
+          }
+        },
+      ),
     );
   }
 }
