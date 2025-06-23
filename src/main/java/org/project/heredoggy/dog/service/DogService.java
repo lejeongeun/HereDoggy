@@ -2,6 +2,7 @@ package org.project.heredoggy.dog.service;
 
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.dog.dto.*;
+import org.project.heredoggy.domain.postgresql.shelter.shelter.ShelterRepository;
 import org.project.heredoggy.global.error.ErrorMessages;
 import org.project.heredoggy.domain.postgresql.dog.Dog;
 import org.project.heredoggy.domain.postgresql.dog.DogImage;
@@ -26,6 +27,7 @@ public class DogService {
 
     private final DogRepository dogRepository;
     private final ImageService imageService;
+    private final ShelterRepository shelterRepository;
 
     @Transactional
     public void create(Long sheltersId, CustomUserDetails userDetails, DogRequestDTO request, List<MultipartFile> imageFiles) throws IOException {
@@ -184,5 +186,15 @@ public class DogService {
                 dog.addImage(image);
             }
         }
+    }
+    // 유저) 보호소 인증 없이 해당 보호소의 강아지 목록 조회
+    public List<DogResponseDTO> getAnotherShelterDogs(Long sheltersId) {
+        Shelter shelter = shelterRepository.findById(sheltersId)
+                .orElseThrow(()-> new NotFoundException(ErrorMessages.SHELTERS_NOT_FOUND));
+
+        return dogRepository.findByShelterId(shelter.getId()).stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+
     }
 }

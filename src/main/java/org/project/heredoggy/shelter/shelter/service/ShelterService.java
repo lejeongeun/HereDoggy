@@ -6,8 +6,10 @@ import org.project.heredoggy.domain.postgresql.shelter.shelter.ShelterImage;
 import org.project.heredoggy.domain.postgresql.shelter.shelter.ShelterImageRepository;
 import org.project.heredoggy.domain.postgresql.shelter.shelter.ShelterRepository;
 import org.project.heredoggy.global.exception.NotFoundException;
+import org.project.heredoggy.global.util.SheltersAuthUtils;
 import org.project.heredoggy.image.ImageService;
 import org.project.heredoggy.security.CustomUserDetails;
+import org.project.heredoggy.shelter.shelter.dto.ShelterProfileResponseDTO;
 import org.project.heredoggy.shelter.shelter.dto.SheltersDetailResponseDTO;
 import org.project.heredoggy.shelter.shelter.dto.SheltersResponseDTO;
 import org.project.heredoggy.shelter.shelterAdmin.dto.ShelterEditRequestDTO;
@@ -100,4 +102,27 @@ public class  ShelterService {
         }
 
     }
+
+    public ShelterProfileResponseDTO getMyProfile(CustomUserDetails userDetails) {
+        Shelter shelter = shelterRepository.findByShelterAdmin(userDetails.getMember())
+                .orElseThrow(() -> new NotFoundException("보호소를 찾을 수 없습니다."));
+
+        List<String> imageUrls = shelterImageRepository.findAllByShelterId(shelter.getId())
+                .stream()
+                .map(ShelterImage::getImageUrl)
+                .collect(Collectors.toList());
+
+        return ShelterProfileResponseDTO.builder()
+                .name(shelter.getName())
+                .email(shelter.getEmail())
+                .phone(shelter.getPhone())
+                .address(shelter.getAddress())
+                .region(shelter.getRegion())
+                .description(shelter.getDescription())
+                .shelterCode(shelter.getShelterCode())
+                .imageUrls(imageUrls)
+                .createdAt(shelter.getCreatedAt())
+                .build();
+    }
+
 }

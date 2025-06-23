@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+
+import '../shelter/shelter_detail_page.dart';
+import '../../utils/constants.dart';
 import 'walk_time_select_page.dart';
 
 class DogDetailPage extends StatefulWidget {
@@ -29,7 +33,7 @@ class _DogDetailPageState extends State<DogDetailPage> {
       error = null;
     });
     try {
-      final response = await http.get(Uri.parse('http://10.0.2.2:8080/api/dogs/${widget.dogId}'));
+      final response = await http.get(Uri.parse('${AppConstants.baseUrl}/dogs/${widget.dogId}'));
       if (response.statusCode == 200) {
         setState(() {
           dog = json.decode(utf8.decode(response.bodyBytes));
@@ -78,6 +82,43 @@ class _DogDetailPageState extends State<DogDetailPage> {
     return isNeutered ? 'O' : 'X';
   }
 
+  // 보호소 목록 조회 및 id 찾기
+  Future<void> navigateToShelterDetail(String shelterName) async {
+    try {
+      final response = await http.get(Uri.parse('${AppConstants.baseUrl}/shelters'));
+      
+      if (response.statusCode == 200) {
+        final List<dynamic> shelters = json.decode(utf8.decode(response.bodyBytes));
+        final shelter = shelters.firstWhere(
+          (shelter) => shelter['shelterName'] == shelterName,
+          orElse: () => null,
+        );
+        
+        if (shelter != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ShelterDetailPage(
+                shelterId: shelter['id'].toString(),
+                shelterName: shelter['shelterName'],
+              ),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('보호소를 찾을 수 없습니다.')),
+          );
+        }
+      } else {
+        throw Exception('Failed to load shelters');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('보호소 정보를 불러오는데 실패했습니다.')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,15 +143,22 @@ class _DogDetailPageState extends State<DogDetailPage> {
                           Container(
                             color: Colors.grey[200],
                             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.verified, color: Colors.green),
-                                const SizedBox(width: 8),
-                                Text(
-                                  dog!["shelterName"] ?? '-',
-                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                                ),
-                              ],
+                            child: InkWell(
+                              onTap: () {
+                                if (dog != null && dog!["shelterName"] != null) {
+                                  navigateToShelterDetail(dog!["shelterName"]);
+                                }
+                              },
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.verified, color: Colors.green),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    dog!["shelterName"] ?? '-',
+                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           // 이미지 슬라이더
@@ -129,7 +177,7 @@ class _DogDetailPageState extends State<DogDetailPage> {
                                     itemBuilder: (context, idx) {
                                       final url = dog!["imagesUrls"][idx];
                                       return Image.network(
-                                        'http://10.0.2.2:8080$url',
+                                        '${AppConstants.baseUrl.replaceAll('/api', '')}$url',
                                         fit: BoxFit.cover,
                                         width: double.infinity,
                                         errorBuilder: (c, e, s) => const Center(child: Icon(Icons.broken_image)),

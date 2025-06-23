@@ -42,7 +42,7 @@ const handleSubmit = async (e) => {
     images.forEach((file) => formData.append("images", file));
     await updateNotice(id, formData);
     alert("공지 수정이 완료되었습니다!");
-    navigate("/shelter/noticelist");
+    navigate(`/shelter/notice/detail/${id}`);
   } catch (err) {
     setError(
       err?.response?.data?.message || "공지 수정에 실패했습니다. 다시 시도해 주세요."

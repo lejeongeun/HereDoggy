@@ -106,3 +106,6 @@ flutter:
   assets:
     - assets/icons/google.svg
     - assets/icons/kakao.svg
+    - assets/images/dogImage1.jpeg
+    - assets/images/dogImage2.jpg
+    - assets/images/dogImage3.jpg

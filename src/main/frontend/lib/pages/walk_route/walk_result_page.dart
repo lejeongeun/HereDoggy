@@ -6,12 +6,18 @@ class WalkResultPage extends StatelessWidget {
   final double distance;
   final int duration;
   final String imageUrl;
+  final String? startTime;
+  final String? endTime;
+  final bool fromHistory;
 
   const WalkResultPage({
     Key? key,
     required this.distance,
     required this.duration,
     required this.imageUrl,
+    this.startTime,
+    this.endTime,
+    this.fromHistory = false,
   }) : super(key: key);
 
   String _formatDuration(int seconds) {
@@ -32,6 +38,21 @@ class WalkResultPage extends StatelessWidget {
     // 상대 경로가 이미 '/'로 시작하면 그대로 사용, 아니면 '/'를 추가
     final normalizedPath = relativeUrl.startsWith('/') ? relativeUrl : '/$relativeUrl';
     return '$serverBaseUrl$normalizedPath';
+  }
+
+  String _formatDateTime(String? dateTimeStr) {
+    if (dateTimeStr == null) return '-';
+    try {
+      final dateTime = DateTime.parse(dateTimeStr);
+      return '${dateTime.month.toString().padLeft(2, '0')}.${dateTime.day.toString().padLeft(2, '0')} (${_getWeekdayKor(dateTime.weekday)}) ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}' ;
+    } catch (e) {
+      return '-';
+    }
+  }
+
+  String _getWeekdayKor(int weekday) {
+    const days = ['월', '화', '수', '목', '금', '토', '일'];
+    return days[(weekday - 1) % 7];
   }
 
   @override
@@ -108,6 +129,32 @@ class WalkResultPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 30),
+                // 시작/종료 시간 표시
+                if (startTime != null && endTime != null) ...[
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 18),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 18),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.12),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('시작 시간:  ${_formatDateTime(startTime)}', style: const TextStyle(fontSize: 15, color: Colors.black87)),
+                        const SizedBox(height: 4),
+                        Text('종료 시간:  ${_formatDateTime(endTime)}', style: const TextStyle(fontSize: 15, color: Colors.black87)),
+                      ],
+                    ),
+                  ),
+                ],
                 // 산책 정보 카드
                 Container(
                   padding: const EdgeInsets.all(20),
@@ -137,10 +184,14 @@ class WalkResultPage extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                // 메인 화면으로 버튼
+                // 버튼
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    if (fromHistory) {
+                      Navigator.of(context).pop();
+                    } else {
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue.shade600,
@@ -149,9 +200,9 @@ class WalkResultPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: const Text(
-                    '메인 화면으로',
-                    style: TextStyle(
+                  child: Text(
+                    fromHistory ? '목록으로 돌아가기' : '메인 화면으로',
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.security.CustomUserDetails;
+import org.project.heredoggy.shelter.shelter.dto.ShelterProfileResponseDTO;
 import org.project.heredoggy.shelter.shelter.dto.SheltersDetailResponseDTO;
 import org.project.heredoggy.shelter.shelter.dto.SheltersResponseDTO;
 import org.project.heredoggy.shelter.shelter.service.ShelterService;
@@ -23,6 +24,12 @@ import java.util.Map;
 public class ShelterController {
     private final ShelterService shelterService;
     private final ObjectMapper objectMapper;
+
+    @GetMapping("/profile")
+    public ResponseEntity<ShelterProfileResponseDTO> getMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails){
+        ShelterProfileResponseDTO shelterProfile = shelterService.getMyProfile(userDetails);
+        return ResponseEntity.ok(shelterProfile);
+    }
 
     @GetMapping
     public ResponseEntity<List<SheltersResponseDTO>> findShelters(@RequestParam(required = false) String region) {

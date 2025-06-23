@@ -392,92 +392,103 @@ class _LoginFullScreenPageState extends State<LoginFullScreenPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 16),
-              IconButton(
-                icon: const Icon(Icons.arrow_back, size: 32, color: Color(0xFF388E3C)),
-                onPressed: () => Navigator.pop(context),
-              ),
-              const SizedBox(height: 16),
-              const Text(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 16),
+            IconButton(
+              icon: const Icon(Icons.arrow_back, size: 32, color: Color(0xFF388E3C)),
+              onPressed: () => Navigator.pop(context),
+            ),
+            const SizedBox(height: 16),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.0),
+              child: Text(
                 '로그인',
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF388E3C)),
               ),
-              const SizedBox(height: 32),
-              // 로그인 폼
-              LoginForm(key: _loginFormKey),
-              const SizedBox(height: 32),
-              // 소셜 로그인
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 28,
-                    child: IconButton(
-                      icon: SvgPicture.asset(
-                        'assets/icons/google.svg',
-                        width: 32,
-                        height: 32,
-                      ),
-                      onPressed: () => _loginFormKey.currentState?._handleGoogleLogin(),
-                    ),
-                  ),
-                  const SizedBox(width: 32),
-                  CircleAvatar(
-                    backgroundColor: const Color(0xFFFFEB3B),
-                    radius: 28,
-                    child: IconButton(
-                      icon: SvgPicture.asset(
-                        'assets/icons/kakao.svg',
-                        width: 32,
-                        height: 32,
-                      ),
-                      onPressed: _handleKakaoLogin,
-                    ),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 8,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const RegisterForm(),
+            ),
+            const SizedBox(height: 32),
+            // 로그인 폼 및 소셜 로그인
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    LoginForm(key: _loginFormKey),
+                    const SizedBox(height: 32),
+                    // 소셜 로그인
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 28,
+                          child: IconButton(
+                            icon: SvgPicture.asset(
+                              'assets/icons/google.svg',
+                              width: 32,
+                              height: 32,
                             ),
-                          );
-                        },
-                        child: const Text('회원가입', style: TextStyle(color: Colors.black54)),
-                      ),
-                      const Text('|', style: TextStyle(color: Colors.black54)),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text('아이디 찾기', style: TextStyle(color: Colors.black54)),
-                      ),
-                      const Text('|', style: TextStyle(color: Colors.black54)),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text('비밀번호 재설정', style: TextStyle(color: Colors.black54)),
-                      ),
-                    ],
-                  ),
+                            onPressed: () => _loginFormKey.currentState?._handleGoogleLogin(),
+                          ),
+                        ),
+                        const SizedBox(width: 32),
+                        CircleAvatar(
+                          backgroundColor: const Color(0xFFFFEB3B),
+                          radius: 28,
+                          child: IconButton(
+                            icon: SvgPicture.asset(
+                              'assets/icons/kakao.svg',
+                              width: 32,
+                              height: 32,
+                            ),
+                            onPressed: _handleKakaoLogin,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+            // 하단 고정: 회원가입/아이디찾기/비밀번호재설정
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: Center(
+                child: Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 8,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const RegisterForm(),
+                          ),
+                        );
+                      },
+                      child: const Text('회원가입', style: TextStyle(color: Colors.black54)),
+                    ),
+                    const Text('|', style: TextStyle(color: Colors.black54)),
+                    TextButton(
+                      onPressed: () {},
+                      child: const Text('아이디 찾기', style: TextStyle(color: Colors.black54)),
+                    ),
+                    const Text('|', style: TextStyle(color: Colors.black54)),
+                    TextButton(
+                      onPressed: () {},
+                      child: const Text('비밀번호 재설정', style: TextStyle(color: Colors.black54)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

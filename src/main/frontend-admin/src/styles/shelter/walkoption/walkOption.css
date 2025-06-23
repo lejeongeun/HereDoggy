@@ -1,70 +1,111 @@
-/* walkOptionSection.css */
-
-.walk-option-section {
-  border: 1px solid #d5eadd;
-  border-radius: 10px;
-  background: #f8fbf7;
-  padding: 28px 18px 24px 18px;
-  margin: 32px 0 0 0;
-  box-shadow: 0 2px 6px #e0f3e9;
-}
-
-.walk-option-section h2 {
-  color: #275742;
-  font-size: 1.1rem;
-  margin-bottom: 18px;
-  font-weight: bold;
-  letter-spacing: 1px;
-}
-
 .walk-option-add-row {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
+}
+
+.date-picker-input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 14px;
+  width: 160px;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: border 0.2s ease-in-out;
+}
+.walk-option-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.walk-option-list li {
+  display: flex;
+  align-items: center;
+  background-color: #f0f7f4;
+  border: 1px solid #c5e1d4;
+  padding: 8px 12px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.date-badge {
+  font-size: 14px;
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+.walk-option-delete-btn {
+  background-color: #e57373;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.walk-option-delete-btn:hover {
+  background-color: #d32f2f;
+}
+
+.date-picker-input:focus {
+  outline: none;
+  border-color: #4caf50;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
 }
 
 .walk-option-add-btn {
-  background: #4AB071;
-  color: #fff;
+  padding: 6px 12px;
+  background-color: #4caf50;
+  color: white;
   border: none;
   border-radius: 6px;
-  padding: 6px 16px;
-  font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
 }
+
 .walk-option-add-btn:hover {
-  background: #357855;
+  background-color: #45a049;
 }
 
 .walk-option-list {
   list-style: none;
-  padding: 0;
-  margin: 0;
+  padding-left: 0;
+  margin-top: 8px;
 }
 
 .walk-option-list li {
-  background: #eaf7f0;
-  border-radius: 5px;
-  padding: 9px 13px 9px 17px;
-  margin-bottom: 7px;
   display: flex;
-  align-items: center;
-  font-size: 1rem;
   justify-content: space-between;
+  align-items: center;
+  background: #f9f9f9;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #333;
 }
 
 .walk-option-delete-btn {
-  color: #f25d5d;
+  background-color: #e53935;
+  color: white;
   border: none;
-  background: none;
-  font-size: 1rem;
-  margin-left: 16px;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
   cursor: pointer;
-  padding: 0;
-  transition: color 0.16s;
+  transition: background-color 0.2s ease;
 }
+
 .walk-option-delete-btn:hover {
-  color: #c31414;
+  background-color: #d32f2f;
 }
