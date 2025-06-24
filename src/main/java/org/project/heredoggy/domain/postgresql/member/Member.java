@@ -123,8 +123,7 @@ public class Member {
     @OneToMany(mappedBy = "reporter", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ShelterReport> shelterReports = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "survey_id")
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private SurveyAnswer surveyAnswer;
 
 }

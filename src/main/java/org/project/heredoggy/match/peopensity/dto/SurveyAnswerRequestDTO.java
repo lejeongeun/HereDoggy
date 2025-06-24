@@ -17,7 +17,6 @@ public class SurveyAnswerRequestDTO {
     private Sensitivity hairLossSensitivity;
     private ExerciseTime exerciseTime;
     private boolean kidsInHouse;
-    private Sensitivity barkingTolerance;
     private AloneTime aloneTime;
     private HomeType homeType;
     private MedicalBudget medicalBudget;
