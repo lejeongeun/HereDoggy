@@ -109,6 +109,7 @@ public class DataInitializer {
                     .name("강아지" + i)
                     .age(1 + i)
                     .gender(i % 2 == 0 ? Gender.FEMALE : Gender.MALE)
+                    .breed(BreedType.MALTESE)
                     .personality("밝고 활발해요.")
                     .weight(5.0 + i)
                     .isNeutered(i % 2 == 1)

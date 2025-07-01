@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.report.comment.CommentReport;
-import org.project.heredoggy.domain.postgresql.report.shelter.ShelterReport;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
