@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
-import AdminHome from './pages/admin/AdminHome';
+import AdminDashboard from './pages/admin/AdminDashboard';
 import Layouts from './components/shelter/layouts/Layouts';
 import NoticeBoardList from './pages/shelter/NoticeList';
 import DashBoard from './pages/shelter/DashBoard';
@@ -10,7 +10,7 @@ import DogRegister from './components/shelter/dog/DogRegister';
 import AdoptionList from './pages/shelter/AdoptionList';
 import AdoptionDetail from './components/shelter/adoption/AdoptionDetail';
 import DonationList from './pages/shelter/DonationList';
-import MyPage from './pages/shelter/MyPage';
+import ShelterProfile from './pages/shelter/ShelterProfile';
 import DogList from './pages/shelter/DogList';
 import NoticeWrite from './components/shelter/notice/NoticeWrite';
 import NoticeDetail from './components/shelter/notice/NoticeDetail';
@@ -18,19 +18,24 @@ import NoticeUpdate from './components/shelter/notice/NoticeUpdate';
 import ShelterRegister from './pages/user/ShelterRequest';
 import DogDetail from './components/shelter/dog/DogDetail';
 import DogEdit from './components/shelter/dog/DogEdit';
-// import WalkList from './pages/shelter/WalkList';
-// import WalkRegister from './components/shelter/walk/WalkRegister';
 import WalkReservationDetail from './components/shelter/walk/WalkReservationDetail';
 import WalkManager from './components/shelter/walk/WalkManager';
 import NotificationList from './components/shelter/notifications/NotificationList';
+import AdminLayout from './components/admin/AdminLayout';
+import UserManage from './pages/admin/UserManage';
+import ShelterAdminManager from './pages/admin/ShelterAdminManager';
+import ShelterWalksBar from './pages/admin/ShelterWalksBar';
+import StaticMapTest from './components/shelter/walk/StaticMapTest';
 
 function App() {
   return (
     <Router>
       <Routes>
+        {/* 통합 로그인폼  */}
         <Route path="" element={<Login />}/>
         <Route path="signup" element={<SignUp />}/>
 
+                      {/* 보호소관리자 */}
         <Route path="shelter" element={<Layouts />}>
           <Route path="dashboard" element={<DashBoard />} />
           <Route path="noticelist" element={<NoticeBoardList />} />
@@ -52,14 +57,22 @@ function App() {
             element={<WalkManager sheltersId={localStorage.getItem('shelters_id')} />}
           />
 
+          
+      <Route path="test" element={<StaticMapTest />} />
           <Route path="donationlist" element={<DonationList />} />
-          <Route path="mypage" element={<MyPage />} />
+          <Route path="profile" element={<ShelterProfile />} />
             <Route path="notifications" element={<NotificationList />} />
         </Route>
 
         <Route path="shelter-request" element={<ShelterRegister />}/>
 
-        <Route path="admin/home" element={<AdminHome />}/>
+                          {/* 시스템관리자 */}
+          <Route path="admin" element={<AdminLayout />}>
+        <Route path="dashboard" element={<AdminDashboard />}/>
+        <Route path="users" element={<UserManage />} />
+        <Route path="shelter" element={<ShelterAdminManager />} />
+        <Route path="reservation" element={<ShelterWalksBar />} />
+        </Route>
       </Routes>
     </Router>
   );

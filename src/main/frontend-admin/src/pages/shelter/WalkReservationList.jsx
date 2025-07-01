@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getReservations } from "../../api/shelter/reservation";
+// import { getReservations } from "../../api/shelter/reservation";
 import { Link } from "react-router-dom";
 import '../../styles/shelter/walk/walkReservation.css';
 
@@ -25,18 +25,75 @@ function statusToKor(status) {
   }
 }
 
+// === [ 더미 데이터 선언 ] ===
+const dummyReservations = [
+  {
+    id: 1,
+    dogImage: "/dummy-dog1.jpg",
+    dogName: "뭉치",
+    memberName: "홍길동",
+    memberPhone: "010-1234-5678",
+    date: "2025-06-20",
+    startTime: "10:00",
+    endTime: "11:00",
+    walkReservationStatus: "PENDING",
+    note: "처음 산책해봐요!",
+  },
+  {
+    id: 2,
+    dogImage: "/dummy-dog2.jpg",
+    dogName: "초코",
+    memberName: "이순신",
+    memberPhone: "010-5678-1234",
+    date: "2025-06-19",
+    startTime: "14:00",
+    endTime: "15:00",
+    walkReservationStatus: "APPROVED",
+    note: "",
+  },
+  {
+    id: 3,
+    dogImage: "/dummy-dog3.jpg",
+    dogName: "백구",
+    memberName: "김개발",
+    memberPhone: "010-8888-9999",
+    date: "2025-06-18",
+    startTime: "09:00",
+    endTime: "09:30",
+    walkReservationStatus: "REJECTED",
+    note: "시간 변경 가능할까요?",
+  },
+  {
+    id: 4,
+    dogImage: null, // 기본 이미지 노출 테스트
+    dogName: "보리",
+    memberName: "박테스터",
+    memberPhone: "010-2222-3333",
+    date: "2025-06-21",
+    startTime: "16:00",
+    endTime: "17:00",
+    walkReservationStatus: "CANCELED",
+    note: "",
+  },
+];
+
+// === [ WalkReservationList 컴포넌트 ] ===
 function WalkReservationList() {
-  const sheltersId = localStorage.getItem("shelters_id");
+  // const sheltersId = localStorage.getItem("shelters_id");
   const [reservations, setReservations] = useState([]);
   const [filter, setFilter] = useState("전체");
 
   useEffect(() => {
-    if (!sheltersId) return;
-    getReservations(sheltersId).then(res => {
-      const sorted = [...res.data].sort((a, b) => new Date(b.date) - new Date(a.date));
-      setReservations(sorted);
-    });
-  }, [sheltersId]);
+    // if (!sheltersId) return;
+    // getReservations(sheltersId).then(res => {
+    //   const sorted = [...res.data].sort((a, b) => new Date(b.date) - new Date(a.date));
+    //   setReservations(sorted);
+    // });
+
+    // ===== 더미 데이터 주입 =====
+    const sorted = [...dummyReservations].sort((a, b) => new Date(b.date) - new Date(a.date));
+    setReservations(sorted);
+  }, []);
 
   // 필터링된 예약 목록
   const filtered = reservations.filter(r => {
@@ -76,9 +133,6 @@ function WalkReservationList() {
             <li key={r.id} className="walk-item">
               <Link to={`/shelter/walk-reservations/${r.id}`} className="walk-link">
                 <div className="walk-main-row">
-                  <div className="walk-thumb">
-                    <img src={r.dogImage || "/default-dog.png"} alt={r.dogName} />
-                  </div>
                   <div className="walk-info">
                     <div className="walk-info-top">
                       <span className="walk-dog">{r.dogName}</span>

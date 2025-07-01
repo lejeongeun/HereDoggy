@@ -27,21 +27,40 @@
   align-items: center;
   gap: 10px;
 }
-
 /* 알림(벨) 버튼 */
 .notif-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
   background: none;
   border: none;
   color: #4AB071;
-  font-size: 1.19rem;
   cursor: pointer;
   padding: 7px 14px;
-  border-radius: 7px;
-  margin-right: 4px;
-  margin-left: 2px;
-  position: relative;
-  transition: background 0.14s, color 0.13s;
 }
+.notif-btn svg {
+  display: inline;
+  color: #4AB071;
+  vertical-align: middle;
+}
+
+.notif-badge {
+  position: absolute;
+  top: -1px;       /* 더 위로! */
+  right: -1px;     /* 종 오른쪽 바깥 */
+  color: red;
+  font-size: 0.80rem;      
+  padding: 1.5px 5px;
+  font-weight: 800;
+  min-width: 13px;
+  height: 15px;
+  text-align: center;
+  z-index: 2;
+  line-height: 1.05;
+  pointer-events: none;
+  transition: top 0.14s, right 0.14s, font-size 0.12s;
+}
+
 
 .notif-btn:hover,
 .notif-btn:focus {
@@ -49,21 +68,6 @@
   color: #357c4c;
 }
 
-/* 알림 갯수 뱃지 */
-.notif-badge {
-  position: absolute;
-  top: 7px;
-  right: 10px;
-  background: #ea4545;
-  color: #fff;
-  border-radius: 50%;
-  font-size: 0.92rem;
-  padding: 2.5px 6px;
-  font-weight: 800;
-  min-width: 16px;
-  text-align: center;
-  box-shadow: 0 1px 4px #be3a3a33;
-}
 
 /* 마이페이지/로그아웃 버튼 - 아웃라인(Outline) 스타일 */
 .mypage-btn, .logout-btn {
@@ -88,6 +92,11 @@
   color: #357c4c;
   border-color: #357c4c;
 }
+.topbar-right > a {
+  text-decoration: none !important;
+  color: black;
+}
+
 
 /* 반응형: 모바일에서는 폰트·패딩 축소, 여백 줄이기 */
 @media (max-width: 700px) {

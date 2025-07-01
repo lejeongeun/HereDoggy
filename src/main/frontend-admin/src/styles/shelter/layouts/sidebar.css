@@ -2,7 +2,6 @@
   width: 220px;
   min-width: 140px;
   height: 100vh;
-  background: #f8faf9;
   border-right: 2px solid #e3ebe2;
   box-shadow: 2px 0 12px #e5ebf433;
   display: flex;
@@ -14,11 +13,7 @@
 }
 
 .sidebar-logo {
-  font-weight: 900;
-  font-size: 1.5rem;
-  color: #4AB071;
-  padding: 34px 0 22px 28px;
-  letter-spacing: -1.3px;
+  margin-left: 20px;
 }
 
 .sidebar-menu {
@@ -31,7 +26,6 @@
 
 .sidebar-menu-item {
   font-size: 1.08rem;
-  color: #185a36;
   padding: 13px 12px 13px 21px;
   border-radius: 7px 0 0 7px;
   margin-right: 14px;
@@ -62,6 +56,72 @@
   border-top: 1px solid #e9eee6;
 }
 
+.sidebar-menu-icon {
+  margin-right: 8px;
+  font-size: 1.3em;
+  vertical-align: middle;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.sidebar-menu {
+  flex: 1 1 auto;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.sidebar-bottom {
+  margin-bottom: 24px;
+  padding: 12px 0 0 0;
+  border-top: 1px solid #e9e9e9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sidebar-brand-name {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #218a52;
+  letter-spacing: -0.5px;
+}
+
+.sidebar-brand-version {
+  font-size: 0.85rem;
+  color: #b0b0b0;
+}
+
+.sidebar-bottom-icons {
+  margin-top: 4px;
+  display: flex;
+  gap: 8px;
+}
+
+.sidebar-icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #707070;
+  padding: 3px;
+  transition: color 0.2s;
+}
+
+.sidebar-icon-btn:hover {
+  color: #218a52;
+}
+
 @media (max-width: 900px) {
   .sidebar {
     width: 54vw;
@@ -73,6 +133,9 @@
 
 @media (max-width: 600px) {
   .sidebar {
-    display: none; /* 모바일에서는 Drawer로 */
+    /* display: none;  ← 이 줄 지워! */
+    width: 200px; /* 필요 시 width만 조정 */
+    min-width: 0;
+    max-width: none;
   }
 }

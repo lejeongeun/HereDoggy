@@ -16,6 +16,13 @@ export const removeShelter = () =>
 export const getShelterMypage = () =>
   api.get("/api/shelters/profile");
 
+
+// 보호소 마이페이지 수정
+export const editShelterProfile = (formData) =>
+  api.put("/api/shelters", formData, {
+    headers: { "Content-Type": "multipart/form-data" }
+  });
+
 // 보호소 목록 조회 (검색)
 export const searchShelters = (params) =>
   api.get("/api/shelters/search", { params });

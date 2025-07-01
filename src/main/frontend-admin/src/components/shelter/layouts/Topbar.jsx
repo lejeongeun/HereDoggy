@@ -1,13 +1,15 @@
 import '../../../styles/shelter/layouts/topbar.css';
-import axios from 'axios';
+import api from '../../../api/shelter/api'; // api 인스턴스 반드시 import!
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Bell } from 'lucide-react';
 import useSseNotifications from './useSseNotifications';
+import { getShelterProfile } from '../../../api/shelter/shelter';
 
+// 알림 개수 API (api 인스턴스 사용!)
 const getUnreadNotifications = async () => {
   try {
-    const response = await axios.get("/api/notifications/unread", { withCredentials: true });
+    const response = await api.get("/api/notifications/unread");
     return response.data;
   } catch (error) {
     console.error("알림을 가져오는 데 실패했습니다.", error);
@@ -17,8 +19,20 @@ const getUnreadNotifications = async () => {
 
 function Topbar() {
   const [unreadCount, setUnreadCount] = useState(0);
+  const [shelterName, setShelterName] = useState("");
   const navigate = useNavigate();
 
+  // 보호소 이름 불러오기
+  const fetchShelterName = async () => {
+    try {
+      const { data } = await getShelterProfile();
+      setShelterName(data.name || "보호소");
+    } catch {
+      setShelterName("보호소");
+    }
+  };
+
+  // 알림 개수 불러오기
   const fetchUnreadNotifications = async () => {
     try {
       const data = await getUnreadNotifications();
@@ -29,8 +43,10 @@ function Topbar() {
   };
 
   const logout = async () => {
+    alert("로그아웃 되었습니다!");
+    navigate("/");
     try {
-      await axios.post("http://localhost:8080/api/shelters/logout", {}, { withCredentials: true });
+      await api.post("/api/shelters/logout", {}, { withCredentials: true });
       alert("로그아웃 되었습니다!");
       navigate("/");
     } catch (e) {
@@ -39,12 +55,13 @@ function Topbar() {
   };
 
   const goNotification = () => {
-    setUnreadCount(0); // 페이지 이동 시 뱃지 0으로 초기화 (원하면 유지해도 됨)
+    setUnreadCount(0);
     navigate("/shelter/notifications");
   };
 
   useEffect(() => {
     fetchUnreadNotifications();
+    fetchShelterName();
   }, []);
 
   // SSE로 실시간 알림 뱃지 증가
@@ -52,17 +69,15 @@ function Topbar() {
 
   return (
     <header className="topbar">
-      <div className="topbar-left">
-        <span className="logo">관리자페이지</span>
-      </div>
+      <div className="topbar-left"></div>
       <div className="topbar-right">
+        <Link to="/shelter/profile" className="sheltername">
+          {shelterName}
+        </Link>
         <button className="notif-btn" onClick={goNotification}>
           <Bell size={22} />
           {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
         </button>
-        <Link to="/shelter/mypage">
-          <button className="mypage-btn">마이페이지</button>
-        </Link>
         <button className="logout-btn" onClick={logout}>로그아웃</button>
       </div>
     </header>

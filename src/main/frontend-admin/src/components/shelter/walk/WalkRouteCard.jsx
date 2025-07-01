@@ -1,18 +1,19 @@
-import '../../../styles/shelter/walk/walkRouteCard.css';
+import "../../../styles/shelter/walk/walkRouteCard.css";
+import default_map_img from "../../../assets/default_map_img.png";
 
 function WalkRouteCard({ route, onDelete, onSelect }) {
-  // 썸네일: route.thumbnailUrl 또는 카카오 Static Map url로 fallback
-  const appkey = process.env.REACT_APP_KAKAO_REST_API_KEY;
   const thumbnail =
-    route.thumbnailUrl ||
-    getStaticMapUrl(route.points, appkey);
+    route.thumbnailBase64 ? route.thumbnailBase64 :
+    route.thumbnailUrl ? route.thumbnailUrl :
+    getNaverStaticMapUrl(route.points); // fallback
 
-   return (
+  return (
     <div className="walk-route-card" onClick={onSelect}>
       <img
         src={thumbnail}
-        alt={"지도 썸네일"}
+        alt="지도 썸네일"
         className="walk-route-thumb"
+        onError={(e) => { e.target.src = default_map_img; }}
       />
       <div className="walk-route-info">
         <div className="walk-route-title-row">
@@ -35,16 +36,19 @@ function WalkRouteCard({ route, onDelete, onSelect }) {
       </div>
     </div>
   );
-
 }
+const getNaverStaticMapUrl = (points) => {
+  const baseUrl = 'https://naveropenapi.apigw.ntruss.com/map-static/v2/raster';
+  const width = 300;
+  const height = 150;
+  const level = 16;
 
-function getStaticMapUrl(points, appkey) {
-  if (!points?.length) return `https://dapi.kakao.com/v2/maps/staticmap?center=37.5665,126.9780&level=5&size=300x150&appkey=${appkey}`;
+  if (!points || points.length === 0) return default_map_img;
+
   const center = `${points[0].lng},${points[0].lat}`;
-  const path = points
-    .map(p => `${p.lng},${p.lat}`)
-    .join('|');
-  return `https://dapi.kakao.com/v2/maps/staticmap?center=${center}&level=5&size=300x150&appkey=${appkey}&path=lw:4|lc:0F8A5F|${path}`;
-}
+  const pathCoords = points.map(p => `${p.lng},${p.lat}`).join('|');
+  const pathParam = `path=2|0x0F8A5F|${pathCoords}`;
 
+  return `${baseUrl}?center=${center}&level=${level}&w=${width}&h=${height}&${pathParam}`;
+};
 export default WalkRouteCard;

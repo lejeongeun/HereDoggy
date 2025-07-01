@@ -1,0 +1,85 @@
+.admin-root {
+  display: flex;
+  min-height: 100vh;
+}
+.admin-sidebar {
+  min-width: 220px !important;
+  background: #24324a;
+  color: #fff;
+  padding: 32px 0 0 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-logo {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  padding-left: 20px;
+}
+
+.admin-sidebar nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.admin-sidebar nav ul li {
+  margin-bottom: 4px;
+}
+
+.admin-link {
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 30px;
+  display: block;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: background 0.18s;
+}
+
+.admin-link:hover {
+  background: #182236;
+}
+
+.admin-content {
+  flex: 1;
+  background: #f6faf7;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-header {
+  height: 56px;
+  background: #24324a; /* 탑바도 네이비로 통일 */
+  color: #fff;
+  border-bottom: 1px solid #1b2234;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.admin-logout-btn {
+  background: none;
+  border: none;
+  font-size: 15px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 400;
+  padding: 7px 16px;
+  border-radius: 7px;
+  transition: background 0.2s;
+}
+.admin-logout-btn:hover {
+  background: #2f3c58;
+}
+
+.admin-main {
+  flex: 1;
+  padding: 32px;
+  overflow: auto;
+}

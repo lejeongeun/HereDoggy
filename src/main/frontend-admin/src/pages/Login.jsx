@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/login.css";
 import { shelterLogin } from "../api/shelter/auth";
 import { Link } from "react-router-dom";
+import logoImg from '../assets/Logo.png';
 
 function Login() {
   const navigate = useNavigate();
@@ -23,15 +24,19 @@ function Login() {
         localStorage.setItem("shelters_id", shelterId);
       }
 
-      setTimeout(() => {
-        if (nextAction) {
-          navigate(nextAction);
-        } else if (role === "SHELTER_ADMIN") {
-          navigate("/shelter/dashboard");
-        } else {
-          navigate("/");
-        }
-      }, 100);
+  setTimeout(() => {
+  if (role === "SYSTEM_ADMIN") {
+    navigate("/admin/dashboard");
+  } else if (role === "SHELTER_ADMIN") {
+    navigate("/shelter/dashboard");
+  } else if (nextAction) {
+    navigate(nextAction);
+  } else {
+    navigate("/");
+  }
+}, 100);
+
+
     } catch (error) {
       if (error.response) {
         const { nextAction, message } = error.response.data || {};
@@ -52,7 +57,9 @@ function Login() {
   return (
     <div className="login-container">
       <form className="login-form" onSubmit={handleSubmit}>
-        <h2 className="login-title">어서오개</h2>
+        <div style={{ textAlign: "center" }}>
+        <img src={logoImg} alt="여기보개 로고" style={{ height: 130, width: 130 }} />
+      </div>
         <div className="login-form-group">
           <label>아이디</label>
           <input
