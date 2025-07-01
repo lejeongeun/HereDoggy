@@ -54,7 +54,27 @@ public class NotificationController {
         return ResponseEntity.ok(Map.of("message", "알림 삭제 완료"));
     }
 
+    // 테스트 알림 전송
+    @PostMapping("/test")
+    public ResponseEntity<Map<String, String>> sendTestNotification(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                    @RequestBody Map<String, Object> request) {
+        String title = (String) request.get("title");
+        String content = (String) request.get("content");
+        String typeStr = (String) request.get("type");
+        String referenceTypeStr = (String) request.get("referenceType");
+        Long referenceId = Long.valueOf(request.get("referenceId").toString());
 
+        notificationService.sendNotification(
+            userDetails.getMember(),
+            org.project.heredoggy.domain.postgresql.notification.NotificationType.valueOf(typeStr),
+            org.project.heredoggy.domain.postgresql.notification.ReferenceType.valueOf(referenceTypeStr),
+            referenceId,
+            title,
+            content
+        );
+
+        return ResponseEntity.ok(Map.of("message", "테스트 알림 전송 완료"));
+    }
 }
 
 
