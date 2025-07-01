@@ -34,7 +34,7 @@ public class ShelterRequest {
 
     private String description;
 
-    private String imageUrl;
+    //private String imageUrl;
 
     @Enumerated(EnumType.STRING)
     private RequestStatus status; // PENDING, APPROVED, REJECTED

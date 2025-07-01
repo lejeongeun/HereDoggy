@@ -23,43 +23,54 @@ import DogEdit from './components/shelter/dog/DogEdit';
 import WalkReservationDetail from './components/shelter/walk/WalkReservationDetail';
 import WalkManager from './components/shelter/walk/WalkManager';
 import NotificationList from './components/shelter/notifications/NotificationList';
+import ChatPage from './pages/ChatPage';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="" element={<Login />}/>
-        <Route path="signup" element={<SignUp />}/>
+        <Route path='' element={<Login />} />
+        <Route path='signup' element={<SignUp />} />
 
-        <Route path="shelter" element={<Layouts />}>
-          <Route path="dashboard" element={<DashBoard />} />
-          <Route path="noticelist" element={<NoticeBoardList />} />
-          <Route path="noticewrite" element={<NoticeWrite />} />
-          <Route path="notice/detail/:id" element={<NoticeDetail />} />
-          <Route path="notice/update/:id" element={<NoticeUpdate />} />
-          <Route path="walkreservationlist" element={<WalkReservationList />} />
-          <Route path="walk-reservations/:id" element={<WalkReservationDetail />} />
-
-          <Route path="dogregister" element={<DogRegister />} />
-          <Route path="doglist" element={<DogList sheltersId={localStorage.getItem('shelters_id')} />} />
-          <Route path="dog/:id" element={<DogDetail />} />
-          <Route path="/shelter/dogedit/:id" element={<DogEdit />} />
-
-          <Route path="adoptionlist" element={<AdoptionList />} />
-          <Route path="/shelter/adoptions/:id" element={<AdoptionDetail />} />
+        <Route path='shelter' element={<Layouts />}>
+          <Route path='dashboard' element={<ChatPage />} />
+          <Route path='noticelist' element={<NoticeBoardList />} />
+          <Route path='noticewrite' element={<NoticeWrite />} />
+          <Route path='notice/detail/:id' element={<NoticeDetail />} />
+          <Route path='notice/update/:id' element={<NoticeUpdate />} />
+          <Route path='walkreservationlist' element={<WalkReservationList />} />
           <Route
-            path="walkmanager"
-            element={<WalkManager sheltersId={localStorage.getItem('shelters_id')} />}
+            path='walk-reservations/:id'
+            element={<WalkReservationDetail />}
           />
 
-          <Route path="donationlist" element={<DonationList />} />
-          <Route path="mypage" element={<MyPage />} />
-            <Route path="notifications" element={<NotificationList />} />
+          <Route path='dogregister' element={<DogRegister />} />
+          <Route
+            path='doglist'
+            element={
+              <DogList sheltersId={localStorage.getItem('shelters_id')} />
+            }
+          />
+          <Route path='dog/:id' element={<DogDetail />} />
+          <Route path='/shelter/dogedit/:id' element={<DogEdit />} />
+
+          <Route path='adoptionlist' element={<AdoptionList />} />
+          <Route path='/shelter/adoptions/:id' element={<AdoptionDetail />} />
+          <Route
+            path='walkmanager'
+            element={
+              <WalkManager sheltersId={localStorage.getItem('shelters_id')} />
+            }
+          />
+
+          <Route path='donationlist' element={<DonationList />} />
+          <Route path='mypage' element={<MyPage />} />
+          <Route path='notifications' element={<NotificationList />} />
         </Route>
 
-        <Route path="shelter-request" element={<ShelterRegister />}/>
+        <Route path='shelter-request' element={<ShelterRegister />} />
 
-        <Route path="admin/home" element={<AdminHome />}/>
+        <Route path='admin/home' element={<AdminHome />} />
       </Routes>
     </Router>
   );

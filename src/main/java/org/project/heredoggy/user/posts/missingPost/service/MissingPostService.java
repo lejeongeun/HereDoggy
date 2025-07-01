@@ -2,17 +2,23 @@ package org.project.heredoggy.user.posts.missingPost.service;
 
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.comment.PostType;
+import org.project.heredoggy.domain.postgresql.dog.Dog;
+import org.project.heredoggy.domain.postgresql.dog.DogRepository;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.post.PostImage;
 import org.project.heredoggy.domain.postgresql.post.PostImageRepository;
 import org.project.heredoggy.domain.postgresql.post.missing.MissingPost;
 import org.project.heredoggy.domain.postgresql.post.missing.MissingPostRepository;
+import org.project.heredoggy.domain.postgresql.walk.reservation.Reservation;
+import org.project.heredoggy.domain.postgresql.walk.reservation.ReservationRepository;
+import org.project.heredoggy.domain.postgresql.walk.reservation.WalkReservationStatus;
 import org.project.heredoggy.global.exception.BadRequestException;
 import org.project.heredoggy.global.exception.ConflictException;
 import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.util.AuthUtils;
 import org.project.heredoggy.image.ImageService;
 import org.project.heredoggy.security.CustomUserDetails;
+import org.project.heredoggy.user.posts.missingPost.dto.DogInfoDTO;
 import org.project.heredoggy.user.posts.missingPost.dto.MissingPostEditRequestDTO;
 import org.project.heredoggy.user.posts.missingPost.dto.MissingPostRequestDTO;
 import org.project.heredoggy.user.posts.missingPost.dto.MissingPostResponseDTO;
@@ -30,6 +36,8 @@ import java.util.stream.Collectors;
 public class MissingPostService {
     private final MissingPostRepository missingPostRepository;
     private final PostImageRepository postImageRepository;
+    private final ReservationRepository reservationRepository;
+    private final DogRepository dogRepository;
     private final ImageService imageService;
 
     @Transactional
@@ -192,4 +200,30 @@ public class MissingPostService {
                 .imageUrls(images)
                 .build();
     }
+
+    public DogInfoDTO getDogInfoByWalkId(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new NotFoundException("해당 산책 예약을 찾을 수 없습니다."));
+
+        if (reservation.getStatus() != WalkReservationStatus.COMPLETED) {
+            throw new IllegalStateException("산책이 완료된 상태에서만 후기를 작성할 수 있습니다.");
+        }
+
+        Dog dog = reservation.getDog();
+
+        return DogInfoDTO.builder()
+                .dogId(dog.getId())
+                .name(dog.getName())
+                .gender(dog.getGender().name())
+                .age(dog.getAge())
+                .weight(dog.getWeight())
+                .isNeutered(dog.getIsNeutered())
+                .personality(dog.getPersonality())
+                .foundLocation(dog.getFoundLocation())
+                .imageUrl(dog.getImages().isEmpty() ? "DEFAULT_IMAGE_URL" : dog.getImages().get(0).getImageUrl())
+                .build();
+    }
+
+
+
 }

@@ -1,7 +1,7 @@
 class AppConstants {
   // API 관련 상수
   // static const String baseUrl = 'http://10.0.2.2:8080/api'; // 에뮬레이터용
-  static const String baseUrl = 'http://192.168.10.128:8080/api'; // 실제 기기용
+  static const String baseUrl = 'http://192.168.10.122:8080/api'; // 실제 기기용
   
   // 라우트 이름
   static const String homeRoute = '/';
