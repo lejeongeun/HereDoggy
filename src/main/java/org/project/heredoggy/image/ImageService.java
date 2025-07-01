@@ -176,21 +176,32 @@ public class ImageService {
         return "/uploads/" + postType.name().toLowerCase() + "-posts/" + postId + "/" + fileName;
     }
 
+    // DJL 이미지 로딩 : 웹 URL 형식의 이미지 -> 실제 로컬 파일 시스템의 Path 객체로 변환
+    public Path getImagePath(String imageUrl){
+        if (imageUrl == null || !imageUrl.startsWith("/uploads/")){
+            throw new IllegalArgumentException("유효하지 않은 URL 입니다." + imageUrl);
+        }
+
+        // uploads 부분 제거하여 상대 경로 얻기
+        String relativePath = imageUrl.substring("/uploads/".length());
+
+        // getAbsoluteUploadDir() 을 사용하여 절대경로를 기준으로 Path 객체 생성
+        return Paths.get(getAbsoluteUploadDir(), relativePath);
+    }
     public void deleteImage(String imageUrl) {
         if (imageUrl == null || imageUrl.isBlank()) {
             return;
         }
-
         try {
-            String relativePath = imageUrl.replaceFirst("^/uploads/", "");
-
-            // OS에 맞는 경로 조합
-            Path path = Paths.get(uploadDir, relativePath);
+            // getImage로 실제 이미지의 정확한 Path 얻어오기
+            Path path = getImagePath(imageUrl);
             Files.deleteIfExists(path);
 
             System.out.println("✅ 이미지 삭제 완료: " + path.toAbsolutePath());
         } catch (IOException e) {
             System.err.println("❌ 이미지 삭제 실패: " + e.getMessage());
+        }catch (IllegalArgumentException e){
+            System.err.println("이미지 삭제 실패 (잘못된 URL 형식) " + e.getMessage());
         }
     }
 

@@ -21,6 +21,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url 'https://mlrepo.djl.ai' }
 }
 
 dependencies {
@@ -66,6 +67,22 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+    // djl - 이미지 유사성 분석을 위한 핵심 라이브러리
+    // DJL Bill of Materials (BOM)
+    implementation platform("ai.djl:bom:0.26.0")
+    // DJL Core API
+    implementation "ai.djl:api"
+    // DJL TensorFlow Engine (백엔드로 TensorFlow 사용)
+    implementation "ai.djl.tensorflow:tensorflow-engine"
+    // TensorFlow 모델 Zoo (사전 학습된 모델 제공)
+//    implementation "ai.djl.tensorflow:tensorflow-model-zoo"
+    implementation "ai.djl:model-zoo"
+    // ✅ 올바른 네이티브 CPU 런타임 의존성
+    runtimeOnly "ai.djl.tensorflow:tensorflow-native-cpu"
+    // ⭐ DJL 로깅 백엔드 (필수)
+    // DJL이 내부적으로 SLF4J를 사용하므로, 로그를 출력하려면 구현체가 필요합니다.
+    runtimeOnly 'org.slf4j:slf4j-simple:2.0.7'
 }
 
 tasks.named('test') {

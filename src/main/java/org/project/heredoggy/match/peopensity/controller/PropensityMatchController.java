@@ -2,7 +2,6 @@ package org.project.heredoggy.match.peopensity.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.match.peopensity.dto.MatchResponseDTO;
-import org.project.heredoggy.match.peopensity.dto.RecommendedBreedDTO;
 import org.project.heredoggy.match.peopensity.dto.SurveyAnswerRequestDTO;
 import org.project.heredoggy.match.peopensity.service.PropensityMatchService;
 import org.project.heredoggy.security.CustomUserDetails;
@@ -10,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController

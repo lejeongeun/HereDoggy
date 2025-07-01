@@ -15,8 +15,11 @@ public class DogImage {
     private Long id;
     private String imageUrl;
 
+    @Lob // Large Object
+    @Column(columnDefinition = "BYTEA") // 명시적으로 Bytea
+    private byte[] featureVector; // 이미지 특정 벡터를 저장할 용도
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dog_id")
     private Dog dog;
-
 }
