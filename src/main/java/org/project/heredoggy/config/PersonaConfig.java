@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 public class PersonaConfig {
 
-    @Value("${chat bot.persona-text}")
+    @Value("${chatbot.persona-text}")
     private String personaText;
 
     public GeminiMessage getPersonaMessage() {
