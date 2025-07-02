@@ -186,6 +186,7 @@ public class MissingPostService {
     private MissingPostResponseDTO convertToDTO(MissingPost post, List<String> images) {
         return MissingPostResponseDTO.builder()
                 .id(post.getId())
+                .nickname(post.getWriter().getNickname())
                 .title(post.getTitle())
                 .type(post.getType())
                 .gender(post.getGender())
