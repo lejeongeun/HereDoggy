@@ -23,7 +23,6 @@ import DogEdit from './components/shelter/dog/DogEdit';
 import WalkReservationDetail from './components/shelter/walk/WalkReservationDetail';
 import WalkManager from './components/shelter/walk/WalkManager';
 import NotificationList from './components/shelter/notifications/NotificationList';
-import ChatPage from './pages/ChatPage';
 
 function App() {
   return (
@@ -33,7 +32,7 @@ function App() {
         <Route path='signup' element={<SignUp />} />
 
         <Route path='shelter' element={<Layouts />}>
-          <Route path='dashboard' element={<ChatPage />} />
+          <Route path='dashboard' element={<DashBoard />} />
           <Route path='noticelist' element={<NoticeBoardList />} />
           <Route path='noticewrite' element={<NoticeWrite />} />
           <Route path='notice/detail/:id' element={<NoticeDetail />} />

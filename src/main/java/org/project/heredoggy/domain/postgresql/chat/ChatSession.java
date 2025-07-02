@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,8 +26,17 @@ public class ChatSession {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
+    private LocalDate createdDate;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdDate = LocalDate.now();
+    }
+
     public ChatSession(Long memberId) {
         this.memberId = memberId;
+        this.createdDate = LocalDate.now();
     }
 }
 

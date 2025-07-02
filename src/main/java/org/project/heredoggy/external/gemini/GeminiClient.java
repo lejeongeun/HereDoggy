@@ -38,6 +38,10 @@ public class GeminiClient {
                 .bodyToMono(GeminiResponse.class)
                 .block();
 
+        if (response != null && response.isUnsafe()) {
+            return "⚠️ 죄송해요. 민감한 내용이 감지되어 답변을 보여드릴 수 없어요.";
+        }
+
         return response != null ? response.getFirstText() : null;
     }
 }

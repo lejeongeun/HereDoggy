@@ -1,14 +1,29 @@
-import React, { useState } from 'react';
-import { sendChatMessage } from '../api/chatApi'; // 너가 만든 Gemini API 연동 함수
-import './ChatPage.css'; // 아래 CSS 불러오기
+import React, { useState, useEffect } from 'react';
+import { sendChatMessage, getChatRemaining } from '../api/chatApi';
+import './ChatPage.css';
 import ReactMarkdown from 'react-markdown';
 
 const ChatPage = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [remaining, setRemaining] = useState(20); // 기본값
+
+  useEffect(() => {
+    fetchRemaining();
+  }, []);
+
+  const fetchRemaining = async () => {
+    try {
+      const count = await getChatRemaining();
+      setRemaining(count);
+    } catch (err) {
+      console.error('질문 제한 정보 가져오기 실패:', err);
+    }
+  };
 
   const handleSend = async () => {
     if (!input.trim()) return;
+
     const userMsg = { role: 'user', content: input };
     setMessages((prev) => [...prev, userMsg]);
 
@@ -17,6 +32,7 @@ const ChatPage = () => {
 
     setMessages((prev) => [...prev, modelMsg]);
     setInput('');
+    fetchRemaining(); // 질문 후 남은 수 갱신
   };
 
   return (
@@ -31,6 +47,8 @@ const ChatPage = () => {
       </div>
 
       <div className='chat-topic'>✨ 여기보개 챗봇입니다 ✨</div>
+
+      <div className='chat-remaining'>남은 질문: {remaining} / 20</div>
 
       <div className='chat-messages'>
         {messages.map((msg, idx) => (

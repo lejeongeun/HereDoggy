@@ -1,6 +1,7 @@
 package org.project.heredoggy.user.chat.service;
 
 import lombok.RequiredArgsConstructor;
+import org.project.heredoggy.config.PersonaConfig;
 import org.project.heredoggy.domain.postgresql.chat.ChatMessage;
 import org.project.heredoggy.domain.postgresql.chat.ChatMessageRepository;
 import org.project.heredoggy.domain.postgresql.chat.ChatSession;
@@ -9,6 +10,7 @@ import org.project.heredoggy.external.gemini.dto.GeminiMessage;
 import org.project.heredoggy.user.chat.limit.ChatRateLimiter;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,9 +22,11 @@ public class ChatService {
     private final ChatSessionRepository chatSessionRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRateLimiter chatRateLimiter;
-
+    private final PersonaConfig personaConfig;
+    private final List<String> systemKeywords = List.of("오류", "버그", "신고", "탈퇴", "로그인", "운영팀", "관리자", "제안", "개선", "문제");
     public List<GeminiMessage> buildMessages(Long memberId, String userInput) {
-        ChatSession session = chatSessionRepository.findTopByMemberIdOrderByCreatedAtDesc(memberId)
+
+        ChatSession session = chatSessionRepository.findByMemberIdAndCreatedDate(memberId, LocalDate.now())
                 .orElseGet(() -> chatSessionRepository.save(new ChatSession(memberId)));
 
         List<ChatMessage> history = chatMessageRepository.findTop10BySessionIdOrderByCreatedAtDesc(session.getId());
@@ -39,21 +43,19 @@ public class ChatService {
         chatRateLimiter.increment(memberId); // 질문 1회 추가
 
         // 페르소나
-        GeminiMessage persona = new GeminiMessage(
-                "user",
-                "넌 '여기보개'의 챗봇 보리야 🐾.\n" +
-                        "너는 따뜻하고 다정한 성격으로, 반려견 산책, 입양, 보호소에 대한 질문에 귀엽고 친절하게 대답해야 해.\n" +
-                        "귀여운 말버릇도 가끔 섞어줘. 너무 길지 않게 핵심 위주로 말해줘.\n" +
-                        "말투는 말랑말랑하고 다정하게, 유저를 응원하는 태도를 가져줘. 이해했으면 '네~! 보리가 알려줄게요!'처럼 답변해줘"
-        );
-        messages.add(0, persona);
+        messages.add(0, personaConfig.getPersonaMessage());
 
         messages.add(new GeminiMessage("user", userInput));
         return messages;
     }
 
     public void saveMessage(Long memberId, String role, String content) {
-        ChatSession session = chatSessionRepository.findTopByMemberIdOrderByCreatedAtDesc(memberId).orElseThrow();
+        ChatSession session = chatSessionRepository.findByMemberIdAndCreatedDate(memberId, LocalDate.now())
+                .orElseThrow();
         chatMessageRepository.save(new ChatMessage(session, role, content));
+    }
+
+    public boolean isSystemInquiry(String userInput) {
+        return systemKeywords.stream().anyMatch(userInput::contains);
     }
 }

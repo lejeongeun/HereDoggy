@@ -15,6 +15,19 @@ public class GeminiResponse {
         return null;
     }
 
+    public boolean isUnsafe() {
+        if (candidates == null || candidates.isEmpty()) return false;
+
+        List<SafetyRating> ratings = candidates.get(0).getSafetyRatings();
+        if (ratings == null) return false;
+
+        // 위험 확률이 MEDIUM 이상인 경우 차단
+        return ratings.stream().anyMatch(rating ->
+                "MEDIUM".equalsIgnoreCase(rating.getProbability()) ||
+                        "HIGH".equalsIgnoreCase(rating.getProbability())
+        );
+    }
+
     @Data
     public static class Candidate {
         private Content content;
