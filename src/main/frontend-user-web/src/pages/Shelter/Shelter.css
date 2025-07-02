@@ -1,0 +1,169 @@
+.shelter {
+  padding: 20px;
+}
+
+.shelter h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.shelter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.shelter-item {
+  display: flex;
+  padding: 20px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.shelter-item:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.shelter-image {
+  width: 120px;
+  height: 120px;
+  margin-right: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.shelter-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.shelter-info h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 18px;
+}
+
+.shelter-info .address,
+.shelter-info .phone {
+  margin: 5px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.shelter-info .description {
+  margin: 10px 0 0 0;
+  color: #888;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.back-button {
+  padding: 10px 20px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.back-button:hover {
+  background: #0056b3;
+}
+
+.shelter-header {
+  display: flex;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.shelter-header .shelter-image {
+  width: 150px;
+  height: 150px;
+}
+
+.dogs-section h3 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.dogs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.dog-card {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background: white;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.dog-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.dog-image {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.dog-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dog-info {
+  padding: 15px;
+}
+
+.dog-info h4 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 18px;
+}
+
+.dog-info .breed {
+  margin: 0 0 5px 0;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.dog-info .details {
+  margin: 0 0 10px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.dog-info .description {
+  margin: 0 0 15px 0;
+  color: #888;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.adopt-button {
+  width: 100%;
+  padding: 10px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.adopt-button:hover {
+  background: #218838;
+} 

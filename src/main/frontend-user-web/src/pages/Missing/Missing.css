@@ -1,0 +1,221 @@
+.missing {
+  padding: 20px;
+}
+
+.missing h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.tab-container {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.tab {
+  padding: 10px 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #666;
+}
+
+.tab.active {
+  color: #007bff;
+  border-bottom: 2px solid #007bff;
+}
+
+.missing-list {
+  margin-top: 20px;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.list-header h3 {
+  color: #333;
+  margin: 0;
+}
+
+.write-button {
+  padding: 10px 20px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.write-button:hover {
+  background: #218838;
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.missing-post {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background: white;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.missing-post:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.post-image {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.post-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.post-content {
+  padding: 15px;
+}
+
+.post-content h4 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 16px;
+}
+
+.post-content .dog-info {
+  margin: 0 0 8px 0;
+  color: #007bff;
+  font-size: 14px;
+}
+
+.post-content .location {
+  margin: 0 0 8px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.post-content .description {
+  margin: 0 0 8px 0;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.post-content .contact {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.post-content .date {
+  font-size: 12px;
+  color: #999;
+}
+
+.missing-write {
+  margin-top: 20px;
+}
+
+.missing-write h3 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.missing-form {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  max-width: 600px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.cancel-button {
+  flex: 1;
+  padding: 12px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.cancel-button:hover {
+  background: #5a6268;
+}
+
+.submit-button {
+  flex: 1;
+  padding: 12px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.submit-button:hover {
+  background: #218838;
+} 

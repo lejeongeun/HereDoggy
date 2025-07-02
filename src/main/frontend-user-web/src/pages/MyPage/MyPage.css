@@ -1,0 +1,112 @@
+.mypage {
+  padding: 20px;
+}
+
+.mypage h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.profile-section {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.profile-image img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-details h3 {
+  margin: 0 0 5px 0;
+  color: #333;
+}
+
+.profile-details p {
+  margin: 0;
+  color: #666;
+}
+
+.tab-container {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.tab {
+  padding: 10px 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #666;
+}
+
+.tab.active {
+  color: #007bff;
+  border-bottom: 2px solid #007bff;
+}
+
+.content {
+  margin-top: 20px;
+}
+
+.info-item {
+  display: flex;
+  margin-bottom: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.info-item label {
+  font-weight: bold;
+  width: 100px;
+  color: #333;
+}
+
+.info-item span {
+  color: #666;
+}
+
+.post-list,
+.adoption-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.post-item,
+.adoption-item {
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background: white;
+}
+
+.post-item h4,
+.adoption-item h4 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.post-item p,
+.adoption-item p {
+  margin: 0 0 10px 0;
+  color: #666;
+}
+
+.post-item .date,
+.adoption-item .date {
+  font-size: 12px;
+  color: #999;
+} 
