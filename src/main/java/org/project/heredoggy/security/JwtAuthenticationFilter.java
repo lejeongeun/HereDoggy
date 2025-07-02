@@ -2,6 +2,7 @@ package org.project.heredoggy.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,34 +30,46 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        String header = request.getHeader("Authorization");
+        String token = resolveToken(request);
 
-        if (header != null && header.startsWith("Bearer ")) {
-            String token = header.substring(7);
-
+        if (token != null) {
             try {
-                // 1. 토큰에서 사용자 ID 추출
                 String email = jwtTokenProvider.getEmailFromToken(token);
-
-                // 2. 사용자 정보 조회
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
-                // 3. SecurityContext 등록
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails,
                                 null,
                                 userDetails.getAuthorities()
                         );
-
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
             } catch (Exception e) {
                 log.warn("❗ JWT 인증 실패: {}", e.getMessage());
-                // 토큰이 유효하지 않아도 그냥 넘어감 (익명 사용자로 처리됨)
             }
         }
 
         filterChain.doFilter(request, response);
     }
+
+    private String resolveToken(HttpServletRequest request) {
+        // 1. 헤더에서 확인
+        String header = request.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            return header.substring(7);
+        }
+
+        // 2. 쿠키에서 확인
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("accessToken".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+
+        return null;
+    }
+
 }
