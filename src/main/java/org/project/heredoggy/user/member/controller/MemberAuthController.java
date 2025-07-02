@@ -1,5 +1,7 @@
 package org.project.heredoggy.user.member.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.member.Member;
@@ -17,10 +19,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -39,7 +38,9 @@ public class MemberAuthController {
         return ResponseEntity.ok(Map.of("message", "회원가입 성공"));
     }
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO request) {
+    public ResponseEntity<Map<String, String>> login(@Valid @RequestBody LoginRequestDTO request,
+                                   @RequestParam(value = "web", required = false, defaultValue = "false") boolean isWeb,
+                                   HttpServletResponse response) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
@@ -48,9 +49,24 @@ public class MemberAuthController {
         String accessToken = jwtTokenProvider.generateAccessToken(member.getEmail());
 
         String refreshToken = jwtTokenProvider.generateRefreshToken(member.getEmail());
-            redisService.saveRefreshToken(member.getEmail(), refreshToken, jwtTokenProvider.getRefreshTokenExpiration());
+            redisService.saveRefreshToken(
+                    member.getEmail(),
+                    refreshToken,
+                    jwtTokenProvider.getRefreshTokenExpiration()
+            );
 
-        return ResponseEntity.ok(new TokenResponseDTO(accessToken, refreshToken));
+            if(isWeb) {
+                Cookie cookie = new Cookie("accessToken", accessToken);
+                cookie.setHttpOnly(true);
+                cookie.setSecure(false);
+                cookie.setPath("/");
+                cookie.setMaxAge((int)jwtTokenProvider.getAccessTokenExpiration());
+                response.addCookie(cookie);
+
+                return ResponseEntity.ok().body(Map.of("message", "웹 로그인 성공"));
+            } else {
+                return ResponseEntity.ok(Map.of("accessToken", accessToken));
+            }
     }
     @PostMapping("/reissue")
     @PreAuthorize("hasRole('USER')")
@@ -70,9 +86,28 @@ public class MemberAuthController {
     @PostMapping("/logout")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> logout(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                    @RequestBody String token) {
+                                    @RequestBody(required = false) String token,
+                                    @RequestParam(value = "web", required = false, defaultValue = "false") boolean isWeb,
+                                    HttpServletResponse response) {
+
+        // RefreshToken 삭제
         redisService.deleteRefreshToken(userDetails.getMember().getEmail());
-        fcmTokenService.deleteToken(token, userDetails.getMember());
+
+        // FCM 토큰은 앱일 때만 삭제
+        if (!isWeb && token != null) {
+            fcmTokenService.deleteToken(token, userDetails.getMember());
+        }
+
+        // 웹일 경우 AccessToken 쿠키 제거
+        if (isWeb) {
+            Cookie cookie = new Cookie("accessToken", null);
+            cookie.setHttpOnly(true);
+            cookie.setSecure(false);
+            cookie.setPath("/");
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+        }
+
         return ResponseEntity.ok("로그아웃 완료");
     }
 
