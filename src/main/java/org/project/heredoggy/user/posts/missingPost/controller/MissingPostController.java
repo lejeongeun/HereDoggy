@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.security.CustomUserDetails;
+import org.project.heredoggy.user.posts.missingPost.dto.DogInfoDTO;
 import org.project.heredoggy.user.posts.missingPost.dto.MissingPostEditRequestDTO;
 import org.project.heredoggy.user.posts.missingPost.dto.MissingPostRequestDTO;
 import org.project.heredoggy.user.posts.missingPost.dto.MissingPostResponseDTO;
@@ -77,5 +78,11 @@ public class MissingPostController {
     public ResponseEntity<MissingPostResponseDTO> getDetailMissingPosts(@PathVariable("post_id") Long postId) {
         MissingPostResponseDTO res = missingPostService.getDetailMissingPosts(postId);
         return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/dog-info")
+    public ResponseEntity<DogInfoDTO> getDogInfoForPost(@RequestParam Long walkId) {
+        DogInfoDTO dogInfo = missingPostService.getDogInfoByWalkId(walkId);
+        return ResponseEntity.ok(dogInfo);
     }
 }

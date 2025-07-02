@@ -16,17 +16,17 @@ public class RedisService {
 
 
     //Refresh Token 발급
-    public void saveRefreshToken(Long memberId, String refreshToken, long expirationMillis) {
-        String key = PREFIX + memberId;
+    public void saveRefreshToken(String email, String refreshToken, long expirationMillis) {
+        String key = PREFIX + email;
         redisTemplate.opsForValue().set(key, refreshToken, Duration.ofMillis(expirationMillis));
     }
 
-    public String getRefreshToken(Long memberId) {
-        return redisTemplate.opsForValue().get(PREFIX + memberId);
+    public String getRefreshToken(String email) {
+        return redisTemplate.opsForValue().get(PREFIX + email);
     }
 
-    public void deleteRefreshToken(Long memberId) {
-        redisTemplate.delete(PREFIX + memberId);
+    public void deleteRefreshToken(String email) {
+        redisTemplate.delete(PREFIX + email);
     }
 
 

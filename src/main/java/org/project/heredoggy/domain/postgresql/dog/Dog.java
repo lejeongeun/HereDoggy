@@ -30,6 +30,10 @@ public class Dog {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private BreedType breed;
+
     @Column(columnDefinition = "TEXT")
     private String personality; // 특이사항
 

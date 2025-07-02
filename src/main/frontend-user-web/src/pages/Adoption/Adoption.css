@@ -1,0 +1,142 @@
+.adoption {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.adoption h2 {
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.adoption-info {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.adoption-info h3 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.adoption-info ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.adoption-info li {
+  margin-bottom: 8px;
+  color: #666;
+  line-height: 1.4;
+}
+
+.adoption-form {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-group.checkbox {
+  display: flex;
+  align-items: center;
+}
+
+.form-group.checkbox input {
+  width: auto;
+  margin-right: 10px;
+}
+
+.form-group.checkbox label {
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 15px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.submit-button:hover {
+  background: #218838;
+}
+
+.adoption-complete {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.adoption-complete h2 {
+  color: #28a745;
+  margin-bottom: 20px;
+}
+
+.complete-icon {
+  font-size: 60px;
+  margin-bottom: 20px;
+}
+
+.adoption-complete p {
+  color: #666;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.back-to-home {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.back-to-home:hover {
+  background: #0056b3;
+} 

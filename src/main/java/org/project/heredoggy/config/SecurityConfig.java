@@ -54,11 +54,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/members/free-posts/**", "/api/members/review-posts/**", "/api/members/missing-posts/**",  "/api/*-posts/*/comments", "/api/*-posts/*/likes/count").permitAll() // 게시물 조회, 댓글 조회, 좋아요 갯수는 비회원도 가능
                         .requestMatchers(HttpMethod.POST,"/api/shelters/login", "/api/admin/login", "/oauth2/authorization/**", "/login/oauth2/code/**", "/api/shelter-request").permitAll()
                         .requestMatchers("/api/dogs/**").permitAll()
-                        .requestMatchers("/uploads/**").permitAll() // push 전에 삭제하기(임시)
-                        .requestMatchers("/api/reservations/**").permitAll() // push 전에 삭제하기(임시)
+                        .requestMatchers("/uploads/**").permitAll()
+                        .requestMatchers("/api/reservations/**").permitAll()
                         .requestMatchers("/error").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/api/shelters").permitAll() //보호소리스트 조회
+                        .requestMatchers(HttpMethod.GET, "/api/shelters/*").permitAll() //보호소 상세 정보 조회
                         .requestMatchers("/api/members/**").hasRole("USER")
                         .requestMatchers("/api/shelters/**").hasRole("SHELTER_ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("SYSTEM_ADMIN")

@@ -65,9 +65,9 @@ public class MemberGoogleOAuthController {
                                 .isActive(true)
                                 .build()));
 
-                String accessToken = jwtTokenProvider.generateAccessToken(member.getId());
-                String refreshToken = jwtTokenProvider.generateRefreshToken(member.getId());
-                redisService.saveRefreshToken(member.getId(), refreshToken, jwtTokenProvider.getRefreshTokenExpiration());
+                String accessToken = jwtTokenProvider.generateAccessToken(member.getEmail());
+                String refreshToken = jwtTokenProvider.generateRefreshToken(member.getEmail());
+                redisService.saveRefreshToken(member.getEmail(), refreshToken, jwtTokenProvider.getRefreshTokenExpiration());
 
                 return ResponseEntity.ok(new TokenResponseDTO(accessToken, refreshToken));
             } else {

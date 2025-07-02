@@ -137,7 +137,13 @@ public class FreePostService {
         List<FreePost> lists = freePostRepository.findAllOrderByCreatedAtDesc();
 
         return lists.stream()
-                .map(post -> convertToDTO(post, List.of()))
+//                .map(post -> convertToDTO(post, List.of()))
+                .map(post -> {
+                    List<String> imageUrls = postImageRepository.findByFreePost(post).stream()
+                            .map(PostImage::getImageUrl)
+                            .toList();
+                    return convertToDTO(post, imageUrls);
+                })
                 .collect(Collectors.toList());
     }
 

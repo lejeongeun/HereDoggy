@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'walk_reservation_complete_page.dart';
 import '../../services/auth_service.dart';
+import '../../utils/constants.dart';
 
 class WalkTimeSelectPage extends StatefulWidget {
   final int dogId;
@@ -50,14 +51,14 @@ class _WalkTimeSelectPageState extends State<WalkTimeSelectPage> {
       }
       // 보호소 지정 예약 불가 날짜
       final datesResponse = await http.get(
-        Uri.parse('http://10.0.2.2:8080/api/reservations/dogs/${widget.dogId}/unavailable-dates'),
+        Uri.parse('${AppConstants.baseUrl}/reservations/dogs/${widget.dogId}/unavailable-dates'),
         headers: {
           'Authorization': 'Bearer $token',
         },
       );
       // 예약 현황 (오전/오후)
       final timesResponse = await http.get(
-        Uri.parse('http://10.0.2.2:8080/api/reservations/dogs/${widget.dogId}/unavailable-times'),
+        Uri.parse('${AppConstants.baseUrl}/reservations/dogs/${widget.dogId}/unavailable-times'),
         headers: {
           'Authorization': 'Bearer $token',
         },
@@ -198,7 +199,7 @@ class _WalkTimeSelectPageState extends State<WalkTimeSelectPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:8080/api/reservations/dogs/${widget.dogId}/reservation-request'),
+        Uri.parse('${AppConstants.baseUrl}/reservations/dogs/${widget.dogId}/reservation-request'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',

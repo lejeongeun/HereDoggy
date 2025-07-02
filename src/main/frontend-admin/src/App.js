@@ -34,6 +34,7 @@ function App() {
   return (
     <Router>
       <Routes>
+<<<<<<< HEAD
         {/* 통합 로그인폼  */}
         <Route path="" element={<Login />}/>
         <Route path="signup" element={<SignUp />}/>
@@ -55,10 +56,23 @@ function App() {
 
           <Route path="adoptionlist" element={<AdoptionList />} />
           <Route path="/shelter/adoptions/:id" element={<AdoptionDetail />} />
+=======
+        <Route path='' element={<Login />} />
+        <Route path='signup' element={<SignUp />} />
+
+        <Route path='shelter' element={<Layouts />}>
+          <Route path='dashboard' element={<DashBoard />} />
+          <Route path='noticelist' element={<NoticeBoardList />} />
+          <Route path='noticewrite' element={<NoticeWrite />} />
+          <Route path='notice/detail/:id' element={<NoticeDetail />} />
+          <Route path='notice/update/:id' element={<NoticeUpdate />} />
+          <Route path='walkreservationlist' element={<WalkReservationList />} />
+>>>>>>> 1979f8a2b7239a904d4e241807cbfe1775a495e6
           <Route
-            path="walkmanager"
-            element={<WalkManager sheltersId={localStorage.getItem('shelters_id')} />}
+            path='walk-reservations/:id'
+            element={<WalkReservationDetail />}
           />
+<<<<<<< HEAD
       <Route path="test" element={<StaticMapTest />} />
           <Route path="donationlist" element={<DonationList />} />
           <Route path="profile" element={<ShelterProfile />} />
@@ -76,6 +90,36 @@ function App() {
         <Route path="statistics" element={<AdminStatistics />} />
         <Route path="reservation" element={<ShelterWalksBar />} />
         </Route>
+=======
+
+          <Route path='dogregister' element={<DogRegister />} />
+          <Route
+            path='doglist'
+            element={
+              <DogList sheltersId={localStorage.getItem('shelters_id')} />
+            }
+          />
+          <Route path='dog/:id' element={<DogDetail />} />
+          <Route path='/shelter/dogedit/:id' element={<DogEdit />} />
+
+          <Route path='adoptionlist' element={<AdoptionList />} />
+          <Route path='/shelter/adoptions/:id' element={<AdoptionDetail />} />
+          <Route
+            path='walkmanager'
+            element={
+              <WalkManager sheltersId={localStorage.getItem('shelters_id')} />
+            }
+          />
+
+          <Route path='donationlist' element={<DonationList />} />
+          <Route path='mypage' element={<MyPage />} />
+          <Route path='notifications' element={<NotificationList />} />
+        </Route>
+
+        <Route path='shelter-request' element={<ShelterRegister />} />
+
+        <Route path='admin/home' element={<AdminHome />} />
+>>>>>>> 1979f8a2b7239a904d4e241807cbfe1775a495e6
       </Routes>
     </Router>
   );

@@ -46,6 +46,10 @@ dependencies:
   kakao_flutter_sdk_user: ^1.9.5
   flutter_dotenv: ^5.1.0
   google_sign_in: ^6.1.5
+  firebase_core: ^3.6.0
+  firebase_messaging: ^15.2.7
+  googleapis_auth: ^2.0.0
+  flutter_local_notifications: ^19.3.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -106,3 +110,6 @@ flutter:
   assets:
     - assets/icons/google.svg
     - assets/icons/kakao.svg
+    - assets/images/dogImage1.jpeg
+    - assets/images/dogImage2.jpg
+    - assets/images/dogImage3.jpg

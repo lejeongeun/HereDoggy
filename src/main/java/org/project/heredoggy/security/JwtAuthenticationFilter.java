@@ -36,10 +36,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             try {
                 // 1. 토큰에서 사용자 ID 추출
-                Long memberId = jwtTokenProvider.getMemberIdFromToken(token);
+                String email = jwtTokenProvider.getEmailFromToken(token);
 
                 // 2. 사용자 정보 조회
-                UserDetails userDetails = userDetailsService.loadUserById(memberId);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
                 // 3. SecurityContext 등록
                 UsernamePasswordAuthenticationToken authentication =

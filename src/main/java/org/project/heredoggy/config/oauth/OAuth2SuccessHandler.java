@@ -34,11 +34,11 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         Member member = oAuth2User.getMember();
 
         // 토큰 발급
-        String accessToken = jwtTokenProvider.generateAccessToken(member.getId());
-        String refreshToken = jwtTokenProvider.generateRefreshToken(member.getId());
+        String accessToken = jwtTokenProvider.generateAccessToken(member.getEmail());
+        String refreshToken = jwtTokenProvider.generateRefreshToken(member.getEmail());
 
         // Redis 저장
-        redisService.saveRefreshToken(member.getId(), refreshToken, jwtTokenProvider.getRefreshTokenExpiration());
+        redisService.saveRefreshToken(member.getEmail(), refreshToken, jwtTokenProvider.getRefreshTokenExpiration());
 
         // 응답 DTO
         TokenResponseDTO tokenDTO = new TokenResponseDTO(accessToken, refreshToken);
