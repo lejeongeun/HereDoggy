@@ -1,21 +1,14 @@
-/* ShelterAdminManager.css */
-
 .shelter-admin-wrap {
-  padding: 32px 16px;
-  max-width: 920px;
+  padding: 28px 16px;
+  max-width: 980px;
   margin: 0 auto;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 2px 12px 0 rgba(36,50,74,0.08);
 }
 
 .shelter-admin-wrap h2 {
-  margin-bottom: 28px;
-  font-size: 1.45rem;
+  margin-bottom: 18px;
+  font-size: 1.4rem;
   color: #24324a;
-  text-align: left;
-  letter-spacing: -1px;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .shelter-admin-wrap section {
@@ -26,86 +19,68 @@
   font-size: 1.13rem;
   margin-bottom: 12px;
   color: #16233a;
-  font-weight: 600;
-  letter-spacing: -0.5px;
+  font-weight: 500;
 }
 
 .shelter-admin-table {
   width: 100%;
   border-collapse: collapse;
-  background: #f6faf7;
-  margin-bottom: 8px;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px 0 rgba(36,50,74,0.03);
+  background: #fff;
+}
+
+.shelter-admin-table thead tr {
+  background: #f0f3f8;
+  text-align: left;
 }
 
 .shelter-admin-table th,
 .shelter-admin-table td {
-  border: 1px solid #e3e6ee;
-  padding: 11px 8px;
-  text-align: center;
+  padding: 10px 8px;
+  border-bottom: 1px solid #f2f2f2;
 }
 
-.shelter-admin-table th {
-  background: #24324a;
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 500;
-  letter-spacing: 0.5px;
+.shelter-admin-table td {
+  color: #333;
 }
 
-.shelter-admin-table tr {
-  background: #f9fbfc;
-  transition: background 0.15s;
+.shelter-admin-table .admin-status-active {
+  color: #0a0;
 }
-
-.shelter-admin-table tr:hover {
-  background: #e6ecf7;
+.shelter-admin-table .admin-status-inactive {
+  color: #c00;
 }
 
 .shelter-admin-table button {
-  border: none;
-  padding: 7px 17px;
-  border-radius: 8px;
-  font-size: 0.97rem;
-  margin: 0 3px;
-  cursor: pointer;
-  font-weight: 500;
-  background: #182236;
+  background: #24324a;
   color: #fff;
-  transition: background 0.18s;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 7px;
+  font-size: 13px;
+  cursor: pointer;
+  margin-right: 6px;
 }
 
 .shelter-admin-table button:hover {
-  background: #39547a;
+  background: #394963;
+}
+
+.shelter-admin-table .admin-btn-gray {
+  background: #888;
+}
+.shelter-admin-table .admin-btn-gray:hover {
+  background: #666;
 }
 
 .shelter-admin-table .admin-btn-danger {
   background: #d23a40;
-  color: #fff;
 }
 .shelter-admin-table .admin-btn-danger:hover {
   background: #a52b2b;
 }
 
-.shelter-admin-table .admin-btn-gray {
-  background: #b2b7bb;
-  color: #fff;
-}
-.shelter-admin-table .admin-btn-gray:hover {
-  background: #959ea7;
-}
-
-@media (max-width: 700px) {
-  .shelter-admin-wrap {
-    padding: 12px 2px;
-    border-radius: 8px;
-  }
-  .shelter-admin-table th, .shelter-admin-table td {
-    padding: 8px 2px;
-    font-size: 0.93rem;
-  }
-  .shelter-admin-wrap h2 { font-size: 1.09rem; }
-  .shelter-admin-wrap h3 { font-size: 0.97rem; }
+.shelter-admin-table td[colspan] {
+  text-align: center;
+  color: #aaa;
+  padding: 28px;
 }

@@ -22,10 +22,13 @@ import WalkReservationDetail from './components/shelter/walk/WalkReservationDeta
 import WalkManager from './components/shelter/walk/WalkManager';
 import NotificationList from './components/shelter/notifications/NotificationList';
 import AdminLayout from './components/admin/AdminLayout';
-import UserManage from './pages/admin/UserManage';
+import UserManager from './pages/admin/UserManager';
 import ShelterAdminManager from './pages/admin/ShelterAdminManager';
 import ShelterWalksBar from './pages/admin/ShelterWalksBar';
 import StaticMapTest from './components/shelter/walk/StaticMapTest';
+import ReportManager from './pages/admin/Report/ReportManager';
+import InquiryManager from './pages/admin/Inquiry/InquiryManager';
+import AdminStatistics from './pages/admin/Statistics/AdminStatistics';
 
 function App() {
   return (
@@ -56,21 +59,21 @@ function App() {
             path="walkmanager"
             element={<WalkManager sheltersId={localStorage.getItem('shelters_id')} />}
           />
-
-          
       <Route path="test" element={<StaticMapTest />} />
           <Route path="donationlist" element={<DonationList />} />
           <Route path="profile" element={<ShelterProfile />} />
             <Route path="notifications" element={<NotificationList />} />
         </Route>
-
         <Route path="shelter-request" element={<ShelterRegister />}/>
 
                           {/* 시스템관리자 */}
           <Route path="admin" element={<AdminLayout />}>
         <Route path="dashboard" element={<AdminDashboard />}/>
-        <Route path="users" element={<UserManage />} />
+        <Route path="users" element={<UserManager />} />
+        <Route path="report" element={<ReportManager />} />
+        <Route path="inquiry" element={<InquiryManager />} />
         <Route path="shelter" element={<ShelterAdminManager />} />
+        <Route path="statistics" element={<AdminStatistics />} />
         <Route path="reservation" element={<ShelterWalksBar />} />
         </Route>
       </Routes>

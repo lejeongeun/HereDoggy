@@ -34,6 +34,24 @@ const initialAdmins = [
   }
 ];
 
+for (let i = 4; i <= 30; i++) {
+  const isPending = i % 5 === 0;
+  const isActive = i % 2 === 0;
+  const baseDate = new Date(2024, 5, (i % 30) + 1); // 6월 날짜
+  const createdAt = baseDate.toISOString();
+  const approvedAt = isPending ? undefined : new Date(baseDate.getTime() + 3600000).toISOString(); // 승인은 1시간 후
+
+  initialAdmins.push({
+    id: i,
+    name: `관리자${i}`,
+    email: `admin${i}@shelter.com`,
+    phone: `010-${1000 + i}-${2000 + i}`,
+    status: isPending ? "PENDING" : "APPROVED",
+    createdAt,
+    approvedAt,
+    active: isActive,
+  });
+}
 function ShelterAdminManager() {
   const [admins, setAdmins] = useState(initialAdmins);
   const [hoverRow, setHoverRow] = useState(null);
@@ -81,7 +99,7 @@ function ShelterAdminManager() {
 
  return (
   <div className="shelter-admin-wrap">
-    <h2>보호소 관리자 계정 관리 (더미)</h2>
+    <h2>보호소 관리자 계정 관리 </h2>
 
     {/* 1. 미승인 보호소 관리자 */}
     <section>

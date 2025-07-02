@@ -74,7 +74,7 @@ const StaticMapCaptureTest = () => {
         <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
       </div>
       <button onClick={handleCapture}>지도 캡처</button>
-      <p>🖱 지도 클릭으로 경로를 추가하세요! (총 {points.length}개 지점)</p>
+      <p>지도 클릭으로 경로 추가 (총 {points.length}개 지점)</p>
       {imgUrl && (
         <div>
           <h4>캡처된 썸네일</h4>

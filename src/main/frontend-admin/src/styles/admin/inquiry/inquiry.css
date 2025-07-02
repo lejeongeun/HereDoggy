@@ -1,0 +1,146 @@
+/* 테이블 스타일 */
+.inquiry-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.inquiry-table th, .inquiry-table td {
+  border: 1px solid #ccc;
+  padding: 12px;
+  text-align: left;
+}
+
+.inquiry-table th {
+  background-color: #24324a; /* 헤더 배경 */
+  color: white;
+  font-weight: bold;
+}
+
+.status-badge.pending {
+  color: #ec2727;
+  font-weight: bold;
+}
+
+.status-badge.done {
+  font-weight: bold;
+}
+
+/* 모달 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  min-width: 320px;
+  max-width: 500px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* 상세보기 버튼 스타일 */
+.action-btn {
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* 처리 완료 버튼 */
+.action-btn.process {
+  background-color: #24324a;  /* 네이비 색상 */
+  color: white;
+  border: none;
+}
+
+.action-btn.process:hover {
+  background-color: #1b2234; /* 호버 시 네이비 계열 어두운 색 */
+}
+
+/* 삭제 / 비활성화 버튼 */
+.action-btn.action {
+  background-color: rgb(243, 55, 55);
+  color: white;
+  border: none;
+}
+
+.action-btn.action:hover {
+  background-color: #f4a261;
+}
+
+/* 닫기 버튼 */
+.action-btn.close {
+  background-color: #ccc;
+  color: #333;
+  border: none;
+}
+
+.action-btn.close:hover {
+  background-color: #999;
+}
+
+/* 반응형 디자인 (모바일 대응) */
+@media (max-width: 768px) {
+  .action-btn {
+    font-size: 12px;
+    padding: 8px 14px;
+  }
+}
+
+
+/* 상세보기 버튼 스타일 */
+.inquiry-detail-btn {
+  background-color: #24324a;  /* 네이비 색상 */
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.inquiry-detail-btn:hover {
+  background-color: #1b2234; /* 호버 시 네이비 계열 어두운 색 */
+}
+
+.inquiry-detail-btn:focus {
+  outline: none; /* 포커스 상태에서 기본 테두리 제거 */
+}
+
+
+/* 반응형 디자인 (모바일 대응) */
+@media (max-width: 768px) {
+  .inquiry-table th, .inquiry-table td {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .modal-content {
+    min-width: 280px;
+    padding: 16px;
+  }
+
+  .action-btn {
+    font-size: 12px;
+    padding: 8px 14px;
+  }
+}

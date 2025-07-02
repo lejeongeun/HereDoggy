@@ -5,12 +5,10 @@ import "../../styles/admin/adminLayout/adminLayout.css";
 const menuItems = [
   { label: "대시보드", to: "/admin/dashboard" },
   { label: "사용자 관리", to: "/admin/users" },
-  { label: "보호소 계정 관리", to: "/admin/shelter" },
-  { label: "전체 예약/산책", to: "/admin/reservation" },
-  { label: "입양 신청 관리", to: "/admin/adoption" },
-  { label: "공지/알림 관리", to: "/admin/notices" },
-  { label: "후원/기부 내역", to: "/admin/donations" },
-  { label: "문의/신고 관리", to: "/admin/feedback" },
+  { label: "보호소 관리", to: "/admin/shelter" },
+  { label: "신고 관리", to: "/admin/report" },
+  { label: "문의 관리", to: "/admin/inquiry" },
+  { label: "통계", to: "/admin/statistics" },
   { label: "시스템 설정", to: "/admin/settings" }
 ];
 
@@ -34,7 +32,7 @@ function AdminLayout() {
       <div className="admin-content">
         {/* 탑바 */}
         <header className="admin-header">
-          <div>어서오개 시스템 관리자</div>
+          <div>여기보개 시스템 관리자</div>
           <button className="admin-logout-btn">
             로그아웃
           </button>
