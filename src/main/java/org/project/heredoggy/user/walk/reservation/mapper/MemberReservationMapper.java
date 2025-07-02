@@ -34,6 +34,7 @@ public class MemberReservationMapper {
                 .id(dog.getId())
                 .name(dog.getName())
                 .age(dog.getAge())
+                .breedType(dog.getBreed())
                 .gender(dog.getGender())
                 .weight(dog.getWeight())
                 .isNeutered(dog.getIsNeutered())

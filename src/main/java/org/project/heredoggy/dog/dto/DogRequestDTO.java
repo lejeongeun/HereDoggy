@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.project.heredoggy.domain.postgresql.dog.BreedType;
 import org.project.heredoggy.domain.postgresql.dog.DogStatus;
 import org.project.heredoggy.domain.postgresql.dog.Gender;
 
@@ -20,6 +21,8 @@ public class DogRequestDTO {
 
     @Min(value = 0, message = "나이를 설정해 주세요.")
     private int age;
+
+    private BreedType breedType;
 
     @NotBlank(message = "성별 입력해 주세요.")
     private Gender gender;

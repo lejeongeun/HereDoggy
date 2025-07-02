@@ -80,8 +80,8 @@ public class MathUtils {
         for (int i = 0; i < len; i++) {
             int floatBits = ((byteArray[i*4] & 0xFF) << 24) | // 4개의 비트를 조합하여 32비트 정수(int)를 재구성
                     ((byteArray[i * 4 + 1] & 0xFF) << 16) | // 각 byte는 0xFF와 비트 AND 연산을 통해 음수 확장을 방지
-                    ((byteArray[i * 4 + 1] & 0xFF) << 8) | // 직렬화된 비트만큼 왼쪽으로 시프트하여 올바른 위치로 이동
-                    (byteArray[i * 4 + 1] & 0xFF);
+                    ((byteArray[i * 4 + 2] & 0xFF) << 8) | // 직렬화된 비트만큼 왼쪽으로 시프트하여 올바른 위치로 이동
+                    (byteArray[i * 4 + 3] & 0xFF);
             floatArray[i] = Float.intBitsToFloat(floatBits); // 재구성한 32비트 정수를 다시 float 값으로 변환
         }
         return floatArray;

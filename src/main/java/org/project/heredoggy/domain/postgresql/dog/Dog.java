@@ -2,6 +2,7 @@ package org.project.heredoggy.domain.postgresql.dog;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.project.heredoggy.dog.dto.DogEditRequestDTO;
 import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
 import org.project.heredoggy.domain.postgresql.walk.reservation.UnavailableDate;
 import org.springframework.data.annotation.CreatedDate;
@@ -62,11 +63,29 @@ public class Dog {
     @JoinColumn(name = "shelter_id", nullable = false)
     private Shelter shelter;
 
+    @OneToMany(mappedBy = "dog", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UnavailableDate> unavailableDates = new ArrayList<>();
+
     public void addImage(DogImage image){
         images.add(image); // dog + dogImage 연관관계 설정
         image.setDog(this); // dogimage + dog 연관 설정 (양방향 설정)
     }
+    public void removeImage(DogImage image){
+        if (image != null){
+            images.remove(image);
+            image.setDog(null);
+        }
+    }
+    public void updateDog(DogEditRequestDTO request){
+        this.name = request.getName();
+        this.age = request.getAge();
+        this.breed = request.getBreedType();
+        this.gender = request.getGender();
+        this.personality = request.getPersonality();
+        this.weight = request.getWeight();
+        this.isNeutered = request.getIsNeutered();
+        this.foundLocation = request.getFoundLocation();
+        this.status = request.getStatus();
+    }
 
-    @OneToMany(mappedBy = "dog", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UnavailableDate> unavailableDates = new ArrayList<>();
 }

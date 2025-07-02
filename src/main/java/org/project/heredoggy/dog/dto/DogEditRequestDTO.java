@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.project.heredoggy.domain.postgresql.dog.BreedType;
 import org.project.heredoggy.domain.postgresql.dog.DogStatus;
 import org.project.heredoggy.domain.postgresql.dog.Gender;
 import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
@@ -17,6 +18,7 @@ import java.util.List;
 public class DogEditRequestDTO {
     private String name;
     private int age;
+    private BreedType breedType;
     private Gender gender;
     private String personality;
     private Double weight;
