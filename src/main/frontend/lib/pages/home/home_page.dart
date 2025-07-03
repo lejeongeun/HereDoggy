@@ -209,9 +209,32 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Expanded(
+                      child: GestureDetector(
+                        onTap: () => Navigator.pushNamed(context, AppConstants.chatRoute),
+                        child: Container(
+                          height: 100,
+                          margin: const EdgeInsets.symmetric(horizontal: 3),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(18),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                offset: Offset(0, 4),
+                                blurRadius: 16,
+                              ),
+                            ],
+                          ),
+                          child: const Center(
+                            child: Text('챗봇', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
                       child: Container(
                         height: 100,
-                        margin: const EdgeInsets.symmetric(horizontal: 3),
+                        margin: const EdgeInsets.only(left: 6),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(18),
@@ -224,24 +247,7 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                         child: const Center(
-                          child: Text('챗봇', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        height: 100,
-                        margin: const EdgeInsets.only(left: 6),
-                        decoration: BoxDecoration(
-                          color: Color(0xFFF0F0F0),
-                          borderRadius: BorderRadius.circular(18),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              offset: Offset(0, 4),
-                              blurRadius: 16,
-                            ),
-                          ],
+                          child: Text('강아지 추천', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                         ),
                       ),
                     ),

@@ -2,7 +2,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../utils/constants.dart';
-import 'package:flutter_web_auth/flutter_web_auth.dart';
 
 class AuthService {
   final _storage = const FlutterSecureStorage();
@@ -166,157 +165,20 @@ class AuthService {
     }
   }
 
-  // 카카오 로그인 - 인가 코드 방식으로 변경
+  // 카카오 로그인 - 임시로 비활성화 (flutter_web_auth 패키지 제거로 인해)
   Future<Map<String, dynamic>> loginWithKakao() async {
-    try {
-      print('카카오 로그인 시작 (인가 코드 방식)');
-      
-      // 카카오 인가 URL 생성
-      final authUrl = 'https://kauth.kakao.com/oauth/authorize'
-          '?client_id=f672fc97c767b2220faed59a97064398' // 실제 카카오 REST API 키로 교체 필요
-          '&redirect_uri=heredoggy://callback'
-          '&response_type=code';
-
-      // 브라우저로 인증 진행
-      final result = await FlutterWebAuth.authenticate(
-        url: authUrl,
-        callbackUrlScheme: 'heredoggy',
-      );
-
-      // 인가 코드 추출
-      final code = Uri.parse(result).queryParameters['code'];
-      
-      if (code == null) {
-        return {
-          'success': false,
-          'message': '인가 코드를 받아오지 못했습니다.',
-        };
-      }
-
-      print('카카오 인가 코드 받음: $code');
-
-      // 백엔드에 인가 코드 전달
-      final response = await http.post(
-        Uri.parse('$_baseUrl/auth/oauth/kakao'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'code': code}),
-      );
-
-      print('카카오 로그인 응답 상태: ${response.statusCode}');
-      print('카카오 로그인 응답 내용: ${response.body}');
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        await saveTokens(data['accessToken'], data['refreshToken']);
-        return {'success': true};
-      } else {
-        // 에러 응답 처리
-        String errorMessage;
-        try {
-          final data = jsonDecode(response.body);
-          errorMessage = data['message'] ?? '카카오 로그인에 실패했습니다.';
-        } catch (e) {
-          errorMessage = response.body;
-        }
-        
-        // 신규 사용자 체크
-        if (response.statusCode == 404 || errorMessage.contains('회원가입이 필요합니다')) {
-          return {
-            'success': false,
-            'message': '회원가입이 필요합니다',
-            'isNewUser': true
-          };
-        }
-        
-        return {
-          'success': false,
-          'message': errorMessage,
-        };
-      }
-    } catch (e) {
-      print('카카오 로그인 에러: $e');
-      return {
-        'success': false,
-        'message': '카카오 로그인 중 오류가 발생했습니다.',
-      };
-    }
+    return {
+      'success': false,
+      'message': '카카오 로그인은 현재 사용할 수 없습니다. flutter_web_auth 패키지가 필요합니다.',
+    };
   }
 
-  // 구글 로그인 - 인가 코드 방식으로 변경
+  // 구글 로그인 - 임시로 비활성화 (flutter_web_auth 패키지 제거로 인해)
   Future<Map<String, dynamic>> loginWithGoogle() async {
-    try {
-      print('구글 로그인 시작 (인가 코드 방식)');
-      
-      // 구글 인가 URL 생성
-      final authUrl = 'https://accounts.google.com/o/oauth2/v2/auth'
-          '?client_id=728754467180-df7u27sojli1h5g5ofdlrpb9lqco96lq.apps.googleusercontent.com'
-          '&redirect_uri=heredoggy://callback'
-          '&response_type=code'
-          '&scope=openid%20email%20profile';
-
-      // 브라우저로 인증 진행
-      final result = await FlutterWebAuth.authenticate(
-        url: authUrl,
-        callbackUrlScheme: 'heredoggy',
-      );
-
-      // 인가 코드 추출
-      final code = Uri.parse(result).queryParameters['code'];
-      
-      if (code == null) {
-        return {
-          'success': false,
-          'message': '인가 코드를 받아오지 못했습니다.',
-        };
-      }
-
-      print('구글 인가 코드 받음: $code');
-
-      // 백엔드에 인가 코드 전달
-      final response = await http.post(
-        Uri.parse('$_baseUrl/auth/oauth/google'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'code': code}),
-      );
-      
-      print('구글 로그인 응답 상태: ${response.statusCode}');
-      print('구글 로그인 응답 내용: ${response.body}');
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        await saveTokens(data['accessToken'], data['refreshToken']);
-        return {'success': true};
-      } else {
-        // 에러 응답 처리
-        String errorMessage;
-        try {
-          final data = jsonDecode(response.body);
-          errorMessage = data['message'] ?? '구글 로그인에 실패했습니다.';
-        } catch (e) {
-          errorMessage = response.body;
-        }
-        
-        // 신규 사용자 체크
-        if (response.statusCode == 404 || errorMessage.contains('회원가입이 필요합니다')) {
-          return {
-            'success': false,
-            'message': '회원가입이 필요합니다',
-            'isNewUser': true
-          };
-        }
-        
-        return {
-          'success': false,
-          'message': errorMessage,
-        };
-      }
-    } catch (e) {
-      print('구글 로그인 에러: $e');
-      return {
-        'success': false,
-        'message': '구글 로그인 중 오류가 발생했습니다.',
-      };
-    }
+    return {
+      'success': false,
+      'message': '구글 로그인은 현재 사용할 수 없습니다. flutter_web_auth 패키지가 필요합니다.',
+    };
   }
 
   // 기존 방식 (호환성을 위해 유지, 나중에 삭제 예정)

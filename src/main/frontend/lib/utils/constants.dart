@@ -16,6 +16,7 @@ class AppConstants {
   static const String shelterListRoute = '/shelter';
   static const String walkReservationRoute = '/walk';
   static const String myPageRoute = '/mypage';
+  static const String chatRoute = '/chat';
 
   // 로컬 스토리지 키
   static const String tokenKey = 'auth_token';
@@ -31,4 +32,5 @@ class AppConstants {
   static const String notificationTitle = '알림';
   static const String donationTitle = '후원';
   static const String adoptionTitle = '입양';
+  static const String chatTitle = '챗봇';
 } 
