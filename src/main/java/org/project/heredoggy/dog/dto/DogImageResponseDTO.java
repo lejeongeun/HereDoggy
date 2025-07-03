@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class DogImageResponseDTO {
-    private Long id;
+    private Long id; // 이미지 ID
     private String imageUrl;
 
 }

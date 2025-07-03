@@ -11,6 +11,9 @@ import org.project.heredoggy.global.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 @Service
 @RequiredArgsConstructor
 public class FavoriteDogService {
@@ -19,20 +22,26 @@ public class FavoriteDogService {
     private final DogRepository dogRepository;
 
     @Transactional
-    public void favoriteDog(Long memberId, Long dogId) {
+    public CompletableFuture<Dog> favoriteDog(Long memberId, Long dogId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(()-> new NotFoundException("사용자의 정보가 없습니다."));
+                .orElseThrow(() -> new NotFoundException("사용자의 정보가 없습니다."));
         Dog dog = dogRepository.findById(dogId)
-                .orElseThrow(()-> new NotFoundException("강아지 정보가 없습니다."));
+                .orElseThrow(() -> new NotFoundException("강아지 정보가 없습니다."));
 
-        if (favoriteDogRepository.existsByMemberAndDog(member, dog)){
+        if (favoriteDogRepository.existsByMemberAndDog(member, dog)) {
             throw new IllegalArgumentException("이미 관심 등록된 강아지입니다.");
         }
+
         FavoriteDog favoriteDog = FavoriteDog.builder()
                 .member(member)
                 .dog(dog)
                 .build();
 
         favoriteDogRepository.save(favoriteDog);
+        return CompletableFuture.completedFuture(dog);
+    }
+
+    public List<Dog> getAllDogs() {
+        return dogRepository.findAllWithImages();
     }
 }

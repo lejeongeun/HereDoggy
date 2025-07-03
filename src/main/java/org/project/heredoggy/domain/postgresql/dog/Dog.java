@@ -66,6 +66,10 @@ public class Dog {
     @OneToMany(mappedBy = "dog", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UnavailableDate> unavailableDates = new ArrayList<>();
 
+    public DogImage getFirstImage(){
+        return images.isEmpty() ? null : images.get(0);
+    }
+
     public void addImage(DogImage image){
         images.add(image); // dog + dogImage 연관관계 설정
         image.setDog(this); // dogimage + dog 연관 설정 (양방향 설정)
@@ -82,7 +86,6 @@ public class Dog {
         this.breed = request.getBreedType();
         this.gender = request.getGender();
         this.personality = request.getPersonality();
-        this.weight = request.getWeight();
         this.isNeutered = request.getIsNeutered();
         this.foundLocation = request.getFoundLocation();
         this.status = request.getStatus();

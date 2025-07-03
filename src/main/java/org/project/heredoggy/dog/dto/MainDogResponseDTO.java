@@ -5,8 +5,6 @@ import org.project.heredoggy.domain.postgresql.dog.BreedType;
 import org.project.heredoggy.domain.postgresql.dog.DogStatus;
 import org.project.heredoggy.domain.postgresql.dog.Gender;
 
-import java.util.List;
-
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,6 +20,6 @@ public class MainDogResponseDTO {
     private Boolean isNeutered;
     private DogStatus status;
     private String foundLocation;
-    private List<String> imagesUrls;
+    private String imageUrl; // 첫 번째 이미지
     private String shelterName;
 }

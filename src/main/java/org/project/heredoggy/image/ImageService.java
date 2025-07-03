@@ -184,10 +184,10 @@ public class ImageService {
 
         // uploads 부분 제거하여 상대 경로 얻기
         String relativePath = imageUrl.substring("/uploads/".length());
-
         // getAbsoluteUploadDir() 을 사용하여 절대경로를 기준으로 Path 객체 생성
         return Paths.get(getAbsoluteUploadDir(), relativePath);
     }
+
     public void deleteImage(String imageUrl) {
         if (imageUrl == null || imageUrl.isBlank()) {
             return;

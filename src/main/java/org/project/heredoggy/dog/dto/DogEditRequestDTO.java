@@ -21,7 +21,6 @@ public class DogEditRequestDTO {
     private BreedType breedType;
     private Gender gender;
     private String personality;
-    private Double weight;
     private Boolean isNeutered;
     private String foundLocation;
     private DogStatus status;

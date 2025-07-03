@@ -21,8 +21,10 @@ configurations {
 
 repositories {
     mavenCentral()
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' } // DJL 스냅샷 저장소
-    maven { url 'https://repo1.maven.org/maven2/' } // 추가 Maven 저장소 (ND4J 호환성)
+    // DJL 의존성을 위한 추가 리포지토리
+    maven {
+        url 'https://publish.djl.ai/'
+    }
 }
 
 dependencies {
@@ -69,19 +71,10 @@ dependencies {
 
     implementation 'com.fasterxml.jackson.core:jackson-databind'
 
-    // DJL BOM: DJL 모듈 버전 통일
-    implementation platform('ai.djl:bom:0.28.0')
-
-    // DJL 핵심 API
-    implementation 'ai.djl:api' // ai.djl.modality.cv (Image, ImageFactory 등) 포함
-    // ✨ PyTorch 엔진 및 ModelZoo 추가 (CPU 버전 권장)
-    implementation 'ai.djl.pytorch:pytorch-engine'
-    implementation 'ai.djl.pytorch:pytorch-model-zoo'
-    runtimeOnly 'ai.djl.pytorch:pytorch-native-cpu' // CPU 버전 사용 (GPU가 없으면)
-//    // TensorFlow 엔진 및 ModelZoo
-//    implementation 'ai.djl.tensorflow:tensorflow-engine' // TensorFlow 엔진
-//    implementation 'ai.djl.tensorflow:tensorflow-model-zoo' // MobileNetV2 모델 로드
-//    runtimeOnly "ai.djl.tensorflow:tensorflow-native-cpu"
+    implementation 'ai.djl:api:0.32.0'
+    implementation 'ai.djl.pytorch:pytorch-engine:0.32.0'
+    implementation 'ai.djl.pytorch:pytorch-native-cpu:2.0.1:osx-aarch64'
+    implementation 'jakarta.annotation:jakarta.annotation-api:2.0.0' // jakarta 사용
 
 
 
