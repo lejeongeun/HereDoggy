@@ -3,6 +3,7 @@ import '../models/missing_post.dart';
 import '../utils/constants.dart';
 import '../services/auth_service.dart';
 import 'dart:convert';
+import 'like_api.dart';
 
 class MissingPostApi {
   static final Dio _dio = Dio(
@@ -126,6 +127,29 @@ class MissingPostApi {
       }
     } catch (e) {
       throw Exception('게시글 삭제 중 오류가 발생했습니다: $e');
+    }
+  }
+
+  // 좋아요 토글
+  static Future<bool> toggleLike(int postId) async {
+    return await LikeApi.toggleLike('missing', postId);
+  }
+
+  // 좋아요 개수 조회
+  static Future<int> getLikeCount(int postId) async {
+    return await LikeApi.getLikeCount('missing', postId);
+  }
+
+  // 게시글 상세 조회 시 좋아요 정보 포함
+  static Future<MissingPost> fetchMissingPostDetailWithLike(int postId) async {
+    try {
+      final post = await fetchMissingPostDetail(postId);
+      final likeCount = await getLikeCount(postId);
+      
+      // 좋아요 개수만 업데이트 (isLiked는 토글 시에만 업데이트)
+      return post.copyWith(likeCount: likeCount);
+    } catch (e) {
+      throw Exception('실종/발견 게시글 상세 정보를 불러오지 못했습니다: $e');
     }
   }
 } 

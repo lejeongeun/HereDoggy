@@ -90,93 +90,56 @@ class _LoginFormState extends State<LoginForm> {
 
   Future<void> _handleKakaoLogin() async {
     try {
-      print('카카오 로그인 시작'); // 디버그 로그
-      OAuthToken token;
-      if (await isKakaoTalkInstalled()) {
-        print('카카오톡 앱으로 로그인 시도'); // 디버그 로그
-        token = await UserApi.instance.loginWithKakaoTalk();
-      } else {
-        print('카카오 계정으로 로그인 시도'); // 디버그 로그
-        token = await UserApi.instance.loginWithKakaoAccount();
-      }
+      print('카카오 로그인 시작 (인가 코드 방식)');
       
-      print('카카오 토큰 받음: ${token.accessToken}'); // 디버그 로그
-      
-      // 백엔드로 토큰 전송
-      final authService = AuthService();
-      final response = await authService.loginWithKakao(token.accessToken);
-      print('백엔드 응답: $response'); // 디버그 로그
+      // 새로운 인가 코드 방식 사용
+      final response = await _authService.loginWithKakao();
+      print('백엔드 응답: $response');
       
       if (response['success']) {
         // 프로필 정보 가져오기
-        final profile = await authService.getProfile();
-        print('프로필 정보: $profile'); // 디버그 로그
+        final profile = await _authService.getProfile();
+        print('프로필 정보: $profile');
         if (profile != null && mounted) {
           Provider.of<UserProvider>(context, listen: false).login(profile);
-          Navigator.of(context, rootNavigator: true).pop();
+          if (widget.onLoginSuccess != null) {
+            widget.onLoginSuccess!();
+          } else {
+            Navigator.of(context, rootNavigator: true).pop();
+          }
         }
-      } else if (response['message']?.contains('회원가입이 필요합니다') == true) {
-        // 카카오 사용자 정보 가져오기
-        User kakaoUser = await UserApi.instance.me();
-        print('카카오 사용자 정보: ${kakaoUser.kakaoAccount}'); // 디버그 로그
-        
-        // 회원가입 폼으로 이동
+      } else if (response['isNewUser'] == true) {
+        // 신규 사용자 - 회원가입 폼으로 이동
         if (mounted) {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (_) => RegisterForm(
-                preFilledEmail: kakaoUser.kakaoAccount?.email,
-                preFilledName: kakaoUser.kakaoAccount?.profile?.nickname,
-                preFilledBirth: kakaoUser.kakaoAccount?.birthday,
                 isSocialLogin: true,
+                provider: 'kakao',
               ),
             ),
           );
         }
       } else {
-        _showErrorDialog(response['message']);
+        _showErrorDialog(response['message'] ?? '카카오 로그인에 실패했습니다.');
       }
     } catch (e) {
-      print('카카오 로그인 에러: $e'); // 디버그 로그
+      print('카카오 로그인 에러: $e');
       _showErrorDialog('카카오 로그인에 실패했습니다.');
     }
   }
 
   Future<void> _handleGoogleLogin() async {
     try {
-      print('구글 로그인 시작'); // 디버그 로그
-      final GoogleSignIn _googleSignIn = GoogleSignIn(
-        serverClientId: '728754467180-df7u27sojli1h5g5ofdlrpb9lqco96lq.apps.googleusercontent.com',
-        scopes: ['profile', 'email'],
-      );
+      print('구글 로그인 시작 (인가 코드 방식)');
       
-      print('구글 로그인 시도'); // 디버그 로그
-      final account = await _googleSignIn.signIn();
-      if (account == null) {
-        print('구글 로그인 취소됨'); // 디버그 로그
-        _showErrorDialog('구글 로그인이 취소되었습니다.');
-        return;
-      }
-      
-      print('구글 계정 정보: ${account.email}, ${account.displayName}'); // 디버그 로그
-      print('인증 정보 요청'); // 디버그 로그
-      final auth = await account.authentication;
-      print('인증 정보 받음: ${auth.accessToken != null}, ${auth.idToken != null}'); // 디버그 로그
-      
-      final idToken = auth.idToken;
-      if (idToken == null) {
-        print('ID 토큰이 null'); // 디버그 로그
-        _showErrorDialog('구글 인증 토큰을 받아오지 못했습니다.');
-        return;
-      }
-
-      print('백엔드로 토큰 전송 시도'); // 디버그 로그
-      final response = await _authService.loginWithGoogle(idToken);
-      print('백엔드 응답: $response'); // 디버그 로그
+      // 새로운 인가 코드 방식 사용
+      final response = await _authService.loginWithGoogle();
+      print('백엔드 응답: $response');
       
       if (response['success']) {
-        print('로그인 성공, 프로필 정보 요청'); // 디버그 로그
+        print('로그인 성공, 프로필 정보 요청');
         final profile = await _authService.getProfile();
         if (profile != null && mounted) {
           Provider.of<UserProvider>(context, listen: false).login(profile);
@@ -186,15 +149,13 @@ class _LoginFormState extends State<LoginForm> {
             Navigator.of(context, rootNavigator: true).pop();
           }
         }
-      } else if (response['message']?.contains('회원가입이 필요합니다') == true) {
-        print('회원가입 필요, 회원가입 폼으로 이동'); // 디버그 로그
+      } else if (response['isNewUser'] == true) {
+        print('회원가입 필요, 회원가입 폼으로 이동');
         if (mounted) {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (_) => RegisterForm(
-                preFilledEmail: account.email,
-                preFilledName: account.displayName,
                 isSocialLogin: true,
                 provider: 'google',
               ),
@@ -202,12 +163,12 @@ class _LoginFormState extends State<LoginForm> {
           );
         }
       } else {
-        print('로그인 실패: ${response['message']}'); // 디버그 로그
+        print('로그인 실패: ${response['message']}');
         _showErrorDialog(response['message'] ?? '구글 로그인에 실패했습니다.');
       }
     } catch (e, stackTrace) {
-      print('구글 로그인 에러: $e'); // 디버그 로그
-      print('스택 트레이스: $stackTrace'); // 디버그 로그
+      print('구글 로그인 에러: $e');
+      print('스택 트레이스: $stackTrace');
       _showErrorDialog('구글 로그인에 실패했습니다. (${e.toString()})');
     }
   }
@@ -317,61 +278,6 @@ class LoginFullScreenPage extends StatefulWidget {
 class _LoginFullScreenPageState extends State<LoginFullScreenPage> {
   final _loginFormKey = GlobalKey<_LoginFormState>();
 
-  Future<void> _handleKakaoLogin() async {
-    try {
-      print('카카오 로그인 시작'); // 디버그 로그
-      OAuthToken token;
-      if (await isKakaoTalkInstalled()) {
-        print('카카오톡 앱으로 로그인 시도'); // 디버그 로그
-        token = await UserApi.instance.loginWithKakaoTalk();
-      } else {
-        print('카카오 계정으로 로그인 시도'); // 디버그 로그
-        token = await UserApi.instance.loginWithKakaoAccount();
-      }
-      
-      print('카카오 토큰 받음: ${token.accessToken}'); // 디버그 로그
-      
-      // 백엔드로 토큰 전송
-      final authService = AuthService();
-      final response = await authService.loginWithKakao(token.accessToken);
-      print('백엔드 응답: $response'); // 디버그 로그
-      
-      if (response['success']) {
-        // 프로필 정보 가져오기
-        final profile = await authService.getProfile();
-        print('프로필 정보: $profile'); // 디버그 로그
-        if (profile != null && mounted) {
-          Provider.of<UserProvider>(context, listen: false).login(profile);
-          Navigator.of(context, rootNavigator: true).pop();
-        }
-      } else if (response['message']?.contains('회원가입이 필요합니다') == true) {
-        // 카카오 사용자 정보 가져오기
-        User kakaoUser = await UserApi.instance.me();
-        print('카카오 사용자 정보: ${kakaoUser.kakaoAccount}'); // 디버그 로그
-        
-        // 회원가입 폼으로 이동
-        if (mounted) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => RegisterForm(
-                preFilledEmail: kakaoUser.kakaoAccount?.email,
-                preFilledName: kakaoUser.kakaoAccount?.profile?.nickname,
-                preFilledBirth: kakaoUser.kakaoAccount?.birthday,
-                isSocialLogin: true,
-              ),
-            ),
-          );
-        }
-      } else {
-        _showErrorDialog(response['message']);
-      }
-    } catch (e) {
-      print('카카오 로그인 에러: $e'); // 디버그 로그
-      _showErrorDialog('카카오 로그인에 실패했습니다.');
-    }
-  }
-
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
@@ -446,7 +352,7 @@ class _LoginFullScreenPageState extends State<LoginFullScreenPage> {
                               width: 32,
                               height: 32,
                             ),
-                            onPressed: _handleKakaoLogin,
+                            onPressed: () => _loginFormKey.currentState?._handleKakaoLogin(),
                           ),
                         ),
                       ],

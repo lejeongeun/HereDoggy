@@ -184,6 +184,69 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 12),
+                // 2-1. 스토어, 챗봇, 빈 카드 Row
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 100,
+                        margin: const EdgeInsets.only(right: 6),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(18),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              offset: Offset(0, 4),
+                              blurRadius: 16,
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Text('스토어', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        height: 100,
+                        margin: const EdgeInsets.symmetric(horizontal: 3),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(18),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              offset: Offset(0, 4),
+                              blurRadius: 16,
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Text('챗봇', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        height: 100,
+                        margin: const EdgeInsets.only(left: 6),
+                        decoration: BoxDecoration(
+                          color: Color(0xFFF0F0F0),
+                          borderRadius: BorderRadius.circular(18),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              offset: Offset(0, 4),
+                              blurRadius: 16,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 16),
                 // 3. 유기견 보호소 찾기 카드
                 InkWell(

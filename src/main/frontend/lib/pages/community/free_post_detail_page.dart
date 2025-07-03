@@ -6,6 +6,8 @@ import '../../api/comment_api.dart';
 import '../../models/free_post.dart';
 import '../../models/comment.dart';
 import '../../utils/constants.dart';
+import '../../models/like_status.dart';
+import '../../api/like_api.dart';
 
 class FreePostDetailPage extends StatefulWidget {
   final int postId;
@@ -25,11 +27,16 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
   int? editingCommentId;
   final TextEditingController _editCommentController = TextEditingController();
 
+  // 좋아요 상태 관리
+  bool isLiking = false;
+  LikeStatus? likeStatus;
+
   @override
   void initState() {
     super.initState();
     fetchDetail();
     fetchComments();
+    fetchLikeStatus();
   }
 
   @override
@@ -50,6 +57,8 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
         post = detail;
         isLoading = false;
       });
+      // 상세 조회 후 좋아요 상태도 별도 fetch
+      fetchLikeStatus();
     } catch (e) {
       setState(() {
         errorMessage = e.toString();
@@ -78,6 +87,11 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
         );
       }
     }
+  }
+
+  Future<void> fetchLikeStatus() async {
+    likeStatus = await LikeApi.fetchLikeStatus('free', widget.postId);
+    setState(() {});
   }
 
   Future<void> _createComment() async {
@@ -212,6 +226,20 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
     }
   }
 
+  Future<void> _toggleLike() async {
+    if (isLiking) return;
+    setState(() { isLiking = true; });
+    try {
+      final liked = await LikeApi.toggleLike('free', post!.id);
+      final count = await LikeApi.getLikeCount('free', post!.id);
+      setState(() {
+        likeStatus = LikeStatus(likeCount: count, isLiked: liked);
+      });
+    } finally {
+      setState(() { isLiking = false; });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -336,6 +364,34 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
                                 ],
                               ),
                             const SizedBox(height: 32),
+                            // 좋아요 하트 + 개수 (LikeStatus 기반)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                GestureDetector(
+                                  onTap: _toggleLike,
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        likeStatus?.isLiked == true ? Icons.favorite : Icons.favorite_border,
+                                        color: likeStatus?.isLiked == true ? Colors.red : Colors.grey,
+                                        size: 28,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        (likeStatus?.likeCount ?? 0).toString(),
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: likeStatus?.isLiked == true ? Colors.red : Colors.grey,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
                             // 수정/삭제 버튼 (본인 글일 때만)
                             if (isMine)
                               Row(

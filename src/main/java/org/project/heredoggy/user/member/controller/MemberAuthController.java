@@ -60,10 +60,13 @@ public class MemberAuthController {
                 cookie.setHttpOnly(true);
                 cookie.setSecure(false);
                 cookie.setPath("/");
-                cookie.setMaxAge((int)jwtTokenProvider.getAccessTokenExpiration());
+                cookie.setMaxAge((int)(jwtTokenProvider.getAccessTokenExpiration() / 1000));
                 response.addCookie(cookie);
 
-                return ResponseEntity.ok().body(Map.of("message", "웹 로그인 성공"));
+                return ResponseEntity.ok().body(Map.of(
+                    "message", "웹 로그인 성공",
+                    "accessToken", accessToken
+                ));
             } else {
                 return ResponseEntity.ok(Map.of("accessToken", accessToken));
             }
