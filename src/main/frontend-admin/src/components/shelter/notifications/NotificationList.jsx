@@ -1,50 +1,77 @@
 import React, { useState, useEffect } from 'react';
-import { getNotifications, markNotificationAsRead, deleteNotification } from '../../../api/shelter/notification';
+import api from '../../../api/shelter/api';
+import {
+  getNotifications,
+  markNotificationAsRead,
+  deleteNotification
+} from '../../../api/shelter/notification';
+import '../../../styles/shelter/notification/notificationList.css';
 
-const NotificationList = () => {
+// 전체 읽음처리 API
+const markAllAsRead = async () => {
+  await api.patch('/api/notifications/read-all');
+};
+
+const NotificationList = ({ setUnreadCount }) => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 알림 목록을 가져오는 함수
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const data = await getNotifications();
-        setNotifications(data);
-        setLoading(false);
-      } catch (err) {
-        setError('알림을 가져오는 데 실패했습니다.');
-        setLoading(false);
+  // 알림 목록 불러오기 (진입 시 자동 전체 읽음 X)
+  const fetchNotifications = async () => {
+    try {
+      const data = await getNotifications();
+      setNotifications(data);
+      if (setUnreadCount) {
+        setUnreadCount(data.filter(n => !n.isRead).length);
       }
-    };
+    } catch (err) {
+      setError('알림을 가져오는 데 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  // 마운트 시 단순히 목록만 조회
+  useEffect(() => {
     fetchNotifications();
-  }, []);  // 컴포넌트가 마운트될 때 한 번만 호출
+  }, []);
 
-  // 개별 알림 읽음 처리
+  // 개별 읽음처리
   const handleMarkAsRead = async (id) => {
     try {
       await markNotificationAsRead(id);
-      setNotifications(prevNotifications =>
-        prevNotifications.map(notification =>
+      setNotifications(prev =>
+        prev.map(notification =>
           notification.id === id ? { ...notification, isRead: true } : notification
         )
       );
-    } catch (error) {
+      if (setUnreadCount) setUnreadCount(prev => Math.max(prev - 1, 0));
+    } catch {
       setError('알림 읽음 처리에 실패했습니다.');
     }
   };
 
-  // 개별 알림 삭제 처리
+  // 삭제
   const handleDeleteNotification = async (id) => {
     try {
       await deleteNotification(id);
-      setNotifications(prevNotifications => 
-        prevNotifications.filter(notification => notification.id !== id)
+      setNotifications(prev =>
+        prev.filter(notification => notification.id !== id)
       );
-    } catch (error) {
+    } catch {
       setError('알림 삭제에 실패했습니다.');
+    }
+  };
+
+  // "전체 읽음" 버튼 클릭 시 실행
+  const onClickAllRead = async () => {
+    try {
+      await markAllAsRead();
+      setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+      if (setUnreadCount) setUnreadCount(0);
+    } catch {
+      setError('전체 읽음 처리에 실패했습니다.');
     }
   };
 
@@ -52,18 +79,42 @@ const NotificationList = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div>
-      <h2>알림 목록</h2>
-      <ul>
+    <div className="notification-list-wrapper">
+      <h2 className="notification-list-title">
+        알림 목록
+        <button
+          className="notification-list-btn"
+          style={{ float: 'right', fontSize: '0.9em' }}
+          onClick={onClickAllRead}
+        >
+          전체 읽음 처리
+        </button>
+      </h2>
+      <ul className="notification-list-ul">
         {notifications.map((notification) => (
-          <li key={notification.id} className={notification.isRead ? 'read' : 'unread'}>
-            <h3>{notification.title}</h3>
-            <p>{notification.content}</p>
-            <div>
+          <li
+            key={notification.id}
+            className={`notification-list-li ${notification.isRead ? 'notification-read' : 'notification-unread'}`}
+          >
+            <div className="notification-main">
+              <h3 className="notification-list-heading">{notification.title}</h3>
+              <p className="notification-list-content">{notification.content}</p>
+            </div>
+            <div className="notification-list-btnbox">
               {!notification.isRead && (
-                <button onClick={() => handleMarkAsRead(notification.id)}>읽음 처리</button>
+                <button
+                  className="notification-list-btn"
+                  onClick={() => handleMarkAsRead(notification.id)}
+                >
+                  읽음 처리
+                </button>
               )}
-              <button onClick={() => handleDeleteNotification(notification.id)}>삭제</button>
+              <button
+                className="notification-list-btn notification-list-delete"
+                onClick={() => handleDeleteNotification(notification.id)}
+              >
+                삭제
+              </button>
             </div>
           </li>
         ))}

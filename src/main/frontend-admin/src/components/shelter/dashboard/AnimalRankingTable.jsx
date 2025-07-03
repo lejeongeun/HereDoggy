@@ -24,17 +24,6 @@ function AnimalRankingTable() {
               <tr key={animal.name}>
                 <td style={{ fontWeight: 700, color: 'black' }}>{i + 1}</td>
                 <td style={{ display: 'flex', alignItems: 'center',  justifyContent: 'center', gap: 7 }}>
-                  <img
-                    src={animal.photo}
-                    alt={animal.name}
-                    style={{
-                      width: 32,
-                      height: 32,
-                      objectFit: 'cover',
-                      borderRadius: '50%',
-                      border: '2px solid #effaf3',
-                    }}
-                  />
                   <span>{animal.name}</span>
                 </td>
                 <td>{animal.count}</td>

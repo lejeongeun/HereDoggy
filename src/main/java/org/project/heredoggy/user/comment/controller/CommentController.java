@@ -2,6 +2,7 @@ package org.project.heredoggy.user.comment.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.project.heredoggy.domain.postgresql.comment.CommentRepository;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.comment.PostType;
 import org.project.heredoggy.global.util.AuthUtils;
@@ -21,6 +22,7 @@ import java.util.Map;
 @RequestMapping("/api")
 public class CommentController {
     private final CommentService commentService;
+    private final CommentRepository commentRepository;
 
     @PostMapping("/{postType}-posts/{post_id}/comments")
     public ResponseEntity<Map<String, String>> createComment(@PathVariable("postType") String postTypeStr,
@@ -58,5 +60,11 @@ public class CommentController {
         return ResponseEntity.ok(Map.of("message", "댓글 삭제 성공"));
     }
 
-
+    @GetMapping("/{postType}-posts/{post_id}/comments/count")
+    public ResponseEntity<Map<String, Long>> countComments(@PathVariable("post_id") Long postId,
+                                                           @PathVariable("postType") String postTypeStr) {
+        PostType type = PostType.valueOf(postTypeStr.toUpperCase());
+        long count = commentRepository.countByPostIdAndPostType(postId, type);
+        return ResponseEntity.ok(Map.of("count", count));
+    }
 }

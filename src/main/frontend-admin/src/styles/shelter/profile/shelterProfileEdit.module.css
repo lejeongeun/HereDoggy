@@ -1,0 +1,136 @@
+.formContainer {
+  width: 410px;
+  background: #fff;
+  border-radius: 18px;
+  padding: 38px 36px 34px 36px;
+  box-shadow: 0 6px 36px rgba(39, 60, 46, 0.12), 0 1.5px 7px rgba(34, 85, 57, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  margin: 0 auto;
+}
+
+.formItem {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formLabel {
+  font-weight: 700;
+  color: #14402a;
+  font-size: 1.03rem;
+  margin-bottom: 2px;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  height: 15px;
+  padding: 13px 12px;
+  border-radius: 9px;
+  border: 1.5px solid #c7d7cd;
+  outline: none;
+  font-size: 1.06rem;
+  background: #f8faf9;
+  color: #143021;
+  font-family: inherit;
+  transition: border 0.16s, box-shadow 0.18s;
+}
+
+.input:focus,
+.textarea:focus {
+  border: 2.2px solid #4AB071;
+  background: #f2f8f3;
+  box-shadow: 0 2px 10px rgba(74, 176, 113, 0.09);
+}
+
+.textarea {
+  height: auto;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.addressRow {
+  display: flex;
+  gap: 10px;
+}
+
+.addressButton {
+  background: #fff;
+  color: #4AB071;
+  border: 2px solid #4AB071;
+  border-radius: 7px;
+  height: 41px;
+  padding: 0 16px;
+  font-size: 1.01rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #e5f4ec;
+  transition: background 0.15s, color 0.14s, border 0.14s;
+}
+
+.addressButton:hover,
+.addressButton:focus {
+  background: #e8f6ed;
+  color: #357c4c;
+  border: 2px solid #357c4c;
+}
+
+.uploadLabel {
+  font-weight: 700;
+  color: #14402a;
+}
+
+.fileInput {
+  margin-top: 6px;
+}
+
+.fileInfo {
+  margin-top: 4px;
+  color: #185a36;
+  font-weight: 600;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.button {
+
+  width: 200px !important;
+  background: #fff;
+  color: #4AB071;
+  border: 2px solid #4AB071;
+  border-radius: 9px;
+  padding: 13px 0;
+  font-weight: 700;
+  font-size: 1.10rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #e5f4ec;
+  transition: background 0.15s, color 0.13s, border 0.14s;
+  outline: none;
+  letter-spacing: 0.02em;
+}
+
+.button:hover,
+.button:focus {
+  background: #e8f6ed;
+  color: #357c4c;
+  border: 2px solid #357c4c;
+}
+
+.cancelButton {
+  color: #9a9a9a;
+  border-color: #bbb;
+}
+
+.cancelButton:hover,
+.cancelButton:focus {
+  background: #f2f2f2;
+  color: #555;
+  border-color: #999;
+}

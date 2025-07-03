@@ -1,0 +1,59 @@
+/* 카드 섹션 전체 정렬 */
+.summary-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+/* 개별 카드 */
+.dash-card {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.dash-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dash-card-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+}
+
+.dash-card-icon {
+  font-size: 20px;
+  color: #4CAF50;
+}
+
+.dash-card-value {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 12px 0;
+}
+
+.dash-card-diff {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 6px;
+  width: fit-content;
+}
+
+.dash-card-diff.up {
+  color: #2e7d32;
+  background-color: #e8f5e9;
+}
+
+.dash-card-diff.down {
+  color: #c62828;
+  background-color: #ffebee;
+}

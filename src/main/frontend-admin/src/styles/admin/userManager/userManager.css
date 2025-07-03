@@ -1,0 +1,75 @@
+.user-manager-container {
+  padding: 28px 16px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.user-manager-header {
+  margin-bottom: 18px;
+  font-size: 1.4rem;
+  color: #24324a;
+  font-weight: 600;
+}
+
+.user-search-row {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-search-input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  min-width: 220px;
+}
+
+.user-blacklist-btn {
+  background: #24324a;
+  color: #fff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.user-table thead tr {
+  background: #f0f3f8;
+  text-align: left;
+}
+
+.user-table th,
+.user-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.user-status-normal {
+  color: #0a0;
+}
+
+.user-status-black {
+  color: red;
+}
+
+.user-action-btn {
+  background: #24324a;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 7px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.user-action-btn:disabled {
+  background: #888;
+  cursor: not-allowed;
+}

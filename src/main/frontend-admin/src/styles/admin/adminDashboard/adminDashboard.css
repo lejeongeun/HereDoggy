@@ -1,0 +1,85 @@
+.dashboard-cards {
+  display: flex;
+  width: 100%;
+  gap: 16px;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+/* 카드 개별 스타일 */
+.dash-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  width: 100%;
+  padding: 16px;
+  margin: 8px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  flex: 1 1 calc(33.333% - 16px); /* 한 줄에 3개 (여백 고려) */
+  min-width: 220px;
+  box-sizing: border-box;
+}
+
+/* 카드 상단 라벨 + 아이콘 */
+.dash-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 라벨 텍스트 */
+.dash-card-label {
+  font-size: 14px;
+  color: #888;
+}
+
+/* 아이콘 스타일 */
+.dash-card-icon {
+  font-size: 20px;
+  color: #2a9d8f;
+}
+
+/* 수치 */
+.dash-card-value {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-top: 6px;
+}
+
+/* 증감률 */
+.dash-card-diff {
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.dash-card-diff.up {
+  color: #2a9d8f;
+}
+
+.dash-card-diff.down {
+  color: #e76f51;
+}
+
+/* 신고/문의 강조 카드 */
+.highlight-card {
+  background: #fef6e4;
+  border-left: 4px solid #f4a261;
+}
+
+
+/* 모바일 대응 */
+@media (max-width: 1024px) {
+  .dash-card {
+    flex: 1 1 calc(50% - 16px); /* 태블릿: 2열 */
+  }
+}
+
+@media (max-width: 600px) {
+  .dash-card {
+    flex: 1 1 100%; /* 모바일: 1열 */
+  }
+}
