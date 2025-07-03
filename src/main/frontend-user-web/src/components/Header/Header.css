@@ -64,7 +64,7 @@
   margin-left: auto;
   margin-right: 0;
   flex: 0 0 auto;
-  background: #3B5BFF;
+  background: #3b4cca;
   color: #fff;
   border: none;
   border-radius: 18px;
@@ -79,8 +79,46 @@
   height: 44px;
 }
 .header-login-btn:hover {
-  background: #2540b3;
-  box-shadow: 0 4px 16px rgba(59,130,246,0.18);
+  background: #283593;
+  box-shadow: 0 4px 16px rgba(40,53,147,0.18);
+}
+
+.header-user-section {
+  margin-left: auto;
+  margin-right: 0;
+  flex: 0 0 auto;
+}
+
+.header-user-btn {
+  background: transparent !important;
+  color: #333 !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 18px !important;
+  padding: 8px 16px !important;
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  height: 44px !important;
+  text-transform: none !important;
+}
+
+.header-user-btn:hover {
+  background: #f8f9fa !important;
+  border-color: #3B5BFF !important;
+  box-shadow: 0 4px 8px rgba(59,91,255,0.1) !important;
+}
+
+.header-user-menu {
+  margin-top: 8px;
+}
+
+.header-user-menu .MuiMenuItem-root {
+  font-size: 0.9rem;
+  padding: 8px 16px;
 }
 
 .header-chatbot-search {
@@ -128,7 +166,8 @@
     height: 36px;
     padding: 0 14px;
   }
-  .header-login-btn {
+  .header-login-btn,
+  .header-user-btn {
     height: 36px;
     padding: 8px 18px;
     font-size: 0.95rem;
@@ -151,7 +190,8 @@
     height: 28px;
     padding: 0 8px;
   }
-  .header-login-btn {
+  .header-login-btn,
+  .header-user-btn {
     height: 28px;
     padding: 6px 10px;
     font-size: 0.8rem;

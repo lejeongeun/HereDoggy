@@ -23,6 +23,7 @@ import 'pages/community/review_post_detail_page.dart';
 import 'pages/community/review_post_edit_page.dart';
 import 'pages/debug/fcm_token_debug_page.dart';
 import 'pages/debug/sse_debug_page.dart';
+import 'pages/chat/chat_page.dart';
 import 'utils/theme.dart';
 import 'utils/constants.dart';
 import 'providers/user_provider.dart';
@@ -259,6 +260,7 @@ class _MyAppState extends State<MyApp> {
         AppConstants.communityRoute: (context) => const CommunityPage(),
         AppConstants.myPageRoute: (context) => const MyPage(),
         AppConstants.adoptionRoute: (context) => const AdoptionPage(),
+        AppConstants.chatRoute: (context) => const ChatPage(),
         '/free-post-write': (context) => const FreePostWritePage(),
         '/missing-post-write': (context) => const MissingPostWritePage(),
         '/review-post-write': (context) => const ReviewPostWritePage(),

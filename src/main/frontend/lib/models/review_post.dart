@@ -9,6 +9,8 @@ class ReviewPost {
   final String nickname;
   final String createdAt;
   final List<String> imageUrls;
+  final int likeCount;
+  final bool isLiked;
 
   ReviewPost({
     required this.id,
@@ -21,6 +23,8 @@ class ReviewPost {
     required this.nickname,
     required this.createdAt,
     this.imageUrls = const [],
+    this.likeCount = 0,
+    this.isLiked = false,
   });
 
   factory ReviewPost.fromJson(Map<String, dynamic> json) {
@@ -35,6 +39,8 @@ class ReviewPost {
       nickname: json['nickname'] as String,
       createdAt: json['createdAt'] as String,
       imageUrls: json['imageUrls'] != null ? List<String>.from(json['imageUrls']) : [],
+      likeCount: json['likeCount'] as int? ?? 0,
+      isLiked: json['isLiked'] as bool? ?? false,
     );
   }
 
@@ -50,6 +56,39 @@ class ReviewPost {
       'nickname': nickname,
       'createdAt': createdAt,
       'imageUrls': imageUrls,
+      'likeCount': likeCount,
+      'isLiked': isLiked,
     };
+  }
+
+  // 좋아요 상태를 업데이트하는 메서드
+  ReviewPost copyWith({
+    int? id,
+    String? title,
+    String? content,
+    String? type,
+    int? rank,
+    int? viewCount,
+    String? email,
+    String? nickname,
+    String? createdAt,
+    List<String>? imageUrls,
+    int? likeCount,
+    bool? isLiked,
+  }) {
+    return ReviewPost(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      type: type ?? this.type,
+      rank: rank ?? this.rank,
+      viewCount: viewCount ?? this.viewCount,
+      email: email ?? this.email,
+      nickname: nickname ?? this.nickname,
+      createdAt: createdAt ?? this.createdAt,
+      imageUrls: imageUrls ?? this.imageUrls,
+      likeCount: likeCount ?? this.likeCount,
+      isLiked: isLiked ?? this.isLiked,
+    );
   }
 } 

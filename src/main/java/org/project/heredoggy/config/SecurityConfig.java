@@ -1,5 +1,6 @@
 package org.project.heredoggy.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.config.oauth.CustomOAuth2UserService;
 import org.project.heredoggy.config.oauth.OAuth2SuccessHandler;
@@ -70,6 +71,11 @@ public class SecurityConfig {
                                 .userService(customOAuth2UserService))
                         .successHandler(oAuth2SuccessHandler)
                 )
+                 .exceptionHandling(eh -> eh
+                         .authenticationEntryPoint((request, response, authException) -> {
+                             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+                         })
+                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

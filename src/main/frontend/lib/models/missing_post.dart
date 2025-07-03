@@ -22,6 +22,8 @@ class MissingPost {
   final String writerNickname;
   final String writerEmail;
   final List<String> imagesUrls;
+  final int likeCount;
+  final bool isLiked;
 
   MissingPost({
     required this.id,
@@ -42,6 +44,8 @@ class MissingPost {
     this.writerNickname = '',
     this.writerEmail = '',
     this.imagesUrls = const [],
+    this.likeCount = 0,
+    this.isLiked = false,
   })  : createdAt = createdAt ?? DateTime.now(),
         updatedAt = updatedAt ?? DateTime.now();
 
@@ -60,6 +64,8 @@ class MissingPost {
       description: json['description'],
       isContactPublic: json['isContactPublic'] ?? false,
       imagesUrls: (json['imageUrls'] as List<dynamic>?)?.map((e) => e as String).toList() ?? [],
+      likeCount: json['likeCount'] as int? ?? 0,
+      isLiked: json['isLiked'] as bool? ?? false,
     );
   }
 
@@ -72,5 +78,52 @@ class MissingPost {
       default:
         return DogGender.unknown;
     }
+  }
+
+  // 좋아요 상태를 업데이트하는 메서드
+  MissingPost copyWith({
+    int? id,
+    MissingPostType? type,
+    String? title,
+    DogGender? gender,
+    int? age,
+    double? weight,
+    String? furColor,
+    String? feature,
+    DateTime? missingDate,
+    String? missingLocation,
+    String? description,
+    bool? isContactPublic,
+    int? viewCount,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? writerNickname,
+    String? writerEmail,
+    List<String>? imagesUrls,
+    int? likeCount,
+    bool? isLiked,
+  }) {
+    return MissingPost(
+      id: id ?? this.id,
+      type: type ?? this.type,
+      title: title ?? this.title,
+      gender: gender ?? this.gender,
+      age: age ?? this.age,
+      weight: weight ?? this.weight,
+      furColor: furColor ?? this.furColor,
+      feature: feature ?? this.feature,
+      missingDate: missingDate ?? this.missingDate,
+      missingLocation: missingLocation ?? this.missingLocation,
+      description: description ?? this.description,
+      isContactPublic: isContactPublic ?? this.isContactPublic,
+      viewCount: viewCount ?? this.viewCount,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      writerNickname: writerNickname ?? this.writerNickname,
+      writerEmail: writerEmail ?? this.writerEmail,
+      imagesUrls: imagesUrls ?? this.imagesUrls,
+      likeCount: likeCount ?? this.likeCount,
+      isLiked: isLiked ?? this.isLiked,
+    );
   }
 } 

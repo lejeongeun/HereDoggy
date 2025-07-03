@@ -1,0 +1,100 @@
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-paper {
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.login-logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 16px;
+  object-fit: contain;
+}
+
+.login-title {
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.login-subtitle {
+  color: #666;
+}
+
+.login-alert {
+  margin-bottom: 24px;
+}
+
+.login-form {
+  width: 100%;
+}
+
+.login-input {
+  margin-bottom: 16px;
+}
+
+.login-input .MuiOutlinedInput-root {
+  border-radius: 8px;
+}
+
+.login-button {
+  background: #536dfe;
+  border-radius: 8px;
+  padding: 12px;
+  font-weight: 600;
+  text-transform: none;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  color: #fff;
+}
+
+.login-button:hover {
+  background: #3b4cca;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(83, 109, 254, 0.4);
+}
+
+.login-links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.login-link {
+  color: #667eea;
+  text-transform: none;
+  font-weight: 500;
+}
+
+.login-link:hover {
+  color: #764ba2;
+  background-color: rgba(102, 126, 234, 0.1);
+}
+
+@media (max-width: 480px) {
+  .login-paper {
+    padding: 24px;
+  }
+  
+  .login-links {
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+} 

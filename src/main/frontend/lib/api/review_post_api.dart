@@ -4,6 +4,7 @@ import '../utils/constants.dart';
 import '../services/auth_service.dart';
 import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
+import 'like_api.dart';
 
 class ReviewPostApi {
   static final Dio _dio = Dio(
@@ -163,6 +164,29 @@ class ReviewPostApi {
       }
     } catch (e) {
       throw Exception('글 수정 중 오류가 발생했습니다: $e');
+    }
+  }
+
+  // 좋아요 토글
+  static Future<bool> toggleLike(int postId) async {
+    return await LikeApi.toggleLike('review', postId);
+  }
+
+  // 좋아요 개수 조회
+  static Future<int> getLikeCount(int postId) async {
+    return await LikeApi.getLikeCount('review', postId);
+  }
+
+  // 게시글 상세 조회 시 좋아요 정보 포함
+  static Future<ReviewPost> fetchReviewPostDetailWithLike(int postId) async {
+    try {
+      final post = await fetchReviewPostDetail(postId);
+      final likeCount = await getLikeCount(postId);
+      
+      // 좋아요 개수만 업데이트 (isLiked는 토글 시에만 업데이트)
+      return post.copyWith(likeCount: likeCount);
+    } catch (e) {
+      throw Exception('리뷰 게시글 상세 정보를 불러오지 못했습니다: $e');
     }
   }
 } 

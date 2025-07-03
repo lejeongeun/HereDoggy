@@ -7,6 +7,8 @@ class FreePost {
   final String nickname;
   final String createdAt;
   final List<String> imagesUrls;
+  final int likeCount;
+  final bool isLiked;
 
   FreePost({
     required this.id,
@@ -17,6 +19,8 @@ class FreePost {
     required this.nickname,
     required this.createdAt,
     this.imagesUrls = const [],
+    this.likeCount = 0,
+    this.isLiked = false,
   });
 
   factory FreePost.fromJson(Map<String, dynamic> json) {
@@ -31,6 +35,8 @@ class FreePost {
       imagesUrls: json['imagesUrls'] != null 
           ? List<String>.from(json['imagesUrls'])
           : [],
+      likeCount: json['likeCount'] as int? ?? 0,
+      isLiked: json['isLiked'] as bool? ?? false,
     );
   }
 
@@ -44,6 +50,35 @@ class FreePost {
       'nickname': nickname,
       'createdAt': createdAt,
       'imagesUrls': imagesUrls,
+      'likeCount': likeCount,
+      'isLiked': isLiked,
     };
+  }
+
+  // 좋아요 상태를 업데이트하는 메서드
+  FreePost copyWith({
+    int? id,
+    String? title,
+    String? content,
+    int? viewCount,
+    String? email,
+    String? nickname,
+    String? createdAt,
+    List<String>? imagesUrls,
+    int? likeCount,
+    bool? isLiked,
+  }) {
+    return FreePost(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      viewCount: viewCount ?? this.viewCount,
+      email: email ?? this.email,
+      nickname: nickname ?? this.nickname,
+      createdAt: createdAt ?? this.createdAt,
+      imagesUrls: imagesUrls ?? this.imagesUrls,
+      likeCount: likeCount ?? this.likeCount,
+      isLiked: isLiked ?? this.isLiked,
+    );
   }
 } 
