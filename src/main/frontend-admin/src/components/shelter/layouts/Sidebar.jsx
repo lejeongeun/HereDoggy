@@ -11,7 +11,7 @@ import {
   LuSettings       
 } from "react-icons/lu"; 
 import '../../../styles/shelter/layouts/sidebar.css';
-import logoImg from '../../../assets/Logo.png';
+import logoImg from '../../../assets/Logo2.png';
 
 const menuList = [
   { name: '대시보드', path: '/shelter/dashboard', icon: <LuLayoutDashboard /> },
@@ -37,14 +37,10 @@ function Sidebar() {
           return (
             <li
               key={i}
-              className={
-                isActive
-                  ? 'sidebar-menu-item active'
-                  : 'sidebar-menu-item'
-              }
+              className={`sidebar-menu-item ${isActive ? 'active' : ''}`}
             >
               <Link to={menu.path} className="sidebar-menu-link">
-                <span className={isActive ? "sidebar-menu-icon active" : "sidebar-menu-icon"}>{menu.icon}</span>
+                <span className="sidebar-menu-icon">{menu.icon}</span>
                 <span className="sidebar-menu-text-simple">{menu.name}</span>
               </Link>
             </li>
@@ -54,14 +50,14 @@ function Sidebar() {
       {/* 하단 영역 */}
       <div className="sidebar-bottom">
         <div className="sidebar-brand">
-          <img src={logoImg} alt="여기보개 미니로고" style={{ height: 28, width: 24, marginRight: 6, borderRadius: 6, boxShadow: '0 1px 4px #e5f4ec' }} />
+          <img src={logoImg} alt="여기보개 미니로고" />
           <div>
             <div className="sidebar-brand-version">v1.0.0</div>
           </div>
         </div>     
         <div className="sidebar-bottom-icons">
-          <button className="sidebar-icon-btn" title="문의하기"><LuCircleHelp size={16} /></button>
-          <button className="sidebar-icon-btn" title="설정"><LuSettings size={16} /></button>
+          <button className="sidebar-icon-btn" title="문의하기"><LuCircleHelp /></button>
+          <button className="sidebar-icon-btn" title="설정"><LuSettings /></button>
         </div>
     
       </div>

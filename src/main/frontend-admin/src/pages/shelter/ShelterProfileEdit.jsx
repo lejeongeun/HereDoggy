@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from '../../styles/shelter/profile/shelterProfileEdit.module.css';
 import { MdPerson, MdEmail, MdPhone, MdLocationOn, MdHome, MdInfo, MdImage, MdSave, MdCancel } from 'react-icons/md';
+import { Image as ImageIcon } from "lucide-react";
 
 function ShelterProfileEdit({
   form,
@@ -10,6 +11,18 @@ function ShelterProfileEdit({
   onSave,
   onCancel
 }) {
+  const [previewUrls, setPreviewUrls] = useState([]);
+
+  useEffect(() => {
+    if (images) {
+      const urls = images.map(file => URL.createObjectURL(file));
+      setPreviewUrls(urls);
+      return () => {
+        urls.forEach(url => URL.revokeObjectURL(url));
+      };
+    }
+  }, [images]);
+
   const handleAddressSearch = () => {
     new window.daum.Postcode({
       oncomplete: function (data) {
@@ -43,15 +56,37 @@ function ShelterProfileEdit({
       </section>
       <section className={styles.formSection}>
         <div className={styles.formItem}><label className={styles.formLabel}><MdImage className={styles.icon}/> 이미지</label>
-          <input type="file" accept="image/*" multiple onChange={handleImageChange} className={styles.fileInput} />
-          {images.length > 0 && (
-            <div className={styles.fileInfo}>{images.length}장 업로드 예정</div>
+          <div>
+            <label htmlFor="file-upload-profile" className={styles.fileInputLabel}>
+              <ImageIcon size={18} />
+              <span>파일 선택</span>
+            </label>
+            <input
+              id="file-upload-profile"
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleImageChange}
+              className={styles.fileInput}
+            />
+            {images.length > 0 && (
+              <span style={{ marginLeft: '16px', color: '#555' }}>
+                {images.length}개의 파일 선택됨
+              </span>
+            )}
+          </div>
+          {previewUrls.length > 0 && (
+            <div className={styles.imageGallery}>
+              {previewUrls.map((url, idx) => (
+                <img key={idx} src={url} alt={`미리보기 ${idx}`} className={styles.previewImage} />
+              ))}
+            </div>
           )}
         </div>
       </section>
       <div className={styles.buttonGroup}>
-        <button className={styles.button} type="submit">저장</button>
-        <button className={styles.button + ' ' + styles.cancelButton} type="button" onClick={onCancel}>취소</button>
+        <button className={`${styles.button} ${styles.saveButton}`} type="submit">저장</button>
+        <button className={`${styles.button} ${styles.cancelButton}`} type="button" onClick={onCancel}>취소</button>
       </div>
     </form>
   );

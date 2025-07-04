@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getDogs } from "../../api/shelter/dog";
 import '../../styles/shelter/pages/dogList.css';
 import { Link } from "react-router-dom";
+import { ImageOff } from 'lucide-react';
 
 const BACKEND_URL = "http://localhost:8080";
 
@@ -10,6 +11,8 @@ function DogList() {
   const [dogs, setDogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // 페이지당 10개 항목
 
   useEffect(() => {
     if (!sheltersId) {
@@ -26,9 +29,8 @@ function DogList() {
 
         // API가 배열을 바로 반환하면
         const dogsData = Array.isArray(response.data) ? response.data : response.data.dogs || [];
-        console.log("처리된 강아지 데이터:", dogsData); // 처리된 데이터 확인
-        console.log("총 개수:", dogs.length);
-
+        console.log("처리된 강아지 데이터:", dogsData);
+        console.log("총 개수:", dogsData.length);
 
         setDogs(dogsData);
       } catch (err) {
@@ -40,6 +42,17 @@ function DogList() {
     };
     fetchDogs();
   }, [sheltersId]);
+
+  // 현재 페이지에 해당하는 유기견 계산
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentDogs = dogs.slice(indexOfFirstItem, indexOfLastItem);
+
+  // 총 페이지 수 계산
+  const totalPages = Math.ceil(dogs.length / itemsPerPage);
+
+  // 페이지 변경 핸들러
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   if (loading) return <p>로딩 중...</p>;
   if (error) return (
@@ -77,7 +90,7 @@ function DogList() {
           </tr>
         </thead>
         <tbody>
-          {dogs.map((dog, index) => (
+          {currentDogs.map((dog, index) => (
             <tr key={`${dog.id}-${index}`}>
               <td>
                 {dog.images && dog.images.length > 0 ? (
@@ -88,7 +101,9 @@ function DogList() {
                     data-image-id={dog.images[0].id}
                   />
                 ) : (
-                  <div className="doglist-img doglist-img-placeholder" />
+                  <div className="doglist-img doglist-img-placeholder">
+                    <ImageOff size={24} color="#999" />
+                  </div>
                 )}
               </td>
               <td>
@@ -103,6 +118,33 @@ function DogList() {
           ))}
         </tbody>
       </table>
+      {dogs.length > itemsPerPage && (
+        <div className="pagination">
+          <button
+            onClick={() => paginate(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="pagination-button"
+          >
+            이전
+          </button>
+          {[...Array(totalPages).keys()].map((number) => (
+            <button
+              key={number + 1}
+              onClick={() => paginate(number + 1)}
+              className={`pagination-button ${currentPage === number + 1 ? 'active' : ''}`}
+            >
+              {number + 1}
+            </button>
+          ))}
+          <button
+            onClick={() => paginate(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="pagination-button"
+          >
+            다음
+          </button>
+        </div>
+      )}
     </div>
   );
 }

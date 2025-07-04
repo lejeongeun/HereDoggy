@@ -2,11 +2,10 @@ import '../../../styles/shelter/layouts/topbar.css';
 import api from '../../../api/shelter/api'; // api 인스턴스 반드시 import!
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Bell } from 'lucide-react';
+import { Bell, LogOut } from 'lucide-react';
 import useSseNotifications from './useSseNotifications';
 import { getShelterProfile } from '../../../api/shelter/shelter';
 import { FaHome } from 'react-icons/fa';
-import { FiLogOut, FiUser } from 'react-icons/fi';
 
 // 알림 개수 API (api 인스턴스 사용!)
 const getUnreadNotifications = async () => {
@@ -71,15 +70,9 @@ function Topbar() {
 
   return (
     <header className="topbar">
-      <div className="topbar-left">
-        <Link to="/shelter" className="logo">
-          <img src="/logo192.png" alt="logo" style={{height: 32, verticalAlign: 'middle', marginRight: 8}} />
-          HereDoggy
-        </Link>
-      </div>
       <div className="topbar-right">
         <Link to="/shelter/profile" className="sheltername">
-          <FaHome style={{marginRight: 6, color: '#4AB071', verticalAlign: 'middle'}} />
+          <FaHome className="icon" />
           <span className="sheltername-text">{shelterName}</span>
         </Link>
         <button className="notif-btn" onClick={goNotification}>
@@ -87,7 +80,8 @@ function Topbar() {
           {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
         </button>
         <button className="logout-btn" onClick={logout}>
-          <FiLogOut style={{marginRight: 4}} /> 로그아웃
+          <LogOut size={18} />
+          <span>로그아웃</span>
         </button>
       </div>
     </header>
