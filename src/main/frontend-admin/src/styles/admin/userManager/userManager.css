@@ -73,3 +73,14 @@
   background: #888;
   cursor: not-allowed;
 }
+.user-filter-row {
+  margin: 12px 0;
+  display: flex;
+  gap: 10px;
+}
+
+.user-filter-select {
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}

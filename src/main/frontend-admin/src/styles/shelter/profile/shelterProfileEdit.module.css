@@ -1,9 +1,11 @@
 .formContainer {
-  width: 410px;
+  width: 100%;
+  max-width: 800px;
   background: #fff;
   border-radius: 18px;
-  padding: 38px 36px 34px 36px;
-  box-shadow: 0 6px 36px rgba(39, 60, 46, 0.12), 0 1.5px 7px rgba(34, 85, 57, 0.05);
+  padding: 24px;
+  box-sizing: border-box;
+  box-shadow: 0 6px 36px rgba(30, 30, 30, 0.07), 0 1.5px 7px rgba(34, 85, 57, 0.05);
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -15,6 +17,13 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  overflow: visible;
+}
+
+.formItem.addressRow, .formItem .addressRow, .formItem .address-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .formLabel {
@@ -27,8 +36,11 @@
 .input,
 .textarea {
   width: 100%;
-  height: 15px;
-  padding: 13px 12px;
+  box-sizing: border-box;
+  height: auto;
+  min-height: 40px;
+  line-height: 1.5;
+  padding: 12px 12px;
   border-radius: 9px;
   border: 1.5px solid #c7d7cd;
   outline: none;
@@ -52,30 +64,29 @@
   min-height: 80px;
 }
 
-.addressRow {
-  display: flex;
-  gap: 10px;
-}
-
 .addressButton {
   background: #fff;
-  color: #4AB071;
-  border: 2px solid #4AB071;
+  color: #23b266;
+  border: 1.5px solid #23b266;
   border-radius: 7px;
-  height: 41px;
-  padding: 0 16px;
+  height: 40px;
+  padding: 0 18px;
   font-size: 1.01rem;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 2px 8px #e5f4ec;
+  box-shadow: 0 2px 8px #e5ebf433;
   transition: background 0.15s, color 0.14s, border 0.14s;
+  display: flex;
+  align-items: center;
+  vertical-align: middle;
+  line-height: 1.5;
 }
 
 .addressButton:hover,
 .addressButton:focus {
-  background: #e8f6ed;
-  color: #357c4c;
-  border: 2px solid #357c4c;
+  background: #23b266;
+  color: #fff;
+  border: 1.5px solid #23b266;
 }
 
 .uploadLabel {
@@ -97,10 +108,13 @@
   display: flex;
   gap: 12px;
   margin-top: 8px;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
 }
 
 .button {
-
+  max-width: 100%;
   width: 200px !important;
   background: #fff;
   color: #4AB071;
@@ -133,4 +147,35 @@
   background: #f2f2f2;
   color: #555;
   border-color: #999;
+}
+
+.formHeader {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #23b266;
+  margin-bottom: 18px;
+  letter-spacing: -1px;
+  display: flex;
+  align-items: center;
+  padding-left: 2px;
+}
+
+.formSection {
+  background: #f8fafc;
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(40, 157, 84, 0.06);
+  padding: 14px 12px 8px 12px;
+  margin-bottom: 16px;
+  border: 1.5px solid #e3e8ee;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: visible;
+}
+
+.icon {
+  margin-right: 2px;
+  color: #23b266;
+  font-size: 1.13em;
+  vertical-align: middle;
 }

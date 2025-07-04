@@ -84,3 +84,20 @@
   color: #aaa;
   padding: 28px;
 }
+.shelter-admin-controls {
+  margin: 12px 0;
+  display: flex;
+  gap: 10px;
+}
+
+.shelter-admin-search {
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.shelter-admin-select {
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}

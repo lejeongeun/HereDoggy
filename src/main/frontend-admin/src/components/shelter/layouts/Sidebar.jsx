@@ -28,37 +28,40 @@ function Sidebar() {
 
   return (
     <aside className="sidebar">
-      <div className="sidebar-logo">
-        <img src={logoImg} alt="여기보개 로고" style={{ height: 110, width: 120 }} />
+      <div className="sidebar-logo-simple">
+        <img src={logoImg} alt="여기보개 로고" className="sidebar-logo-img-simple" />
       </div>
       <ul className="sidebar-menu">
-        {menuList.map((menu, i) => (
-          <li
-            key={i}
-            className={
-              location.pathname.startsWith(menu.path)
-                ? 'sidebar-menu-item active'
-                : 'sidebar-menu-item'
-            }
-          >
-            <Link to={menu.path}>
-              <span className="sidebar-menu-icon">{menu.icon}</span>
-              {menu.name}
-            </Link>
-          </li>
-        ))}
+        {menuList.map((menu, i) => {
+          const isActive = location.pathname.startsWith(menu.path);
+          return (
+            <li
+              key={i}
+              className={
+                isActive
+                  ? 'sidebar-menu-item active'
+                  : 'sidebar-menu-item'
+              }
+            >
+              <Link to={menu.path} className="sidebar-menu-link">
+                <span className={isActive ? "sidebar-menu-icon active" : "sidebar-menu-icon"}>{menu.icon}</span>
+                <span className="sidebar-menu-text-simple">{menu.name}</span>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
-      {/* 하단 영역 추가 */}
+      {/* 하단 영역 */}
       <div className="sidebar-bottom">
         <div className="sidebar-brand">
-          <img src={logoImg} alt="여기보개 미니로고" style={{ height: 50, width: 45, marginRight: 6 }} />
+          <img src={logoImg} alt="여기보개 미니로고" style={{ height: 28, width: 24, marginRight: 6, borderRadius: 6, boxShadow: '0 1px 4px #e5f4ec' }} />
           <div>
             <div className="sidebar-brand-version">v1.0.0</div>
           </div>
         </div>     
         <div className="sidebar-bottom-icons">
-          <button className="sidebar-icon-btn" title="문의하기"><LuCircleHelp size={20} /></button>
-          <button className="sidebar-icon-btn" title="설정"><LuSettings size={20} /></button>
+          <button className="sidebar-icon-btn" title="문의하기"><LuCircleHelp size={16} /></button>
+          <button className="sidebar-icon-btn" title="설정"><LuSettings size={16} /></button>
         </div>
     
       </div>

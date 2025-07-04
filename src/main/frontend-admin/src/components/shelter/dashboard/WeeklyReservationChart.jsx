@@ -13,14 +13,16 @@ const data = [
 
 function WeeklyReservationChart() {
   return (
-    <div className="dashboard-widget">
-      <div className="chart-title">주간 예약 현황</div>
+    <div className="dashboard-widget" style={{background:'#fff', borderRadius:16, boxShadow:'0 3px 16px rgba(44,69,67,0.07)'}}>
+      <div className="chart-title" style={{color:'#222', fontWeight:700}}>
+        주간 예약 현황
+      </div>
       <ResponsiveContainer width="100%" height={276}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e4efe6" />
-          <XAxis dataKey="name" />
-          <YAxis allowDecimals={false}/>
-          <Tooltip contentStyle={{ borderRadius: 10, border: 'none', background: "#effaf3" }}/>
+          <XAxis dataKey="name" tick={{fill:'#222', fontWeight:600}} />
+          <YAxis allowDecimals={false} tick={{fill:'#222', fontWeight:600}}/>
+          <Tooltip contentStyle={{ borderRadius: 10, border: 'none', background: "#fff", color:'#222', fontWeight:600 }}/>
           <Bar dataKey="reservations" fill="#184c24" radius={[6, 6, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>

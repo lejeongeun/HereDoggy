@@ -1,6 +1,8 @@
 import React from "react";
-import { Link, Outlet } from "react-router-dom";
-import "../../styles/admin/adminLayout/adminLayout.css";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import "../../../styles/admin/adminLayout/adminLayout.css";
+import { adminLogout } from "../../../api/system/admin"; // 또는 경로에 따라 조정
+
 
 const menuItems = [
   { label: "대시보드", to: "/admin/dashboard" },
@@ -12,7 +14,20 @@ const menuItems = [
   { label: "시스템 설정", to: "/admin/settings" }
 ];
 
+
+
 function AdminLayout() {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+  try {
+    await adminLogout(); // 서버에 로그아웃 요청
+    navigate("/"); // 로그인 페이지로 이동
+  } catch (error) {
+    alert("로그아웃 실패");
+  }
+};
+
   return (
     <div className="admin-root">
       {/* 사이드바 */}
@@ -33,7 +48,7 @@ function AdminLayout() {
         {/* 탑바 */}
         <header className="admin-header">
           <div>여기보개 시스템 관리자</div>
-          <button className="admin-logout-btn">
+          <button className="admin-logout-btn" onClick={handleLogout}>
             로그아웃
           </button>
         </header>

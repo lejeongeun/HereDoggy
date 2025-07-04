@@ -52,3 +52,4 @@ const getNaverStaticMapUrl = (points) => {
   return `${baseUrl}?center=${center}&level=${level}&w=${width}&h=${height}&${pathParam}`;
 };
 export default WalkRouteCard;
+

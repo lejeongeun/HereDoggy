@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { createNotice } from "../../../api/shelter/notice";
 import { useNavigate } from "react-router-dom";
+import { LuMegaphone } from "react-icons/lu";
+import { FiCheck, FiX, FiAlertCircle, FiUpload } from "react-icons/fi";
 import "../../../styles/shelter/notice/noticeWrite.css";
 
 function NoticeWrite() {
@@ -71,6 +73,10 @@ function NoticeWrite() {
 
           <label className="nw-label">
             이미지 첨부 (선택)
+            <span className="nw-upload-guide">
+              <FiUpload style={{marginRight:4, verticalAlign:'middle'}} />
+              이미지는 여러 장 첨부할 수 있습니다.
+            </span>
             <input
               type="file"
               accept="image/*"
@@ -89,7 +95,12 @@ function NoticeWrite() {
             </div>
           )}
 
-          {error && <div className="nw-error">{error}</div>}
+          {error && (
+            <div className="nw-error">
+              <FiAlertCircle style={{marginRight:4, verticalAlign:'middle'}} />
+              {error}
+            </div>
+          )}
 
           <div className="nw-btns">
             <button type="submit" className="nw-btn nw-btn-main">등록</button>

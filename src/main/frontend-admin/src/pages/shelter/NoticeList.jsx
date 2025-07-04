@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getNotices } from "../../api/shelter/notice";
 import "../../styles/shelter/notice/noticeList.css";
+import { FiChevronDown, FiChevronUp, FiAlertCircle } from "react-icons/fi";
 
 function NoticeList() {
   const [notices, setNotices] = useState([]);
@@ -29,7 +30,7 @@ function NoticeList() {
   };
 
   if (loading) return <div className="notice-list-wrap">로딩 중...</div>;
-  if (error) return <div className="notice-list-wrap error">{error}</div>;
+  if (error) return <div className="notice-list-wrap error"><FiAlertCircle style={{marginRight:4, verticalAlign:'middle'}} />{error}</div>;
 
   return (
     <div className="notice-list-wrap">
@@ -41,7 +42,10 @@ function NoticeList() {
       </div>
       <div className="notice-list">
         {notices.length === 0 ? (
-          <div className="notice-item empty">등록된 공지사항이 없습니다.</div>
+          <div className="notice-item empty">
+            <FiAlertCircle style={{marginRight:4, verticalAlign:'middle'}} />
+            등록된 공지사항이 없습니다.
+          </div>
         ) : (
           notices.map((notice) => (
             <div className="notice-item" key={notice.id}>
@@ -58,7 +62,7 @@ function NoticeList() {
                   className="notice-toggle"
                   aria-label="내용 열기/닫기"
                 >
-                  {openId === notice.id ? "–" : "+"}
+                  {openId === notice.id ? <FiChevronUp /> : <FiChevronDown />}
                 </button>
               </div>
               {openId === notice.id && (

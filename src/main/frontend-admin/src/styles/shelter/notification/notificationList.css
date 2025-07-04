@@ -4,24 +4,31 @@
   margin: 0 auto;
   background: #fff;
   border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(100,180,120,0.09);
+  box-shadow: 0 8px 32px rgba(60,80,120,0.09);
   padding-bottom: 24px;
   margin-top: 40px;
   min-height: 380px;
 }
 
-.notification-list-title {
+.notification-list-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin: 32px 0 20px 34px;
+}
+
+.notification-list-title {
+  margin: 0;
   font-size: 24px;
   color: #142f21;
   font-weight: 800;
   letter-spacing: -0.5px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 7px;
 }
 
-.notification-list-title button {
+.notification-list-allread {
   margin-right: 34px;
   font-size: 15px;
   padding: 6px 16px;
@@ -34,7 +41,7 @@
   transition: background 0.15s, color 0.15s;
 }
 
-.notification-list-title button:hover {
+.notification-list-allread:hover {
   background: #8bd3b9;
   color: #175c39;
 }
@@ -46,12 +53,12 @@
 }
 
 .notification-list-li {
-  border: 1.2px solid #ecf3ec;
+  border: 1.5px solid #e0e0e0;
   border-radius: 16px;
   margin: 18px 22px;
   padding: 20px 24px 18px 24px;
-  background: #f9fbf9;
-  box-shadow: 0 2px 8px rgba(100,180,120,0.04);
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(60,80,120,0.04);
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -60,15 +67,15 @@
 }
 
 .notification-list-li:hover {
-  background: #e6f5ee;
-  box-shadow: 0 6px 18px rgba(40,160,100,0.08);
-  border-color: #a9e6c7;
+  background: #f5f5f5;
+  box-shadow: 0 6px 18px rgba(60,80,120,0.10);
+  border-color: #bdbdbd;
 }
 
 .notification-unread {
-  background: #eefaf2;
-  border: 1.8px solid #62c397;
-  box-shadow: 0 3px 12px rgba(60, 180, 100, 0.07);
+  background: #f8fcf9;
+  border: 2px solid #23b266;
+  box-shadow: 0 3px 12px rgba(35, 178, 102, 0.10);
 }
 
 .notification-unread::before {
@@ -78,15 +85,15 @@
   left: 0;
   width: 7px;
   height: 34px;
-  background: #53c995;
+  background: #23b266;
   border-radius: 4px;
-  opacity: 0.6;
+  opacity: 0.8;
 }
 
 .notification-read {
-  color: #bbb;
-  background: #fafafa;
-  border: 1px solid #ededed;
+  color: #b6b8ba;
+  background: #fafbfc;
+  border: 1.5px solid #e0e0e0;
 }
 
 .notification-main {
@@ -95,10 +102,34 @@
   gap: 4px;
 }
 
+.notification-list-heading-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+
+.notification-list-icon {
+  font-size: 1.35em;
+  color: #b5e4c6;
+  vertical-align: middle;
+}
+
+.notification-list-icon-unread {
+  color: #23b266;
+}
+
+.notification-list-date {
+  font-size: 0.98em;
+  color: #888;
+  margin-left: 8px;
+  font-weight: 400;
+}
+
 .notification-list-heading {
   margin: 0;
-  font-size: 17px;
-  color: #1b3320;
+  font-size: 18px;
+  color: #181818;
   font-weight: 700;
   letter-spacing: -0.2px;
   text-overflow: ellipsis;
@@ -108,9 +139,9 @@
 
 .notification-list-content {
   margin: 3px 0 0 0;
-  font-size: 15px;
+  font-size: 15.5px;
   line-height: 1.62;
-  color: #35563b;
+  color: #232323;
   word-break: keep-all;
 }
 
@@ -130,28 +161,33 @@
 .notification-list-btn {
   padding: 7px 20px;
   border-radius: 8px;
-  color: black !important;
-  border: none;
-  background: #d1e7db;
+  color: #181818 !important;
+  border: 1.5px solid #e0e0e0;
+  background: #fff;
   cursor: pointer;
   font-size: 15px !important;
-  transition: background 0.15s, color 0.15s;
+  font-weight: 600;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s, border 0.15s;
   outline: none;
+  box-shadow: 0 2px 8px rgba(60,80,120,0.04);
 }
 
 .notification-list-btn:hover, .notification-list-btn:focus {
-  background: #9fdac4;
-  color: #145c3d;
+  background: #232323;
+  color: #fff !important;
+  border: 1.5px solid #232323;
+  box-shadow: 0 4px 14px rgba(60,80,120,0.13);
 }
 
 .notification-list-delete {
-  background: #fbe2e2;
-  color: #ce4444;
+  background: #f44336;
+  color: #fff !important;
+  border: none;
 }
 
 .notification-list-delete:hover, .notification-list-delete:focus {
-  background: #ffc3c3;
-  color: #842323;
+  background: #c62828;
+  color: #fff !important;
 }
 
 /* 모바일 대응 */
@@ -170,7 +206,7 @@
     padding: 14px 8px 12px 14px;
     border-radius: 10px;
   }
-  .notification-list-title button {
+  .notification-list-allread {
     margin-right: 10px;
     font-size: 13px;
     padding: 4px 10px;

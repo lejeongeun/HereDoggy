@@ -5,6 +5,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Bell } from 'lucide-react';
 import useSseNotifications from './useSseNotifications';
 import { getShelterProfile } from '../../../api/shelter/shelter';
+import { FaHome } from 'react-icons/fa';
+import { FiLogOut, FiUser } from 'react-icons/fi';
 
 // 알림 개수 API (api 인스턴스 사용!)
 const getUnreadNotifications = async () => {
@@ -69,16 +71,24 @@ function Topbar() {
 
   return (
     <header className="topbar">
-      <div className="topbar-left"></div>
+      <div className="topbar-left">
+        <Link to="/shelter" className="logo">
+          <img src="/logo192.png" alt="logo" style={{height: 32, verticalAlign: 'middle', marginRight: 8}} />
+          HereDoggy
+        </Link>
+      </div>
       <div className="topbar-right">
         <Link to="/shelter/profile" className="sheltername">
-          {shelterName}
+          <FaHome style={{marginRight: 6, color: '#4AB071', verticalAlign: 'middle'}} />
+          <span className="sheltername-text">{shelterName}</span>
         </Link>
         <button className="notif-btn" onClick={goNotification}>
           <Bell size={22} />
           {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
         </button>
-        <button className="logout-btn" onClick={logout}>로그아웃</button>
+        <button className="logout-btn" onClick={logout}>
+          <FiLogOut style={{marginRight: 4}} /> 로그아웃
+        </button>
       </div>
     </header>
   );

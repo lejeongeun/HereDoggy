@@ -37,9 +37,9 @@ const initialAdmins = [
 for (let i = 4; i <= 30; i++) {
   const isPending = i % 5 === 0;
   const isActive = i % 2 === 0;
-  const baseDate = new Date(2024, 5, (i % 30) + 1); // 6월 날짜
+  const baseDate = new Date(2024, 5, (i % 30) + 1);
   const createdAt = baseDate.toISOString();
-  const approvedAt = isPending ? undefined : new Date(baseDate.getTime() + 3600000).toISOString(); // 승인은 1시간 후
+  const approvedAt = isPending ? undefined : new Date(baseDate.getTime() + 3600000).toISOString();
 
   initialAdmins.push({
     id: i,
@@ -52,9 +52,36 @@ for (let i = 4; i <= 30; i++) {
     active: isActive,
   });
 }
+
 function ShelterAdminManager() {
   const [admins, setAdmins] = useState(initialAdmins);
-  const [hoverRow, setHoverRow] = useState(null);
+  const [search, setSearch] = useState("");
+  const [sortKey, setSortKey] = useState("id");
+  const [sortOrder, setSortOrder] = useState("asc");
+
+  // 목록 분리
+  const pendingAdmins = admins.filter(a => a.status === "PENDING");
+  const approvedAdmins = admins.filter(a => a.status === "APPROVED");
+
+  // 검색 필터
+  const filteredPending = pendingAdmins.filter(a =>
+    a.name.includes(search) || a.email.includes(search)
+  );
+  const filteredApproved = approvedAdmins.filter(a =>
+    a.name.includes(search) || a.email.includes(search)
+  );
+
+  // 정렬
+  const sortAdmins = list =>
+    [...list].sort((a, b) => {
+      const aVal = a[sortKey] || "";
+      const bVal = b[sortKey] || "";
+      if (sortOrder === "asc") return aVal > bVal ? 1 : -1;
+      else return aVal < bVal ? 1 : -1;
+    });
+
+  const sortedPending = sortAdmins(filteredPending);
+  const sortedApproved = sortAdmins(filteredApproved);
 
   // 관리 함수
   const approveAdmin = id => {
@@ -74,17 +101,13 @@ function ShelterAdminManager() {
 
   const deactivateAdmin = id => {
     setAdmins(prev =>
-      prev.map(a =>
-        a.id === id ? { ...a, active: false } : a
-      )
+      prev.map(a => (a.id === id ? { ...a, active: false } : a))
     );
   };
 
   const activateAdmin = id => {
     setAdmins(prev =>
-      prev.map(a =>
-        a.id === id ? { ...a, active: true } : a
-      )
+      prev.map(a => (a.id === id ? { ...a, active: true } : a))
     );
   };
 
@@ -93,104 +116,107 @@ function ShelterAdminManager() {
     setAdmins(prev => prev.filter(a => a.id !== id));
   };
 
-  // 목록 분리
-  const pendingAdmins = admins.filter(a => a.status === "PENDING");
-  const approvedAdmins = admins.filter(a => a.status === "APPROVED");
+  return (
+    <div className="shelter-admin-wrap">
+      <h2>보호소 관리자 계정 관리</h2>
 
- return (
-  <div className="shelter-admin-wrap">
-    <h2>보호소 관리자 계정 관리 </h2>
+      <div className="shelter-admin-controls">
+        <input
+          className="shelter-admin-search"
+          placeholder="이름/이메일 검색"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
+        <select value={sortKey} onChange={e => setSortKey(e.target.value)} className="shelter-admin-select">
+          <option value="id">ID</option>
+          <option value="name">이름</option>
+          <option value="createdAt">신청일</option>
+          <option value="approvedAt">승인일</option>
+        </select>
+        <select value={sortOrder} onChange={e => setSortOrder(e.target.value)} className="shelter-admin-select">
+          <option value="asc">오름차순</option>
+          <option value="desc">내림차순</option>
+        </select>
+      </div>
 
-    {/* 1. 미승인 보호소 관리자 */}
-    <section>
-      <h3>미승인 보호소 관리자 요청</h3>
-      <table className="shelter-admin-table">
-        <thead>
-          <tr>
-            <th>이름</th>
-            <th>이메일</th>
-            <th>전화번호</th>
-            <th>신청일</th>
-            <th>처리</th>
-          </tr>
-        </thead>
-        <tbody>
-          {pendingAdmins.length === 0 && (
+      {/* 1. 미승인 보호소 관리자 */}
+      <section>
+        <h3>미승인 보호소 관리자 요청</h3>
+        <table className="shelter-admin-table">
+          <thead>
             <tr>
-              <td colSpan={5}>대기 중인 요청이 없습니다.</td>
+              <th>이름</th>
+              <th>이메일</th>
+              <th>전화번호</th>
+              <th>신청일</th>
+              <th>처리</th>
             </tr>
-          )}
-          {pendingAdmins.map(a => (
-            <tr key={a.id}>
-              <td>{a.name}</td>
-              <td>{a.email}</td>
-              <td>{a.phone}</td>
-              <td>{a.createdAt.slice(0, 10)}</td>
-              <td>
-                <button onClick={() => approveAdmin(a.id)}>
-                  승인
-                </button>
-                <button className="admin-btn-danger" onClick={() => rejectAdmin(a.id)}>
-                  거절
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </section>
+          </thead>
+          <tbody>
+            {sortedPending.length === 0 ? (
+              <tr>
+                <td colSpan={5}>대기 중인 요청이 없습니다.</td>
+              </tr>
+            ) : (
+              sortedPending.map(a => (
+                <tr key={a.id}>
+                  <td>{a.name}</td>
+                  <td>{a.email}</td>
+                  <td>{a.phone}</td>
+                  <td>{a.createdAt.slice(0, 10)}</td>
+                  <td>
+                    <button onClick={() => approveAdmin(a.id)}>승인</button>
+                    <button className="admin-btn-danger" onClick={() => rejectAdmin(a.id)}>거절</button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </section>
 
-    {/* 2. 승인된 보호소 관리자 */}
-    <section>
-      <h3>승인된 보호소 관리자</h3>
-      <table className="shelter-admin-table">
-        <thead>
-          <tr>
-            <th>이름</th>
-            <th>이메일</th>
-            <th>전화번호</th>
-            <th>상태</th>
-            <th>가입일</th>
-            <th>관리</th>
-          </tr>
-        </thead>
-        <tbody>
-          {approvedAdmins.length === 0 && (
+      {/* 2. 승인된 보호소 관리자 */}
+      <section>
+        <h3>승인된 보호소 관리자</h3>
+        <table className="shelter-admin-table">
+          <thead>
             <tr>
-              <td colSpan={6}>승인된 관리자가 없습니다.</td>
+              <th>이름</th>
+              <th>이메일</th>
+              <th>전화번호</th>
+              <th>상태</th>
+              <th>가입일</th>
+              <th>관리</th>
             </tr>
-          )}
-          {approvedAdmins.map(a => (
-            <tr key={a.id}>
-              <td>{a.name}</td>
-              <td>{a.email}</td>
-              <td>{a.phone}</td>
-              <td>{a.active ? "활성" : "비활성"}</td>
-              <td>{a.approvedAt?.slice(0, 10) ?? "-"}</td>
-              <td>
-                {a.active ? (
-                  <button className="admin-btn-gray" onClick={() => deactivateAdmin(a.id)}>
-                    비활성화
-                  </button>
-                ) : (
-                  <button onClick={() => activateAdmin(a.id)}>
-                    활성화
-                  </button>
-                )}
-                <button
-                  className="admin-btn-danger"
-                  style={{ marginLeft: 8 }}
-                  onClick={() => deleteAdmin(a.id)}
-                >
-                  삭제
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </section>
-  </div>
+          </thead>
+          <tbody>
+            {sortedApproved.length === 0 ? (
+              <tr>
+                <td colSpan={6}>승인된 관리자가 없습니다.</td>
+              </tr>
+            ) : (
+              sortedApproved.map(a => (
+                <tr key={a.id}>
+                  <td>{a.name}</td>
+                  <td>{a.email}</td>
+                  <td>{a.phone}</td>
+                  <td>{a.active ? "활성" : "비활성"}</td>
+                  <td>{a.approvedAt?.slice(0, 10) ?? "-"}</td>
+                  <td>
+                    {a.active ? (
+                      <button className="admin-btn-gray" onClick={() => deactivateAdmin(a.id)}>비활성화</button>
+                    ) : (
+                      <button onClick={() => activateAdmin(a.id)}>활성화</button>
+                    )}
+                    <button className="admin-btn-danger" style={{ marginLeft: 8 }} onClick={() => deleteAdmin(a.id)}>삭제</button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </section>
+    </div>
   );
 }
 

@@ -21,7 +21,7 @@ import DogEdit from './components/shelter/dog/DogEdit';
 import WalkReservationDetail from './components/shelter/walk/WalkReservationDetail';
 import WalkManager from './components/shelter/walk/WalkManager';
 import NotificationList from './components/shelter/notifications/NotificationList';
-import AdminLayout from './components/admin/AdminLayout';
+import AdminLayout from './components/admin/layouts/AdminLayout';
 import UserManager from './pages/admin/UserManager';
 import ShelterAdminManager from './pages/admin/ShelterAdminManager';
 import ShelterWalksBar from './pages/admin/ShelterWalksBar';

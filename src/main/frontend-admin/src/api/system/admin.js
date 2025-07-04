@@ -1,4 +1,4 @@
-import api from "./api";
+import api from "../shelter/api";
 
 // 관리자 로그인/로그아웃 (auth.js에도 같이 쓸 수 있음)
 export const adminLogin = (email, password) => api.post("/api/admin/login", { email, password });
