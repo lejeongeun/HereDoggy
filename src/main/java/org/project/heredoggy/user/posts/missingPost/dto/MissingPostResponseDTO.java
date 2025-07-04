@@ -13,6 +13,7 @@ import java.util.List;
 @Builder
 public class MissingPostResponseDTO {
     private Long id;
+    private String nickname;
     private String title; //제목
 
     private MissingPostType type; //실종, 발견

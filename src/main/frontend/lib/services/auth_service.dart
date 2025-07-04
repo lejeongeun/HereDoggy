@@ -7,19 +7,21 @@ class AuthService {
   final _storage = const FlutterSecureStorage();
   final _baseUrl = AppConstants.baseUrl;
 
-  // 토큰 저장
+  // 토큰 저장 - 키 통일
   Future<void> saveTokens(String accessToken, String refreshToken) async {
-    await _storage.write(key: 'access_token', value: accessToken);
+    await _storage.write(key: AppConstants.tokenKey, value: accessToken);
+    await _storage.write(key: 'refreshToken', value: refreshToken);
   }
 
-  // 토큰 가져오기
+  // 토큰 가져오기 - 키 통일
   Future<String?> getAccessToken() async {
-    return await _storage.read(key: 'access_token');
+    return await _storage.read(key: AppConstants.tokenKey);
   }
 
-  // 토큰 삭제 (로그아웃)
+  // 토큰 삭제 (로그아웃) - 키 통일
   Future<void> deleteTokens() async {
-    await _storage.delete(key: 'access_token');
+    await _storage.delete(key: AppConstants.tokenKey);
+    await _storage.delete(key: 'refreshToken');
   }
 
   // 로그인
@@ -163,9 +165,27 @@ class AuthService {
     }
   }
 
-  Future<Map<String, dynamic>> loginWithKakao(String kakaoToken) async {
+  // 카카오 로그인 - 임시로 비활성화 (flutter_web_auth 패키지 제거로 인해)
+  Future<Map<String, dynamic>> loginWithKakao() async {
+    return {
+      'success': false,
+      'message': '카카오 로그인은 현재 사용할 수 없습니다. flutter_web_auth 패키지가 필요합니다.',
+    };
+  }
+
+  // 구글 로그인 - 임시로 비활성화 (flutter_web_auth 패키지 제거로 인해)
+  Future<Map<String, dynamic>> loginWithGoogle() async {
+    return {
+      'success': false,
+      'message': '구글 로그인은 현재 사용할 수 없습니다. flutter_web_auth 패키지가 필요합니다.',
+    };
+  }
+
+  // 기존 방식 (호환성을 위해 유지, 나중에 삭제 예정)
+  @Deprecated('Use loginWithKakao() instead')
+  Future<Map<String, dynamic>> loginWithKakaoToken(String kakaoToken) async {
     try {
-      print('카카오 로그인 시도: $_baseUrl/auth/oauth/kakao'); // 디버그 로그
+      print('카카오 로그인 시도 (기존 방식): $_baseUrl/auth/oauth/kakao');
       
       final response = await http.post(
         Uri.parse('$_baseUrl/auth/oauth/kakao'),
@@ -177,13 +197,12 @@ class AuthService {
         }),
       );
 
-      print('카카오 로그인 응답 상태: ${response.statusCode}'); // 디버그 로그
-      print('카카오 로그인 응답 내용: ${response.body}'); // 디버그 로그
+      print('카카오 로그인 응답 상태: ${response.statusCode}');
+      print('카카오 로그인 응답 내용: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        await _storage.write(key: AppConstants.tokenKey, value: data['accessToken']);
-        await _storage.write(key: 'refreshToken', value: data['refreshToken']);
+        await saveTokens(data['accessToken'], data['refreshToken']);
         return {'success': true};
       }
 
@@ -192,7 +211,7 @@ class AuthService {
         'message': '카카오 로그인에 실패했습니다.',
       };
     } catch (e) {
-      print('카카오 로그인 에러: $e'); // 디버그 로그
+      print('카카오 로그인 에러: $e');
       return {
         'success': false,
         'message': '서버 연결에 실패했습니다.',
@@ -200,10 +219,11 @@ class AuthService {
     }
   }
 
-  Future<Map<String, dynamic>> loginWithGoogle(String idToken) async {
+  @Deprecated('Use loginWithGoogle() instead')
+  Future<Map<String, dynamic>> loginWithGoogleToken(String idToken) async {
     try {
-      print('구글 로그인 시도: $_baseUrl/auth/oauth/google');
-      print('구글 idToken: $idToken');  // idToken 로깅 추가
+      print('구글 로그인 시도 (기존 방식): $_baseUrl/auth/oauth/google');
+      print('구글 idToken: $idToken');
       
       final response = await http.post(
         Uri.parse('$_baseUrl/auth/oauth/google'),
@@ -216,21 +236,17 @@ class AuthService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        await _storage.write(key: AppConstants.tokenKey, value: data['accessToken']);
-        await _storage.write(key: 'refreshToken', value: data['refreshToken']);
+        await saveTokens(data['accessToken'], data['refreshToken']);
         return {'success': true};
       } else {
-        // 에러 응답 처리 개선
         String errorMessage;
         try {
           final data = jsonDecode(response.body);
           errorMessage = data['message'] ?? '구글 로그인에 실패했습니다.';
         } catch (e) {
-          // JSON 파싱 실패 시 원본 메시지 사용
           errorMessage = response.body;
         }
         
-        // 신규 사용자 체크
         if (response.statusCode == 404 || errorMessage.contains('회원가입이 필요합니다')) {
           return {
             'success': false,

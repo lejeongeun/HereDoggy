@@ -23,7 +23,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBdPpeRAvLYKFDxyb9R5jSiMdcDQZey4i8"/>
-            
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -44,6 +44,13 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <!-- flutter_web_auth를 위한 intent-filter -->
+            <intent-filter android:label="flutter_web_auth">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="heredoggy" />
             </intent-filter>
         </activity>
         <!-- 카카오 로그인 -->
