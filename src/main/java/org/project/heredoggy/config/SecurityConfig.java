@@ -56,7 +56,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,"/api/shelters/login", "/api/admin/login", "/oauth2/authorization/**", "/login/oauth2/code/**", "/api/shelter-request").permitAll()
                         .requestMatchers("/api/dogs/**").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
-                        .requestMatchers("/api/reservations/**").permitAll()
+                        .requestMatchers("/api/reservations/**", "/api/shelters/volunteer/unavailable").permitAll()
                         .requestMatchers("/error").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/api/shelters").permitAll() //보호소리스트 조회
