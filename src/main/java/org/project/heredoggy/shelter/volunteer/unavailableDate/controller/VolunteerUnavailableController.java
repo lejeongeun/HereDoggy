@@ -1,13 +1,10 @@
 package org.project.heredoggy.shelter.volunteer.unavailableDate.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.project.heredoggy.domain.postgresql.volunteer.VolunteerReservation;
-import org.project.heredoggy.domain.postgresql.volunteer.VolunteerReservationRepository;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.shelter.volunteer.unavailableDate.dto.VolunteerUnavailableRequestDTO;
 import org.project.heredoggy.shelter.volunteer.unavailableDate.dto.VolunteerUnavailableResponseDTO;
 import org.project.heredoggy.shelter.volunteer.unavailableDate.service.VolunteerUnavailableService;
-import org.project.heredoggy.user.volunteer.dto.VolunteerReservationResponseDTO;
 import org.project.heredoggy.user.volunteer.service.VolunteerReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,7 +18,6 @@ import java.util.Map;
 @RequestMapping("/api/shelters/volunteer/unavailable")
 public class VolunteerUnavailableController {
     private final VolunteerUnavailableService volunteerUnavailableService;
-    private final VolunteerReservationService volunteerReservationService;
 
     // 각 보호소 불가능 시간대 설정
     @PostMapping

@@ -23,7 +23,7 @@ public class VolunteerReservationController {
 
     //봉사 신청
     @PostMapping
-    public ResponseEntity<Map<String, String>>  reserve(@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<Map<String, String>> reserve(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                         @RequestBody VolunteerReservationRequestDTO requestDTO) {
 
         if(requestDTO.getIsGroup()) {
@@ -32,6 +32,22 @@ public class VolunteerReservationController {
 
         volunteerReservationService.reserve(userDetails, requestDTO);
         return ResponseEntity.ok(Map.of("message", "예약이 완료 되었습니다."));
+    }
+
+    //PENDING 상태일때 봉사 신청 취소하기
+    @DeleteMapping("/reservations/{reservation_id}")
+    public ResponseEntity<Map<String, String>> requestPendingCancel(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                    @PathVariable("reservation_id") Long reservationId) {
+        volunteerReservationService.cancelPendingReservation(userDetails, reservationId);
+        return ResponseEntity.ok(Map.of("message", "취소가 완료되었습니다."));
+    }
+
+    //ACCEPTED 상태일때 봉사 신청 취소 요청하기
+    @PostMapping("/reservations/{id}/cancel-request")
+    public ResponseEntity<Map<String, String>> requestCancel(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                             @PathVariable Long id) {
+        volunteerReservationService.requestCancel(userDetails, id);
+        return ResponseEntity.ok(Map.of("message", "취소 요청이 접수되었습니다."));
     }
 
     //내 예약 내역 조회

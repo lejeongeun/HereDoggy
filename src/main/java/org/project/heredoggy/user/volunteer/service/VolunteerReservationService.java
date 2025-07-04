@@ -81,34 +81,37 @@ public class VolunteerReservationService {
                 .toList();
     }
 
-    public List<VolunteerReservationResponseDTO> getReservationForShelter(CustomUserDetails userDetails) {
-        Shelter shelter = SheltersAuthUtils.getValidMember(userDetails).getShelter();
-
-        List<VolunteerReservation> reservations = volunteerReservationRepository.findByShelter(shelter);
-
-        return reservations.stream()
-                .map(VolunteerReservationResponseDTO::fromEntity)
-                .collect(Collectors.toList());
-    }
-
-    public void updateReservationStatus(CustomUserDetails userDetails, Long reservationId, String statusStr) {
-        Shelter shelter = SheltersAuthUtils.getValidMember(userDetails).getShelter();
-
+    public void cancelPendingReservation(CustomUserDetails userDetails, Long reservationId) {
+        Member member = AuthUtils.getValidMember(userDetails);
         VolunteerReservation reservation = volunteerReservationRepository.findById(reservationId)
                 .orElseThrow(() -> new NotFoundException("예약이 존재하지 않습니다."));
 
-        if (!reservation.getShelter().getId().equals(shelter.getId())) {
-            throw new ForbiddenException("이 보호소의 예약이 아닙니다.");
+        if (!reservation.getMember().getId().equals(member.getId())) {
+            throw new ForbiddenException("본인의 예약만 취소할 수 있습니다.");
         }
 
-        VReservationStatus status;
-        try {
-            status = VReservationStatus.valueOf(statusStr.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("잘못된 상태 값입니다.");
+        if (reservation.getStatus() != VReservationStatus.PENDING) {
+            throw new IllegalStateException("대기 상태 예약만 즉시 취소할 수 있습니다.");
         }
 
-        reservation.setStatus(status);
+        reservation.setStatus(VReservationStatus.CANCELED);
+        volunteerReservationRepository.save(reservation);
+    }
+
+    public void requestCancel(CustomUserDetails userDetails, Long id) {
+        Member member = AuthUtils.getValidMember(userDetails);
+        VolunteerReservation reservation = volunteerReservationRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("예약이 존재하지 않습니다."));
+
+        if (!reservation.getMember().getId().equals(member.getId())) {
+            throw new ForbiddenException("본인의 예약만 취소 요청할 수 있습니다.");
+        }
+
+        if (reservation.getStatus() != VReservationStatus.ACCEPTED) {
+            throw new IllegalStateException("승인된 예약만 취소 요청할 수 있습니다.");
+        }
+
+        reservation.setStatus(VReservationStatus.CANCEL_REQUEST);
         volunteerReservationRepository.save(reservation);
     }
 }
