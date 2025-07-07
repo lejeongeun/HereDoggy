@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.user.posts.missingPost.dto.DogInfoDTO;
-import org.project.heredoggy.user.posts.missingPost.dto.MissingPostEditRequestDTO;
-import org.project.heredoggy.user.posts.missingPost.dto.MissingPostRequestDTO;
-import org.project.heredoggy.user.posts.missingPost.dto.MissingPostResponseDTO;
+import org.project.heredoggy.user.posts.missingPost.dto.*;
 import org.project.heredoggy.user.posts.missingPost.service.MissingPostService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -69,8 +66,8 @@ public class MissingPostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MissingPostResponseDTO>> getMissingPostsByCreatedAt() {
-        List<MissingPostResponseDTO> res = missingPostService.getAllMissingPosts();
+    public ResponseEntity<List<MissingPostResDTO>> getMissingPostsByCreatedAt() {
+        List<MissingPostResDTO> res = missingPostService.getAllMissingPosts();
         return ResponseEntity.ok(res);
     }
 

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.user.posts.reveiwPost.dto.ReviewPostEditRequestDTO;
 import org.project.heredoggy.user.posts.reveiwPost.dto.ReviewPostRequestDTO;
+import org.project.heredoggy.user.posts.reveiwPost.dto.ReviewPostResDTO;
 import org.project.heredoggy.user.posts.reveiwPost.dto.ReviewPostResponseDTO;
 import org.project.heredoggy.user.posts.reveiwPost.service.ReviewPostService;
 import org.springframework.http.MediaType;
@@ -68,8 +69,8 @@ public class ReviewPostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReviewPostResponseDTO>> getReviewPostsByCreatedAt() {
-        List<ReviewPostResponseDTO> res = reviewPostService.getAllReviewPosts();
+    public ResponseEntity<List<ReviewPostResDTO>> getReviewPostsByCreatedAt() {
+        List<ReviewPostResDTO> res = reviewPostService.getAllReviewPosts();
         return ResponseEntity.ok(res);
     }
 

@@ -13,8 +13,10 @@ import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.util.AuthUtils;
 import org.project.heredoggy.image.ImageService;
 import org.project.heredoggy.security.CustomUserDetails;
+import org.project.heredoggy.user.posts.freePost.dto.FreePostResDTO;
 import org.project.heredoggy.user.posts.reveiwPost.dto.ReviewPostEditRequestDTO;
 import org.project.heredoggy.user.posts.reveiwPost.dto.ReviewPostRequestDTO;
+import org.project.heredoggy.user.posts.reveiwPost.dto.ReviewPostResDTO;
 import org.project.heredoggy.user.posts.reveiwPost.dto.ReviewPostResponseDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -132,12 +134,9 @@ public class ReviewPostService {
 
     }
 
-
-    public List<ReviewPostResponseDTO> getAllReviewPosts() {
-        List<ReviewPost> lists = reviewPostRepository.findAllOrderByCreatedAtDesc();
-        return lists.stream()
-                .map(post -> convertToDTO(post, List.of()))
-                .collect(Collectors.toList());
+    @Transactional(readOnly = true)
+    public List<ReviewPostResDTO> getAllReviewPosts() {
+        return reviewPostRepository.findAllOptimized();
     }
 
 
