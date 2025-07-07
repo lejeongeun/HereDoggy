@@ -2,6 +2,7 @@
 
 :root {
   --sidebar-width: 240px;
+  --sidebar-width-collapsed: 70px; /* 축소된 사이드바 너비 */
   --primary-color: #23b266;
   --text-primary: #333;
   --text-secondary: #666;
@@ -10,18 +11,62 @@
   --border-color: #e9e9e9;
 }
 
-.sidebar {
+/* Layout Container */
+.layout-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar Wrapper */
+.sidebar-wrapper {
   width: var(--sidebar-width);
+  position: fixed;
   height: 100vh;
+  z-index: 100;
   background: var(--bg-primary);
   border-right: 1px solid var(--border-color);
+  transition: width 0.3s ease;
+}
+
+/* Content Wrapper */
+.content-wrapper {
+  margin-left: var(--sidebar-width); /* 사이드바 너비만큼 밀기 */
+  flex: 1;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  transition: margin-left 0.3s ease;
+}
+
+/* Topbar Wrapper */
+.topbar-wrapper {
   position: fixed;
   top: 0;
-  left: 0;
-  z-index: 100;
-  transition: width 0.3s ease;
+  right: 0;
+  left: var(--sidebar-width); /* 사이드바 너비만큼 시작 위치 조정 */
+  background: var(--bg-primary);
+  z-index: 90;
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: left 0.3s ease;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 88px 24px 24px 24px; /* 탑바 높이 고려 */
+  background: #fafbfa;
+  position: relative;
+  z-index: 1;
+}
+
+.sidebar {
+  width: 100%; /* 부모(sidebar-wrapper)의 너비를 따르도록 */
+  height: 100vh;
+  background: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
   font-family: 'Pretendard', sans-serif;
 }
 
@@ -143,8 +188,14 @@
 
 /* Responsive */
 @media (max-width: 900px) {
-  .sidebar {
-    width: 70px;
+  .sidebar-wrapper {
+    width: var(--sidebar-width-collapsed); /* 사이드바 너비 축소 */
+  }
+  .content-wrapper {
+    margin-left: var(--sidebar-width-collapsed); /* 메인 콘텐츠 마진 조정 */
+  }
+  .topbar-wrapper {
+    left: var(--sidebar-width-collapsed); /* 탑바 시작 위치 조정 */
   }
   .sidebar-menu-text-simple,
   .sidebar-brand-version,
@@ -163,6 +214,19 @@
   }
   .sidebar-bottom {
     flex-direction: column;
-    gap: 16px;
+    gap: 10px; /* 간격 줄이기 */
+    padding: 15px 5px; /* 패딩 조정 */
+    align-items: center; /* 중앙 정렬 */
+  }
+  .sidebar-bottom .sidebar-brand img {
+    display: none; /* 하단 로고 숨기기 */
+  }
+  .sidebar-bottom-icons {
+    flex-direction: column; /* 아이콘 세로 정렬 */
+    gap: 8px; /* 아이콘 간 간격 조정 */
+  }
+  .sidebar-icon-btn {
+    font-size: 1.5rem; /* 아이콘 크기 약간 키우기 */
+    padding: 5px; /* 아이콘 패딩 조정 */
   }
 }

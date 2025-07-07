@@ -67,7 +67,7 @@ useEffect(() => {
     if (points.length > 1) {
       const newPolyline = new naver.maps.Polyline({
         path: points,
-        strokeColor: "#FF0000",
+        strokeColor: "#2563eb",
         strokeWeight: 4,
         map: map,
       });
@@ -125,7 +125,7 @@ useEffect(() => {
       if (poly) poly.setMap(null);
       poly = new naver.maps.Polyline({
         path: path,
-        strokeColor: "#FF0000",
+        strokeColor: "#2563eb",
         strokeWeight: 4,
         map: map,
       });

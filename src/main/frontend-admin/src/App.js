@@ -29,6 +29,7 @@ import StaticMapTest from './components/shelter/walk/StaticMapTest';
 import ReportManager from './pages/admin/Report/ReportManager';
 import InquiryManager from './pages/admin/Inquiry/InquiryManager';
 import AdminStatistics from './pages/admin/Statistics/AdminStatistics';
+import SystemSettings from './pages/admin/SystemSettings';
 
 function App() {
   return (
@@ -77,6 +78,7 @@ function App() {
         <Route path="shelter" element={<ShelterAdminManager />} />
         <Route path="statistics" element={<AdminStatistics />} />
         <Route path="reservation" element={<ShelterWalksBar />} />
+        <Route path="settings" element={<SystemSettings />} />
         </Route>
 
       </Routes>

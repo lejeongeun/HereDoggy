@@ -115,13 +115,13 @@ function AdminDashboard() {
       <div className="dashboard-charts">
         <div className="dashboard-chart-box">
           <h3 className="chart-title"><FaChartLine style={{ marginRight: 6 }} />월별 전체 후원 금액</h3>
-          <div style={{ height: "240px" }}>
+          <div className="chart-canvas-container">
             <Line data={donationsLineData} options={donationsLineOptions} />
           </div>
         </div>
         <div className="dashboard-chart-box">
           <h3 className="chart-title"><FaChartBar style={{ marginRight: 6 }} />보호소별 산책 예약 TOP5</h3>
-          <div style={{ height: "240px" }}>
+          <div className="chart-canvas-container">
             <Bar data={shelterBarData} options={shelterBarOptions} />
           </div>
         </div>

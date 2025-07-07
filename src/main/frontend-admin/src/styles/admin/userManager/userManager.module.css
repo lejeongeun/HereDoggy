@@ -1,0 +1,202 @@
+/*
+  File: userManager.module.css
+  Description: Admin-focused styles for UserManager component.
+  Priorities: Readability, Clarity, Functionality.
+*/
+
+/* Main container for the admin view */
+.userManagerContainer {
+  padding: 24px;
+  background-color: #f7f9fc; /* A light, neutral background */
+  border-radius: 8px;
+  margin: 20px auto;
+  max-width: 1200px;
+}
+
+/* Page header - clear and prominent */
+.userManagerHeader {
+  margin-bottom: 24px;
+  font-size: 1.8rem; /* Larger for clear hierarchy */
+  color: #1d2a39;
+  font-weight: 700;
+  border-bottom: 1px solid #dfe3e8;
+  padding-bottom: 16px;
+}
+
+/* Controls section (search, filters) */
+.userSearchRow,
+.userFilterRow {
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  background-color: #ffffff;
+  padding: 16px;
+  border-radius: 6px;
+  border: 1px solid #dfe3e8;
+}
+
+/* Standardized input and select fields for forms */
+.userSearchInput,
+.userFilterSelect {
+  padding: 9px 12px;
+  border: 1px solid #c4cdd5;
+  border-radius: 4px;
+  background-color: #ffffff;
+  font-size: 14px;
+  color: #333;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.userSearchInput:focus,
+.userFilterSelect:focus {
+  outline: none;
+  border-color: #007bff; /* Standard blue focus color */
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.userSearchInput {
+  min-width: 300px; /* More space for searching */
+}
+
+/* Buttons designed for clarity and action */
+.userBlacklistBtn,
+.userActionBtn {
+  padding: 9px 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600; /* Bold text for action */
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+/* Destructive action button */
+.userBlacklistBtn {
+  background-color: #d9534f; /* A clear red for danger */
+  color: #ffffff;
+  border-color: #d43f3a;
+}
+
+.userBlacklistBtn:hover {
+  background-color: #c9302c;
+  border-color: #ac2925;
+}
+
+/* Data table optimized for scanning */
+.userTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background-color: #ffffff;
+  border: 1px solid #dfe3e8;
+  border-radius: 6px;
+  overflow: hidden; /* To respect border-radius on table */
+}
+
+.userTable th,
+.userTable td {
+  padding: 14px 16px;
+  text-align: left;
+  vertical-align: middle; /* Ensures vertical alignment */
+  border-bottom: 1px solid #dfe3e8;
+}
+
+.userTable th {
+  background-color: #f1f3f5; /* Slightly darker header */
+  font-weight: 600;
+  color: #495057;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+/* Zebra-striping for rows */
+.userTable tbody tr:nth-of-type(even) {
+  background-color: #f8f9fa;
+}
+
+.userTable tbody tr:hover {
+  background-color: #e9ecef; /* Clear hover state */
+}
+
+/* High-contrast status tags for admin UIs */
+.userStatusNormal,
+.userStatusBlack {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px; /* Consistent with other UI elements */
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.userStatusNormal {
+  background-color: #28a745; /* High-vis green */
+}
+
+.userStatusBlack {
+  background-color: #dc3545; /* High-vis red */
+}
+
+/* Secondary action button within the table */
+.userActionBtn {
+  background-color: #6c757d; /* Neutral gray */
+  color: #ffffff;
+  border-color: #6c757d;
+  padding: 7px 14px;
+}
+
+.userActionBtn:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+.userActionBtn:disabled {
+  background-color: #b0b5b9;
+  border-color: #b0b5b9;
+  color: #f8f9fa;
+  cursor: not-allowed;
+}
+
+/* Pagination Styles */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 5px;
+}
+
+.paginationButton {
+  background-color: #e9ecef;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.paginationButton:hover:not(:disabled) {
+  background-color: #dee2e6;
+  color: #212529;
+}
+
+.paginationButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.paginationButton.activePage {
+  background-color: #007bff;
+  color: #ffffff;
+  border-color: #007bff;
+}
+
+.paginationButton.activePage:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
+}

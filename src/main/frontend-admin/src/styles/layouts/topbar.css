@@ -6,6 +6,11 @@
   background: #fff;
   border-bottom: 1px solid #eee;
   padding: 0 28px;
+  position: fixed; /* Added for fixed positioning */
+  top: 0;
+  left: 200px; /* Adjust based on sidebar width */
+  right: 0;
+  z-index: 999; /* Slightly lower than sidebar to be behind it if overlapping */
 }
 
 .topbar-left {

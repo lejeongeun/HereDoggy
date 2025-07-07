@@ -1,5 +1,4 @@
-// AdminStatistics.jsx
-import React from "react";
+import React, { useState } from "react";
 import {
   FaUsers,
   FaHospitalAlt,
@@ -7,103 +6,166 @@ import {
   FaWalking,
   FaEnvelopeOpenText,
   FaExclamationTriangle,
-  FaComment
+  FaComment,
 } from "react-icons/fa";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import '../../../styles/admin/adminStatistics/adminStatistics.css';
 import WalkStatistics from './WalkStatistics';
+import DashCard from '../../../components/admin/statistics/common/DashCard';
+import AdoptionStatistics from '../../../components/admin/statistics/AdoptionStatistics';
+import ReportStatistics from '../../../components/admin/statistics/ReportStatistics';
+import ReviewStatistics from '../../../components/admin/statistics/ReviewStatistics';
+import ShelterComparisonStatistics from '../../../components/admin/statistics/ShelterComparisonStatistics';
+import UserBehaviorStatistics from '../../../components/admin/statistics/UserBehaviorStatistics';
 
 const summaryStats = {
-  totalUsers: { value: 5683, diff: "+2.1%" },
-  totalShelters: { value: 135, diff: "+0.7%" },
-  totalDogs: { value: 902, diff: "+1.8%" },
-  totalWalks: { value: 7036, diff: "+3.5%" },
-  totalAdoptions: { value: 431, diff: "+1.2%" },
-  totalReports: { value: 139, diff: "-0.6%" },
-  totalReviews: { value: 210, diff: "+0.4%" }
+  totalUsers: {
+    value: 5683,
+    diff: "+2.1%",
+    trendData: [
+      { day: 'D-6', count: 800 },
+      { day: 'D-5', count: 820 },
+      { day: 'D-4', count: 810 },
+      { day: 'D-3', count: 850 },
+      { day: 'D-2', count: 830 },
+      { day: 'D-1', count: 880 },
+      { day: 'Today', count: 900 },
+    ],
+  },
+  totalShelters: {
+    value: 135,
+    diff: "+0.7%",
+    trendData: [
+      { day: 'D-6', count: 10 },
+      { day: 'D-5', count: 12 },
+      { day: 'D-4', count: 11 },
+      { day: 'D-3', count: 13 },
+      { day: 'D-2', count: 12 },
+      { day: 'D-1', count: 14 },
+      { day: 'Today', count: 15 },
+    ],
+  },
+  totalDogs: {
+    value: 902,
+    diff: "+1.8%",
+    trendData: [
+      { day: 'D-6', count: 100 },
+      { day: 'D-5', count: 105 },
+      { day: 'D-4', count: 102 },
+      { day: 'D-3', count: 108 },
+      { day: 'D-2', count: 106 },
+      { day: 'D-1', count: 110 },
+      { day: 'Today', count: 112 },
+    ],
+  },
+  totalWalks: {
+    value: 7036,
+    value7Days: 150,
+    diff: "+3.5%",
+    trendData: [
+      { day: 'D-6', count: 18 },
+      { day: 'D-5', count: 22 },
+      { day: 'D-4', count: 20 },
+      { day: 'D-3', count: 25 },
+      { day: 'D-2', count: 23 },
+      { day: 'D-1', count: 28 },
+      { day: 'Today', count: 30 },
+    ],
+  },
+  totalAdoptions: {
+    value: 431,
+    value7Days: 25,
+    diff: "+1.2%",
+    trendData: [
+      { day: 'D-6', count: 3 },
+      { day: 'D-5', count: 4 },
+      { day: 'D-4', count: 5 },
+      { day: 'D-3', count: 3 },
+      { day: 'D-2', count: 4 },
+      { day: 'D-1', count: 6 },
+      { day: 'Today', count: 5 },
+    ],
+  },
+  totalReports: {
+    value: 139,
+    value7Days: 10,
+    diff: "-0.6%",
+    trendData: [
+      { day: 'D-6', count: 12 },
+      { day: 'D-5', count: 15 },
+      { day: 'D-4', count: 13 },
+      { day: 'D-3', count: 16 },
+      { day: 'D-2', count: 14 },
+      { day: 'D-1', count: 17 },
+      { day: 'Today', count: 15 },
+    ],
+  },
+  totalReviews: {
+    value: 210,
+    diff: "+0.4%",
+    trendData: [
+      { day: 'D-6', count: 10 },
+      { day: 'D-5', count: 12 },
+      { day: 'D-4', count: 11 },
+      { day: 'D-3', count: 13 },
+      { day: 'D-2', count: 12 },
+      { day: 'D-1', count: 14 },
+      { day: 'Today', count: 15 },
+    ],
+  },
 };
 
-const walkReservationData = [
-  { name: '월', '예약 건수': 400, '취소 건수': 24 },
-  { name: '화', '예약 건수': 300, '취소 건수': 13 },
-  { name: '수', '예약 건수': 200, '취소 건수': 98 },
-  { name: '목', '예약 건수': 278, '취소 건수': 39 },
-  { name: '금', '예약 건수': 189, '취소 건수': 48 },
-  { name: '토', '예약 건수': 239, '취소 건수': 38 },
-  { name: '일', '예약 건수': 349, '취소 건수': 43 },
-];
-
-const cancellationReasonData = [
-  { name: '단순 변심', '건수': 120 },
-  { name: '일정 변경', '건수': 90 },
-  { name: '날씨 문제', '건수': 60 },
-  { name: '기타', '건수': 30 },
-];
-
 function AdminStatistics() {
+  const [tab, setTab] = useState('summary');
   return (
     <div className="statistics-page">
       <h2 className="page-title">시스템 통계 대시보드</h2>
-
-      {/* 요약 카드 */}
-      <section className="summary-section">
-        <DashCard label="전체 회원" value={`${summaryStats.totalUsers.value.toLocaleString()}명`} diff={summaryStats.totalUsers.diff} icon={<FaUsers />} />
-        <DashCard label="보호소 수" value={`${summaryStats.totalShelters.value}곳`} diff={summaryStats.totalShelters.diff} icon={<FaHospitalAlt />} />
-        <DashCard label="등록 유기견" value={`${summaryStats.totalDogs.value.toLocaleString()}마리`} diff={summaryStats.totalDogs.diff} icon={<FaDog />} />
-        <DashCard label="산책 예약" value={`${summaryStats.totalWalks.value.toLocaleString()}건`} diff={summaryStats.totalWalks.diff} icon={<FaWalking />} />
-        <DashCard label="입양 신청" value={`${summaryStats.totalAdoptions.value.toLocaleString()}건`} diff={summaryStats.totalAdoptions.diff} icon={<FaEnvelopeOpenText />} />
-        <DashCard label="신고 건수" value={`${summaryStats.totalReports.value}건`} diff={summaryStats.totalReports.diff} icon={<FaExclamationTriangle />} />
-        <DashCard label="후기 수" value={`${summaryStats.totalReviews.value}건`} diff={summaryStats.totalReviews.diff} icon={<FaComment />} />
-      </section>
-
-      {/* 산책 통계 */}
-      <WalkStatistics />
-
-      {/* 차트 섹션 */}
-      <section className="charts-section">
-        <div className="chart-container">
-          <h3 className="chart-title">주간 산책 예약 현황</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={walkReservationData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="예약 건수" stroke="#8884d8" activeDot={{ r: 8 }} />
-              <Line type="monotone" dataKey="취소 건수" stroke="#82ca9d" />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-        <div className="chart-container">
-          <h3 className="chart-title">산책 취소 사유</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={cancellationReasonData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="건수" fill="#8884d8" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </section>
-    </div>
-  );
-}
-
-function DashCard({ label, value, diff, icon }) {
-  return (
-    <div className="dash-card">
-      <div className="dash-card-top">
-        <span className="dash-card-label">{label}</span>
-        <span className="dash-card-icon">{icon}</span>
+      <div className="statistics-tab-bar">
+        <button className={tab==='summary' ? 'active' : ''} onClick={()=>setTab('summary')}>전체 요약</button>
+        <button className={tab==='walk' ? 'active' : ''} onClick={()=>setTab('walk')}>산책</button>
+        <button className={tab==='adoption' ? 'active' : ''} onClick={()=>setTab('adoption')}>입양</button>
+        <button className={tab==='report' ? 'active' : ''} onClick={()=>setTab('report')}>제보/신고</button>
+        <button className={tab==='review' ? 'active' : ''} onClick={()=>setTab('review')}>후기</button>
+        <button className={tab==='shelter' ? 'active' : ''} onClick={()=>setTab('shelter')}>보호소 비교</button>
+        <button className={tab==='user' ? 'active' : ''} onClick={()=>setTab('user')}>사용자 행동</button>
       </div>
-      <div className="dash-card-value">{value}</div>
-      {diff && (
-        <div className={`dash-card-diff ${diff.startsWith('+') ? 'up' : 'down'}`}>{diff}</div>
+      {tab === 'summary' && (
+        <section className="summary-section">
+          <DashCard label="전체 회원" value={`${summaryStats.totalUsers.value.toLocaleString()}명`} diff={summaryStats.totalUsers.diff} icon={<FaUsers />} trendData={summaryStats.totalUsers.trendData} />
+          <DashCard label="보호소 수" value={`${summaryStats.totalShelters.value}곳`} diff={summaryStats.totalShelters.diff} icon={<FaHospitalAlt />} trendData={summaryStats.totalShelters.trendData} />
+          <DashCard label="등록 유기견" value={`${summaryStats.totalDogs.value.toLocaleString()}마리`} diff={summaryStats.totalDogs.diff} icon={<FaDog />} trendData={summaryStats.totalDogs.trendData} />
+          <DashCard
+            label="산책 예약수"
+            value={`${summaryStats.totalWalks.value.toLocaleString()}건`}
+            tooltipContent={`7일간 ${summaryStats.totalWalks.value7Days.toLocaleString()}건`}
+            diff={summaryStats.totalWalks.diff}
+            icon={<FaWalking />}
+            trendData={summaryStats.totalWalks.trendData}
+          />
+          <DashCard
+            label="입양 신청"
+            value={`${summaryStats.totalAdoptions.value.toLocaleString()}건`}
+            tooltipContent={`7일간 ${summaryStats.totalAdoptions.value7Days.toLocaleString()}건`}
+            diff={summaryStats.totalAdoptions.diff}
+            icon={<FaEnvelopeOpenText />}
+            trendData={summaryStats.totalAdoptions.trendData}
+          />
+          <DashCard
+            label="신고 건수"
+            value={`${summaryStats.totalReports.value.toLocaleString()}건`}
+            tooltipContent={`7일간 ${summaryStats.totalReports.value7Days.toLocaleString()}건`}
+            diff={summaryStats.totalReports.diff}
+            icon={<FaExclamationTriangle />}
+            trendData={summaryStats.totalReports.trendData}
+          />
+          <DashCard label="후기 수" value={`${summaryStats.totalReviews.value}건`} diff={summaryStats.totalReviews.diff} icon={<FaComment />} trendData={summaryStats.totalReviews.trendData} />
+        </section>
       )}
+      {tab === 'walk' && <WalkStatistics />}
+      {tab === 'adoption' && <AdoptionStatistics />}
+      {tab === 'report' && <ReportStatistics />}
+      {tab === 'review' && <ReviewStatistics />}
+      {tab === 'shelter' && <ShelterComparisonStatistics />}
+      {tab === 'user' && <UserBehaviorStatistics />}
     </div>
   );
 }

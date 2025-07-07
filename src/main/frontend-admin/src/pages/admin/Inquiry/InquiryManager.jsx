@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import InquiryList from "./InquiryList";
 import InquiryDetailModal from "./InquiryDetailModal";
-import '../../../styles/admin/inquiry/inquiry.css';
+import styles from '../../../styles/admin/inquiry/inquiry.module.css';
 
 const dummyInquiries = [
   {
@@ -46,7 +46,7 @@ function InquiryManager() {
   };
 
   return (
-    <div>
+    <div className={styles.managerContainer}>
       <InquiryList inquiries={dummyInquiries} onSelect={handleSelectInquiry} />
       <InquiryDetailModal
         inquiry={selectedInquiry}

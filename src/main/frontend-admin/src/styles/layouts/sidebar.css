@@ -3,6 +3,11 @@
   background: #46554a;
   min-height: 100vh;
   padding: 20px 0;
+  position: fixed; /* Added for fixed positioning */
+  top: 0;
+  left: 0;
+  height: 100vh; /* Ensures it takes full viewport height */
+  z-index: 1000; /* Ensures it stays on top of other content */
 }
 .sidebar ul {
   list-style: none;

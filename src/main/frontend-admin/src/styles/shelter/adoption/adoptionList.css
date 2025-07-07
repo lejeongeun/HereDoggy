@@ -1,139 +1,197 @@
 .adoption-container {
-  max-width: 1200px;
-  margin: 48px auto;
-  padding: 36px 28px;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 32px 36px;
   background: #fff;
-  border-radius: 24px;
-  box-shadow: 0 10px 30px rgba(36, 153, 111, 0.1);
+  border-radius: 18px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.4s ease-out forwards; /* 애니메이션 적용 */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .adoption-title {
-  font-size: 1.6rem;
-  font-weight: bold;
-  color: #222;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2c3e50;
+  letter-spacing: -0.8px;
+  margin-bottom: 30px;
   text-align: center;
-  margin-bottom: 32px;
-  letter-spacing: 0.5px;
+}
+
+.adoption-empty {
+  text-align: center;
+  padding: 50px 0;
+  color: #888;
+  font-size: 1.1rem;
 }
 
 .adoption-list {
   list-style: none;
-  margin: 0;
   padding: 0;
+  margin: 0;
 }
 
 .adoption-item {
-  background: #fefefe;
-  border: 1.5px solid #e2f1e6;
-  border-radius: 16px;
-  padding: 18px 22px;
-  margin-bottom: 20px;
-  transition: box-shadow 0.2s ease;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+  background: #f9fbfd;
+  border: 1px solid #e0e6ed;
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
 }
 
 .adoption-item:hover {
-  box-shadow: 0 6px 16px rgba(38, 153, 111, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .adoption-link {
-  display: block;
   text-decoration: none;
   color: inherit;
+  display: block;
 }
 
 .adoption-main-row {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  gap: 15px;
 }
 
 .adoption-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  flex-grow: 1;
 }
 
 .adoption-info-top {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  font-size: 1rem;
-  font-weight: 500;
-  color: #333;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
 .adoption-dog {
+  font-size: 1.1rem;
   font-weight: 700;
-  color: #222;
+  color: #2c3e50;
 }
 
 .adoption-member {
-  color: #444;
-  font-weight: 600;
+  font-size: 0.95rem;
+  color: #555;
 }
 
 .adoption-dot {
-  color: #aaa;
+  color: #bbb;
   font-size: 1.1em;
 }
 
 .adoption-status {
-  padding: 3px 10px;
-  font-size: 0.9rem;
-  font-weight: 700;
+  padding: 4px 10px;
   border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  margin-left: auto; /* 오른쪽으로 정렬 */
 }
 
 .adoption-status--pending {
-  background: #fff9db;
+  background: #fffbe8;
   color: #d08700;
+  border-color: #f0e0a4;
 }
 
 .adoption-status--approved {
   background: #e0f6ea;
   color: #2b9064;
+  border-color: #a1d8b8;
 }
 
 .adoption-status--rejected {
   background: #fde7e7;
-  color: #d33;
+  color: #dc3545;
+  border-color: #f8c4c4;
 }
 
 .adoption-meta {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #555;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #777;
 }
 
-.adoption-date {
+.adoption-date,
+.adoption-phone,
+.adoption-dday {
   color: #444;
 }
 
-.adoption-phone {
-  color: #555;
+/* 반응형 */
+@media (max-width: 768px) {
+  .adoption-container {
+    margin: 20px auto;
+    padding: 25px 20px;
+  }
+  .adoption-title {
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+  }
+  .adoption-item {
+    padding: 18px 20px;
+    margin-bottom: 15px;
+  }
+  .adoption-info-top {
+    flex-wrap: wrap;
+  }
+  .adoption-status {
+    margin-left: 0;
+    width: 100%;
+    text-align: right;
+  }
+  .adoption-meta {
+    flex-wrap: wrap;
+  }
+  .adoption-date,
+  .adoption-phone,
+  .adoption-dday {
+    width: 100%;
+  }
 }
 
-.adoption-dday {
-  font-weight: bold;
-  color: #2b9064;
-}
-
-.adoption-empty {
-  text-align: center;
-  color: #b4b4b4;
-  padding: 48px 0 24px;
-  font-size: 1.16rem;
-  letter-spacing: 0.2px;
-  animation: fadeIn 0.6s both;
-}
-
-@keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+@media (max-width: 480px) {
+  .adoption-container {
+    margin: 15px auto;
+    padding: 20px 15px;
+  }
+  .adoption-title {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+  .adoption-item {
+    padding: 15px 18px;
+    margin-bottom: 12px;
+  }
+  .adoption-info-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  .adoption-dog,
+  .adoption-member {
+    font-size: 14px;
+  }
+  .adoption-status {
+    font-size: 0.8rem;
+    padding: 3px 8px;
+  }
+  .adoption-meta {
+    font-size: 0.85rem;
+  }
+  .adoption-dot {
+    display: none;
+  }
 }

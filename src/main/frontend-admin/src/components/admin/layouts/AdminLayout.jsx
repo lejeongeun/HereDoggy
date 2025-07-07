@@ -5,13 +5,13 @@ import { adminLogout } from "../../../api/system/admin"; // 또는 경로에 따
 
 
 const menuItems = [
-  { label: "대시보드", to: "/admin/dashboard" },
-  { label: "사용자 관리", to: "/admin/users" },
-  { label: "보호소 관리", to: "/admin/shelter" },
-  { label: "신고 관리", to: "/admin/report" },
-  { label: "문의 관리", to: "/admin/inquiry" },
-  { label: "통계", to: "/admin/statistics" },
-  { label: "시스템 설정", to: "/admin/settings" }
+  { label: "대시보드", to: "/admin/dashboard", icon: "fas fa-tachometer-alt" },
+  { label: "사용자 관리", to: "/admin/users", icon: "fas fa-users" },
+  { label: "보호소 관리", to: "/admin/shelter", icon: "fas fa-home" },
+  { label: "신고 관리", to: "/admin/report", icon: "fas fa-flag" },
+  { label: "문의 관리", to: "/admin/inquiry", icon: "fas fa-question-circle" },
+  { label: "통계", to: "/admin/statistics", icon: "fas fa-chart-line" },
+  { label: "시스템 설정", to: "/admin/settings", icon: "fas fa-cog" }
 ];
 
 
@@ -37,7 +37,9 @@ function AdminLayout() {
           <ul>
       {menuItems.map(item => (
         <li key={item.to}>
-          <Link className="admin-link" to={item.to}>{item.label}</Link>
+          <Link className="admin-link" to={item.to}>
+            <i className={`${item.icon} menuIcon`}></i> {item.label}
+          </Link>
         </li>
       ))}
     </ul>

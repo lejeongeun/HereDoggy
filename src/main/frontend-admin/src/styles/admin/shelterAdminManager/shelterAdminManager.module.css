@@ -1,0 +1,219 @@
+/*
+  File: shelterAdminManager.module.css
+  Description: Admin-focused styles for ShelterAdminManager component.
+  Based on the design system from userManager.module.css.
+*/
+
+/* Main container */
+.managerContainer {
+  padding: 24px;
+  background-color: #f7f9fc;
+  border-radius: 8px;
+  margin: 20px auto;
+  max-width: 1200px;
+}
+
+/* Page header */
+.managerHeader {
+  margin-bottom: 24px;
+  font-size: 1.8rem;
+  color: #1d2a39;
+  font-weight: 700;
+  border-bottom: 1px solid #dfe3e8;
+  padding-bottom: 16px;
+}
+
+/* Section styling */
+.managerSection {
+  margin-bottom: 40px;
+}
+
+.sectionHeader {
+  font-size: 1.25rem;
+  margin-bottom: 16px;
+  color: #344054;
+  font-weight: 600;
+}
+
+/* Controls section (search, filters) */
+.controlsRow {
+  margin-bottom: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  background-color: #ffffff;
+  padding: 16px;
+  border-radius: 6px;
+  border: 1px solid #dfe3e8;
+}
+
+/* Input and select fields */
+.searchInput,
+.filterSelect {
+  padding: 9px 12px;
+  border: 1px solid #c4cdd5;
+  border-radius: 4px;
+  background-color: #ffffff;
+  font-size: 14px;
+  color: #333;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.searchInput:focus,
+.filterSelect:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.searchInput {
+  min-width: 300px;
+}
+
+/* Data table */
+.managerTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background-color: #ffffff;
+  border: 1px solid #dfe3e8;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.managerTable th,
+.managerTable td {
+  padding: 14px 16px;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid #dfe3e8;
+}
+
+.managerTable th {
+  background-color: #f1f3f5;
+  font-weight: 600;
+  color: #495057;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.managerTable tbody tr:nth-of-type(even) {
+  background-color: #f8f9fa;
+}
+
+.managerTable tbody tr:hover {
+  background-color: #e9ecef;
+}
+
+.managerTable td[colspan] {
+  text-align: center;
+  color: #6c757d;
+  padding: 32px;
+  font-style: italic;
+}
+
+/* Status tags */
+.statusActive,
+.statusInactive {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.statusActive {
+  background-color: #28a745; /* Green */
+}
+
+.statusInactive {
+  background-color: #6c757d; /* Gray */
+}
+
+/* Action buttons in table */
+.actionsCell {
+  display: flex;
+  gap: 8px;
+}
+
+.actionBtn {
+  padding: 7px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color 0.2s, border-color 0.2s;
+  color: #ffffff;
+}
+
+.approveBtn, .activateBtn {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+.approveBtn:hover, .activateBtn:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+
+.rejectBtn, .deleteBtn {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+.rejectBtn:hover, .deleteBtn:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+.deactivateBtn {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+.deactivateBtn:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+/* Pagination Styles (copied from userManager.module.css) */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 5px;
+}
+
+.paginationButton {
+  background-color: #e9ecef;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.paginationButton:hover:not(:disabled) {
+  background-color: #dee2e6;
+  color: #212529;
+}
+
+.paginationButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.paginationButton.activePage {
+  background-color: #007bff;
+  color: #ffffff;
+  border-color: #007bff;
+}
+
+.paginationButton.activePage:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
