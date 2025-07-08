@@ -180,14 +180,23 @@ public class MemberReservationService {
     @Transactional
     public void cancelRequestReservation(CustomUserDetails userDetails, Long reservationsId) {
         Member member = userDetails.getMember();
+
         Reservation reservation = reservationRepository.findById(reservationsId)
                 .orElseThrow(()-> new NotFoundException(ErrorMessages.RESERVATION_NOT_FOUND));
         if (!reservation.getMember().getId().equals(member.getId())){
             throw new BadRequestException(ErrorMessages.UNAUTHORIZED_ACCESS);
         }
 
-        reservation.setStatus(WalkReservationStatus.CANCELED_REQUEST);
-        reservationRepository.save(reservation);
+        if (reservation.getStatus().equals(WalkReservationStatus.APPROVED)){
+            reservation.setStatus(WalkReservationStatus.CANCELED);
+            reservationRepository.save(reservation);
+
+        }
+
+        if (reservation.getStatus().equals(WalkReservationStatus.PENDING)){
+            reservation.setStatus(WalkReservationStatus.CANCELED_REQUEST);
+            reservationRepository.save(reservation);
+        }
 
         sseNotificationFactory.notifyWalkReservationCanceled(
                 reservation.getShelter().getShelterAdmin(),
