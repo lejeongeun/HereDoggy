@@ -152,7 +152,7 @@ function ShelterRequest() {
           />
         </div>
 
-        <button type="submit" className="signupbtn" disabled={loading}>
+        <button type="submit" className="submit-request-btn" disabled={loading}>
           {loading ? "요청 중..." : "생성 요청 제출"}
         </button>
       </form>

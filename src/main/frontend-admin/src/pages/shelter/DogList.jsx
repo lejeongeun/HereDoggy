@@ -3,6 +3,8 @@ import { getDogs } from "../../api/shelter/dog";
 import '../../styles/shelter/pages/dogList.css';
 import { Link } from "react-router-dom";
 import { ImageOff } from 'lucide-react';
+import Pagination from "../../components/shelter/common/Pagination";
+
 
 const BACKEND_URL = "http://localhost:8080";
 
@@ -118,33 +120,12 @@ function DogList() {
           ))}
         </tbody>
       </table>
-      {dogs.length > itemsPerPage && (
-        <div className="pagination">
-          <button
-            onClick={() => paginate(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="pagination-button"
-          >
-            이전
-          </button>
-          {[...Array(totalPages).keys()].map((number) => (
-            <button
-              key={number + 1}
-              onClick={() => paginate(number + 1)}
-              className={`pagination-button ${currentPage === number + 1 ? 'active' : ''}`}
-            >
-              {number + 1}
-            </button>
-          ))}
-          <button
-            onClick={() => paginate(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="pagination-button"
-          >
-            다음
-          </button>
-        </div>
-      )}
+     <Pagination
+        totalItems={dogs.length}
+        itemPerPage={10}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 }

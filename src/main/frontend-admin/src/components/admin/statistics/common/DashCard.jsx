@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { LineChart, Line, ResponsiveContainer } from 'recharts';
+import CountUp from 'react-countup';
 
 function DashCard({ label, value, tooltipContent, diff, icon, trendData }) {
   const [showTooltip, setShowTooltip] = useState(false);
+
+  // value에서 숫자만 추출
+  const numericValue = parseFloat(value.replace(/[^0-9.]/g, ''));
 
   return (
     <div
@@ -14,7 +18,9 @@ function DashCard({ label, value, tooltipContent, diff, icon, trendData }) {
         <span className="dash-card-label">{label}</span>
         <span className="dash-card-icon">{icon}</span>
       </div>
-      <div className="dash-card-value">{value}</div>
+      <div className="dash-card-value">
+        {value}
+      </div>
       {diff && (
         <div className={`dash-card-diff ${diff.startsWith('+') ? 'up' : 'down'}`}>{diff}</div>
       )}

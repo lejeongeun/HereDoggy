@@ -21,6 +21,19 @@
   margin-bottom: 30px; /* 마진 조정 */
   letter-spacing: -0.8px; /* 자간 조정 */
 }
+.donation-all {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.donation-summary--total {
+  color: #2b9064;
+}
+.donation-summary--monthly {
+  color: #d08700;
+}
 
 .donation-list {
   list-style: none;

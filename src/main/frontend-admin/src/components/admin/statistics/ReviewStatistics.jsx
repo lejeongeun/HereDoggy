@@ -17,8 +17,8 @@ function ReviewStatistics() {
     ],
   };
   return (
-    <section className="review-section">
-      <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 18 }}>
+    <section className="review-section walk-section">
+      <div className="summary-cards">
         <StatCard icon={<FaClipboardList />} label="전체 후기" value={reviewStats.total + '건'} color="#28A745" />
         <StatCard icon={<FaUserFriends />} label="평균 좋아요" value={reviewStats.avgLikes} color="#FFC107" />
         <StatCard icon={<FaComment />} label="평균 댓글" value={reviewStats.avgComments} color="#6495ED" />

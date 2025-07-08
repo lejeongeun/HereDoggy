@@ -20,7 +20,7 @@ function UserBehaviorStatistics() {
   };
   return (
     <section className="user-behavior-section">
-      <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 18 }}>
+      <div className="summary-cards">
         <StatCard icon={<FaUserFriends />} label="월간 활성(MAU)" value={userStats.mau + '명'} color="#28A745" />
         <StatCard icon={<FaUserFriends />} label="주간 활성(WAU)" value={userStats.wau + '명'} color="#6495ED" />
         <StatCard icon={<FaBell />} label="알림 동의율" value={(userStats.notificationOptIn*100).toFixed(1)+'%'} color="#FFC107" />

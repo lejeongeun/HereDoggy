@@ -1,16 +1,19 @@
 import React from "react";
 import { FaWalking, FaCheckCircle, FaTimesCircle, FaClock, FaChartPie } from "react-icons/fa";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import CountUp from 'react-countup';
 
 function StatCard({ icon, label, value, color }) {
   return (
     <div style={{
-      display: 'flex', alignItems: 'center', background: '#f9f9f9', borderRadius: 12, padding: '18px 20px', boxShadow: '0 2px 8px rgba(44,62,80,0.06)', marginRight: 16, marginBottom: 12, minWidth: 120
+      display: 'flex', alignItems: 'center', background: '#f9f9f9', borderRadius: 12, padding: '18px 20px', boxShadow: '0 2px 8px rgba(44,62,80,0.06)', marginRight: 16, marginBottom: 12
     }}>
       <span style={{ fontSize: 28, color, marginRight: 14 }}>{icon}</span>
       <div>
         <div style={{ fontSize: 13, color: '#888', fontWeight: 600 }}>{label}</div>
-        <div style={{ fontSize: 22, fontWeight: 800, color: '#222' }}>{value}</div>
+        <div style={{ fontSize: 22, fontWeight: 800, color: '#222' }}>
+          {value}
+        </div>
       </div>
     </div>
   );
@@ -48,7 +51,7 @@ function WalkStatistics() {
 
   return (
     <section className="walk-section walk-summary-section">
-      <div className="walk-summary-cards">
+      <div className="summary-cards">
         <StatCard icon={<FaWalking />} label="총 예약" value={total.toLocaleString() + '건'} color="#23b266" />
         <StatCard icon={<FaCheckCircle />} label="성공" value={success.toLocaleString() + '건'} color="#3498db" />
         <StatCard icon={<FaTimesCircle />} label="취소" value={cancelled.toLocaleString() + '건'} color="#e74c3c" />

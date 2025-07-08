@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getNotices } from "../../api/shelter/notice";
 import "../../styles/shelter/notice/noticeList.css";
 import { ChevronDown, ChevronUp, AlertCircle, PlusCircle } from "lucide-react";
+import Pagination from "../../components/shelter/common/Pagination";
 
 function NoticeList() {
   const [notices, setNotices] = useState([]);
@@ -87,33 +88,12 @@ function NoticeList() {
           ))
         )}
       </div>
-      {notices.length > itemsPerPage && (
-        <div className="pagination">
-          <button
-            onClick={() => paginate(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="pagination-button"
-          >
-            이전
-          </button>
-          {[...Array(totalPages).keys()].map((number) => (
-            <button
-              key={number + 1}
-              onClick={() => paginate(number + 1)}
-              className={`pagination-button ${currentPage === number + 1 ? 'active' : ''}`}
-            >
-              {number + 1}
-            </button>
-          ))}
-          <button
-            onClick={() => paginate(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="pagination-button"
-          >
-            다음
-          </button>
-        </div>
-      )}
+      <Pagination
+        totalItems={notices.length}
+        itemPerPage={10}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 }

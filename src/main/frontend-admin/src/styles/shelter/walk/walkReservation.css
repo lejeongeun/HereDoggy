@@ -139,6 +139,26 @@
   color: #444;
 }
 
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 8px;
+}
+.pagination button {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #f7f7f7;
+  cursor: pointer;
+}
+.pagination button.active {
+  background-color: #2b9064;
+  color: white;
+  font-weight: bold;
+}
+
+
 /* 반응형 */
 @media (max-width: 768px) {
   .walk-container {

@@ -25,8 +25,8 @@ function ReportStatistics() {
   };
   const doneRate = Math.round((reportStats.done / reportStats.total) * 100);
   return (
-    <section className="report-section">
-      <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 18 }}>
+    <section className="report-section walk-section">
+      <div className="summary-cards">
         <StatCard icon={<FaClipboardList />} label="전체 제보" value={reportStats.total + '건'} color="#28A745" />
         <StatCard icon={<FaCheckCircle />} label="처리 완료" value={reportStats.done + '건'} color="#6495ED" />
         <StatCard icon={<FaTimesCircle />} label="대기" value={reportStats.pending + '건'} color="#FFC107" />

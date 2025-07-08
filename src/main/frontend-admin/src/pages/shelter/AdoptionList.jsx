@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { getAdoptions } from "../../api/shelter/adoption";
 import "../../styles/shelter/adoption/adoptionList.css";
+import Pagination from "../../components/shelter/common/Pagination";
 
 // 상태 한글 변환
 function statusToKor(status) {
@@ -17,42 +17,51 @@ function statusToKor(status) {
 function getDday(dateStr) {
   const today = new Date();
   const d = new Date(dateStr);
-  d.setHours(0,0,0,0); today.setHours(0,0,0,0);
-  const diff = Math.floor((d-today)/(1000*60*60*24));
-  if (diff === 0) return 'D-day';
+  d.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
+  const diff = Math.floor((d - today) / (1000 * 60 * 60 * 24));
+  if (diff === 0) return "D-day";
   if (diff > 0) return `D-${diff}`;
   return `D+${Math.abs(diff)}`;
 }
 
+// ✅ 더미 데이터 생성 함수
+function generateDummyAdoptions(count) {
+  const names = ["홍길동", "김영희", "이철수", "박영수", "최은주"];
+  const dogs = ["행복이", "초코", "사랑이", "두부", "보리"];
+  const statuses = ["PENDING", "APPROVED", "REJECTED"];
+
+  const list = [];
+  for (let i = 1; i <= count; i++) {
+    const name = names[i % names.length];
+    const dog = dogs[i % dogs.length];
+    const status = statuses[i % statuses.length];
+
+    const visitDate = new Date(2024, 5, 10 + (i % 10)); // 6월 10~19일
+    const visitTime = `${10 + (i % 5)}:00:00`; // 10시 ~ 14시
+
+    list.push({
+      adoptionId: i,
+      memberName: name,
+      memberPhone: `010-${1000 + i}-${2000 + i}`,
+      dogName: dog,
+      visitDate: visitDate.toISOString().split("T")[0],
+      visitTime,
+      createdAt: new Date(2024, 5, 1 + (i % 5)).toISOString(),
+      status,
+    });
+  }
+  return list;
+}
+
 function AdoptionList() {
-  const sheltersId = localStorage.getItem("shelters_id");
-  // const [adoptions, setAdoptions] = useState([]);
-const [adoptions, setAdoptions] = useState([
-    {
-      adoptionId: 3,
-      memberName: "홍길동",
-      memberPhone: "010-1234-5678",
-      dogName: "행복이",
-      visitDate: "2024-06-15",
-      visitTime: "14:00:00",
-      createdAt: "2024-06-11T10:30:00",
-      status: "PENDING",
-    },
-    {
-      adoptionId: 4,
-      memberName: "김희진",
-      memberPhone: "010-5555-8888",
-      dogName: "초코",
-      visitDate: "2024-06-20",
-      visitTime: "11:00:00",
-      createdAt: "2024-06-10T09:15:00",
-      status: "APPROVED",
-    }
-  ]);
-//   useEffect(() => {
-//     if (!sheltersId) return;
-//     getAdoptions(sheltersId).then(res => setAdoptions(res.data));
-//   }, [sheltersId]);
+  const [adoptions] = useState(generateDummyAdoptions(25)); // 배열로 초기화
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentAdoptions = adoptions.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
     <div className="adoption-container">
@@ -61,7 +70,7 @@ const [adoptions, setAdoptions] = useState([
         <p className="adoption-empty">입양 신청이 없습니다.</p>
       ) : (
         <ul className="adoption-list">
-          {adoptions.map(a => (
+          {currentAdoptions.map((a) => (
             <li key={a.adoptionId} className="adoption-item">
               <Link to={`/shelter/adoptions/${a.adoptionId}`} className="adoption-link">
                 <div className="adoption-main-row">
@@ -90,6 +99,13 @@ const [adoptions, setAdoptions] = useState([
           ))}
         </ul>
       )}
+
+      <Pagination
+        totalItems={adoptions.length}
+        itemPerPage={itemsPerPage}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 }

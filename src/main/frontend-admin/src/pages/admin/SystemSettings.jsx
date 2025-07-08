@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../../styles/admin/adminStatistics/adminStatistics.css'; 
+import '../../styles/admin/systemSettings/systemSettings.css'; 
 
 function SystemSettings() {
   // 관리자 계정 관리 상태

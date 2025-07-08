@@ -9,7 +9,7 @@ import {
   FaComment,
 } from "react-icons/fa";
 import '../../../styles/admin/adminStatistics/adminStatistics.css';
-import WalkStatistics from './WalkStatistics';
+import WalkStatistics from '../../../components/admin/statistics/WalkStatistics';
 import DashCard from '../../../components/admin/statistics/common/DashCard';
 import AdoptionStatistics from '../../../components/admin/statistics/AdoptionStatistics';
 import ReportStatistics from '../../../components/admin/statistics/ReportStatistics';
@@ -126,7 +126,7 @@ function AdminStatistics() {
         <button className={tab==='report' ? 'active' : ''} onClick={()=>setTab('report')}>제보/신고</button>
         <button className={tab==='review' ? 'active' : ''} onClick={()=>setTab('review')}>후기</button>
         <button className={tab==='shelter' ? 'active' : ''} onClick={()=>setTab('shelter')}>보호소 비교</button>
-        <button className={tab==='user' ? 'active' : ''} onClick={()=>setTab('user')}>사용자 행동</button>
+        <button className={tab==='user' ? 'active' : ''} onClick={()=>setTab('user')}>사용자 활동</button>
       </div>
       {tab === 'summary' && (
         <section className="summary-section">
