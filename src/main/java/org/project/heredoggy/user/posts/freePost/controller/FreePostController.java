@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.user.posts.freePost.dto.FreePostEditRequestDTO;
 import org.project.heredoggy.user.posts.freePost.dto.FreePostRequestDTO;
+import org.project.heredoggy.user.posts.freePost.dto.FreePostResDTO;
 import org.project.heredoggy.user.posts.freePost.dto.FreePostResponseDTO;
 import org.project.heredoggy.user.posts.freePost.service.FreePostService;
 import org.springframework.http.MediaType;
@@ -66,8 +67,8 @@ public class FreePostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FreePostResponseDTO>> getFreePostsByCreatedAt() {
-        List<FreePostResponseDTO> res = freePostService.getAllFreePosts();
+    public ResponseEntity<List<FreePostResDTO>> getFreePostsByCreatedAt() {
+        List<FreePostResDTO> res = freePostService.getAllFreePosts();
         return ResponseEntity.ok(res);
     }
 

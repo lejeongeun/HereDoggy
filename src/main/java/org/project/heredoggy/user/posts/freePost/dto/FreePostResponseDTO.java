@@ -18,4 +18,6 @@ public class FreePostResponseDTO {
     private String nickname;
     private String createdAt;
     private List<String> imagesUrls;
+    private Long commentCount;
+    private Long likeCount;
 }
