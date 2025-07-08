@@ -2,7 +2,6 @@ package org.project.heredoggy.domain.postgresql.post.free;
 
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.user.posts.freePost.dto.FreePostResDTO;
-import org.project.heredoggy.user.posts.freePost.dto.FreePostResponseDTO;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

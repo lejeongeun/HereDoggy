@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.user.posts.reveiwPost.dto.ReviewPostEditRequestDTO;
-import org.project.heredoggy.user.posts.reveiwPost.dto.ReviewPostRequestDTO;
-import org.project.heredoggy.user.posts.reveiwPost.dto.ReviewPostResDTO;
-import org.project.heredoggy.user.posts.reveiwPost.dto.ReviewPostResponseDTO;
+import org.project.heredoggy.user.posts.reveiwPost.dto.*;
 import org.project.heredoggy.user.posts.reveiwPost.service.ReviewPostService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +37,6 @@ public class ReviewPostController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(Map.of("message", "서버오류", "error", e.getMessage()));
         }
-
     }
 
     @PutMapping(value = "/{post_id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -58,7 +54,6 @@ public class ReviewPostController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(Map.of("message", "서버 오류", "error", e.getMessage()));
         }
-
     }
 
     @DeleteMapping("/{post_id}")
@@ -78,5 +73,21 @@ public class ReviewPostController {
     public ResponseEntity<ReviewPostResponseDTO> getDetailReviewPosts(@PathVariable("post_id") Long postId) {
         ReviewPostResponseDTO res = reviewPostService.getDetailReviewPosts(postId);
         return ResponseEntity.ok(res);
+    }
+
+    //산책 기준으로 강아지 정보 가져오기
+    @GetMapping("/prepare-review/{reservationId}")
+    public ResponseEntity<ReviewDogInfoDTO> prepareReview(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Long reservationId) {
+        ReviewDogInfoDTO dogInfo = reviewPostService.getDogInfoFromReservation(userDetails, reservationId);
+        return ResponseEntity.ok(dogInfo);
+    }
+
+    //사용자가 완료한 산책 리스트를 기준으로 강아지 목록 조회
+    @GetMapping("/review/dogs")
+    public ResponseEntity<List<ReviewDogInfoDTO>> getMyReviewableDogs(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        List<ReviewDogInfoDTO> result = reviewPostService.getMyCompletedDogs(userDetails);
+        return ResponseEntity.ok(result);
     }
 }

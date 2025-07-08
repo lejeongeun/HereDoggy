@@ -1,7 +1,5 @@
 package org.project.heredoggy.user.posts.freePost.dto;
 
-import java.util.List;
-
 
 public interface FreePostResDTO {
     Long getId();

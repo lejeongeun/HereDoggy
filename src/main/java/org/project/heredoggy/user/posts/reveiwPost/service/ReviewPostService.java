@@ -2,33 +2,36 @@ package org.project.heredoggy.user.posts.reveiwPost.service;
 
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.comment.PostType;
+import org.project.heredoggy.domain.postgresql.dog.Dog;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.post.PostImage;
 import org.project.heredoggy.domain.postgresql.post.PostImageRepository;
 import org.project.heredoggy.domain.postgresql.post.review.ReviewPost;
 import org.project.heredoggy.domain.postgresql.post.review.ReviewPostRepository;
+import org.project.heredoggy.domain.postgresql.walk.reservation.Reservation;
+import org.project.heredoggy.domain.postgresql.walk.reservation.ReservationRepository;
+import org.project.heredoggy.domain.postgresql.walk.reservation.WalkReservationStatus;
 import org.project.heredoggy.global.exception.BadRequestException;
 import org.project.heredoggy.global.exception.ConflictException;
 import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.util.AuthUtils;
 import org.project.heredoggy.image.ImageService;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.user.posts.reveiwPost.dto.ReviewPostEditRequestDTO;
-import org.project.heredoggy.user.posts.reveiwPost.dto.ReviewPostRequestDTO;
-import org.project.heredoggy.user.posts.reveiwPost.dto.ReviewPostResDTO;
-import org.project.heredoggy.user.posts.reveiwPost.dto.ReviewPostResponseDTO;
+import org.project.heredoggy.user.posts.reveiwPost.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ReviewPostService {
     private final ReviewPostRepository reviewPostRepository;
     private final PostImageRepository postImageRepository;
+    private final ReservationRepository reservationRepository;
     private final ImageService imageService;
 
     @Transactional
@@ -151,6 +154,50 @@ public class ReviewPostService {
                 .toList();
 
         return convertToDTO(post, imageUrls);
+    }
+
+    @Transactional(readOnly = true)
+    public ReviewDogInfoDTO getDogInfoFromReservation(CustomUserDetails userDetails, Long reservationId) {
+        Member member = AuthUtils.getValidMember(userDetails);
+
+        Reservation reservation = reservationRepository.findByIdAndMember(reservationId, member)
+                .orElseThrow(() -> new NotFoundException("해당 산책 기록이 존재하지 않습니다."));
+
+        Dog dog = reservation.getDog();
+        String thumbnail = dog.getImages().isEmpty() ? null : dog.getImages().get(0).getImageUrl();
+
+        return ReviewDogInfoDTO.builder()
+                .id(dog.getId())
+                .name(dog.getName())
+                .gender(dog.getGender().name())
+                .age(dog.getAge())
+                .shelterName(dog.getShelter().getName())
+                .status(dog.getStatus().name())
+                .imageUrl(thumbnail)
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewDogInfoDTO> getMyCompletedDogs(CustomUserDetails userDetails) {
+        Member member = AuthUtils.getValidMember(userDetails);
+
+        List<Reservation> reservations = reservationRepository.findByMemberAndStatus(member, WalkReservationStatus.COMPLETED);
+
+        return reservations.stream()
+                .map(res -> {
+                    Dog dog = res.getDog();
+                    String thumbnail = dog.getImages().isEmpty() ? null : dog.getImages().get(0).getImageUrl();
+                    return ReviewDogInfoDTO.builder()
+                            .id(dog.getId())
+                            .name(dog.getName())
+                            .gender(dog.getGender().name())
+                            .age(dog.getAge())
+                            .shelterName(dog.getShelter().getName())
+                            .status(dog.getStatus().name())
+                            .imageUrl(thumbnail)
+                            .build();
+                }).distinct()
+                .collect(Collectors.toList());
     }
 
     private ReviewPostResponseDTO convertToDTO(ReviewPost post, List<String> imageUrls) {

@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.dog.dto.DogResponseDTO;
 import org.project.heredoggy.security.CustomUserDetails;
+import org.project.heredoggy.user.walk.reservation.dto.DogSimpleDTO;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationRequestDTO;
 import org.project.heredoggy.user.walk.reservation.dto.UnavailableTimeResponseDTO;
 import org.project.heredoggy.user.walk.reservation.service.MemberReservationService;
@@ -52,6 +53,12 @@ public class MemberReservationController {
                                                                   @Valid @RequestBody MemberReservationRequestDTO requestDTO) {
         memberReservationService.requestReservation(userDetails, dogsId, requestDTO);
         return ResponseEntity.ok(Map.of("message", "산책 예약이 신청되었습니다."));
+    }
+
+    @GetMapping("/my/completed-dogs")
+    public ResponseEntity<List<DogSimpleDTO>> getMyCompletedDogs(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        List<DogSimpleDTO> dogs = memberReservationService.getCompletedDogsByMember(userDetails);
+        return ResponseEntity.ok(dogs);
     }
 
 }
