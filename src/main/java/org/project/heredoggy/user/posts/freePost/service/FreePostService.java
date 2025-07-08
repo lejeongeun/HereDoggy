@@ -33,8 +33,6 @@ import java.util.stream.Collectors;
 public class FreePostService {
     private final FreePostRepository freePostRepository;
     private final PostImageRepository postImageRepository;
-    private final CommentRepository commentRepository;
-    private final LikeRepository likeRepository;
     private final ImageService imageService;
 
     @Transactional
@@ -141,51 +139,6 @@ public class FreePostService {
     public List<FreePostResDTO> getAllFreePosts() {
         return freePostRepository.findAllProjected();
     }
-
-//    @Transactional(readOnly = true)
-//    public List<FreePostResponseDTO> getAllFreePosts() {
-//
-//        //List<FreePost> lists = freePostRepository.findAllOrderByCreatedAtDesc();
-//        List<FreePost> posts = freePostRepository.findAllWriterAndImages();
-//
-//        Map<Long, Long> commentCountMap = commentRepository.countCommentsByPostTypeGroupByPostId(PostType.FREE)
-//                .stream()
-//                .collect(Collectors.toMap(CommentRepository.CommentCountProjection::getPostId, CommentRepository.CommentCountProjection::getCount));
-//
-//        Map<Long, Long> likeCountMap = likeRepository.countLikesByFreePostIn(posts)
-//                .stream()
-//                .collect(Collectors.toMap(LikeRepository.LikeCountProjection::getPostId, LikeRepository.LikeCountProjection::getCount));
-//
-//        return posts.stream().map(post -> {
-//            Long postId = post.getId();
-//            return FreePostResponseDTO.builder()
-//                    .id(postId)
-//                    .title(post.getTitle())
-//                    .email(post.getWriter().getEmail())
-//                    .nickname(post.getWriter().getNickname())
-//                    .imagesUrls(post.getPostImages().stream()
-//                            .map(PostImage::getImageUrl)
-//                            .collect(Collectors.toList()))
-//                    .commentCount(commentCountMap.getOrDefault(postId, 0L))
-//                    .likeCount(likeCountMap.getOrDefault(postId, 0L))
-//                    .build();
-//        }).collect(Collectors.toList());
-//    }
-
-//    public List<FreePostResponseDTO> getAllFreePosts() {
-//
-//        List<FreePost> lists = freePostRepository.findAllOrderByCreatedAtDesc();
-//
-//        return lists.stream()
-////                .map(post -> convertToDTO(post, List.of()))
-//                .map(post -> {
-//                    List<String> imageUrls = postImageRepository.findByFreePost(post).stream()
-//                            .map(PostImage::getImageUrl)
-//                            .toList();
-//                    return convertToDTO(post, imageUrls);
-//                })
-//                .collect(Collectors.toList());
-//    }
 
 
     @Transactional

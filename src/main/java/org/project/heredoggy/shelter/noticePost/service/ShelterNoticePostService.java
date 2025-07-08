@@ -15,9 +15,7 @@ import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.util.AuthUtils;
 import org.project.heredoggy.image.ImageService;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.shelter.noticePost.dto.ShelterNoticePostEditRequestDTO;
-import org.project.heredoggy.shelter.noticePost.dto.ShelterNoticePostRequestDTO;
-import org.project.heredoggy.shelter.noticePost.dto.ShelterNoticePostResponseDTO;
+import org.project.heredoggy.shelter.noticePost.dto.*;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,17 +89,13 @@ public class ShelterNoticePostService {
         noticePostRepository.deleteById(postId);
     }
 
-
-    public List<ShelterNoticePostResponseDTO> getAllNoticePost(CustomUserDetails userDetails) {
+    @Transactional(readOnly = true)
+    public List<NoticePostResDTO> getAllNoticePost(CustomUserDetails userDetails) {
         Member member = AuthUtils.getValidMember(userDetails);
         Shelter shelter = shelterRepository.findByShelterAdmin(member)
                 .orElseThrow(() -> new NotFoundException("보호소 정보 없음"));
 
-        List<NoticePost> posts = noticePostRepository.findAllByShelterIdOrderByCreatedAtDesc(shelter.getId());
-
-        return posts.stream()
-                .map(post -> convertToDTO(post, List.of()))
-                .collect(Collectors.toList());
+        return noticePostRepository.findAllByShelterIdProjected(shelter.getId());
     }
 
 

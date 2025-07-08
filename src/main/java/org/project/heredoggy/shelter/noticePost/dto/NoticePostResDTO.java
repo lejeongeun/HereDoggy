@@ -1,6 +1,6 @@
 package org.project.heredoggy.shelter.noticePost.dto;
 
-public interface ShelterNoticePostResDTO {
+public interface NoticePostResDTO {
     Long getId();
     String getTitle();
     String getContent();

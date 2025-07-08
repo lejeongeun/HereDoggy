@@ -13,7 +13,6 @@ import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.util.AuthUtils;
 import org.project.heredoggy.image.ImageService;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.user.posts.freePost.dto.FreePostResDTO;
 import org.project.heredoggy.user.posts.reveiwPost.dto.ReviewPostEditRequestDTO;
 import org.project.heredoggy.user.posts.reveiwPost.dto.ReviewPostRequestDTO;
 import org.project.heredoggy.user.posts.reveiwPost.dto.ReviewPostResDTO;
@@ -24,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

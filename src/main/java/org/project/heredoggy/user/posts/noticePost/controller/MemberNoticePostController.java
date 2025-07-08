@@ -1,13 +1,10 @@
 package org.project.heredoggy.user.posts.noticePost.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.project.heredoggy.security.CustomUserDetails;
+import org.project.heredoggy.shelter.noticePost.dto.NoticePostResDTO;
 import org.project.heredoggy.shelter.noticePost.dto.ShelterNoticePostResponseDTO;
-import org.project.heredoggy.shelter.noticePost.service.ShelterNoticePostService;
-import org.project.heredoggy.user.posts.noticePost.dto.MemberNoticePostResDTO;
 import org.project.heredoggy.user.posts.noticePost.service.MemberNoticePostService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,10 +16,10 @@ public class MemberNoticePostController {
     private final MemberNoticePostService noticePostService;
 
     @GetMapping
-    public ResponseEntity<List<MemberNoticePostResDTO>> getNoticePostByShelter(
+    public ResponseEntity<List<NoticePostResDTO>> getNoticePostByShelter(
             @RequestParam("shelterId") Long shelterId) {
 
-        List<MemberNoticePostResDTO> res = noticePostService.getNoticePostsByShelter(shelterId);
+        List<NoticePostResDTO> res = noticePostService.getNoticePostsByShelter(shelterId);
         return ResponseEntity.ok(res);
     }
 
