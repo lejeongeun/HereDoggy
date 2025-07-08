@@ -4,11 +4,14 @@
   Focus: Modern aesthetics, improved readability, and consistent design.
 */
 
+* {
+  box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+}
+
 .admin-root {
   display: flex;
   min-height: 100vh;
   background-color: #f0f2f5; /* Light background for the whole page */
-  background-color: #ff0000 !important; /* TEST: Bright red to check if CSS is applied */
 }
 
 /* Admin Sidebar */
@@ -25,15 +28,20 @@
   height: 100vh;
   z-index: 1000;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: transform 0.3s ease-in-out; /* For responsive slide effect */
 }
 
 .admin-logo {
   font-size: 24px; /* Larger logo text */
   font-weight: 700;
-  margin-bottom: 40px;
+  margin-bottom: 50px; /* Increased margin for more space */
   padding: 0 25px;
   color: #ffffff; /* Pure white for logo */
   text-align: center;
+}
+
+.admin-sidebar nav {
+  flex-grow: 1; /* Allow navigation to take available space */
 }
 
 .admin-sidebar nav ul {
@@ -47,7 +55,7 @@
 }
 
 .admin-link {
-  color: #bdc3c7; /* Lighter gray for default links */
+  color: #e0e6ed; /* Lighter gray for default links for better contrast */
   text-decoration: none;
   padding: 14px 25px; /* Increased padding for better click area */
   display: flex; /* Use flexbox for icon and text alignment */
@@ -59,13 +67,13 @@
 }
 
 .admin-link:hover {
-  background-color: #34495e; /* Darker hover state */
+  background-color: #3a506b; /* Slightly lighter hover state */
   color: #ffffff;
 }
 
 /* Active link style (assuming you'll add a class for active state) */
 .admin-link.active {
-  background-color: #3498db; /* Vibrant blue for active link */
+  background-color: #4a90e2; /* Softer, professional blue for active link */
   color: #ffffff;
   font-weight: 600;
 }
@@ -73,6 +81,25 @@
 .menuIcon {
   margin-right: 10px; /* Space between icon and text */
   font-size: 18px; /* Adjust icon size */
+}
+
+/* Admin Sidebar Footer */
+.admin-sidebar-footer {
+  padding: 20px 25px;
+  text-align: center;
+  font-size: 12px;
+  color: #95a5a6; /* Muted gray for footer text */
+  border-top: 1px solid rgba(255, 255, 255, 0.1); /* Subtle separator */
+  margin-top: auto; /* Push to the bottom */
+}
+
+.admin-sidebar-footer p {
+  margin: 5px 0;
+}
+
+.admin-sidebar-footer .version-info {
+  font-weight: 600;
+  color: #bdc3c7;
 }
 
 /* Admin Content Area */
@@ -83,6 +110,7 @@
   display: flex;
   flex-direction: column;
   margin-left: 240px; /* Matches sidebar width */
+  transition: margin-left 0.3s ease-in-out; /* For responsive slide effect */
 }
 
 /* Admin Header (Topbar) */
@@ -103,10 +131,11 @@
   right: 0;
   z-index: 999;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+  transition: left 0.3s ease-in-out; /* For responsive slide effect */
 }
 
 .admin-logout-btn {
-  background-color: #e74c3c; /* Red for logout button */
+  background-color: #6c757d; /* Dark gray for logout button */
   color: #ffffff;
   border: none;
   font-size: 14px;
@@ -118,7 +147,19 @@
 }
 
 .admin-logout-btn:hover {
-  background-color: #c0392b;
+  background-color: #5a6268; /* Darker gray on hover */
+}
+
+/* Hamburger Menu for small screens */
+.hamburger-menu {
+  display: none; /* Hidden by default on larger screens */
+  background: none;
+  border: none;
+  color: #34495e;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  margin-right: 15px;
 }
 
 /* Main content area below the header */
@@ -126,5 +167,46 @@
   flex: 1;
   padding: 24px; /* Adjusted padding */
   overflow-y: auto; /* Allow scrolling within main content */
+  overflow-x: auto; /* Allow horizontal scrolling if content overflows */
   padding-top: 60px; /* Matches header height */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .admin-sidebar {
+    transform: translateX(-100%); /* Hide sidebar off-screen */
+    position: fixed;
+    height: 100vh;
+    z-index: 1001; /* Above content and overlay */
+  }
+
+  .admin-sidebar.open {
+    transform: translateX(0); /* Show sidebar */
+  }
+
+  .admin-content {
+    margin-left: 0; /* Main content takes full width */
+    width: 100%; /* Ensure content takes full width */
+  }
+
+  .admin-header {
+    left: 0; /* Header takes full width */
+    padding: 0 20px;
+  }
+
+  .hamburger-menu {
+    display: block; /* Show hamburger menu */
+  }
+
+  /* Overlay when sidebar is open */
+  .admin-root.sidebar-open::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
+    z-index: 1000;
+  }
 }

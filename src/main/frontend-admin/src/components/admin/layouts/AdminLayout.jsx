@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import "../../../styles/admin/adminLayout/adminLayout.css";
 import { adminLogout } from "../../../api/system/admin"; // 또는 경로에 따라 조정
@@ -18,6 +18,11 @@ const menuItems = [
 
 function AdminLayout() {
   const navigate = useNavigate();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   const handleLogout = async () => {
   try {
@@ -29,9 +34,9 @@ function AdminLayout() {
 };
 
   return (
-    <div className="admin-root">
+    <div className={`admin-root ${isSidebarOpen ? 'sidebar-open' : ''}`}>
       {/* 사이드바 */}
-      <aside className="admin-sidebar">
+      <aside className={`admin-sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="admin-logo">ADMIN</div>
         <nav>
           <ul>
@@ -44,11 +49,18 @@ function AdminLayout() {
       ))}
     </ul>
         </nav>
+        <div className="admin-sidebar-footer">
+          <p className="version-info">v1.0.0</p>
+          <p className="copyright-info">&copy; 2024 HereDoggy</p>
+        </div>
       </aside>
       {/* 메인 컨텐츠 */}
       <div className="admin-content">
         {/* 탑바 */}
         <header className="admin-header">
+          <button className="hamburger-menu" onClick={toggleSidebar}>
+            <i className="fas fa-bars"></i>
+          </button>
           <div>여기보개 시스템 관리자</div>
           <button className="admin-logout-btn" onClick={handleLogout}>
             로그아웃
