@@ -183,6 +183,25 @@ class _ReviewPostDetailPageState extends State<ReviewPostDetailPage> {
     );
   }
 
+  String _formatDate(String date) {
+    if (date.isEmpty) return '';
+    
+    try {
+      // ISO 8601 형식 (2024-01-01T10:30:00) 처리
+      if (date.contains('T')) {
+        final parts = date.split('T');
+        final datePart = parts[0].replaceAll('-', '.');
+        final timePart = parts.length > 1 && parts[1].length >= 5 ? parts[1].substring(0, 5) : '';
+        return '$datePart $timePart'.trim();
+      }
+      
+      // 다른 형식의 날짜 처리
+      return date.replaceAll('-', '.');
+    } catch (e) {
+      return date; // 파싱 실패 시 원본 반환
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -232,9 +251,7 @@ class _ReviewPostDetailPageState extends State<ReviewPostDetailPage> {
                                     Row(
                                       children: [
                                         Text(
-                                          post!.createdAt.split("T")[0].replaceAll("-", ".") +
-                                              ' ' +
-                                              (post!.createdAt.length > 16 ? post!.createdAt.substring(11, 16) : ''),
+                                          _formatDate(post!.createdAt),
                                           style: const TextStyle(fontSize: 13, color: Colors.grey),
                                         ),
                                         const SizedBox(width: 8),

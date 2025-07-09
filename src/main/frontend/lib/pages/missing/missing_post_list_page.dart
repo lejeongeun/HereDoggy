@@ -204,6 +204,12 @@ class _MissingPostListPageState extends State<MissingPostListPage> {
                                                 ),
                                               ],
                                             ),
+                                            const SizedBox(height: 8),
+                                            // 닉네임
+                                            Text(
+                                              post.nickname.isNotEmpty ? post.nickname : '익명',
+                                              style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                            ),
                                           ],
                                         ),
                                       ),

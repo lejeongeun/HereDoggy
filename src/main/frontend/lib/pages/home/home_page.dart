@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
     return Stack(
       children: [
         Scaffold(
-          backgroundColor: Color(0xFFF5F9FF),
+          backgroundColor: Color(0xFFF6F6F6),
           body: SafeArea(
             child: ListView(
               controller: _scrollController,
@@ -71,9 +71,9 @@ class _HomePageState extends State<HomePage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: const [
-                            Text('강아지들 간식주기', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                            Text('유기동물 간식주기', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                             SizedBox(height: 4),
-                            Text('보호소 유기견들의 간식을 챙겨주세요', style: TextStyle(fontSize: 12, color: Colors.black54)),
+                            Text('보호소 동물들의 간식을 챙겨주세요', style: TextStyle(fontSize: 12, color: Colors.black54)),
                           ],
                         ),
                       ),
@@ -114,9 +114,9 @@ class _HomePageState extends State<HomePage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: const [
-                                    Text('산책 예약', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                                    Text('산책 & 체험 예약', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                                     SizedBox(height: 4),
-                                    Text('보호소 강아지와 산책해요', style: TextStyle(fontSize: 13, color: Colors.black54)),
+                                    Text('동물과의 활동을 예약해요', style: TextStyle(fontSize: 13, color: Colors.black54)),
                                   ],
                                 ),
                               ),
@@ -124,10 +124,14 @@ class _HomePageState extends State<HomePage> {
                               Positioned(
                                 right: 16,
                                 bottom: 16,
-                                child: Icon(
-                                  Icons.pets,
-                                  size: 48,
-                                  color: Color(0xFF4CAF50),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.asset(
+                                    'assets/images/walk.jpg',
+                                    width: 140,
+                                    height: 75,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ],
@@ -161,7 +165,7 @@ class _HomePageState extends State<HomePage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: const [
-                                    Text('유기견 입양', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                                    Text('유기동물 입양', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                                     SizedBox(height: 4),
                                     Text('입양 신청을 해보세요', style: TextStyle(fontSize: 13, color: Colors.black54)),
                                   ],
@@ -171,10 +175,14 @@ class _HomePageState extends State<HomePage> {
                               Positioned(
                                 right: 16,
                                 bottom: 16,
-                                child: Icon(
-                                  Icons.volunteer_activism,
-                                  size: 48,
-                                  color: Color(0xFFFF9800),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.asset(
+                                    'assets/images/adopt.jpg',
+                                    width: 140,
+                                    height: 70,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ],
@@ -189,22 +197,53 @@ class _HomePageState extends State<HomePage> {
                 Row(
                   children: [
                     Expanded(
-                      child: Container(
-                        height: 100,
-                        margin: const EdgeInsets.only(right: 6),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(18),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              offset: Offset(0, 4),
-                              blurRadius: 16,
-                            ),
-                          ],
-                        ),
-                        child: const Center(
-                          child: Text('스토어', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                      child: GestureDetector(
+                        onTap: () => Navigator.pushNamed(context, AppConstants.storeRoute),
+                        child: Container(
+                          height: 100,
+                          margin: const EdgeInsets.only(right: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(18),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                offset: Offset(0, 4),
+                                blurRadius: 16,
+                              ),
+                            ],
+                          ),
+                          child: Stack(
+                            children: [
+                              // 텍스트 왼쪽 상단
+                              Positioned(
+                                left: 12,
+                                top: 12,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    Text('스토어', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                                    SizedBox(height: 2),
+                                    Text('', style: TextStyle(fontSize: 12)),
+                                  ],
+                                ),
+                              ),
+                              // 아이콘 오른쪽 하단
+                              Positioned(
+                                right: 12,
+                                bottom: 12,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(6),
+                                  child: Image.asset(
+                                    'assets/images/store_main.jpg',
+                                    width: 90,
+                                    height: 55,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -225,8 +264,36 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ],
                           ),
-                          child: const Center(
-                            child: Text('챗봇', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                          child: Stack(
+                            children: [
+                              // 텍스트 왼쪽 상단
+                              Positioned(
+                                left: 12,
+                                top: 12,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    Text('AI 보리', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                                    SizedBox(height: 2),
+                                    Text('', style: TextStyle(fontSize: 12)),
+                                  ],
+                                ),
+                              ),
+                              // 아이콘 오른쪽 하단
+                              Positioned(
+                                right: 4,
+                                bottom: 4,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.asset(
+                                    'assets/images/bori.png',
+                                    width: 68,
+                                    height: 68,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -246,8 +313,36 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ],
                         ),
-                        child: const Center(
-                          child: Text('강아지 추천', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        child: Stack(
+                          children: [
+                            // 텍스트 왼쪽 상단
+                            Positioned(
+                              left: 12,
+                              top: 12,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Text('맞춤동물 추천', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                                  SizedBox(height: 2),
+                                  Text('', style: TextStyle(fontSize: 12)),
+                                ],
+                              ),
+                            ),
+                            // 아이콘 오른쪽 하단
+                            Positioned(
+                              right: 12,
+                              bottom: 12,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.asset(
+                                  'assets/images/recommend.jpg',
+                                  width: 50,
+                                  height: 50,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -266,12 +361,28 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(8),
                       color: Colors.white,
                     ),
-                    child: Column(
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text('유기견 보호소 찾기', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                        SizedBox(height: 4),
-                        Text('내 주변 보호소를 찾아봐요', style: TextStyle(fontSize: 12, color: Colors.black54)),
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text('유기동물 보호소 찾기', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                              SizedBox(height: 4),
+                              Text('내 주변 보호소를 찾아봐요', style: TextStyle(fontSize: 12, color: Colors.black54)),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(right: 0),
+                          child: Image.asset(
+                            'assets/images/shelter.jpg',
+                            width: 180,
+                            height: 45,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -300,42 +411,49 @@ class _HomePageState extends State<HomePage> {
                       return const Center(child: Text('유기견 정보가 없습니다.'));
                     }
                     final dogsToShow = dogProvider.dogs.take(dogProvider.displayCount).toList();
-                    return GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 12,
-                        crossAxisSpacing: 12,
-                        childAspectRatio: 0.8,
+                    return SizedBox(
+                      height: 220, // 카드 높이(기존과 비슷하게 조정)
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: dogsToShow.length + ((dogProvider.displayCount < dogProvider.dogs.length) ? 1 : 0),
+                        physics: BouncingScrollPhysics(),
+                        padding: EdgeInsets.zero, // padding 제거
+                        itemBuilder: (context, index) {
+                          if (index < dogsToShow.length) {
+                            final dog = dogsToShow[index];
+                            return Container(
+                              width: MediaQuery.of(context).size.width * 0.4, // 2.5개 보이게
+                              margin: EdgeInsets.only(
+                                left: index == 0 ? 0 : 0,
+                                right: index == dogsToShow.length - 1 ? 16 : 16,
+                              ),
+                              child: _DogInfoCard(
+                                imageUrl: dog.imagesUrls.isNotEmpty
+                                    ? '${AppConstants.baseUrl.replaceAll('/api', '')}${dog.imagesUrls.first}'
+                                    : '',
+                                name: dog.name,
+                                breed: '', // 품종 정보가 없으므로 빈 문자열
+                                age: '${dog.age}살',
+                                weight: '${dog.weight}kg',
+                                found: dog.foundLocation,
+                                shelter: dog.shelterName,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AdoptionDogDetailPage(dogId: dog.id),
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          } else if (dogProvider.displayCount < dogProvider.dogs.length) {
+                            return const Center(child: CircularProgressIndicator());
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        },
                       ),
-                      itemCount: dogsToShow.length + ((dogProvider.displayCount < dogProvider.dogs.length) ? 1 : 0),
-                      itemBuilder: (context, index) {
-                        if (index < dogsToShow.length) {
-                          final dog = dogsToShow[index];
-                          return _DogInfoCard(
-                            imageUrl: dog.imagesUrls.isNotEmpty ? '${AppConstants.baseUrl.replaceAll('/api', '')}${dog.imagesUrls.first}' : '',
-                            name: dog.name,
-                            breed: '', // 품종 정보가 없으므로 빈 문자열
-                            age: '${dog.age}살',
-                            weight: '${dog.weight}kg',
-                            found: dog.foundLocation,
-                            shelter: dog.shelterName,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AdoptionDogDetailPage(dogId: dog.id),
-                                ),
-                              );
-                            },
-                          );
-                        } else if (dogProvider.displayCount < dogProvider.dogs.length) {
-                          return const Center(child: CircularProgressIndicator());
-                        } else {
-                          return const SizedBox.shrink();
-                        }
-                      },
                     );
                   },
                 ),
@@ -343,7 +461,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          bottomNavigationBar: _HomeBottomNavBar(),
+          bottomNavigationBar: HomeBottomNavBar(currentIndex: 0),
         ),
         // 알림 모달 오버레이
         if (_showNotificationModal)
@@ -420,7 +538,10 @@ class _DogInfoCard extends StatelessWidget {
 }
 
 // 하단 네비게이션 바
-class _HomeBottomNavBar extends StatelessWidget {
+class HomeBottomNavBar extends StatelessWidget {
+  final int currentIndex;
+  const HomeBottomNavBar({this.currentIndex = 0, Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final Color green = const Color(0xFF4CAF50);
@@ -476,7 +597,7 @@ class _HomeBottomNavBar extends StatelessWidget {
               break;
           }
         },
-        currentIndex: 0,
+        currentIndex: currentIndex,
       ),
     );
   }
