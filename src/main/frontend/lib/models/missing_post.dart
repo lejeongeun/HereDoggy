@@ -19,8 +19,7 @@ class MissingPost {
   final int viewCount;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final String writerNickname;
-  final String writerEmail;
+  final String nickname;
   final List<String> imagesUrls;
   final int likeCount;
   final bool isLiked;
@@ -41,8 +40,7 @@ class MissingPost {
     this.viewCount = 0,
     DateTime? createdAt,
     DateTime? updatedAt,
-    this.writerNickname = '',
-    this.writerEmail = '',
+    this.nickname = '',
     this.imagesUrls = const [],
     this.likeCount = 0,
     this.isLiked = false,
@@ -63,6 +61,10 @@ class MissingPost {
       missingLocation: json['missingLocation'],
       description: json['description'],
       isContactPublic: json['isContactPublic'] ?? false,
+      viewCount: json['viewCount'] as int? ?? 0,
+      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      nickname: json['nickname'] as String? ?? '',
       imagesUrls: (json['imageUrls'] as List<dynamic>?)?.map((e) => e as String).toList() ?? [],
       likeCount: json['likeCount'] as int? ?? 0,
       isLiked: json['isLiked'] as bool? ?? false,
@@ -97,8 +99,7 @@ class MissingPost {
     int? viewCount,
     DateTime? createdAt,
     DateTime? updatedAt,
-    String? writerNickname,
-    String? writerEmail,
+    String? nickname,
     List<String>? imagesUrls,
     int? likeCount,
     bool? isLiked,
@@ -119,8 +120,7 @@ class MissingPost {
       viewCount: viewCount ?? this.viewCount,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      writerNickname: writerNickname ?? this.writerNickname,
-      writerEmail: writerEmail ?? this.writerEmail,
+      nickname: nickname ?? this.nickname,
       imagesUrls: imagesUrls ?? this.imagesUrls,
       likeCount: likeCount ?? this.likeCount,
       isLiked: isLiked ?? this.isLiked,

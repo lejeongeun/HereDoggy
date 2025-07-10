@@ -67,6 +67,19 @@ class MemberService {
       };
     }
   }
+
+  // 산책 내역 가져오기
+  async getMyWalkRecords() {
+    try {
+      const response = await api.get('/members/walk-records');
+      return { success: true, data: response.data };
+    } catch (error) {
+      return { 
+        success: false, 
+        message: error.response?.data?.message || '산책 내역을 불러오지 못했습니다.' 
+      };
+    }
+  }
 }
 
 export default new MemberService(); 

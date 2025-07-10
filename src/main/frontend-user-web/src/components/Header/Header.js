@@ -75,6 +75,7 @@ const Header = () => {
             className="header-login-btn" 
             onClick={() => navigate('/login')}
             variant="contained"
+            sx={{ backgroundColor: '#345CFF', '&:hover': { backgroundColor: '#2746b3' } }}
           >
             로그인
           </Button>

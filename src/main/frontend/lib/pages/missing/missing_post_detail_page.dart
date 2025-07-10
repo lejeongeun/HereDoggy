@@ -171,10 +171,49 @@ class _MissingPostDetailPageState extends State<MissingPostDetailPage> {
     });
   }
 
+  void _showDeleteDialog() async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('게시글 삭제'),
+        content: const Text('정말 삭제하시겠습니까?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('취소'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('확인'),
+          ),
+        ],
+      ),
+    );
+    if (result == true) {
+      _deletePost();
+    }
+  }
+
+  Future<void> _deletePost() async {
+    try {
+      await MissingPostApi.deleteMissingPost(widget.postId);
+      if (mounted) {
+        Navigator.pop(context, true); // true 반환(삭제됨)
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('삭제 실패: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final isMine = post != null && userProvider.user?['email'] == post!.writerEmail;
+    // 닉네임으로 본인 글 확인 (정확도는 떨어질 수 있음)
+    final isMine = post != null && userProvider.user?['nickname'] == post!.nickname;
     final Color green = const Color(0xFF4CAF50);
     final Color blue = const Color(0xFF2196F3);
     final Color grayBox = const Color(0xFFF0F0F0);
@@ -220,7 +259,7 @@ class _MissingPostDetailPageState extends State<MissingPostDetailPage> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        post!.writerNickname.isNotEmpty ? post!.writerNickname : '익명',
+                                        post!.nickname.isNotEmpty ? post!.nickname : '익명',
                                         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
                                       ),
                                       const SizedBox(height: 4),
@@ -356,7 +395,14 @@ class _MissingPostDetailPageState extends State<MissingPostDetailPage> {
                                         padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
                                       ),
                                       onPressed: () {
-                                        // TODO: 수정 기능 연결
+                                        Navigator.pushNamed(
+                                          context,
+                                          '/missing-post-edit/${post!.id}',
+                                        ).then((result) {
+                                          if (result == true) {
+                                            fetchDetail();
+                                          }
+                                        });
                                       },
                                       child: const Text('수정', style: TextStyle(fontSize: 15)),
                                     ),
@@ -370,7 +416,7 @@ class _MissingPostDetailPageState extends State<MissingPostDetailPage> {
                                         padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
                                       ),
                                       onPressed: () {
-                                        // TODO: 삭제 기능 연결
+                                        _showDeleteDialog();
                                       },
                                       child: const Text('삭제', style: TextStyle(fontSize: 15)),
                                     ),

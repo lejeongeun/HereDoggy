@@ -37,7 +37,7 @@ class ReviewPost {
       viewCount: json['viewCount'] is int ? json['viewCount'] : int.tryParse(json['viewCount'].toString()) ?? 0,
       email: json['email'] as String,
       nickname: json['nickname'] as String,
-      createdAt: json['createdAt'] as String,
+      createdAt: json['createdAt']?.toString() ?? '',
       imageUrls: json['imageUrls'] != null ? List<String>.from(json['imageUrls']) : [],
       likeCount: json['likeCount'] as int? ?? 0,
       isLiked: json['isLiked'] as bool? ?? false,

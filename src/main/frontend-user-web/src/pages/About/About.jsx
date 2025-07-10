@@ -14,6 +14,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import PublicIcon from '@mui/icons-material/Public';
 import EmojiNatureIcon from '@mui/icons-material/EmojiNature';
 import './About.css';
+import FadeIn from '../../components/FadeIn';
 
 const impactList = [
   {
@@ -269,120 +270,196 @@ const timelineSteps = [
   },
 ];
 
+// 인트로 섹션 컴포넌트
+const IntroSection = () => (
+  <section className="about-intro about-section about-section-intro">
+    <FadeIn duration={1100}>
+      <img src="/images/logo.png" alt="여기보개 로고" className="about-logo" />
+    </FadeIn>
+    <FadeIn duration={1100} delay={200}>
+      <h1 className="about-title">여기보개</h1>
+    </FadeIn>
+    <FadeIn duration={1100} delay={400}>
+      <p className="about-slogan">
+        여기보개는 유기동물과 교감하고 입양까지 연결하는
+        <span className="about-highlight"> 참여형 체험 플랫폼</span>입니다.
+      </p>
+    </FadeIn>
+    <FadeIn duration={1100} delay={600}>
+      <p className="about-desc">
+        이를 통해 <span className="about-highlight">입양률을 높이고</span>, 보호소의 부담을 줄이며,<br />
+        <span className="about-highlight">지역사회와 생명 존중 문화</span>를 동시에 살립니다.
+      </p>
+    </FadeIn>
+  </section>
+);
+
+// 임팩트 섹션 컴포넌트 (네이버 연혁 카드 스타일)
+const ImpactSection = () => (
+  <section className="about-impact-section about-section">
+    <FadeIn duration={1100}>
+      <div className="about-section-title" style={{ marginBottom: 12 }}>목표 및 기대성과</div>
+    </FadeIn>
+    <div className="impact-card-row">
+      {impactList.map((item, idx) => (
+        <FadeIn key={idx} duration={900} delay={idx * 220} direction="left">
+          <div className="impact-big-card">
+            <div className="impact-big-icon">{item.icon}</div>
+            <div className="impact-big-value">{item.value}</div>
+            <div className="impact-big-desc">{item.desc}</div>
+          </div>
+        </FadeIn>
+      ))}
+    </div>
+  </section>
+);
+
+// 유기동물 현황 섹션 컴포넌트
+const AnimalStatusSection = () => (
+  <section className="about-bg-section about-section about-section-bg">
+    <FadeIn duration={1000} delay={100}>
+      <div className="about-bg-label">유기동물 현황</div>
+    </FadeIn>
+    <FadeIn duration={1000} delay={300}>
+      <div className="about-bg-maintext">
+        <span className="about-bg-strong">연간 <span className="about-highlight">12만 마리</span>의 유기동물이 발견되는 사실, 알고 계셨나요?</span><br />
+        하루에 <span className="about-highlight">5마리</span>, 매년 약 <span className="about-highlight">2만 마리</span> 이상의 유기동물은 <span className="about-highlight">안락사</span>되고 있습니다.
+      </div>
+    </FadeIn>
+    <FadeIn duration={1000} delay={500}>
+      <div className="about-bg-donuts">
+        {donutData.map((d, i) => (
+          <div className="about-bg-donut-card" key={i}>
+            <DonutChart percent={d.percent} color={d.color} />
+            <div className="about-bg-donut-label">{d.label}</div>
+            <div className="about-bg-donut-desc">
+              {d.desc.split('\n').map((line, idx) => (
+                <div key={idx}>{line}</div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </FadeIn>
+  </section>
+);
+
+// 해결점 제시 섹션 컴포넌트
+const SolutionSection = () => (
+  <section className="about-solution-section about-section">
+    <FadeIn duration={1000} delay={100}>
+      <div className="about-solution-title">
+        <span className="about-solution-green">행동을 유도</span>하고, 시스템을 <span className="about-solution-blue">혁신</span>하는 <span className="about-solution-gray">구체적인 방안</span>이 필요합니다.
+      </div>
+    </FadeIn>
+    <FadeIn duration={1000} delay={300}>
+      <div className="about-solution-cards">
+        {solutionCards.map((card, idx) => (
+          <div className="solution-card" key={idx} style={{ borderColor: card.color }}>
+            <div className="solution-card-num" style={{ background: card.color }}>{card.num}</div>
+            <div className="solution-card-title" style={{ color: card.color }}>{card.title}</div>
+            <div className="solution-card-lines">
+              {card.lines.map((line, i) => (
+                <React.Fragment key={i}>
+                  {i > 0 && <div className="solution-card-divider" />}
+                  <div className="solution-card-line">{line}</div>
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </FadeIn>
+  </section>
+);
+
+// 기능적 차별점 카드 섹션 컴포넌트
+const FeatureSection = () => (
+  <section className="about-feature-section about-section">
+    <FadeIn duration={1000} delay={100}>
+      <div className="about-section-title">여기보개의 주요 기능</div>
+      <div className="about-section-desc">입양 문화를 혁신하는 다양한 기능을 제공합니다.</div>
+    </FadeIn>
+    <FadeIn duration={1000} delay={300}>
+      <div className="about-feature-cards">
+        {featureCards.map((card, idx) => (
+          <div className="feature-card" key={idx}>
+            <div className="feature-card-icon" style={{ fontSize: 120 }}>{React.cloneElement(card.icon, { style: { ...card.icon.props.style, fontSize: 120 } })}</div>
+            <div className="feature-card-title" style={{ color: card.color }}>{card.title}</div>
+            <div className="feature-card-desc">{card.desc}</div>
+          </div>
+        ))}
+      </div>
+    </FadeIn>
+  </section>
+);
+
+// 수익 모델 분석 블록 섹션 컴포넌트
+const RevenueSection = () => (
+  <section className="about-revenue-section about-section">
+    <FadeIn duration={1000} delay={100}>
+      <div className="about-section-title">지속 가능한 수익 구조</div>
+      <div className="about-section-desc">모든 참여자가 함께 성장하는 선순환 구조를 만듭니다.</div>
+    </FadeIn>
+    <FadeIn duration={1000} delay={300}>
+      <svg className="about-revenue-connector" width="100%" height="80" viewBox="0 0 1100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="220" y1="40" x2="550" y2="40" stroke="#b7e2c7" strokeWidth="3.5" />
+        <line x1="550" y1="40" x2="880" y2="40" stroke="#b7e2c7" strokeWidth="3.5" />
+      </svg>
+      <div className="about-revenue-blocks">
+        {revenueBlocks.map((block, idx) => (
+          <div className="revenue-block" key={idx}>
+            <div className="revenue-block-icon" style={{ fontSize: 120 }}>{
+              typeof block.icon === 'string' ? block.icon : React.cloneElement(block.icon, { style: { ...block.icon.props?.style, fontSize: 120 } })
+            }</div>
+            {block.title}
+            <div className="revenue-block-desc">{block.desc}</div>
+          </div>
+        ))}
+      </div>
+    </FadeIn>
+  </section>
+);
+
+// 시장 점유 목표 & 계획 타임라인 섹션 컴포넌트
+const TimelineSection = () => (
+  <section className="about-timeline-section about-section">
+    <FadeIn duration={1000} delay={100}>
+      <div className="about-section-title">성장 로드맵</div>
+      <div className="about-section-desc">단계별 목표와 함께 미래를 향해 나아갑니다.</div>
+    </FadeIn>
+    <FadeIn duration={1000} delay={300}>
+      <svg className="about-timeline-connector" width="100%" height="80" viewBox="0 0 1100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="160" y1="40" x2="366" y2="40" stroke="#b7e2c7" strokeWidth="3.5" />
+        <line x1="366" y1="40" x2="733" y2="40" stroke="#b7e2c7" strokeWidth="3.5" />
+        <line x1="733" y1="40" x2="940" y2="40" stroke="#b7e2c7" strokeWidth="3.5" />
+      </svg>
+      <div className="about-timeline-blocks">
+        {timelineSteps.map((step, idx) => (
+          <div className="timeline-block" key={idx}>
+            <div className="timeline-block-year">{step.year}</div>
+            <div className="timeline-block-circle" style={{ borderColor: step.color }}>
+              {React.cloneElement(step.icon, { style: { ...step.icon.props.style, fontSize: 120 } })}
+            </div>
+            <div className="timeline-block-title" style={{ color: step.color }}>{step.title}</div>
+            <div className="timeline-block-desc">{step.desc}</div>
+          </div>
+        ))}
+      </div>
+    </FadeIn>
+  </section>
+);
+
 const About = () => {
   return (
     <div className="about-page-bg">
-      <section className="about-intro">
-        <img src="/images/logo.png" alt="여기보개 로고" className="about-logo" />
-        <h1 className="about-title">여기보개</h1>
-        <p className="about-slogan">
-          여기보개는 유기동물과 교감하고 입양까지 연결하는
-          <span className="about-highlight"> 참여형 체험 플랫폼</span>입니다.
-        </p>
-        <p className="about-desc">
-          이를 통해 <span className="about-highlight">입양률을 높이고</span>, 보호소의 부담을 줄이며,<br />
-          <span className="about-highlight">지역사회와 생명 존중 문화</span>를 동시에 살립니다.
-        </p>
-      </section>
-      <section className="about-impact-cards">
-        {impactList.map((item, idx) => (
-          <div className="impact-card" key={idx}>
-            <div className="impact-icon">{item.icon}</div>
-            <div className="impact-value">{item.value}</div>
-            <div className="impact-desc">{item.desc}</div>
-          </div>
-        ))}
-      </section>
-      <section className="about-bg-section">
-        <div className="about-bg-label">유기동물 현황</div>
-        <div className="about-bg-maintext">
-          <span className="about-bg-strong">연간 <span className="about-highlight">12만 마리</span>의 유기동물이 발견되는 사실, 알고 계셨나요?</span><br />
-          하루에 <span className="about-highlight">5마리</span>, 매년 약 <span className="about-highlight">2만 마리</span> 이상의 유기동물은 <span className="about-highlight">안락사</span>되고 있습니다.
-        </div>
-        <div className="about-bg-donuts">
-          {donutData.map((d, i) => (
-            <div className="about-bg-donut-card" key={i}>
-              <DonutChart percent={d.percent} color={d.color} />
-              <div className="about-bg-donut-label">{d.label}</div>
-              <div className="about-bg-donut-desc">
-                {d.desc.split('\n').map((line, idx) => (
-                  <div key={idx}>{line}</div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-      {/* 해결점 제시 섹션 */}
-      <section className="about-solution-section">
-        <div className="about-solution-title">
-          <span className="about-solution-green">행동을 유도</span>하고, 시스템을 <span className="about-solution-blue">혁신</span>하는 <span className="about-solution-gray">구체적인 방안</span>이 필요합니다.
-        </div>
-        <div className="about-solution-cards">
-          {solutionCards.map((card, idx) => (
-            <div className="solution-card" key={idx} style={{ borderColor: card.color }}>
-              <div className="solution-card-num" style={{ background: card.color }}>{card.num}</div>
-              <div className="solution-card-title" style={{ color: card.color }}>{card.title}</div>
-              <div className="solution-card-lines">
-                {card.lines.map((line, i) => (
-                  <React.Fragment key={i}>
-                    {i > 0 && <div className="solution-card-divider" />}
-                    <div className="solution-card-line">{line}</div>
-                  </React.Fragment>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-      {/* 기능적 차별점 카드 섹션 */}
-      <section className="about-feature-section">
-        <div className="about-feature-cards">
-          {featureCards.map((card, idx) => (
-            <div className="feature-card" key={idx}>
-              <div className="feature-card-icon">{card.icon}</div>
-              <div className="feature-card-title" style={{ color: card.color }}>{card.title}</div>
-              <div className="feature-card-desc">{card.desc}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-      {/* 수익 모델 분석 블록 섹션 (원+선+중앙정렬) */}
-      <section className="about-revenue-section">
-        <svg className="about-revenue-connector" width="100%" height="80" viewBox="0 0 1100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <line x1="220" y1="40" x2="550" y2="40" stroke="#b7e2c7" strokeWidth="3.5" />
-          <line x1="550" y1="40" x2="880" y2="40" stroke="#b7e2c7" strokeWidth="3.5" />
-        </svg>
-        <div className="about-revenue-blocks">
-          {revenueBlocks.map((block, idx) => (
-            <div className="revenue-block" key={idx}>
-              <div className="revenue-block-icon">{block.icon}</div>
-              {block.title}
-              <div className="revenue-block-desc">{block.desc}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-      {/* 시장 점유 목표 & 계획 타임라인 섹션 */}
-      <section className="about-timeline-section">
-        <svg className="about-timeline-connector" width="100%" height="80" viewBox="0 0 1100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <line x1="160" y1="40" x2="366" y2="40" stroke="#b7e2c7" strokeWidth="3.5" />
-          <line x1="366" y1="40" x2="733" y2="40" stroke="#b7e2c7" strokeWidth="3.5" />
-          <line x1="733" y1="40" x2="940" y2="40" stroke="#b7e2c7" strokeWidth="3.5" />
-        </svg>
-        <div className="about-timeline-blocks">
-          {timelineSteps.map((step, idx) => (
-            <div className="timeline-block" key={idx}>
-              <div className="timeline-block-year">{step.year}</div>
-              <div className="timeline-block-circle" style={{ borderColor: step.color }}>
-                {step.icon}
-              </div>
-              <div className="timeline-block-title" style={{ color: step.color }}>{step.title}</div>
-              <div className="timeline-block-desc">{step.desc}</div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <IntroSection />
+      <ImpactSection />
+      <AnimalStatusSection />
+      <SolutionSection />
+      <FeatureSection />
+      <RevenueSection />
+      <TimelineSection />
     </div>
   );
 };
