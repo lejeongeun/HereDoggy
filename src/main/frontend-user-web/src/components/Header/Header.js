@@ -1,13 +1,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { Button, Menu, MenuItem, Avatar, Typography } from '@mui/material';
+import { useCart } from '../../contexts/CartContext';
+import { Button, Menu, MenuItem, Avatar, Typography, IconButton, Badge } from '@mui/material';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useState } from 'react';
 import './Header.css';
 
 const Header = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuth();
+  const { cartItems } = useCart();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenuClick = (event) => {
@@ -29,6 +32,10 @@ const Header = () => {
     navigate('/mypage');
   };
 
+  const handleCartClick = () => {
+    navigate('/cart');
+  };
+
   return (
     <header className="header">
       <div className="header-content">
@@ -42,6 +49,11 @@ const Header = () => {
             placeholder="무엇이든 물어보세요…"
           />
         </div>
+        <IconButton color="inherit" onClick={handleCartClick} sx={{ mr: 2 }}>
+          <Badge badgeContent={cartItems.reduce((acc, item) => acc + item.quantity, 0)} color="primary">
+            <ShoppingCartIcon />
+          </Badge>
+        </IconButton>
         {isAuthenticated ? (
           <div className="header-user-section">
             <Button
