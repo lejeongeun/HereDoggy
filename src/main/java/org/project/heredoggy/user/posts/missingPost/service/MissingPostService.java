@@ -3,7 +3,6 @@ package org.project.heredoggy.user.posts.missingPost.service;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.domain.postgresql.comment.PostType;
 import org.project.heredoggy.domain.postgresql.dog.Dog;
-import org.project.heredoggy.domain.postgresql.dog.DogRepository;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.post.PostImage;
 import org.project.heredoggy.domain.postgresql.post.PostImageRepository;
@@ -18,10 +17,7 @@ import org.project.heredoggy.global.exception.NotFoundException;
 import org.project.heredoggy.global.util.AuthUtils;
 import org.project.heredoggy.image.ImageService;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.user.posts.missingPost.dto.DogInfoDTO;
-import org.project.heredoggy.user.posts.missingPost.dto.MissingPostEditRequestDTO;
-import org.project.heredoggy.user.posts.missingPost.dto.MissingPostRequestDTO;
-import org.project.heredoggy.user.posts.missingPost.dto.MissingPostResponseDTO;
+import org.project.heredoggy.user.posts.missingPost.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +32,6 @@ public class MissingPostService {
     private final MissingPostRepository missingPostRepository;
     private final PostImageRepository postImageRepository;
     private final ReservationRepository reservationRepository;
-    private final DogRepository dogRepository;
     private final ImageService imageService;
 
     @Transactional
@@ -155,14 +149,9 @@ public class MissingPostService {
         missingPostRepository.deleteById(postId);
     }
 
-
-    public List<MissingPostResponseDTO> getAllMissingPosts() {
-
-        List<MissingPost> lists = missingPostRepository.findAllOrderByCreatedAtDesc();
-
-        return lists.stream()
-                .map(post -> convertToDTO(post, List.of()))
-                .collect(Collectors.toList());
+    @Transactional(readOnly = true)
+    public List<MissingPostResDTO> getAllMissingPosts() {
+        return missingPostRepository.findAllOptimized();
     }
 
 

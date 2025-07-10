@@ -5,9 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.security.CustomUserDetails;
-import org.project.heredoggy.shelter.noticePost.dto.ShelterNoticePostEditRequestDTO;
-import org.project.heredoggy.shelter.noticePost.dto.ShelterNoticePostRequestDTO;
-import org.project.heredoggy.shelter.noticePost.dto.ShelterNoticePostResponseDTO;
+import org.project.heredoggy.shelter.noticePost.dto.*;
 import org.project.heredoggy.shelter.noticePost.service.ShelterNoticePostService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -68,8 +66,8 @@ public class ShelterNoticePostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ShelterNoticePostResponseDTO>> getNoticePostByCreatedAt(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        List<ShelterNoticePostResponseDTO> res = noticePostService.getAllNoticePost(userDetails);
+    public ResponseEntity<List<NoticePostResDTO>> getNoticePostByCreatedAt(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        List<NoticePostResDTO> res = noticePostService.getAllNoticePost(userDetails);
         return ResponseEntity.ok(res);
     }
 

@@ -6,13 +6,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.project.heredoggy.domain.postgresql.comment.*;
 import org.project.heredoggy.domain.postgresql.member.*;
 import org.project.heredoggy.domain.postgresql.notice.*;
+import org.project.heredoggy.domain.postgresql.post.PostImage;
+import org.project.heredoggy.domain.postgresql.post.PostImageRepository;
 import org.project.heredoggy.domain.postgresql.post.free.*;
 import org.project.heredoggy.domain.postgresql.post.like.*;
 import org.project.heredoggy.domain.postgresql.post.missing.*;
 import org.project.heredoggy.domain.postgresql.post.review.*;
 import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -29,10 +33,12 @@ public class PostDataInitializer {
     private final MissingPostRepository missingPostRepository;
     private final ReviewPostRepository reviewPostRepository;
     private final NoticePostRepository noticePostRepository;
+    private final PostImageRepository postImageRepository;
 
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
 
+    private final RestTemplate restTemplate;
     private final Random random = new Random();
 
     @PostConstruct
@@ -68,6 +74,7 @@ public class PostDataInitializer {
                             .build()
             );
 
+            generateImagesFromApi(post, null, null, null);
             generateCommentsAndLikes(writer, PostType.FREE, post.getId(), post, null, null, null);
         });
     }
@@ -94,6 +101,7 @@ public class PostDataInitializer {
                             .build()
             );
 
+            generateImagesFromApi(null, post, null, null);
             generateCommentsAndLikes(writer, PostType.MISSING, post.getId(), null, post, null, null);
         });
     }
@@ -113,6 +121,7 @@ public class PostDataInitializer {
                             .build()
             );
 
+            generateImagesFromApi(null, null, post, null);
             generateCommentsAndLikes(writer, PostType.REVIEW, post.getId(), null, null, post, null);
         });
     }
@@ -133,7 +142,7 @@ public class PostDataInitializer {
                             .shelter(shelter) // ✅ Shelter 연결 추가
                             .build()
             );
-
+            generateImagesFromApi(null, null, null, post);
             generateCommentsAndLikes(shelterAdmin, PostType.NOTICE, post.getId(), null, null, null, post);
         });
     }
@@ -161,6 +170,27 @@ public class PostDataInitializer {
             if (reviewPost != null) builder.reviewPost(reviewPost);
             if (noticePost != null) builder.noticePost(noticePost);
             likeRepository.save(builder.build());
+        }
+    }
+
+    // 이미지 저장 메서드 추가
+    private void generateImagesFromApi(FreePost freePost, MissingPost missingPost, ReviewPost reviewPost, NoticePost noticePost) {
+        for (int i = 0; i < 2; i++) {
+            try {
+                String apiUrl = "https://dog.ceo/api/breeds/image/random";
+                ResponseEntity<Map> response = restTemplate.getForEntity(apiUrl, Map.class);
+                String imageUrl = (String) response.getBody().get("message");
+
+                PostImage.PostImageBuilder builder = PostImage.builder().imageUrl(imageUrl);
+                if (freePost != null) builder.freePost(freePost);
+                if (missingPost != null) builder.missingPost(missingPost);
+                if (reviewPost != null) builder.reviewPost(reviewPost);
+                if (noticePost != null) builder.noticePost(noticePost);
+                postImageRepository.save(builder.build());
+
+            } catch (Exception e) {
+                log.warn("❌ dog.ceo 이미지 불러오기 실패: {}", e.getMessage());
+            }
         }
     }
 }

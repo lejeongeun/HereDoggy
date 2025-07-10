@@ -4,6 +4,7 @@ import com.sun.jdi.request.InvalidRequestStateException;
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.dog.dto.DogResponseDTO;
 import org.project.heredoggy.domain.postgresql.dog.Dog;
+import org.project.heredoggy.domain.postgresql.dog.DogImage;
 import org.project.heredoggy.domain.postgresql.dog.DogRepository;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.shelter.shelter.Shelter;
@@ -21,6 +22,7 @@ import org.project.heredoggy.global.util.TimeUtil;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.shelter.walk.walkRoute.dto.WalkRouteResponseDTO;
 import org.project.heredoggy.shelter.walk.walkRoute.mapper.WalkRouteMapper;
+import org.project.heredoggy.user.walk.reservation.dto.DogSimpleDTO;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationRequestDTO;
 import org.project.heredoggy.user.walk.reservation.dto.MemberReservationResponseDTO;
 import org.project.heredoggy.user.walk.reservation.dto.UnavailableTimeResponseDTO;
@@ -180,14 +182,23 @@ public class MemberReservationService {
     @Transactional
     public void cancelRequestReservation(CustomUserDetails userDetails, Long reservationsId) {
         Member member = userDetails.getMember();
+
         Reservation reservation = reservationRepository.findById(reservationsId)
                 .orElseThrow(()-> new NotFoundException(ErrorMessages.RESERVATION_NOT_FOUND));
         if (!reservation.getMember().getId().equals(member.getId())){
             throw new BadRequestException(ErrorMessages.UNAUTHORIZED_ACCESS);
         }
 
-        reservation.setStatus(WalkReservationStatus.CANCELED_REQUEST);
-        reservationRepository.save(reservation);
+        if (reservation.getStatus().equals(WalkReservationStatus.APPROVED)){
+            reservation.setStatus(WalkReservationStatus.CANCELED);
+            reservationRepository.save(reservation);
+
+        }
+
+        if (reservation.getStatus().equals(WalkReservationStatus.PENDING)){
+            reservation.setStatus(WalkReservationStatus.CANCELED_REQUEST);
+            reservationRepository.save(reservation);
+        }
 
         sseNotificationFactory.notifyWalkReservationCanceled(
                 reservation.getShelter().getShelterAdmin(),
@@ -258,5 +269,22 @@ public class MemberReservationService {
         if (TimeUtil.isAfternoon(newStartTime) && hasAfternoon){
             throw new BadRequestException("해당 강아지는 오후 예약이 이미 존재합니다.");
         }
+    }
+
+    public List<DogSimpleDTO> getCompletedDogsByMember(CustomUserDetails userDetails) {
+        Member member = AuthUtils.getValidMember(userDetails);
+
+        List<Reservation> reservations = reservationRepository
+                .findByMemberAndStatus(member, WalkReservationStatus.COMPLETED);
+
+        return reservations.stream()
+                .map(res -> {
+                    Dog dog = res.getDog();
+                    List<DogImage> images = dog.getImages();
+                    String thumbnail = (images != null && !images.isEmpty()) ? images.get(0).getImageUrl() : null;
+                    return new DogSimpleDTO(dog.getId(), dog.getName(), thumbnail);
+                })
+                .distinct()
+                .collect(Collectors.toList());
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
@@ -21,4 +22,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findByDogIdAndStatusIn(Long dogId, List<WalkReservationStatus> statuses);
 
+    List<Reservation> findByMemberAndStatus(Member member, WalkReservationStatus walkReservationStatus);
+
+    Optional<Reservation> findByIdAndMember(Long reservationId, Member member);
 }

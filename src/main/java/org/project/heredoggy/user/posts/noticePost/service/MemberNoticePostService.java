@@ -6,14 +6,12 @@ import org.project.heredoggy.domain.postgresql.notice.NoticePostRepository;
 import org.project.heredoggy.domain.postgresql.post.PostImage;
 import org.project.heredoggy.domain.postgresql.post.PostImageRepository;
 import org.project.heredoggy.global.exception.NotFoundException;
-import org.project.heredoggy.global.util.AuthUtils;
-import org.project.heredoggy.security.CustomUserDetails;
+import org.project.heredoggy.shelter.noticePost.dto.NoticePostResDTO;
 import org.project.heredoggy.shelter.noticePost.dto.ShelterNoticePostResponseDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,13 +19,9 @@ public class MemberNoticePostService {
     private final NoticePostRepository noticePostRepository;
     private final PostImageRepository postImageRepository;
 
-    public List<ShelterNoticePostResponseDTO> getNoticePostsByShelter(Long shelterId) {
-
-        List<NoticePost> posts = noticePostRepository.findAllByShelterIdOrderByCreatedAtDesc(shelterId);
-
-        return posts.stream()
-                .map(post -> convertToDTO(post, List.of()))
-                .collect(Collectors.toList());
+    @Transactional(readOnly = true)
+    public List<NoticePostResDTO> getNoticePostsByShelter(Long shelterId) {
+        return noticePostRepository.findAllByShelterIdProjected(shelterId);
     }
 
     @Transactional

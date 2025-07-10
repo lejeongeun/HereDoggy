@@ -6,7 +6,11 @@ import org.project.heredoggy.domain.postgresql.post.free.FreePost;
 import org.project.heredoggy.domain.postgresql.post.missing.MissingPost;
 import org.project.heredoggy.domain.postgresql.post.review.ReviewPost;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface LikeRepository extends JpaRepository<Like, Long> {
@@ -25,4 +29,12 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     Long countByMissingPost(MissingPost missingPost);
     Long countByReviewPost(ReviewPost reviewPost);
     Long countByNoticePost(NoticePost noticePost);
+
+    @Query("SELECT l.freePost.id AS postId, COUNT(1) AS count " + "FROM Like l WHERE l.freePost IN :posts GROUP BY l.freePost.id")
+    List<LikeCountProjection> countLikesByFreePostIn(@Param("posts") List<FreePost> posts);
+
+    public interface LikeCountProjection {
+        Long getPostId();
+        Long getCount();
+    }
 }

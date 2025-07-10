@@ -1,12 +1,14 @@
 package org.project.heredoggy.user.posts.freePost.service;
 
 import lombok.RequiredArgsConstructor;
+import org.project.heredoggy.domain.postgresql.comment.CommentRepository;
 import org.project.heredoggy.domain.postgresql.comment.PostType;
 import org.project.heredoggy.domain.postgresql.member.Member;
 import org.project.heredoggy.domain.postgresql.post.PostImage;
 import org.project.heredoggy.domain.postgresql.post.PostImageRepository;
 import org.project.heredoggy.domain.postgresql.post.free.FreePost;
 import org.project.heredoggy.domain.postgresql.post.free.FreePostRepository;
+import org.project.heredoggy.domain.postgresql.post.like.LikeRepository;
 import org.project.heredoggy.global.exception.BadRequestException;
 import org.project.heredoggy.global.exception.ConflictException;
 import org.project.heredoggy.global.exception.NotFoundException;
@@ -15,6 +17,7 @@ import org.project.heredoggy.image.ImageService;
 import org.project.heredoggy.security.CustomUserDetails;
 import org.project.heredoggy.user.posts.freePost.dto.FreePostEditRequestDTO;
 import org.project.heredoggy.user.posts.freePost.dto.FreePostRequestDTO;
+import org.project.heredoggy.user.posts.freePost.dto.FreePostResDTO;
 import org.project.heredoggy.user.posts.freePost.dto.FreePostResponseDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -131,20 +135,9 @@ public class FreePostService {
         freePostRepository.deleteById(postId);
     }
 
-
-    public List<FreePostResponseDTO> getAllFreePosts() {
-
-        List<FreePost> lists = freePostRepository.findAllOrderByCreatedAtDesc();
-
-        return lists.stream()
-//                .map(post -> convertToDTO(post, List.of()))
-                .map(post -> {
-                    List<String> imageUrls = postImageRepository.findByFreePost(post).stream()
-                            .map(PostImage::getImageUrl)
-                            .toList();
-                    return convertToDTO(post, imageUrls);
-                })
-                .collect(Collectors.toList());
+    @Transactional(readOnly = true)
+    public List<FreePostResDTO> getAllFreePosts() {
+        return freePostRepository.findAllProjected();
     }
 
 
