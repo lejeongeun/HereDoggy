@@ -19,6 +19,61 @@ import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import './Home.css';
 
+// --- 파도 애니메이션 컴포넌트 추가 ---
+const AnimatedWave = () => {
+  const pathRefs = [useRef(), useRef(), useRef()];
+
+  // 파도 갯수
+  const configs = [
+    { amp: 25, freq: 2, speed: 0.4, baseY: 70, color: "#E0F7FA", opacity: 1 }, 
+    { amp: 20, freq: 2.4, speed: 0.6, baseY: 86, color: "#B2EBF2", opacity: 0.7 }, 
+    { amp: 15, freq: 2.1, speed: 0.8, baseY: 95, color: "#80DEEA", opacity: 0.42 }  
+  ];
+
+  function makeWavePath({amp, freq, speed, baseY}, phase, width=1440, height=120) {
+    let d = `M0,${baseY}`;
+    for (let x = 0; x <= width; x += 30) {
+      let theta = (x / width) * freq * Math.PI * 2 + phase * speed;
+      let y = baseY + amp * Math.sin(theta);
+      d += ` L${x},${y}`;
+    }
+    d += ` L${width},${height} L0,${height} Z`;
+    return d;
+  }
+
+  useEffect(() => {
+    let raf;
+    let start = Date.now();
+    function animate() {
+      const now = Date.now();
+      const phase = (now - start) / 1200; // Removed % (Math.PI * 2) for continuous phase
+      configs.forEach((cfg, idx) => {
+        const path = pathRefs[idx].current;
+        if (path) path.setAttribute("d", makeWavePath(cfg, phase + idx * 0.5)); // Adjusted idx offset for visual distinction
+      });
+      raf = requestAnimationFrame(animate);
+    }
+    animate();
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  return (
+    <div className="hero-wave">
+      <svg viewBox="0 0 1440 120" width="100%" height="100%" preserveAspectRatio="none">
+        {configs.map((cfg, idx) => (
+          <path
+            key={idx}
+            ref={pathRefs[idx]}
+            fill={cfg.color}
+            opacity={cfg.opacity}
+          />
+        ))}
+      </svg>
+    </div>
+  );
+};
+// --- 여기까지 ---
+
 const getTabMenus = (isAuthenticated) => {
   const baseMenus = [
     { icon: <StorefrontIcon />, label: '스토어', path: '/store' },
@@ -27,7 +82,6 @@ const getTabMenus = (isAuthenticated) => {
   ];
 
   if (isAuthenticated) {
-    // 로그인된 사용자: 마이페이지, 입양신청, 입양내역, 실종신고/문의 추가
     return [
       ...baseMenus,
       { icon: <PersonIcon />, label: '마이페이지', path: '/mypage' },
@@ -36,7 +90,6 @@ const getTabMenus = (isAuthenticated) => {
       { icon: <HelpOutlineIcon />, label: '실종신고/문의', path: '/missing' },
     ];
   } else {
-    // 비로그인 사용자: 로그인 탭만 추가
     return [
       ...baseMenus,
       { icon: <VpnKeyIcon />, label: '로그인/로그아웃', path: '/login' },
@@ -147,11 +200,9 @@ const Home = () => {
   const coreRefs = [useRef(null), useRef(null), useRef(null)];
   const [coreVisible, setCoreVisible] = useState([false, false, false]);
 
-  // 로그인 상태에 따른 탭 메뉴 동적 생성
   const tabMenus = getTabMenus(isAuthenticated);
   const infoCards = getInfoCards(isAuthenticated);
 
-  // 임팩트 숫자 애니메이션 상태
   const [impactCounts, setImpactCounts] = useState(impactStats.map(() => 0));
   useEffect(() => {
     let raf;
@@ -174,25 +225,20 @@ const Home = () => {
     return () => raf && cancelAnimationFrame(raf);
   }, []);
 
-  // 후원 배너 스크롤 애니메이션
   useEffect(() => {
     const handleScroll = () => {
       const donationSection = document.querySelector('.donation-section');
       if (donationSection) {
         const rect = donationSection.getBoundingClientRect();
         const windowHeight = window.innerHeight;
-        
-        // 섹션이 화면의 70% 이상 보일 때 애니메이션 트리거
         if (rect.top < windowHeight * 0.7 && !donationAnimated) {
           setDonationAnimated(true);
           donationSection.classList.add('animate');
         }
       }
     };
-
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // 초기 로드 시에도 체크
-
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, [donationAnimated]);
 
@@ -231,7 +277,6 @@ const Home = () => {
 
   const handleCardClick = (card) => {
     if (card.requiresAuth && !isAuthenticated) {
-      // 인증이 필요한 기능인데 로그인하지 않은 경우
       alert('로그인이 필요한 서비스입니다. 로그인 후 이용해주세요.');
       navigate('/login');
     } else {
@@ -273,11 +318,7 @@ const Home = () => {
             )}
           </React.Fragment>
         ))}
-        <div className="hero-wave">
-          <svg viewBox="0 0 1440 120" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0,80 Q360,0 720,60 T1440,80 L1440,120 L0,120 Z" fill="#f8f9fa" />
-          </svg>
-        </div>
+        <AnimatedWave />
         <div className="hero-pagination">
           {heroImages.map((_, idx) => (
             <button
@@ -359,7 +400,6 @@ const Home = () => {
                 <span className="story-date">2024.01.15</span>
               </div>
             </div>
-            
             <div className="story-item">
               <img src="/images/adoption-story2.jpg" alt="입양 스토리 2" />
               <div className="story-content">
@@ -368,7 +408,6 @@ const Home = () => {
                 <span className="story-date">2024.01.10</span>
               </div>
             </div>
-            
             <div className="story-item">
               <img src="/images/adoption-story3.jpg" alt="입양 스토리 3" />
               <div className="story-content">
@@ -413,4 +452,4 @@ const Home = () => {
   );
 };
 
-export default Home; 
+export default Home;

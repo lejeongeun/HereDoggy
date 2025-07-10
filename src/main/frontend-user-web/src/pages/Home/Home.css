@@ -1268,6 +1268,30 @@
   opacity: 0.85;
   line-height: 1.6;
 }
+.hero-wave path.wave1 {
+  animation: waveMove1 6s infinite linear alternate;
+}
+.hero-wave path.wave2 {
+  animation: waveMove2 9s infinite linear alternate;
+}
+.hero-wave path.wave3 {
+  animation: waveMove3 12s infinite linear alternate;
+}
+
+@keyframes waveMove1 {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-18px); }
+}
+@keyframes waveMove2 {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-9px); }
+}
+@keyframes waveMove3 {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-24px); }
+}
+
+
 @media (max-width: 900px) {
   .core-services-cards {
     flex-direction: column;
