@@ -1,7 +1,6 @@
 import React from "react";
-import { FaWalking, FaCheckCircle, FaTimesCircle, FaClock, FaChartPie } from "react-icons/fa";
+import { FaWalking, FaCheckCircle, FaTimesCircle, FaClock } from "react-icons/fa";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import CountUp from 'react-countup';
 
 function StatCard({ icon, label, value, color }) {
   return (

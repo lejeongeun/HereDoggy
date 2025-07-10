@@ -1,12 +1,8 @@
 import React, { useState } from "react";
 import { LineChart, Line, ResponsiveContainer } from 'recharts';
-import CountUp from 'react-countup';
 
 function DashCard({ label, value, tooltipContent, diff, icon, trendData }) {
   const [showTooltip, setShowTooltip] = useState(false);
-
-  // value에서 숫자만 추출
-  const numericValue = parseFloat(value.replace(/[^0-9.]/g, ''));
 
   return (
     <div
