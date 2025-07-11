@@ -8,10 +8,12 @@ import {
   LuHouse, 
   LuHeartHandshake,
   LuCircleHelp,      
-  LuSettings       
+  LuSettings,
+  LuHandshake       
 } from "react-icons/lu"; 
 import '../../../styles/shelter/layouts/sidebar.css';
 import logoImg from '../../../assets/Logo2.png';
+import PartnerRequestList from '../../../pages/shelter/PartnerRequestList';
 
 const menuList = [
   { name: '대시보드', path: '/shelter/dashboard', icon: <LuLayoutDashboard /> },
@@ -21,6 +23,7 @@ const menuList = [
   { name: '산책예약 관리', path: '/shelter/walkreservationlist', icon: <LuCalendarCheck /> },
   { name: '입양 관리', path: '/shelter/adoptionlist', icon: <LuHouse /> },
   { name: '후원 관리', path: '/shelter/donationlist', icon: <LuHeartHandshake /> },
+  { name: '협약체 관리', path: '/shelter/partner-request', icon: <LuHandshake /> },
 ];
 
 function Sidebar() {

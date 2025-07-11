@@ -1,13 +1,12 @@
 import '../../../styles/shelter/layouts/topbar.css';
-import api from '../../../api/shelter/api'; // api 인스턴스 반드시 import!
+import api from '../../../api/shelter/api';
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Bell, LogOut } from 'lucide-react';
-import useSseNotifications from './useSseNotifications';
 import { getShelterProfile } from '../../../api/shelter/shelter';
 import { FaHome } from 'react-icons/fa';
 
-// 알림 개수 API (api 인스턴스 사용!)
+// 알림 개수 API
 const getUnreadNotifications = async () => {
   try {
     const response = await api.get("/api/notifications/unread");
@@ -48,8 +47,6 @@ function Topbar() {
     navigate("/");
     try {
       await api.post("/api/shelters/logout", {}, { withCredentials: true });
-      alert("로그아웃 되었습니다!");
-      navigate("/");
     } catch (e) {
       alert("로그아웃 실패");
     }
@@ -63,10 +60,13 @@ function Topbar() {
   useEffect(() => {
     fetchUnreadNotifications();
     fetchShelterName();
-  }, []);
 
-  // SSE로 실시간 알림 뱃지 증가
-  useSseNotifications(() => setUnreadCount((c) => c + 1));
+    const interval = setInterval(() => {
+      fetchUnreadNotifications();
+    }, 5000); // 5초마다 알림 개수 갱신
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <header className="topbar">

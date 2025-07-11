@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import api from '../../../api/shelter/api';
 import {
   getNotifications,
   markNotificationAsRead,
   deleteNotification
 } from '../../../api/shelter/notification';
+import api from '../../../api/shelter/api';
 import '../../../styles/shelter/notification/notificationList.css';
 import { MdNotificationsActive, MdNotificationsNone } from 'react-icons/md';
 
@@ -18,70 +18,79 @@ const NotificationList = ({ setUnreadCount }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 알림 목록 불러오기 (진입 시 자동 전체 읽음 X)
+  // 알림 목록 불러오기
   const fetchNotifications = async () => {
-    // 더미 데이터 (테스트용)
-    const dummy = [
-      { id: 1, title: '입양 문의가 도착했습니다', content: '새 입양 문의가 등록되었습니다.', isRead: false, createdAt: new Date().toISOString() },
-      { id: 2, title: '후원금 입금 안내', content: '후원금 10,000원이 입금되었습니다.', isRead: true, createdAt: new Date(Date.now() - 3600*1000).toISOString() },
-      { id: 3, title: '예약 취소 알림', content: '산책 예약이 취소되었습니다.', isRead: false, createdAt: new Date(Date.now() - 2*3600*1000).toISOString() },
-      { id: 4, title: '공지사항', content: '시스템 점검 안내: 5월 10일 02:00~04:00', isRead: true, createdAt: new Date(Date.now() - 3*3600*1000).toISOString() },
-      { id: 5, title: '입양 완료', content: '강아지 뽀삐가 입양되었습니다.', isRead: false, createdAt: new Date(Date.now() - 4*3600*1000).toISOString() },
-      { id: 6, title: '후원자 메시지', content: '후원자님이 메시지를 남겼습니다.', isRead: true, createdAt: new Date(Date.now() - 5*3600*1000).toISOString() },
-      { id: 7, title: '예약 확정', content: '산책 예약이 확정되었습니다.', isRead: false, createdAt: new Date(Date.now() - 6*3600*1000).toISOString() },
-      { id: 8, title: '입양 문의 답변', content: '입양 문의에 답변이 등록되었습니다.', isRead: true, createdAt: new Date(Date.now() - 7*3600*1000).toISOString() },
-      { id: 9, title: '시스템 알림', content: '비밀번호가 변경되었습니다.', isRead: false, createdAt: new Date(Date.now() - 8*3600*1000).toISOString() },
-      { id: 10, title: '후원금 입금 안내', content: '후원금 5,000원이 입금되었습니다.', isRead: true, createdAt: new Date(Date.now() - 9*3600*1000).toISOString() },
-      { id: 11, title: '예약 취소 알림', content: '산책 예약이 취소되었습니다.', isRead: false, createdAt: new Date(Date.now() - 10*3600*1000).toISOString() },
-      { id: 12, title: '공지사항', content: '새로운 공지사항이 등록되었습니다.', isRead: true, createdAt: new Date(Date.now() - 11*3600*1000).toISOString() },
-    ];
-    setNotifications(dummy);
-    if (setUnreadCount) {
-      setUnreadCount(dummy.filter(n => !n.isRead).length);
+    try {
+      const res = await getNotifications();
+      const notiList = Array.isArray(res) ? res : [];
+
+      setNotifications(notiList);
+      if (setUnreadCount) {
+        setUnreadCount(notiList.filter(n => !n.isRead).length);
+      }
+    } catch (err) {
+      console.error("알림 목록 조회 실패:", err);
+      setError("알림을 불러오지 못했습니다.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  // 마운트 시 단순히 목록만 조회
   useEffect(() => {
-    fetchNotifications();
+    fetchNotifications(); // 최초 1회 호출
+
+    const interval = setInterval(async () => {
+      try {
+        const res = await getNotifications();
+        const notiList = Array.isArray(res) ? res : [];
+
+        setNotifications(prev => {
+          if (JSON.stringify(prev) !== JSON.stringify(notiList)) {
+            if (setUnreadCount) {
+              setUnreadCount(notiList.filter(n => !n.isRead).length);
+            }
+            return notiList;
+          }
+          return prev;
+        });
+      } catch (err) {
+        console.error("주기적 알림 조회 실패:", err);
+      }
+    }, 5000); // 5초마다 갱신
+
+    return () => clearInterval(interval);
   }, []);
 
-  // 개별 읽음처리
   const handleMarkAsRead = async (id) => {
     try {
       await markNotificationAsRead(id);
       setNotifications(prev =>
-        prev.map(notification =>
-          notification.id === id ? { ...notification, isRead: true } : notification
+        prev.map(n =>
+          n.id === id ? { ...n, isRead: true } : n
         )
       );
       if (setUnreadCount) setUnreadCount(prev => Math.max(prev - 1, 0));
     } catch {
-      setError('알림 읽음 처리에 실패했습니다.');
+      setError("알림 읽음 처리에 실패했습니다.");
     }
   };
 
-  // 삭제
   const handleDeleteNotification = async (id) => {
     try {
       await deleteNotification(id);
-      setNotifications(prev =>
-        prev.filter(notification => notification.id !== id)
-      );
+      setNotifications(prev => prev.filter(n => n.id !== id));
     } catch {
-      setError('알림 삭제에 실패했습니다.');
+      setError("알림 삭제에 실패했습니다.");
     }
   };
 
-  // "전체 읽음" 버튼 클릭 시 실행
   const onClickAllRead = async () => {
     try {
       await markAllAsRead();
       setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
       if (setUnreadCount) setUnreadCount(0);
     } catch {
-      setError('전체 읽음 처리에 실패했습니다.');
+      setError("전체 읽음 처리에 실패했습니다.");
     }
   };
 
@@ -92,7 +101,7 @@ const NotificationList = ({ setUnreadCount }) => {
     <div className="notification-list-wrapper">
       <div className="notification-list-title-row">
         <h2 className="notification-list-title">
-          <MdNotificationsActive style={{marginRight:8, color:'#23b266', verticalAlign:'middle'}} />
+          <MdNotificationsActive style={{ marginRight: 8, color: '#23b266', verticalAlign: 'middle' }} />
           알림 목록
         </h2>
         <button
@@ -146,4 +155,3 @@ const NotificationList = ({ setUnreadCount }) => {
 };
 
 export default NotificationList;
- 

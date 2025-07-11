@@ -1,0 +1,69 @@
+.partner-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: sans-serif;
+}
+
+.partner-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.partner-card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.partner-status {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.partner-status.pending {
+  color: #e69e00;
+}
+
+.partner-status.approved {
+  color: #2e8b57;
+}
+
+.partner-status.rejected {
+  color: #c0392b;
+}
+
+.button-group {
+  margin-top: 12px;
+}
+
+button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.approve-btn {
+  background-color: #4caf50;
+  color: white;
+  margin-right: 10px;
+}
+
+.approve-btn:hover {
+  background-color: #3e8e41;
+}
+
+.reject-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.reject-btn:hover {
+  background-color: #d32f2f;
+}
