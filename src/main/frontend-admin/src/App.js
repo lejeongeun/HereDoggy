@@ -35,6 +35,7 @@ import ReportManager from './pages/admin/Report/ReportManager';
 import InquiryManager from './pages/admin/Inquiry/InquiryManager';
 import AdminStatistics from './pages/admin/Statistics/AdminStatistics';
 import SystemSettings from './pages/admin/SystemSettings';
+import PartnershipManager from './pages/admin/partnership/PartnershipManager';
 
 function App() {
   const [unreadCount, setUnreadCount] = useState(0);
@@ -89,6 +90,7 @@ function App() {
         <Route path="statistics" element={<AdminStatistics />} />
         <Route path="reservation" element={<ShelterWalksBar />} />
         <Route path="settings" element={<SystemSettings />} />
+        <Route path="partnership" element={<PartnershipManager />} />
         </Route>
 
       </Routes>

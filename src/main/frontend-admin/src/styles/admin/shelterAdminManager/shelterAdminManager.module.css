@@ -14,14 +14,7 @@
 }
 
 /* Page header */
-.managerHeader {
-  margin-bottom: 24px;
-  font-size: 1.8rem;
-  color: #1d2a39;
-  font-weight: 700;
-  border-bottom: 1px solid #dfe3e8;
-  padding-bottom: 16px;
-}
+
 
 /* Section styling */
 .managerSection {
@@ -36,40 +29,10 @@
 }
 
 /* Controls section (search, filters) */
-.controlsRow {
-  margin-bottom: 24px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 16px;
-  background-color: #ffffff;
-  padding: 16px;
-  border-radius: 6px;
-  border: 1px solid #dfe3e8;
-}
+
 
 /* Input and select fields */
-.searchInput,
-.filterSelect {
-  padding: 9px 12px;
-  border: 1px solid #c4cdd5;
-  border-radius: 4px;
-  background-color: #ffffff;
-  font-size: 14px;
-  color: #333;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
 
-.searchInput:focus,
-.filterSelect:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-}
-
-.searchInput {
-  min-width: 300px;
-}
 
 /* Data table */
 .managerTable {
@@ -176,44 +139,4 @@
 .deactivateBtn:hover {
   background-color: #5a6268;
   border-color: #545b62;
-}
-
-/* Pagination Styles (copied from userManager.module.css) */
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-  gap: 5px;
-}
-
-.paginationButton {
-  background-color: #e9ecef;
-  color: #495057;
-  border: 1px solid #dee2e6;
-  padding: 8px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
-}
-
-.paginationButton:hover:not(:disabled) {
-  background-color: #dee2e6;
-  color: #212529;
-}
-
-.paginationButton:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.paginationButton.activePage {
-  background-color: #007bff;
-  color: #ffffff;
-  border-color: #007bff;
-}
-
-.paginationButton.activePage:hover {
-  background-color: #0069d9;
-  border-color: #0062cc;
 }

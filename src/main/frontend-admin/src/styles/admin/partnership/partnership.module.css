@@ -1,0 +1,282 @@
+/* Partnership Manager & Modal Layout (admin 스타일 시스템과 유사하게 통일, prefix 적용) */
+.partnership-container {
+  padding: 24px;
+  background-color: #f7f9fc;
+  border-radius: 8px;
+  margin: 20px auto;
+  max-width: 1200px;
+}
+
+
+
+.partnership-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background-color: #ffffff;
+  border: 1px solid #dfe3e8;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.partnership-table th,
+.partnership-table td {
+  padding: 14px 16px;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid #dfe3e8;
+}
+
+.partnership-table th {
+  background-color: #f1f3f5;
+  font-weight: 600;
+  color: #495057;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.partnership-table tbody tr:nth-of-type(even) {
+  background-color: #f8f9fa;
+}
+
+.partnership-tableRow {
+  cursor: pointer;
+  transition: background 0.18s;
+}
+
+.partnership-tableRow:hover {
+  background-color: #e9ecef;
+}
+
+/* 상태 뱃지(승인/대기/거절)는 항상 세로 가운데 정렬 */
+.partnership-pending {
+  background-color: #ffc107;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.partnership-approved {
+  background-color: #28a745;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.partnership-rejected {
+  background-color: #dc3545;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* 버튼 스타일 (admin actionBtn 계열과 유사) */
+.partnership-button {
+  padding: 7px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color 0.2s, border-color 0.2s;
+  color: #ffffff;
+}
+.partnership-approveButton {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+.partnership-approveButton:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+.partnership-rejectButton {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+.partnership-rejectButton:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+.partnership-closeButton {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+.partnership-closeButton:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+/* Modal Styles (admin modal 스타일과 유사) */
+.partnership-modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+@keyframes partnership-fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.partnership-modalContent {
+  background: #fff;
+  padding: 24px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative; /* For close button positioning */
+}
+
+@keyframes partnership-modalPop {
+  from { transform: scale(0.9); opacity: 0.7; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.partnership-modalTitle {
+  font-size: 1.5rem;
+  color: #1d2a39;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #dfe3e8;
+  padding-bottom: 12px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.partnership-modalSection {
+  margin-bottom: 16px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.partnership-modalActions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* 닫기 버튼 우상단 스타일 (선택적) */
+.partnership-modalCloseIcon {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.18s;
+  z-index: 2;
+}
+.partnership-modalCloseIcon:hover {
+  color: #222;
+}
+
+.partnership-shelterSelectionTitle {
+  font-size: 1.13rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem; /* 간격 조정 */
+  color: #2d6cdf;
+}
+
+.partnership-shelterSearchContainer {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.partnership-shelterSearchInput {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.partnership-shelterSearchInput:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.partnership-shelterDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 5px;
+  max-height: 200px; /* 스크롤 추가 */
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.partnership-shelterDropdown li {
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.partnership-shelterDropdown li:hover {
+  background-color: #f8f9fa;
+}
+
+.partnership-noResults {
+  padding: 10px 12px;
+  color: #6c757d;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+
+
+
+
+
+
+/* 반응형 */
+@media (max-width: 600px) {
+  .partnership-container {
+    padding: 10px;
+    border-radius: 0;
+  }
+  .partnership-modalContent {
+    padding: 1.2rem;
+    min-width: 0;
+    border-radius: 0;
+    max-width: 98vw;
+  }
+  .partnership-title, .partnership-modalTitle {
+    font-size: 1.3rem;
+  }
+  .partnership-table th, .partnership-table td {
+    padding: 0.8rem 0.5rem;
+    font-size: 0.9rem;
+  }
+}

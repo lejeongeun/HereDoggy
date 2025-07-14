@@ -11,6 +11,7 @@ const menuItems = [
   { label: "신고 관리", to: "/admin/report", icon: "fas fa-flag" },
   { label: "문의 관리", to: "/admin/inquiry", icon: "fas fa-question-circle" },
   { label: "통계", to: "/admin/statistics", icon: "fas fa-chart-line" },
+  { label: "협약 업체 관리", to: "/admin/partnership", icon: "fas fa-handshake" },
   { label: "시스템 설정", to: "/admin/settings", icon: "fas fa-cog" }
 ];
 
@@ -69,7 +70,7 @@ function AdminLayout() {
         </nav>
         <div className="admin-sidebar-footer">
           <p className="version-info">v1.0.0</p>
-          <p className="copyright-info">&copy; 2024 HereDoggy</p>
+          <p className="copyright-info">&copy; 2025 HereDoggy</p>
         </div>
       </aside>
       {/* 메인 컨텐츠 */}

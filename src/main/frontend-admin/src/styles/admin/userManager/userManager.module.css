@@ -14,51 +14,13 @@
 }
 
 /* Page header - clear and prominent */
-.userManagerHeader {
-  margin-bottom: 24px;
-  font-size: 1.8rem; /* Larger for clear hierarchy */
-  color: #1d2a39;
-  font-weight: 700;
-  border-bottom: 1px solid #dfe3e8;
-  padding-bottom: 16px;
-}
+
 
 /* Controls section (search, filters) */
-.userSearchRow,
-.userFilterRow {
-  margin-bottom: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 16px;
-  background-color: #ffffff;
-  padding: 16px;
-  border-radius: 6px;
-  border: 1px solid #dfe3e8;
-}
+
 
 /* Standardized input and select fields for forms */
-.userSearchInput,
-.userFilterSelect {
-  padding: 9px 12px;
-  border: 1px solid #c4cdd5;
-  border-radius: 4px;
-  background-color: #ffffff;
-  font-size: 14px;
-  color: #333;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
 
-.userSearchInput:focus,
-.userFilterSelect:focus {
-  outline: none;
-  border-color: #007bff; /* Standard blue focus color */
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-}
-
-.userSearchInput {
-  min-width: 300px; /* More space for searching */
-}
 
 /* Buttons designed for clarity and action */
 .userBlacklistBtn,

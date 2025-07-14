@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import styles from '../../styles/admin/userManager/userManager.module.css';
+import commonStyles from '../../styles/admin/common/adminControls.module.css'; // 공통 스타일 임포트
+import AdminPagination from '../../components/admin/common/AdminPagination'; // Pagination 컴포넌트 임포트
 
 // 더미 사용자 데이터
 const usersDummy = [
@@ -58,15 +60,15 @@ function UserManager() {
   const totalPages = Math.ceil(sorted.length / itemsPerPage);
 
   // 페이지 변경 핸들러
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className={styles.userManagerContainer}>
-      <h2 className={styles.userManagerHeader}>사용자 관리</h2>
+      <h2 className={commonStyles.managerTitle}>사용자 관리</h2>
 
-      <div className={styles.userSearchRow}>
+      <div className={commonStyles.controlsContainer}>
         <input
-          className={styles.userSearchInput}
+          className={commonStyles.searchInput}
           placeholder="이름/이메일 검색"
           value={search}
           onChange={e => {
@@ -74,20 +76,10 @@ function UserManager() {
             setCurrentPage(1); // 검색 시 첫 페이지로 이동
           }}
         />
-        <button
-          className={styles.userBlacklistBtn}
-          onClick={() => alert("선택된 사용자 블랙리스트 처리(예시)")}
-        >
-          선택 블랙리스트
-        </button>
-      </div>
-
-      {/* 필터 UI 추가 */}
-      <div className={styles.userFilterRow}>
         <select value={roleFilter} onChange={e => {
           setRoleFilter(e.target.value);
           setCurrentPage(1); // 필터 변경 시 첫 페이지로 이동
-        }} className={styles.userFilterSelect}>
+        }} className={commonStyles.selectInput}>
           <option value="전체">전체 권한</option>
           <option value="일반">일반</option>
           <option value="SHELTER_ADMIN">보호소 관리자</option>
@@ -97,7 +89,7 @@ function UserManager() {
         <select value={statusFilter} onChange={e => {
           setStatusFilter(e.target.value);
           setCurrentPage(1); // 필터 변경 시 첫 페이지로 이동
-        }} className={styles.userFilterSelect}>
+        }} className={commonStyles.selectInput}>
           <option value="전체">전체 상태</option>
           <option value="정상">정상</option>
           <option value="블랙리스트">블랙리스트</option>
@@ -107,7 +99,7 @@ function UserManager() {
         <select value={sortKey} onChange={e => {
           setSortKey(e.target.value);
           setCurrentPage(1); // 정렬 변경 시 첫 페이지로 이동
-        }} className={styles.userFilterSelect}>
+        }} className={commonStyles.selectInput}>
           <option value="id">ID</option>
           <option value="name">이름</option>
           <option value="joined">가입일</option>
@@ -115,10 +107,16 @@ function UserManager() {
         <select value={sortOrder} onChange={e => {
           setSortOrder(e.target.value);
           setCurrentPage(1); // 정렬 변경 시 첫 페이지로 이동
-        }} className={styles.userFilterSelect}>
+        }} className={commonStyles.selectInput}>
           <option value="asc">오름차순</option>
           <option value="desc">내림차순</option>
         </select>
+        <button
+          className={styles.userBlacklistBtn}
+          onClick={() => alert("선택된 사용자 블랙리스트 처리(예시)")}
+        >
+          선택 블랙리스트
+        </button>
       </div>
 
       <table className={styles.userTable}>
@@ -176,32 +174,12 @@ function UserManager() {
         </tbody>
       </table>
 
-      {/* Pagination Controls */}
-      <div className={styles.pagination}>
-        <button
-          onClick={() => paginate(currentPage - 1)}
-          disabled={currentPage === 1}
-          className={styles.paginationButton}
-        >
-          이전
-        </button>
-        {[...Array(totalPages).keys()].map((number) => (
-          <button
-            key={number + 1}
-            onClick={() => paginate(number + 1)}
-            className={`${styles.paginationButton} ${currentPage === number + 1 ? styles.activePage : ''}`}
-          >
-            {number + 1}
-          </button>
-        ))}
-        <button
-          onClick={() => paginate(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className={styles.paginationButton}
-        >
-          다음
-        </button>
-      </div>
+      <AdminPagination
+        totalItems={sorted.length}
+        itemPerPage={itemsPerPage}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 }

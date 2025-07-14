@@ -1,0 +1,53 @@
+/*
+  File: adminControls.module.css
+  Description: Common styles for admin search, filter, and management controls.
+*/
+
+.managerTitle {
+  margin-bottom: 24px;
+  font-size: 1.8rem;
+  color: #1d2a39;
+  font-weight: 700;
+  border-bottom: 1px solid #dfe3e8;
+  padding-bottom: 16px;
+}
+
+.controlsContainer {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.searchInput {
+  flex-grow: 1;
+  padding: 10px 15px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.075);
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.searchInput:focus {
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 .2rem rgba(0,123,255,.25);
+}
+
+.selectInput {
+  padding: 10px 15px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  font-size: 1rem;
+  background-color: #fff;
+  cursor: pointer;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.075);
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.selectInput:focus {
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 .2rem rgba(0,123,255,.25);
+}

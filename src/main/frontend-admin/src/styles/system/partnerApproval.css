@@ -1,0 +1,180 @@
+/* ==========================================================================
+   System Admin Page General Styles
+   ========================================================================== */
+:root {
+  --primary-color: #6f42c1; /* A distinct purple for admin pages */
+  --success-color: #34c38f;
+  --danger-color: #f46a6a;
+  --info-color: #50a5f1;
+  --light-gray-color: #f8f9fa;
+  --gray-color: #e9ecef;
+  --dark-gray-color: #495057;
+  --text-color: #333;
+  --card-bg: #ffffff;
+  --body-bg: #f3f3f9;
+  --font-family: 'Pretendard', sans-serif;
+  --box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+  --border-radius: 12px;
+}
+
+.admin-container {
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+.admin-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: var(--dark-gray-color);
+}
+
+/* ==========================================================================
+   Tabs
+   ========================================================================== */
+.admin-tabs {
+  display: flex;
+  border-bottom: 2px solid var(--gray-color);
+  margin-bottom: 30px;
+}
+
+.tab-btn {
+  padding: 12px 25px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--dark-gray-color);
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.tab-btn.active {
+  color: var(--primary-color);
+}
+
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--primary-color);
+}
+
+/* ==========================================================================
+   Admin Card List
+   ========================================================================== */
+.admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.admin-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border: 1px solid var(--gray-color);
+  border-radius: var(--border-radius);
+  background-color: var(--light-gray-color);
+  transition: background-color 0.2s ease;
+}
+
+.admin-card:hover {
+  background-color: #f1f1f6;
+}
+
+.admin-card span {
+  font-weight: 600;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.approve-btn, .reject-btn, .match-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.approve-btn { background-color: var(--success-color); color: white; }
+.reject-btn { background-color: var(--danger-color); color: white; }
+.match-btn { background-color: var(--info-color); color: white; }
+
+.approve-btn:hover { background-color: #2ca67c; }
+.reject-btn:hover { background-color: #e35d5d; }
+.match-btn:hover { background-color: #4393d9; }
+
+/* ==========================================================================
+   Matching Modal
+   ========================================================================== */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modal-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.modal-select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--gray-color);
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn-cancel, .btn-confirm {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--gray-color);
+}
+
+.btn-cancel { background-color: #fff; color: var(--dark-gray-color); }
+.btn-confirm { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import styles from '../../styles/admin/shelterAdminManager/shelterAdminManager.module.css';
+import commonStyles from '../../styles/admin/common/adminControls.module.css';
+import AdminPagination from '../../components/admin/common/AdminPagination';
 
 function ShelterAdminManager() {
   const [admins, setAdmins] = useState(() => {
@@ -146,11 +148,11 @@ function ShelterAdminManager() {
 
   return (
     <div className={styles.managerContainer}>
-      <h2 className={styles.managerHeader}>보호소 관리자 계정 관리</h2>
+      <h2 className={commonStyles.managerTitle}>보호소 관리자 계정 관리</h2>
 
-      <div className={styles.controlsRow}>
+      <div className={commonStyles.controlsContainer}>
         <input
-          className={styles.searchInput}
+          className={commonStyles.searchInput}
           placeholder="이름/이메일 검색"
           value={search}
           onChange={e => {
@@ -163,7 +165,7 @@ function ShelterAdminManager() {
           setSortKey(e.target.value);
           setCurrentPagePending(1); // 정렬 시 첫 페이지로 이동
           setCurrentPageApproved(1); // 정렬 시 첫 페이지로 이동
-        }} className={styles.filterSelect}>
+        }} className={commonStyles.selectInput}>
           <option value="id">ID</option>
           <option value="name">이름</option>
           <option value="createdAt">신청일</option>
@@ -173,7 +175,7 @@ function ShelterAdminManager() {
           setSortOrder(e.target.value);
           setCurrentPagePending(1); // 정렬 시 첫 페이지로 이동
           setCurrentPageApproved(1); // 정렬 시 첫 페이지로 이동
-        }} className={styles.filterSelect}>
+        }} className={commonStyles.selectInput}>
           <option value="asc">오름차순</option>
           <option value="desc">내림차순</option>
         </select>
@@ -214,31 +216,12 @@ function ShelterAdminManager() {
           </tbody>
         </table>
         {/* Pagination Controls for Pending Admins */}
-        <div className={styles.pagination}>
-          <button
-            onClick={() => paginatePending(currentPagePending - 1)}
-            disabled={currentPagePending === 1}
-            className={styles.paginationButton}
-          >
-            이전
-          </button>
-          {[...Array(totalPagesPending).keys()].map((number) => (
-            <button
-              key={number + 1}
-              onClick={() => paginatePending(number + 1)}
-              className={`${styles.paginationButton} ${currentPagePending === number + 1 ? styles.activePage : ''}`}
-            >
-              {number + 1}
-            </button>
-          ))}
-          <button
-            onClick={() => paginatePending(currentPagePending + 1)}
-            disabled={currentPagePending === totalPagesPending}
-            className={styles.paginationButton}
-          >
-            다음
-          </button>
-        </div>
+        <AdminPagination
+          totalItems={sortedPending.length}
+          itemPerPage={itemsPerPage}
+          currentPage={currentPagePending}
+          onPageChange={paginatePending}
+        />
       </section>
 
       {/* 2. 승인된 보호소 관리자 */}
@@ -286,31 +269,12 @@ function ShelterAdminManager() {
           </tbody>
         </table>
         {/* Pagination Controls for Approved Admins */}
-        <div className={styles.pagination}>
-          <button
-            onClick={() => paginateApproved(currentPageApproved - 1)}
-            disabled={currentPageApproved === 1}
-            className={styles.paginationButton}
-          >
-            이전
-          </button>
-          {[...Array(totalPagesApproved).keys()].map((number) => (
-            <button
-              key={number + 1}
-              onClick={() => paginateApproved(number + 1)}
-              className={`${styles.paginationButton} ${currentPageApproved === number + 1 ? styles.activePage : ''}`}
-            >
-              {number + 1}
-            </button>
-          ))}
-          <button
-            onClick={() => paginateApproved(currentPageApproved + 1)}
-            disabled={currentPageApproved === totalPagesApproved}
-            className={styles.paginationButton}
-          >
-            다음
-          </button>
-        </div>
+        <AdminPagination
+          totalItems={sortedApproved.length}
+          itemPerPage={itemsPerPage}
+          currentPage={currentPageApproved}
+          onPageChange={paginateApproved}
+        />
       </section>
     </div>
   );
