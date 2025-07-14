@@ -23,14 +23,14 @@ public class TossPaymentClient {
     private final RestTemplate restTemplate;
     private final Environment environment;
 
-    @Value("{toss.test.secret-key}")
+    @Value("${toss.test.secret-key}")
     private String secretKey;
-    @Value("{toss.test.success-url}")
+    @Value("${toss.test.success-url}")
     private String successUrl;
-    @Value("{toss.test.fail-url}")
+    @Value("${toss.test.fail-url}")
     private String failUrl;
 
-    private final String BASE_URL = "https://api.tosspayment.com/v1";
+    private final String BASE_URL = "https://api.tosspayments.com/v1";
 
     // 결제 요청 -> paymentUrl 반환
     public String createPaymentRequest(String orderId, Long amount, String orderName){
@@ -65,7 +65,6 @@ public class TossPaymentClient {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBasicAuth(secretKey, "");
         Map<String, Object> body = Map.of(
-                "payment", dto.getPaymentKey(),
                 "orderId", dto.getOrderId(),
                 "amount", dto.getAmount()
         );
@@ -73,7 +72,7 @@ public class TossPaymentClient {
 
         try{
             ResponseEntity<Map> response = restTemplate.postForEntity(
-                    BASE_URL + "/payment/confirm",
+                    BASE_URL + "/payments/" + dto.getPaymentKey(), // paymentKey 포함 (위치 수정)
                     request,
                     Map.class
             );

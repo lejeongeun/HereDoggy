@@ -35,7 +35,7 @@ public class DonationService {
         return tossPaymentClient.createPaymentRequest(orderId, dto.getAmount(), dto.getOrderName());
     }
 
-    public void handelSuccessDonation(DonationSuccessRequestDTO requestDTO) {
+    public void handleSuccessDonation(DonationSuccessRequestDTO requestDTO) {
         tossPaymentClient.confirmPayment(requestDTO);
         Donation donation = donationRepository.findByOrderId(requestDTO.getOrderId())
                 .orElseThrow(()-> new IllegalArgumentException("해당 주문 ID의 후원이 없습니다."));
