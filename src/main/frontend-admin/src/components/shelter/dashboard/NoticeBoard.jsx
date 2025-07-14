@@ -35,39 +35,39 @@ function NoticeBoard() {
   return (
     <div className="notice-table-wrap">
       <div className="notice-table-header">
-        <Link to="/shelter/noticelist" className="notice-table-title">
+        <Link to="/shelter/noticelist" className="notice-table-title" style={{color:'#222', fontWeight:700}}>
           공지사항
         </Link>
       </div>
-      <table className="notice-table">
+      <table className="notice-table" style={{color:'#222'}}>
         <thead>
           <tr>
-            <th>번호</th>
-            <th>제목</th>
-            <th>내용</th>
-            <th>작성일</th>
+            <th style={{color:'#222'}}>번호</th>
+            <th style={{color:'#222'}}>제목</th>
+            <th style={{color:'#222'}}>내용</th>
+            <th style={{color:'#222'}}>작성일</th>
           </tr>
         </thead>
         <tbody>
           {notices.length === 0 ? (
             <tr>
-              <td colSpan="4" className="notice-empty">등록된 공지사항이 없습니다.</td>
+              <td colSpan="4" className="notice-empty" style={{color:'#888'}}>등록된 공지사항이 없습니다.</td>
             </tr>
           ) : (
             notices.slice(0, 4).map((notice) => (
               <tr key={notice.id}>
-                <td>{notice.id}</td>
+                <td style={{color:'#222', fontWeight:600}}>{notice.id}</td>
                 <td>
-                  <Link to={`/shelter/notice/detail/${notice.id}`} className="notice-table-link">
+                  <Link to={`/shelter/notice/detail/${notice.id}`} className="notice-table-link" style={{color:'#184c24', fontWeight:600}}>
                     {notice.title}
                   </Link>
                 </td>
-                <td className="notice-table-content">
+                <td className="notice-table-content" style={{color:'#222'}}>
                   {notice.content?.length > 25
                     ? `${notice.content.slice(0, 25)}...`
                     : notice.content}
                 </td>
-                <td>{new Date(notice.createdAt || notice.date).toLocaleDateString('ko-KR')}</td>
+                <td style={{color:'#222'}}>{new Date(notice.createdAt || notice.date).toLocaleDateString('ko-KR')}</td>
               </tr>
             ))
           )}

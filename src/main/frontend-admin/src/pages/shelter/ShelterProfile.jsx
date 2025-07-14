@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getShelterProfile, editShelterProfile } from "../../api/shelter/shelter";
 import styles from '../../styles/shelter/profile/shelterProfile.module.css';
 import ShelterProfileEdit from "./ShelterProfileEdit";
+import { MdLocationOn, MdEmail, MdPhone, MdCalendarToday, MdHome, MdInfo } from 'react-icons/md';
 
 const BACKEND_BASE_URL = "http://localhost:8080";
 
@@ -72,47 +73,57 @@ console.log("profile.email:", profile?.email);
 
  return (
   <div className={styles.container}>
-   {profile?.imageUrls?.length > 0 && (
-  <div className={styles.profileImages}>
-    {profile.imageUrls.map((url, idx) => (
-      <img
-        key={idx}
-        src={BACKEND_BASE_URL + url} // ★ 반드시 서버 주소를 앞에 붙이기!
-        alt="shelter"
-        className={styles.profileImg}
-      />
-    ))}
-  </div>
-)}
+    {/* 상단 요약 카드 */}
+    <div className={styles.profileSummaryCard}>
+      <div className={styles.profileSummaryImgWrap}>
+        {profile?.imageUrls?.length > 0 ? (
+          <img
+            src={BACKEND_BASE_URL + profile.imageUrls[0]}
+            alt="shelter"
+            className={styles.profileSummaryImg}
+          />
+        ) : (
+          <div className={styles.profileSummaryImgPlaceholder}><MdHome size={48} color="#b5e4c6"/></div>
+        )}
+      </div>
+      <div className={styles.profileSummaryInfo}>
+        <div className={styles.profileSummaryName}>{profile.name}</div>
+        <div className={styles.profileSummaryRow}><MdLocationOn className={styles.icon}/>{profile.region || <span className={styles.placeholder}>지역 정보 없음</span>}</div>
+        <div className={styles.profileSummaryRow}><MdEmail className={styles.icon}/>{profile.email || <span className={styles.placeholder}>이메일 없음</span>}</div>
+        <div className={styles.profileSummaryRow}><MdPhone className={styles.icon}/>{profile.phone || <span className={styles.placeholder}>전화번호 없음</span>}</div>
+      </div>
+    </div>
 
-    {!editMode ? (
-      <>
-        <div className={styles.profileItem}>
-          <span className={styles.profileLabel}>이름:</span> {profile.name}
-        </div>
-        <div className={styles.profileItem}>
-          <span className={styles.profileLabel}>이메일:</span> {profile.email}
-        </div>
-        <div className={styles.profileItem}>
-          <span className={styles.profileLabel}>전화번호:</span> {profile.phone}
-        </div>
-        <div className={styles.profileItem}>
-          <span className={styles.profileLabel}>주소:</span> {profile.address}
-        </div>
-        <div className={styles.profileItem}>
-          <span className={styles.profileLabel}>지역:</span> {profile.region}
-        </div>
-        <div className={styles.profileItem}>
-          <span className={styles.profileLabel}>설명:</span> {profile.description}
-        </div>
-        <div className={styles.profileItem}>
-          <span className={styles.profileLabel}>가입일:</span> {new Date(profile.createdAt).toLocaleDateString()}
-        </div>
-        <div className={styles.buttonGroup}>
-          <button className={styles.button} onClick={() => setEditMode(true)}>수정하기</button>
-        </div>
-      </>
-    ) : (
+    {/* 상세 정보 카드 */}
+    <div className={styles.profileDetailCard}>
+      <div className={styles.profileDetailRow}><MdHome className={styles.icon}/><span className={styles.profileLabel}>주소</span>{profile.address || <span className={styles.placeholder}>주소 없음</span>}</div>
+      <div className={styles.profileDetailRow}><MdInfo className={styles.icon}/><span className={styles.profileLabel}>설명</span>{profile.description || <span className={styles.placeholder}>설명 없음</span>}</div>
+      <div className={styles.profileDetailRow}><MdCalendarToday className={styles.icon}/><span className={styles.profileLabel}>가입일</span>{new Date(profile.createdAt).toLocaleDateString()}</div>
+    </div>
+
+    {/* 이미지 여러장 있을 때 썸네일 하단에 추가 */}
+    {profile?.imageUrls?.length > 1 && (
+      <div className={styles.profileImagesSub}>
+        {profile.imageUrls.slice(1).map((url, idx) => (
+          <img
+            key={idx}
+            src={BACKEND_BASE_URL + url}
+            alt="shelter"
+            className={styles.profileImgSub}
+          />
+        ))}
+      </div>
+    )}
+
+    {/* 수정 버튼 */}
+    {!editMode && (
+      <div className={styles.buttonGroup}>
+        <button className={styles.button} onClick={() => setEditMode(true)}>수정하기</button>
+      </div>
+    )}
+
+    {/* 수정 모드 */}
+    {editMode && (
       <ShelterProfileEdit
         form={form}
         images={images}

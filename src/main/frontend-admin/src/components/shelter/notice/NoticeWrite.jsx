@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { createNotice } from "../../../api/shelter/notice";
-import { useNavigate } from "react-router-dom";
-import "../../../styles/shelter/notice/noticeWrite.css";
+import { useNavigate, Link } from "react-router-dom";
+import "../../../styles/shelter/notice/noticeForms.css";
+import { PlusCircle, XCircle, AlertCircle, Image as ImageIcon } from "lucide-react";
 
 function NoticeWrite() {
   const [form, setForm] = useState({ title: "", content: "" });
@@ -39,70 +40,90 @@ function NoticeWrite() {
   };
 
   return (
-    <div className="nw-wrap">
-      <div className="nw-box">
-        <h2 className="nw-title">공지 작성</h2>
-        <form className="nw-form" onSubmit={handleSubmit}>
-          <label className="nw-label">
-            제목
-            <input
-              type="text"
-              name="title"
-              className="nw-input"
-              value={form.title}
-              onChange={handleChange}
-              placeholder="공지 제목 입력"
-              maxLength={100}
-            />
-          </label>
+    <div className="notice-container">
+      <div className="notice-header">
+        <h1 className="notice-title">새 공지 작성</h1>
+      </div>
+      <form className="notice-form" onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="title" className="form-label">제목</label>
+          <input
+            id="title"
+            type="text"
+            name="title"
+            className="form-input"
+            value={form.title}
+            onChange={handleChange}
+            placeholder="공지 제목을 입력하세요"
+            maxLength={100}
+            required
+          />
+        </div>
 
-          <label className="nw-label">
-            내용
-            <textarea
-              name="content"
-              className="nw-textarea"
-              value={form.content}
-              onChange={handleChange}
-              placeholder="공지 내용 입력"
-              rows={8}
-              maxLength={2000}
-            />
-          </label>
+        <div className="form-group">
+          <label htmlFor="content" className="form-label">내용</label>
+          <textarea
+            id="content"
+            name="content"
+            className="form-textarea"
+            value={form.content}
+            onChange={handleChange}
+            placeholder="공지 내용을 입력하세요"
+            maxLength={2000}
+            required
+          />
+        </div>
 
-          <label className="nw-label">
-            이미지 첨부 (선택)
+        <div className="form-group">
+          <label htmlFor="images" className="form-label">이미지 첨부 (선택)</label>
+          <div>
+            <label htmlFor="file-upload-write" className="form-file-label">
+              <ImageIcon size={18} />
+              <span>파일 선택</span>
+            </label>
             <input
+              id="file-upload-write"
               type="file"
+              name="images"
               accept="image/*"
               multiple
               onChange={handleImageChange}
-              className="nw-input"
-              style={{ padding: "10px" }}
+              className="form-file-input"
             />
-          </label>
-
-          {previewUrls.length > 0 && (
-            <div className="nw-image-preview">
-              {previewUrls.map((url, idx) => (
-                <img key={idx} src={url} alt={`미리보기 ${idx}`} className="nw-preview-img" />
-              ))}
-            </div>
-          )}
-
-          {error && <div className="nw-error">{error}</div>}
-
-          <div className="nw-btns">
-            <button type="submit" className="nw-btn nw-btn-main">등록</button>
-            <button
-              type="button"
-              className="nw-btn nw-btn-cancel"
-              onClick={() => navigate("/shelter/noticelist")}
-            >
-              취소
-            </button>
+            {images.length > 0 && (
+              <span style={{ marginLeft: '16px', color: '#555' }}>
+                {images.length}개의 파일 선택됨
+              </span>
+            )}
           </div>
-        </form>
-      </div>
+        </div>
+
+        {previewUrls.length > 0 && (
+          <div className="image-gallery">
+            {previewUrls.map((url, idx) => (
+              <img key={idx} src={url} alt={`미리보기 ${idx}`} className="notice-image" />
+            ))}
+          </div>
+        )}
+
+        {error && (
+          <div className="error-message">
+            <AlertCircle size={20} style={{ marginRight: '8px' }} />
+            {error}
+          </div>
+        )}
+
+        <div className="button-group">
+          <Link to="/shelter/noticelist" className="btn btn-secondary">
+            <XCircle size={18} style={{ marginRight: '8px' }} />
+            취소
+          </Link>
+          <button type="submit" className="btn btn-primary">
+            <PlusCircle size={18} style={{ marginRight: '8px' }} />
+            등록
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

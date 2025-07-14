@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-// import { getReservations } from "../../api/shelter/reservation";
+import { getReservations } from "../../api/shelter/reservation";
 import { Link } from "react-router-dom";
 import '../../styles/shelter/walk/walkReservation.css';
+import Pagination from "../../components/shelter/common/Pagination";
 
 // 날짜 차이 계산 (D-day용)
 function getDday(dateStr) {
   const today = new Date();
   const d = new Date(dateStr);
-  d.setHours(0, 0, 0, 0); today.setHours(0, 0, 0, 0);
+  d.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
   const diff = Math.floor((d - today) / (1000 * 60 * 60 * 24));
   if (diff === 0) return 'D-day';
   if (diff > 0) return `D-${diff}`;
@@ -25,81 +27,36 @@ function statusToKor(status) {
   }
 }
 
-// === [ 더미 데이터 선언 ] ===
-const dummyReservations = [
-  {
-    id: 1,
-    dogImage: "/dummy-dog1.jpg",
-    dogName: "뭉치",
-    memberName: "홍길동",
-    memberPhone: "010-1234-5678",
-    date: "2025-06-20",
-    startTime: "10:00",
-    endTime: "11:00",
-    walkReservationStatus: "PENDING",
-    note: "처음 산책해봐요!",
-  },
-  {
-    id: 2,
-    dogImage: "/dummy-dog2.jpg",
-    dogName: "초코",
-    memberName: "이순신",
-    memberPhone: "010-5678-1234",
-    date: "2025-06-19",
-    startTime: "14:00",
-    endTime: "15:00",
-    walkReservationStatus: "APPROVED",
-    note: "",
-  },
-  {
-    id: 3,
-    dogImage: "/dummy-dog3.jpg",
-    dogName: "백구",
-    memberName: "김개발",
-    memberPhone: "010-8888-9999",
-    date: "2025-06-18",
-    startTime: "09:00",
-    endTime: "09:30",
-    walkReservationStatus: "REJECTED",
-    note: "시간 변경 가능할까요?",
-  },
-  {
-    id: 4,
-    dogImage: null, // 기본 이미지 노출 테스트
-    dogName: "보리",
-    memberName: "박테스터",
-    memberPhone: "010-2222-3333",
-    date: "2025-06-21",
-    startTime: "16:00",
-    endTime: "17:00",
-    walkReservationStatus: "CANCELED",
-    note: "",
-  },
-];
-
-// === [ WalkReservationList 컴포넌트 ] ===
 function WalkReservationList() {
-  // const sheltersId = localStorage.getItem("shelters_id");
-  const [reservations, setReservations] = useState([]);
+  const sheltersId = localStorage.getItem("shelters_id");
   const [filter, setFilter] = useState("전체");
+  const [reservations, setReservations] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
-  useEffect(() => {
-    // if (!sheltersId) return;
-    // getReservations(sheltersId).then(res => {
-    //   const sorted = [...res.data].sort((a, b) => new Date(b.date) - new Date(a.date));
-    //   setReservations(sorted);
-    // });
-
-    // ===== 더미 데이터 주입 =====
-    const sorted = [...dummyReservations].sort((a, b) => new Date(b.date) - new Date(a.date));
-    setReservations(sorted);
-  }, []);
-
-  // 필터링된 예약 목록
   const filtered = reservations.filter(r => {
     if (filter === "전체") return true;
     return statusToKor(r.walkReservationStatus) === filter;
   });
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filtered.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  useEffect(() => {
+    if (!sheltersId) return;
+
+    getReservations(sheltersId).then(res => {
+      const sorted = [...res.data].sort((a, b) => new Date(b.date) - new Date(a.date));
+      setReservations(sorted);
+    }).catch(err => {
+      console.error("산책 예약 목록 조회 실패:", err);
+    });
+  }, [sheltersId]);
 
   return (
     <div className="walk-container">
@@ -129,7 +86,7 @@ function WalkReservationList() {
         <p className="walk-empty">예약이 없습니다.</p>
       ) : (
         <ul className="walk-list">
-          {filtered.map(r => (
+          {currentItems.map(r => (
             <li key={r.id} className="walk-item">
               <Link to={`/shelter/walk-reservations/${r.id}`} className="walk-link">
                 <div className="walk-main-row">
@@ -163,6 +120,12 @@ function WalkReservationList() {
           ))}
         </ul>
       )}
+      <Pagination
+        totalItems={filtered.length}
+        itemPerPage={itemsPerPage}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 }

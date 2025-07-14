@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { CartProvider } from './contexts/CartContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
@@ -12,6 +13,10 @@ import Shelter from './pages/Shelter/Shelter';
 import Adoption from './pages/Adoption/Adoption';
 import Missing from './pages/Missing/Missing';
 import Store from './pages/Store/Store';
+import ProductDetail from './pages/ProductDetail/ProductDetail';
+import Cart from './pages/Cart/Cart';
+import Checkout from './pages/Checkout/Checkout';
+import PaymentComplete from './pages/PaymentComplete/PaymentComplete';
 import About from './pages/About/About';
 import Login from './pages/Login/Login';
 import Signup from './pages/Signup/Signup';
@@ -20,13 +25,18 @@ import './App.css';
 function App() {
   return (
     <AuthProvider>
-      <Router>
+      <CartProvider>
+        <Router>
         <div className="App">
           <Header />
           <main className="main-content">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/store" element={<Store />} />
+              <Route path="/store/:id" element={<ProductDetail />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/payment-complete" element={<PaymentComplete />} />
               <Route path="/community" element={<Community />} />
               <Route path="/shelter" element={<Shelter />} />
               <Route path="/about" element={<About />} />
@@ -59,6 +69,7 @@ function App() {
           <Footer />
         </div>
       </Router>
+      </CartProvider>
     </AuthProvider>
   );
 }

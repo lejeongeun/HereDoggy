@@ -3,50 +3,20 @@ import Topbar from "./Topbar";
 import { Outlet } from 'react-router-dom';
 
 function Layouts() {
-  const sidebarWidth = 220;
   return (
-    <div style={{ display: 'flex' }}>
+    <div className="layout-container">
       {/* 고정 sidebar */}
-      <div style={{
-        width: sidebarWidth,
-        position: 'fixed',
-        height: '100vh',
-        zIndex: 100,
-        background: '#fff',
-        borderRight: '2px solid #e9eee6'
-      }}>
+      <div className="sidebar-wrapper">
         <Sidebar />
       </div>
       {/* 오른쪽 메인 */}
-      <div style={{
-        marginLeft: sidebarWidth,
-        flex: 1,
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column'
-      }}>
+      <div className="content-wrapper">
         {/* 고정 탑바 */}
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          right: 0,
-          left: sidebarWidth,
-          background: '#fff',
-          zIndex: 90,
-          borderBottom: '2px solid #e9eee6',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
-        }}>
+        <div className="topbar-wrapper">
           <Topbar />
         </div>
         {/* 본문 스크롤 */}
-        <main style={{
-          flex: 1,
-          overflowY: 'auto',
-          padding: '88px 24px 24px 24px',
-          background: '#fafbfa',
-          position: 'relative',
-          zIndex: 1
-        }}>
+        <main className="main-content">
           <Outlet />
         </main>
       </div>

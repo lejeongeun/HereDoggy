@@ -10,6 +10,7 @@ const MyPage = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const [myPosts, setMyPosts] = useState(null);
   const [myAdoptions, setMyAdoptions] = useState(null);
+  const [myWalkRecords, setMyWalkRecords] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [imageError, setImageError] = useState(false);
@@ -44,6 +45,13 @@ const MyPage = () => {
         const result = await memberService.getMyAdoptions();
         if (result.success) {
           setMyAdoptions(result.data);
+        } else {
+          setError(result.message);
+        }
+      } else if (activeTab === 'walk') {
+        const result = await memberService.getMyWalkRecords();
+        if (result.success) {
+          setMyWalkRecords(result.data);
         } else {
           setError(result.message);
         }
@@ -106,6 +114,46 @@ const MyPage = () => {
   const formatDate = (dateString) => {
     if (!dateString) return '날짜 정보 없음';
     return new Date(dateString).toLocaleDateString('ko-KR');
+  };
+
+  // 산책 시간 포맷팅
+  const formatWalkDuration = (seconds) => {
+    if (!seconds) return '0분 0초';
+    const minutes = Math.floor(seconds / 60);
+    const remainSeconds = seconds % 60;
+    return `${minutes}분 ${remainSeconds}초`;
+  };
+
+  // 산책 거리 포맷팅
+  const formatWalkDistance = (meters) => {
+    if (!meters) return '0m';
+    return `${Math.round(meters)}m`;
+  };
+
+  // 산책 시작/종료 시간 포맷팅
+  const formatWalkDateTime = (dateTimeString) => {
+    if (!dateTimeString) return '-';
+    try {
+      const date = new Date(dateTimeString);
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+      const weekday = weekdays[date.getDay()];
+      return `${month}.${day} (${weekday}) ${hours}:${minutes}`;
+    } catch (e) {
+      return '-';
+    }
+  };
+
+  // 산책 상태별 이름
+  const getWalkStatusName = (status) => {
+    switch (status) {
+      case 'IN_PROGRESS': return '진행중';
+      case 'COMPLETED': return '완료';
+      default: return status;
+    }
   };
 
   // 게시글 타입별 이름
@@ -180,6 +228,12 @@ const MyPage = () => {
           onClick={() => setActiveTab('adoption')}
         >
           입양내역
+        </button>
+        <button 
+          className={`tab ${activeTab === 'walk' ? 'active' : ''}`}
+          onClick={() => setActiveTab('walk')}
+        >
+          산책 내역
         </button>
       </div>
 
@@ -328,6 +382,70 @@ const MyPage = () => {
               </div>
             ) : (
               <div className="no-data">입양내역 정보를 불러올 수 없습니다.</div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'walk' && (
+          <div className="walk-content">
+            <h3>산책 내역</h3>
+            {loading ? (
+              <div className="loading">산책 내역을 불러오는 중...</div>
+            ) : error ? (
+              <div className="error">{error}</div>
+            ) : myWalkRecords ? (
+              <div className="walk-list">
+                {myWalkRecords.length > 0 ? (
+                  myWalkRecords
+                    .filter(walk => walk.status === 'COMPLETED')
+                    .sort((a, b) => new Date(b.endTime) - new Date(a.endTime))
+                    .map((walk, index) => (
+                      <div key={index} className="walk-item">
+                        <div className="walk-header">
+                          <h4>산책 기록 #{walk.id}</h4>
+                          <span className={`status ${walk.status?.toLowerCase()}`}>
+                            {getWalkStatusName(walk.status)}
+                          </span>
+                        </div>
+                        <div className="walk-details">
+                          <div className="walk-info">
+                            <div className="info-row">
+                              <span className="label">시작 시간:</span>
+                              <span className="value">{formatWalkDateTime(walk.startTime)}</span>
+                            </div>
+                            <div className="info-row">
+                              <span className="label">종료 시간:</span>
+                              <span className="value">{formatWalkDateTime(walk.endTime)}</span>
+                            </div>
+                            <div className="info-row">
+                              <span className="label">산책 시간:</span>
+                              <span className="value">{formatWalkDuration(walk.actualDuration)}</span>
+                            </div>
+                            <div className="info-row">
+                              <span className="label">이동 거리:</span>
+                              <span className="value">{formatWalkDistance(walk.actualDistance)}</span>
+                            </div>
+                          </div>
+                          {walk.thumbnailUrl && (
+                            <div className="walk-image">
+                              <img 
+                                src={walk.thumbnailUrl} 
+                                alt="산책 썸네일"
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                }}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))
+                ) : (
+                  <div className="no-data">완료된 산책 내역이 없습니다.</div>
+                )}
+              </div>
+            ) : (
+              <div className="no-data">산책 내역 정보를 불러올 수 없습니다.</div>
             )}
           </div>
         )}

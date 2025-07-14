@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import '../../../styles/admin/inquiry/inquiry.css';
+import styles from '../../../styles/admin/inquiry/inquiry.module.css';
 
 function InquiryDetailModal({ inquiry, onClose, onProcess }) {
   const [response, setResponse] = useState("");
@@ -19,28 +19,31 @@ function InquiryDetailModal({ inquiry, onClose, onProcess }) {
   if (!inquiry) return null;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <h3>문의 상세</h3>
-        <p><strong>ID:</strong> {inquiry.id}</p>
-        <p><strong>사용자:</strong> {inquiry.user}</p>
-        <p><strong>제목:</strong> {inquiry.subject}</p>
-        <p><strong>내용:</strong> {inquiry.subject}</p>
-        <p><strong>날짜:</strong> {inquiry.date}</p>
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalContent}>
+        <h3 className={styles.modalHeader}>문의 상세</h3>
+        <div className={styles.modalBody}>
+          <p><strong>ID:</strong> {inquiry.id}</p>
+          <p><strong>사용자:</strong> {inquiry.user}</p>
+          <p><strong>제목:</strong> {inquiry.subject}</p>
+          <p><strong>내용:</strong> {inquiry.subject}</p>
+          <p><strong>날짜:</strong> {inquiry.date}</p>
 
-        <div className="modal-actions">
-
-          <div>
-            <label>답변</label>
-            <textarea 
+          <div className={styles.formGroup}>
+            <label htmlFor="response">답변</label>
+            <textarea
+              id="response"
+              className={styles.textareaField}
               value={response}
               onChange={handleResponseChange}
               placeholder="문의에 대한 답변을 작성하세요"
             />
           </div>
+        </div>
 
-          <button className="action-btn process" onClick={handleSubmit}>답변 제출</button>
-          <button className="action-btn close" onClick={onClose}>닫기</button>
+        <div className={styles.modalActions}>
+          <button className={`${styles.actionBtn} ${styles.processBtn}`} onClick={handleSubmit}>답변 제출</button>
+          <button className={`${styles.actionBtn} ${styles.closeBtn}`} onClick={onClose}>닫기</button>
         </div>
       </div>
     </div>

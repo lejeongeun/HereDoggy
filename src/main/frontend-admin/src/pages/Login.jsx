@@ -58,7 +58,7 @@ function Login() {
     <div className="login-container">
       <form className="login-form" onSubmit={handleSubmit}>
         <div style={{ textAlign: "center" }}>
-        <img src={logoImg} alt="여기보개 로고" style={{ height: 130, width: 130 }} />
+        <img src={logoImg} alt="여기보개 로고" className="login-logo" />
       </div>
         <div className="login-form-group">
           <label>아이디</label>

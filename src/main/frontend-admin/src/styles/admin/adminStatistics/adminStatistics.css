@@ -1,59 +1,395 @@
-/* 카드 섹션 전체 정렬 */
+/* adminStatistics.css */
+
+/* ============ 기본 레이아웃 ============ */
+.statistics-page {
+  padding: 2rem;
+}
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* ============ 요약 카드(대시보드, summary-cards) ============ */
+.summary-cards {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+  justify-content: center;
+}
+.summary-cards > div {
+  flex: 1 1 160px;
+  min-width: 140px;
+}
+
 .summary-section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  margin-bottom: 40px;
+  gap: 18px;
+  justify-items: center;   /* 카드 중앙정렬 */
+  margin-bottom: 48px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.summary-section label {
+  width: 330px;
+
 }
 
-/* 개별 카드 */
-.dash-card {
-  background-color: #fff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  .dash-card {
+  background: linear-gradient(145deg, #fff, #f9f9f9);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.07);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transition: all 0.3s;
+  border: 1px solid #e0e0e0;
+  position: relative;
+  min-width: 210px;
+  max-width: 330px;
+  width: 100%;
 }
 
+@media (max-width: 1100px) {
+  .summary-section {
+    grid-template-columns: repeat(3, minmax(210px, 1fr));
+    gap: 14px;
+  }
+}
+@media (max-width: 800px) {
+  .summary-section {
+    grid-template-columns: repeat(2, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .dash-card {
+    min-width: 170px;
+    max-width: 220px;
+    padding: 16px;
+  }
+}
+@media (max-width: 500px) {
+  .summary-section {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 0 2px;
+  }
+  .dash-card {
+    min-width: 0;
+    max-width: 100%;
+    padding: 10px;
+  }
+}
+
+.dash-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+}
 .dash-card-top {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+}
+.dash-card-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #34495e;
+}
+.dash-card-icon {
+  font-size: 28px;
+  color: #6495ED;
+  background: #E0EAFB;
+  border-radius: 50%;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dash-card-value {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 16px 0;
+  color: #2c3e50;
+}
+.dash-card-diff {
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 8px;
+  width: fit-content;
+  background: #E0EAFB;
+}
+.dash-card-diff.up { color: #28A745; }
+.dash-card-diff.down { color: #DC3545; }
+/* DashCard sparkline */
+.dash-card-sparkline-container {
+  width: 100%;
+  height: 50px;
+  margin-top: 10px;
+}
+/* 카드 툴팁 */
+.dash-card-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  z-index: 10;
+  margin-bottom: 10px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+}
+.dash-card:hover .dash-card-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ============ 차트 영역 ============ */
+.charts-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 24px;
+}
+.chart-container {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.07);
+}
+.chart-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 24px;
+}
+
+/* ============ 통계 대시보드 탭 ============ */
+.statistics-tab-bar {
+  display: flex;
+  gap: 0;
+  justify-content: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  background: #f7f8fa;
+  border-radius: 10px 10px 0 0;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.03);
+  border-bottom: 1.5px solid #e0e4ea;
+  padding: 0;
+}
+.statistics-tab-bar button {
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 14px 32px 12px 32px;
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: #6a7686;
+  cursor: pointer;
+  transition: color 0.18s, border-bottom 0.18s, background 0.18s;
+  outline: none;
+  border-bottom: 2.5px solid transparent;
+  margin-bottom: -1.5px;
+  position: relative;
+}
+.statistics-tab-bar button.active {
+  color: #6495ED;
+  background: #E0EAFB;
+  border-bottom: 2.5px solid #6495ED;
+  z-index: 2;
+}
+.statistics-tab-bar button:hover:not(.active) {
+  color: #6495ED;
+  background: #E0EAFB;
+}
+
+/* ============ 통계 주요 섹션 공통 ============ */
+.adoption-section,
+.report-section,
+.review-section,
+.shelter-comparison-section,
+.user-behavior-section,
+.walk-section {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 6px 24px rgba(44,62,80,0.08);
+  padding: 36px 28px;
+  margin-bottom: 40px;
+  border: 1.5px solid #eafaf1;
+  transition: box-shadow 0.2s;
+}
+.adoption-section:hover,
+.report-section:hover,
+.review-section:hover,
+.shelter-comparison-section:hover,
+.user-behavior-section:hover,
+.walk-section:hover {
+  box-shadow: 0 12px 32px rgba(35,178,102,0.13);
+}
+.adoption-section h3,
+.report-section h3,
+.review-section h3,
+.shelter-comparison-section h3,
+.user-behavior-section h3,
+.walk-section h3 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #6495ED;
+  margin-bottom: 20px;
+  letter-spacing: -1px;
+}
+.adoption-section ul,
+.report-section ul,
+.review-section ul,
+.user-behavior-section ul,
+.walk-section ul {
+  margin-bottom: 20px;
+  padding-left: 22px;
+  color: #444;
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+.adoption-section li,
+.report-section li,
+.review-section li,
+.user-behavior-section li,
+.walk-section li {
+  margin-bottom: 8px;
+}
+.adoption-section h4,
+.report-section h4,
+.review-section h4,
+.user-behavior-section h4,
+.walk-section h4 {
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: #3498db;
+  margin: 22px 0 12px 0;
+}
+.adoption-section ol,
+.report-section ol,
+.review-section ol,
+.user-behavior-section ol,
+.walk-section ol {
+  margin-left: 28px;
+  color: #555;
+  font-size: 1.01rem;
+  line-height: 1.6;
+}
+.adoption-section ol li,
+.report-section ol li,
+.review-section ol li,
+.user-behavior-section ol li,
+.walk-section ol li {
+  margin-bottom: 5px;
+}
+
+/* ============ 보호소 비교 테이블 ============ */
+.shelter-comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 14px;
+  background: #f9f9f9;
+  border-radius: 12px;
+  overflow: hidden;
+  font-size: 1.01rem;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.04);
+}
+.shelter-comparison-table th, .shelter-comparison-table td {
+  padding: 12px 14px;
+  border-bottom: 1.5px solid #e0e0e0;
+  text-align: center;
+}
+.shelter-comparison-table th {
+  background: #6495ED;
+  color: #222;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.shelter-comparison-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ============ 산책 통계 전용 스타일(카드 관련만 삭제) ============ */
+.walk-section {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 36px 28px 32px 28px;
+}
+.walk-section .walk-graph-row {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  margin-top: 8px;
+}
+.walk-section .walk-graph-block {
+  background: #f7f8fa;
+  border-radius: 12px;
+  padding: 18px 12px 10px 12px;
+  flex: 1 1 220px;
+  min-width: 180px;
+  box-shadow: 0 1px 6px rgba(44,62,80,0.04);
+  display: flex;
+  flex-direction: column;
   align-items: center;
 }
-
-.dash-card-label {
-  font-size: 14px;
+.walk-section .walk-graph-title {
+  font-weight: 700;
+  font-size: 1.04rem;
+  color: #6495ED;
+  margin-bottom: 8px;
+  text-align: center;
+}
+.walk-section .walk-progress {
+  max-width: 340px;
+  margin-bottom: 8px;
+}
+.walk-section .walk-progress-label {
   font-weight: 600;
-  color: #555;
+  margin-bottom: 6px;
+  color: #6495ED;
+  font-size: 1.01rem;
 }
 
-.dash-card-icon {
-  font-size: 20px;
-  color: #4CAF50;
+/* ============ 미디어 쿼리(반응형) ============ */
+@media (max-width: 900px) {
+  .walk-section .walk-graph-row {
+    flex-direction: column;
+    gap: 18px;
+  }
+  .walk-section .walk-graph-block {
+    min-width: 0;
+    width: 100%;
+  }
 }
-
-.dash-card-value {
-  font-size: 24px;
-  font-weight: bold;
-  margin: 12px 0;
-}
-
-.dash-card-diff {
-  font-size: 13px;
-  font-weight: 500;
-  padding: 2px 6px;
-  border-radius: 6px;
-  width: fit-content;
-}
-
-.dash-card-diff.up {
-  color: #2e7d32;
-  background-color: #e8f5e9;
-}
-
-.dash-card-diff.down {
-  color: #c62828;
-  background-color: #ffebee;
+@media (max-width: 700px) {
+  .adoption-section,
+  .report-section,
+  .review-section,
+  .shelter-comparison-section,
+  .user-behavior-section,
+  .walk-section {
+    padding: 16px 4px;
+  }
+  .shelter-comparison-table th,
+  .shelter-comparison-table td {
+    padding: 7px 3px;
+    font-size: 0.97rem;
+  }
+  .statistics-tab-bar button {
+    padding: 10px 10px 8px 10px;
+    font-size: 0.98rem;
+  }
 }

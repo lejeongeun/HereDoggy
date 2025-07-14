@@ -1,21 +1,38 @@
-/* donationList.css */
-
 .donation-container {
-  max-width: 800px;
-  margin: 48px auto;
-  padding: 36px 28px;
-  background: #fff;
-  border-radius: 24px;
-  box-shadow: 0 10px 30px rgba(36, 153, 111, 0.1);
+  max-width: 800px; /* 다른 폼들과 통일 */
+  margin: 40px auto; /* 다른 폼들과 통일 */
+  padding: 32px 36px; /* 다른 폼들과 통일 */
+  background: #fff; /* 다른 폼들과 통일 */
+  border-radius: 18px; /* 다른 폼들과 통일 */
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08); /* 다른 폼들과 통일 */
+  animation: fadeIn 0.4s ease-out forwards; /* 애니메이션 적용 */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .donation-title {
-  font-size: 1.6rem;
-  font-weight: bold;
-  color: #222;
+  font-size: 1.8rem; /* 다른 폼들과 통일 */
+  font-weight: 700; /* 다른 폼들과 통일 */
+  color: #2c3e50; /* 다른 폼들과 통일 */
   text-align: center;
-  margin-bottom: 32px;
-  letter-spacing: 0.5px;
+  margin-bottom: 30px; /* 마진 조정 */
+  letter-spacing: -0.8px; /* 자간 조정 */
+}
+.donation-all {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.donation-summary--total {
+  color: #2b9064;
+}
+.donation-summary--monthly {
+  color: #d08700;
 }
 
 .donation-list {
@@ -25,80 +42,165 @@
 }
 
 .donation-item {
-  background: #fefefe;
-  border: 1.5px solid #e1f1e5;
-  border-radius: 16px;
-  padding: 18px 22px;
-  margin-bottom: 20px;
-  transition: box-shadow 0.2s ease;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+  background: #f9fbfd; /* 배경색 조정 */
+  border: 1px solid #e0e6ed; /* 테두리 조정 */
+  border-radius: 14px; /* 모서리 둥글게 */
+  padding: 20px 24px; /* 패딩 조정 */
+  margin-bottom: 18px; /* 마진 조정 */
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04); /* 그림자 조정 */
 }
 
 .donation-item:hover {
-  box-shadow: 0 6px 16px rgba(38, 153, 111, 0.15);
+  transform: translateY(-2px); /* 호버 시 약간 위로 이동 */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); /* 그림자 효과 강화 */
 }
 
 .donation-info-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 10px; /* 간격 조정 */
   align-items: center;
-  font-size: 1rem;
+  font-size: 15px; /* 폰트 크기 조정 */
   font-weight: 500;
-  color: #333;
-  margin-bottom: 6px;
+  color: #34495e;
+  margin-bottom: 8px;
 }
 
 .donation-name {
-  font-weight: 700;
-  color: #222;
+  font-weight: 700; /* 폰트 굵기 조정 */
+  color: #2c3e50;
+  font-size: 16px; /* 폰트 크기 조정 */
 }
 
 .donation-dot {
-  color: #aaa;
+  color: #bbb;
   font-size: 1.1em;
 }
 
 .donation-amount {
-  color: #2b9064;
+  color: #28a745; /* 색상 조정 */
+  font-weight: 700;
 }
 
 .donation-status {
-  padding: 3px 10px;
+  padding: 4px 10px;
   border-radius: 6px;
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: 600;
+  border: 1px solid transparent;
 }
 
 .donation-status--success {
   background: #e0f6ea;
   color: #2b9064;
+  border-color: #a1d8b8;
 }
 
 .donation-status--pending {
-  background: #fff9db;
+  background: #fffbe8;
   color: #d08700;
+  border-color: #f0e0a4;
 }
 
 .donation-status--failed {
   background: #fde7e7;
-  color: #d33;
+  color: #dc3545;
+  border-color: #f8c4c4;
 }
 
 .donation-method {
   color: #555;
+  font-weight: 500;
 }
 
 .donation-date {
   font-size: 0.95rem;
-  color: #888;
+  color: #777;
+  margin-left: auto; /* 오른쪽으로 정렬 */
 }
 
 .donation-message {
-  margin-top: 8px;
-  padding-left: 6px;
+  margin-top: 10px;
+  padding: 10px 15px;
   font-style: italic;
   color: #444;
-  font-size: 0.96rem;
-  border-left: 3px solid #cdeede;
+  font-size: 0.95rem;
+  background: #f7fbfd;
+  border-left: 4px solid #a1d8b8;
+  border-radius: 0 8px 8px 0;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .donation-container {
+    margin: 20px auto;
+    padding: 25px 20px;
+  }
+  .donation-title {
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+  }
+  .donation-item {
+    padding: 18px 20px;
+    margin-bottom: 15px;
+  }
+  .donation-info-row {
+    font-size: 14px;
+    gap: 8px;
+  }
+  .donation-name {
+    font-size: 15px;
+  }
+  .donation-amount {
+    font-size: 14px;
+  }
+  .donation-status {
+    font-size: 0.85rem;
+    padding: 3px 8px;
+  }
+  .donation-method {
+    font-size: 14px;
+  }
+  .donation-date {
+    font-size: 0.9rem;
+  }
+  .donation-message {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .donation-container {
+    margin: 15px auto;
+    padding: 20px 15px;
+  }
+  .donation-title {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+  .donation-item {
+    padding: 15px 18px;
+    margin-bottom: 12px;
+  }
+  .donation-info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  .donation-name,
+  .donation-amount,
+  .donation-status,
+  .donation-method,
+  .donation-date {
+    font-size: 13px;
+  }
+  .donation-dot {
+    display: none;
+  }
+  .donation-message {
+    font-size: 0.85rem;
+    padding: 6px 10px;
+  }
 }

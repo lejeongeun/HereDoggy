@@ -1,3 +1,7 @@
+.dashboard-container {
+  padding: 24px; /* 기본 패딩 */
+}
+
 .dashboard-cards {
   display: flex;
   width: 100%;
@@ -12,7 +16,7 @@
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   width: 100%;
-  padding: 16px;
+  padding: 20px;
   margin: 8px 0;
   display: flex;
   flex-direction: column;
@@ -70,16 +74,80 @@
   border-left: 4px solid #f4a261;
 }
 
+/* 그래프 섹션 */
+.dashboard-charts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px; /* 그래프 간 간격 */
+  margin-bottom: 24px;
+}
 
-/* 모바일 대응 */
-@media (max-width: 1024px) {
+/* 각 그래프 박스 */
+.dashboard-chart-box {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 20px;
+  flex: 1 1 calc(50% - 12px); /* 한 줄에 2개 (간격 고려) */
+  min-width: 300px; /* 최소 너비 */
+  box-sizing: border-box;
+}
+
+/* 그래프 제목 */
+.chart-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
+
+/* 그래프 캔버스 컨테이너 */
+.chart-canvas-container {
+  position: relative;
+  height: 280px; /* 기본 높이 */
+  width: 100%;
+}
+
+.chart-canvas-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* 반응형 */
+@media (max-width: 1200px) {
+  .dashboard-cards {
+    justify-content: center; /* 카드들을 중앙 정렬 */
+  }
   .dash-card {
-    flex: 1 1 calc(50% - 16px); /* 태블릿: 2열 */
+    flex: 1 1 calc(50% - 16px); /* 2열 */
+  }
+}
+
+@media (max-width: 900px) {
+  .dashboard-container {
+    padding: 16px; /* 패딩 줄이기 */
+  }
+  .dashboard-charts {
+    flex-direction: column; /* 그래프 세로로 쌓기 */
+  }
+  .dashboard-chart-box {
+    flex: 1 1 100%; /* 1열 */
+  }
+  .chart-canvas-container {
+    height: 250px; /* 높이 조정 */
   }
 }
 
 @media (max-width: 600px) {
+  .dashboard-container {
+    padding: 10px; /* 패딩 더 줄이기 */
+  }
   .dash-card {
-    flex: 1 1 100%; /* 모바일: 1열 */
+    flex: 1 1 100%; /* 1열 */
+  }
+  .chart-canvas-container {
+    height: 200px; /* 높이 더 줄이기 */
   }
 }

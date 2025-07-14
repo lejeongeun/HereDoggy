@@ -1,35 +1,25 @@
-import React from "react";
-import '../../../styles/admin/inquiry/inquiry.css';
+import React, { useState } from "react";
+import styles from '../../../styles/admin/inquiry/inquiry.module.css';
 
-const dummyInquiries = [
-  {
-    id: 1,
-    user: "user01",
-    subject: "산책 예약 방법",
-    status: "처리중",
-    date: "2025-06-30",
-  },
-  {
-    id: 2,
-    user: "user02",
-    subject: "입양 관련 문의",
-    status: "답변완료",
-    date: "2025-06-28",
-  },
-  {
-    id: 3,
-    user: "user03",
-    subject: "서비스 오류 신고",
-    status: "처리중",
-    date: "2025-06-29",
-  },
-];
+function InquiryList({ inquiries, onSelect }) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // 한 페이지당 보여줄 항목 수
 
-function InquiryList({ onSelect }) {
+  // 현재 페이지의 항목 계산
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = inquiries.slice(indexOfFirstItem, indexOfLastItem);
+
+  // 총 페이지 수 계산
+  const totalPages = Math.ceil(inquiries.length / itemsPerPage);
+
+  // 페이지 변경 핸들러
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
-    <div className="shelter-admin-wrap">
-     <h2>문의 목록</h2>
-    <table className="shelter-admin-table">
+    <div className={styles.managerSection}>
+      <h2 className={styles.managerHeader}>문의 목록</h2>
+      <table className={styles.managerTable}>
         <thead>
           <tr>
             <th>ID</th>
@@ -41,20 +31,59 @@ function InquiryList({ onSelect }) {
           </tr>
         </thead>
         <tbody>
-          {dummyInquiries.map((inquiry) => (
-            <tr key={inquiry.id}>
-              <td>{inquiry.id}</td>
-              <td>{inquiry.user}</td>
-              <td>{inquiry.subject}</td>
-              <td>{inquiry.status}</td>
-              <td>{inquiry.date}</td>
-              <td>
-                <button className="inquiry-detail-btn" onClick={() => onSelect(inquiry)}>상세</button>
+          {currentItems.length === 0 ? (
+            <tr>
+              <td colSpan={6} style={{ textAlign: "center", color: "#aaa", padding: 28 }}>
+                문의 내역이 없습니다.
               </td>
             </tr>
-          ))}
+          ) : (
+            currentItems.map((inquiry) => (
+              <tr key={inquiry.id}>
+                <td>{inquiry.id}</td>
+                <td>{inquiry.user}</td>
+                <td>{inquiry.subject}</td>
+                <td>
+                  <span className={`${styles.statusBadge} ${inquiry.status === "처리중" ? styles.pending : styles.done}`}>
+                    {inquiry.status}
+                  </span>
+                </td>
+                <td>{inquiry.date}</td>
+                <td>
+                  <button className={`${styles.actionBtn} ${styles.detailBtn}`} onClick={() => onSelect(inquiry)}>상세</button>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
+
+      {/* Pagination Controls */}
+      <div className={styles.pagination}>
+        <button
+          onClick={() => paginate(currentPage - 1)}
+          disabled={currentPage === 1}
+          className={styles.paginationButton}
+        >
+          이전
+        </button>
+        {[...Array(totalPages).keys()].map((number) => (
+          <button
+            key={number + 1}
+            onClick={() => paginate(number + 1)}
+            className={`${styles.paginationButton} ${currentPage === number + 1 ? styles.activePage : ''}`}
+          >
+            {number + 1}
+          </button>
+        ))}
+        <button
+          onClick={() => paginate(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className={styles.paginationButton}
+        >
+          다음
+        </button>
+      </div>
     </div>
   );
 }

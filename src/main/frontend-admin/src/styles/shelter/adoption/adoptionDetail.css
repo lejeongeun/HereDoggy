@@ -1,10 +1,10 @@
 .adoption-detail-container {
-  max-width: 800px;
-  margin: 48px auto;
-  padding: 36px 32px;
-  background: #fff;
-  border-radius: 24px;
-  box-shadow: 0 12px 32px rgba(36, 153, 111, 0.12);
+  max-width: 800px; /* 산책 등록 폼과 동일하게 */
+  margin: 40px auto; /* 산책 등록 폼과 동일하게 */
+  padding: 32px 36px; /* 산책 등록 폼과 동일하게 */
+  background: #fff; /* 산책 등록 폼과 동일하게 */
+  border-radius: 18px; /* 산책 등록 폼과 동일하게 */
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08); /* 산책 등록 폼과 동일하게 */
   animation: fadeIn 0.5s ease-in-out;
 }
 
@@ -12,7 +12,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 26px;
+  margin-bottom: 25px; /* 마진 조정 */
+  padding-bottom: 15px; /* 하단 패딩 추가 */
+  border-bottom: 1px solid #eee; /* 하단 구분선 */
 }
 
 .adoption-detail-status {
@@ -20,24 +22,25 @@
   font-size: 0.95rem;
   font-weight: 700;
   border-radius: 8px;
-  background: #f4f4f4;
-  color: #444;
-  border: 1px solid #ccc;
+  border: 1px solid; /* 테두리 추가 */
 }
 
 .adoption-status--pending {
   background: #fffbe8;
   color: #d08700;
+  border-color: #f0e0a4;
 }
 
 .adoption-status--approved {
   background: #e0f6ea;
   color: #2b9064;
+  border-color: #a1d8b8;
 }
 
 .adoption-status--rejected {
   background: #fde7e7;
-  color: #d33;
+  color: #dc3545;
+  border-color: #f8c4c4;
 }
 
 .adoption-detail-date {
@@ -52,43 +55,45 @@
 }
 
 .adoption-detail-dog {
-  font-size: 1.3rem;
+  font-size: 1.5rem; /* 폰트 크기 증가 */
   font-weight: 700;
-  color: #222;
+  color: #2c3e50; /* 색상 조정 */
   text-align: center;
-  padding: 12px 0;
+  padding: 15px 0; /* 패딩 조정 */
   border-bottom: 1px solid #eee;
 }
 
-.adoption-detail-member {
+.adoption-detail-member,
+.adoption-detail-meta {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px; /* 간격 조정 */
   font-size: 1rem;
   color: #444;
 }
 
-.adoption-detail-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 0.95rem;
-  color: #555;
+.adoption-detail-member b,
+.adoption-detail-meta b {
+  color: #333; /* 볼드체 색상 조정 */
 }
 
 .adoption-detail-survey {
-  margin-top: 8px;
-  padding: 16px 20px;
-  border-radius: 16px;
-  background: #f9fbfa;
-  border: 1.5px solid #d6efe3;
+  margin-top: 15px; /* 마진 조정 */
+  padding: 20px 24px; /* 패딩 조정 */
+  border-radius: 14px; /* 모서리 둥글게 */
+  background: #f9fbfd; /* 배경색 조정 */
+  border: 1px solid #e0e6ed; /* 테두리 조정 */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04); /* 그림자 추가 */
 }
 
 .adoption-survey-title {
-  font-weight: 700;
-  font-size: 1.1rem;
-  margin-bottom: 12px;
-  color: #2b9064;
+  font-weight: 600; /* 폰트 굵기 조정 */
+  font-size: 1.15rem; /* 폰트 크기 조정 */
+  margin-bottom: 15px; /* 마진 조정 */
+  color: #34495e; /* 색상 조정 */
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .adoption-survey-item {
@@ -104,48 +109,112 @@
 }
 
 .adoption-survey-a {
-  font-size: 0.96rem;
+  font-size: 0.98rem; /* 폰트 크기 조정 */
   color: #444;
-  padding-left: 8px;
+  padding-left: 10px; /* 패딩 조정 */
+  line-height: 1.5; /* 줄 간격 조정 */
 }
 
 .adoption-detail-actions {
   display: flex;
   justify-content: center;
-  gap: 16px;
-  margin-top: 20px;
+  gap: 15px; /* 간격 조정 */
+  margin-top: 30px; /* 마진 조정 */
 }
 
 .adoption-approve-btn,
 .adoption-reject-btn {
   padding: 10px 24px;
-  font-size: 1rem;
-  font-weight: 700;
-  border-radius: 10px;
+  font-size: 15px; /* 폰트 크기 조정 */
+  font-weight: 600; /* 폰트 굵기 조정 */
+  border-radius: 8px; /* 모서리 둥글게 */
   cursor: pointer;
   border: none;
-  transition: all 0.2s ease;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* 그림자 추가 */
 }
 
 .adoption-approve-btn {
-  background: #2b9064;
+  background: #28a745; /* 초록색 계열 */
   color: #fff;
 }
 
 .adoption-approve-btn:hover {
-  background: #23835b;
+  background: #218838;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
 }
 
 .adoption-reject-btn {
-  background: #e25858;
+  background: #dc3545; /* 빨간색 계열 */
   color: #fff;
 }
 
 .adoption-reject-btn:hover {
-  background: #cc4b4b;
+  background: #c82333;
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
 }
 
 @keyframes fadeIn {
   0% { opacity: 0; transform: translateY(16px); }
   100% { opacity: 1; transform: none; }
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .adoption-detail-container {
+    margin: 20px auto;
+    padding: 25px 20px;
+  }
+  .adoption-detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .adoption-detail-dog {
+    font-size: 1.3rem;
+  }
+  .adoption-detail-survey {
+    padding: 15px 18px;
+  }
+  .adoption-survey-title {
+    font-size: 1.1rem;
+  }
+  .adoption-survey-a {
+    font-size: 0.9rem;
+  }
+  .adoption-detail-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .adoption-approve-btn,
+  .adoption-reject-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .adoption-detail-container {
+    margin: 15px auto;
+    padding: 20px 15px;
+  }
+  .adoption-detail-dog {
+    font-size: 1.2rem;
+  }
+  .adoption-detail-member,
+  .adoption-detail-meta {
+    font-size: 0.9rem;
+  }
+  .adoption-survey-title {
+    font-size: 1rem;
+  }
+  .adoption-survey-q,
+  .adoption-survey-a {
+    font-size: 0.85rem;
+  }
+  .adoption-approve-btn,
+  .adoption-reject-btn {
+    font-size: 14px;
+    padding: 8px 18px;
+  }
 }

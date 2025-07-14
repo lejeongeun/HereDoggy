@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { toPng } from "html-to-image";
 import { createRoute } from "../../../api/shelter/route";
 import "../../../styles/shelter/walk/walkRegister.css";
+import { MdDirectionsWalk, MdInfo, MdMap, MdSave, MdLocationOn, MdReplay, MdDelete } from "react-icons/md";
 
 function WalkRegister({ sheltersId, selectedRoute, setIsDrawing, onRouteSaved, isDrawing }) {
   const mapRef = useRef(null);
@@ -66,7 +67,7 @@ useEffect(() => {
     if (points.length > 1) {
       const newPolyline = new naver.maps.Polyline({
         path: points,
-        strokeColor: "#FF0000",
+        strokeColor: "#2563eb",
         strokeWeight: 4,
         map: map,
       });
@@ -124,7 +125,7 @@ useEffect(() => {
       if (poly) poly.setMap(null);
       poly = new naver.maps.Polyline({
         path: path,
-        strokeColor: "#FF0000",
+        strokeColor: "#2563eb",
         strokeWeight: 4,
         map: map,
       });
@@ -242,48 +243,66 @@ useEffect(() => {
 
   return (
     <div className="walk-register-wrap">
-      <div className="walk-input-group">
-        <input
-          type="text"
-          placeholder="경로 이름"
-          value={routeName}
-          onChange={e => setRouteName(e.target.value)}
-          className="walk-input"
-          disabled={!!selectedRoute}
-        />
-        <textarea
-          placeholder="경로 설명"
-          value={description}
-          onChange={e => setDescription(e.target.value)}
-          className="walk-textarea"
-          disabled={!!selectedRoute}
-        />
+      <div className="walk-register-header">
+        <MdDirectionsWalk size={26} style={{marginRight:8, color:'#3EB489', verticalAlign:'middle'}} />
+        <span>산책로 등록</span>
       </div>
-
-      <div ref={captureRef} className="walk-map">
-        <div ref={mapRef} style={{ width: "100%", height: "100%" }} />
-      </div>
-
-      <div className="walk-btn-group">
-        {!selectedRoute && (
-          <>
-            <button onClick={moveToMyLocation} className="walk-btn walk-btn-blue">내 위치 보기</button>
-            <button onClick={() => window.resetRoute()} className="walk-btn walk-btn-green">경로 다시 그리기</button>
-            <button onClick={saveRoute} disabled={linePath.length < 2} className="walk-btn walk-btn-red">경로 저장</button>
-          </>
-        )}
-      </div>
-
-      <div className="walk-info-row">
-        <strong>총 거리:</strong> {distance.toFixed(1)} m
-        <span style={{ marginLeft: 16 }}>
-          <strong>예상 소요 시간:</strong> {duration} 분
-        </span>
-      </div>
-
+      <section className="walk-register-section walk-register-form-section">
+        <div className="walk-register-section-title">
+          <MdInfo size={18} style={{marginRight:5, color:'#234E70', verticalAlign:'middle'}} />
+          경로 정보 입력
+        </div>
+        <div className="walk-input-group">
+          <input
+            type="text"
+            placeholder="경로 이름"
+            value={routeName}
+            onChange={e => setRouteName(e.target.value)}
+            className="walk-input"
+            disabled={!!selectedRoute}
+          />
+          <textarea
+            placeholder="경로 설명"
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+            className="walk-textarea"
+            disabled={!!selectedRoute}
+          />
+        </div>
+      </section>
+      <section className="walk-register-section walk-register-map-section">
+        <div className="walk-register-section-title">
+          <MdMap size={18} style={{marginRight:5, color:'#234E70', verticalAlign:'middle'}} />
+          지도에서 경로 그리기
+        </div>
+        <div className="walk-register-map-guide">지도 위를 클릭해 경로를 그려주세요.</div>
+        <div ref={captureRef} className="walk-map">
+          <div ref={mapRef} style={{ width: "100%", height: "100%" }} />
+        </div>
+      </section>
+      <section className="walk-register-section walk-register-btn-section">
+        <div className="walk-btn-group">
+          {!selectedRoute && (
+            <>
+              <button onClick={moveToMyLocation} className="walk-btn walk-btn-blue"><MdLocationOn style={{verticalAlign:'middle', marginRight:3}}/>내 위치 보기</button>
+              <button onClick={() => window.resetRoute()} className="walk-btn walk-btn-green"><MdReplay style={{verticalAlign:'middle', marginRight:3}}/>경로 다시 그리기</button>
+              <button onClick={saveRoute} disabled={linePath.length < 2} className="walk-btn walk-btn-red"><MdSave style={{verticalAlign:'middle', marginRight:3}}/>경로 저장</button>
+            </>
+          )}
+        </div>
+      </section>
+      <section className="walk-register-section walk-register-meta-section">
+        <div className="walk-info-row">
+          <strong><MdDirectionsWalk style={{verticalAlign:'middle', marginRight:2}}/> 총 거리:</strong> {distance.toFixed(1)} m
+          <span style={{ marginLeft: 16 }}>
+            <strong><MdInfo style={{verticalAlign:'middle', marginRight:2}}/> 예상 소요 시간:</strong> {duration} 분
+          </span>
+        </div>
+      </section>
       {selectedRoute && (
-        <div style={{ textAlign: "center", fontSize: "12px", color: "#f44336" }}>
-          <span>경로를 수정하시려면 기존 경로를 삭제 후 다시 만들어주세요.</span>
+        <div className="walk-edit-warning">
+          <MdDelete style={{verticalAlign:'middle', marginRight:3}}/>
+          경로를 수정하시려면 기존 경로를 삭제 후 다시 만들어주세요.
         </div>
       )}
     </div>

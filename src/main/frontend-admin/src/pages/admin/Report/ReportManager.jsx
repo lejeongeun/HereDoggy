@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ReportList from "./ReportList";
 import ReportDetailModal from "./ReportDetailModal";
-import '../../../styles/admin/adminReport/report.css';
+import styles from '../../../styles/admin/adminReport/report.module.css';
 
 const dummyReports = [
   {
@@ -69,7 +69,7 @@ function ReportManager() {
   };
 
   return (
-    <div>
+    <div className={styles.managerContainer}>
       <ReportList reports={reports} onSelect={handleSelectReport} />
       <ReportDetailModal
         report={selectedReport}

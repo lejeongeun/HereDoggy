@@ -58,8 +58,8 @@ class BoardPost {
       content: post.description,
       boardType: 'missing',
       viewCount: post.viewCount,
-      email: post.writerEmail,
-      nickname: post.writerNickname,
+      email: '',
+      nickname: post.nickname,
       createdAt: post.createdAt.toIso8601String(),
       imagesUrls: post.imagesUrls,
       extraType: post.type == MissingPostType.found ? 'found' : 'missing',
@@ -163,8 +163,8 @@ class _CommunityPageState extends State<CommunityPage> {
           content: e.description,
           boardType: 'missing',
           viewCount: e.viewCount,
-          email: e.writerEmail,
-          nickname: e.writerNickname,
+          email: '',
+          nickname: e.nickname,
           createdAt: e.createdAt.toIso8601String(),
           imagesUrls: e.imagesUrls,
           extraType: e.type == MissingPostType.found ? 'found' : 'missing',
@@ -187,8 +187,8 @@ class _CommunityPageState extends State<CommunityPage> {
     try {
       final reviewPosts = await ReviewPostApi.fetchReviewPosts();
       final boardList = reviewPosts.map((e) => BoardPost.fromReviewPost(e)).toList();
-      // createdAt 기준 내림차순 정렬 (최신순)
-      boardList.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      // createdAt 기준 오름차순 정렬 (최신순)
+      boardList.sort((a, b) => a.createdAt.compareTo(b.createdAt));
       setState(() {
         boardPosts = boardList;
         isLoading = false;
@@ -441,7 +441,7 @@ class _CommunityPageState extends State<CommunityPage> {
                           Icon(Icons.calendar_today_outlined, size: 16, color: Colors.grey[500]),
                           const SizedBox(width: 3),
                           Text(
-                            post.createdAt.split("T")[0].replaceAll("-", "."),
+                            _formatDate(post.createdAt),
                             style: GoogleFonts.notoSansKr(fontSize: 12, color: Colors.grey),
                           ),
                           const SizedBox(width: 10),
@@ -484,6 +484,23 @@ class _CommunityPageState extends State<CommunityPage> {
         );
       },
     );
+  }
+
+  String _formatDate(String createdAt) {
+    if (createdAt.isEmpty) return '';
+    
+    try {
+      // ISO 8601 형식 (2024-01-01T10:30:00) 처리
+      if (createdAt.contains('T')) {
+        final parts = createdAt.split('T');
+        return parts[0].replaceAll('-', '.');
+      }
+      
+      // 다른 형식의 날짜 처리
+      return createdAt.replaceAll('-', '.');
+    } catch (e) {
+      return createdAt; // 파싱 실패 시 원본 반환
+    }
   }
 }
 
