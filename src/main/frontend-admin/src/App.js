@@ -38,8 +38,7 @@ import SystemSettings from './pages/admin/SystemSettings';
 
 function App() {
   const [unreadCount, setUnreadCount] = useState(0);
-
-  usePollingNotifications(setUnreadCount); // 알림 감지
+  const shelterId = localStorage.getItem("shelters_id");
 
   return (
     <>
@@ -94,9 +93,14 @@ function App() {
 
       </Routes>
     </Router>
-    <ToastContainer/>
+      {/* 로그인 상태에서만 알림 폴링 */}
+      {shelterId && <PollingNotifications setUnreadCount={setUnreadCount} />}
+      <ToastContainer />
     </>
   );
 }
-
+function PollingNotifications({ setUnreadCount }) {
+  usePollingNotifications(setUnreadCount);
+  return null;
+}
 export default App;
