@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getAdoptions } from "../../api/shelter/adoption"; 
 import "../../styles/shelter/adoption/adoptionList.css";
 import Pagination from "../../components/shelter/common/Pagination";
 
@@ -25,39 +26,28 @@ function getDday(dateStr) {
   return `D+${Math.abs(diff)}`;
 }
 
-// ✅ 더미 데이터 생성 함수
-function generateDummyAdoptions(count) {
-  const names = ["홍길동", "김영희", "이철수", "박영수", "최은주"];
-  const dogs = ["행복이", "초코", "사랑이", "두부", "보리"];
-  const statuses = ["PENDING", "APPROVED", "REJECTED"];
-
-  const list = [];
-  for (let i = 1; i <= count; i++) {
-    const name = names[i % names.length];
-    const dog = dogs[i % dogs.length];
-    const status = statuses[i % statuses.length];
-
-    const visitDate = new Date(2024, 5, 10 + (i % 10)); // 6월 10~19일
-    const visitTime = `${10 + (i % 5)}:00:00`; // 10시 ~ 14시
-
-    list.push({
-      adoptionId: i,
-      memberName: name,
-      memberPhone: `010-${1000 + i}-${2000 + i}`,
-      dogName: dog,
-      visitDate: visitDate.toISOString().split("T")[0],
-      visitTime,
-      createdAt: new Date(2024, 5, 1 + (i % 5)).toISOString(),
-      status,
-    });
-  }
-  return list;
-}
-
 function AdoptionList() {
-  const [adoptions] = useState(generateDummyAdoptions(25)); // 배열로 초기화
+  const sheltersId = localStorage.getItem("shelters_id");
+  const [adoptions, setAdoptions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
+
+  useEffect(() => {
+    if (!sheltersId) return;
+
+    getAdoptions(sheltersId)
+      .then((res) => {
+        const sorted = [...res.data].sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setAdoptions(sorted);
+      })
+      .catch((err) => {
+        console.error("입양 신청 목록 조회 실패:", err);
+      });
+  }, [sheltersId]);
+
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;

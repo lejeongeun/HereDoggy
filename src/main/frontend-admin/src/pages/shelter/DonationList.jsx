@@ -22,7 +22,7 @@ function methodToKor(method) {
   }
 }
 
-// ✅ 더미 후원 데이터 생성
+// 더미 후원 데이터 생성
 function generateDummyDonations(count) {
   const names = ["홍길동", "김후원", "이영희", "박민수", "익명"];
   const statuses = ["SUCCESS", "PENDING", "FAILED"];

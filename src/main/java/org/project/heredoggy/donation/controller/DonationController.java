@@ -23,11 +23,11 @@ public class DonationController {
     public ResponseEntity<Map<String, String>> requestDonation(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                @Valid @RequestBody DonationRequestDTO request){
         String paymentUrl = donationService.requestDonation(userDetails.getMember(), request);
-        return ResponseEntity.ok(Map.of("tossPayment", paymentUrl));
+        return ResponseEntity.ok(Map.of("paymentUrl", paymentUrl));
     }
 
     // 성공 처리
-    @GetMapping("/success")
+    @PostMapping("/success")
     public ResponseEntity<Map<String, String>> successDonation(@ModelAttribute DonationSuccessRequestDTO successRequest){
         donationService.handleSuccessDonation(successRequest);
         return ResponseEntity.ok(Map.of("message", "결제가 성공적으로 처리되었습니다."));
