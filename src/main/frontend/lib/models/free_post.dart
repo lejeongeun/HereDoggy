@@ -24,6 +24,16 @@ class FreePost {
   });
 
   factory FreePost.fromJson(Map<String, dynamic> json) {
+    // 백엔드에서 imageUrl(단일) 또는 imagesUrls(배열) 중 하나를 반환할 수 있음
+    List<String> imagesUrls = [];
+    if (json['imagesUrls'] != null) {
+      // 상세 조회 시 (배열)
+      imagesUrls = List<String>.from(json['imagesUrls']);
+    } else if (json['imageUrl'] != null && json['imageUrl'].toString().isNotEmpty) {
+      // 목록 조회 시 (단일)
+      imagesUrls = [json['imageUrl'] as String];
+    }
+    
     return FreePost(
       id: json['id'] as int,
       title: json['title'] as String,
@@ -32,9 +42,7 @@ class FreePost {
       email: json['email'] as String,
       nickname: json['nickname'] as String,
       createdAt: json['createdAt'] as String,
-      imagesUrls: json['imagesUrls'] != null 
-          ? List<String>.from(json['imagesUrls'])
-          : [],
+      imagesUrls: imagesUrls,
       likeCount: json['likeCount'] as int? ?? 0,
       isLiked: json['isLiked'] as bool? ?? false,
     );

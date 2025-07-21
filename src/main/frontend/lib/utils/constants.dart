@@ -1,7 +1,9 @@
+import 'dart:ui';
+
 class AppConstants {
   // API 관련 상수
-  static const String baseUrl = 'http://10.0.2.2:8080/api'; // 에뮬레이터용
-  // static const String baseUrl = 'http://192.168.10.128:8080/api'; // 실제 기기용
+  // static const String baseUrl = 'http://10.0.2.2:8080/api'; // 에뮬레이터용
+  static const String baseUrl = 'http://192.168.10.128:8080/api'; // 실제 기기용
 
   
   // 라우트 이름
@@ -35,4 +37,7 @@ class AppConstants {
   static const String adoptionTitle = '입양';
   static const String chatTitle = '챗봇';
   static const String storeTitle = '스토어';
+
+  // 브랜드 컬러
+  static const Color brandGreen = Color(0xFF22C55E);
 } 

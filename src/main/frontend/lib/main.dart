@@ -33,6 +33,15 @@ import 'providers/notification_provider.dart';
 import 'services/fcm_service.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'providers/adoption_history_provider.dart';
+import 'providers/inquiry_history_provider.dart';
+import 'providers/report_history_provider.dart';
+import 'pages/donation/donation_page.dart';
+import 'pages/volunteer/volunteer_reservation_page.dart';
+import 'pages/volunteer/volunteer_time_select_page.dart';
+import 'pages/volunteer/volunteer_reservation_complete_page.dart';
+import 'providers/volunteer_history_provider.dart';
+import 'pages/mypage/report_page.dart';
 
 // 백그라운드 메시지 핸들러
 @pragma('vm:entry-point')
@@ -78,6 +87,10 @@ void main() async {
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => DogProvider()),
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
+        ChangeNotifierProvider(create: (_) => AdoptionHistoryProvider()..loadHistories()),
+        ChangeNotifierProvider(create: (_) => InquiryHistoryProvider()..loadHistories()),
+        ChangeNotifierProvider(create: (_) => ReportHistoryProvider()..loadHistories()),
+        ChangeNotifierProvider(create: (_) => VolunteerHistoryProvider()..loadHistories()),
       ],
       child: const MyApp(),
     ),
@@ -263,9 +276,14 @@ class _MyAppState extends State<MyApp> {
         AppConstants.adoptionRoute: (context) => const AdoptionPage(),
         AppConstants.chatRoute: (context) => const ChatPage(),
         AppConstants.storeRoute: (context) => StorePage(),
+        AppConstants.donationRoute: (context) => const DonationPage(),
         '/free-post-write': (context) => const FreePostWritePage(),
         '/missing-post-write': (context) => const MissingPostWritePage(),
         '/review-post-write': (context) => const ReviewPostWritePage(),
+        '/walk-reservation': (context) => const WalkReservationPage(),
+        '/volunteer-reservation': (context) => VolunteerReservationPage(),
+        '/volunteer-time-select': (context) => VolunteerTimeSelectPage(shelter: {}),
+        '/volunteer-reservation-complete': (context) => const VolunteerReservationCompletePage(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/dog-detail') {
@@ -349,6 +367,19 @@ class _MyAppState extends State<MyApp> {
         if (settings.name == '/sse-debug') {
           return MaterialPageRoute(
             builder: (context) => const SseDebugPage(),
+          );
+        }
+        if (settings.name == '/report') {
+          final args = settings.arguments as Map<String, dynamic>?;
+          final targetType = args?['targetType'] as String? ?? '';
+          final targetId = args?['targetId'] as int? ?? 0;
+          final targetTitle = args?['targetTitle'] as String? ?? '';
+          return MaterialPageRoute(
+            builder: (context) => ReportPage(
+              targetType: targetType,
+              targetId: targetId,
+              targetTitle: targetTitle,
+            ),
           );
         }
         return null;

@@ -33,6 +33,16 @@ class FreePostApi {
       print('게시글 목록 API 응답: ${response.data}');
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
+        print('게시글 개수: ${data.length}');
+        for (int i = 0; i < data.length; i++) {
+          print('게시글 $i: ${data[i]}');
+          if (data[i]['imageUrl'] != null) {
+            print('게시글 $i imageUrl: ${data[i]['imageUrl']}');
+          }
+          if (data[i]['imagesUrls'] != null) {
+            print('게시글 $i imagesUrls: ${data[i]['imagesUrls']}');
+          }
+        }
         return data.map((json) => FreePost.fromJson(json)).toList();
       } else {
         throw Exception('서버 오류: ${response.statusCode}');

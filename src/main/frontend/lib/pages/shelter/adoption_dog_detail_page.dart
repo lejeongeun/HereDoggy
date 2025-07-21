@@ -261,7 +261,10 @@ class _AdoptionDogDetailPageState extends State<AdoptionDogDetailPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const AdoptionFormPage(),
+                                    builder: (context) => AdoptionFormPage(
+                                      dogId: widget.dogId.toString(),
+                                      dogName: dog != null && dog!['name'] != null ? dog!['name'] : '',
+                                    ),
                                   ),
                                 );
                               },

@@ -23,6 +23,7 @@ class MissingPost {
   final List<String> imagesUrls;
   final int likeCount;
   final bool isLiked;
+  final String? imageUrl;
 
   MissingPost({
     required this.id,
@@ -44,6 +45,7 @@ class MissingPost {
     this.imagesUrls = const [],
     this.likeCount = 0,
     this.isLiked = false,
+    this.imageUrl,
   })  : createdAt = createdAt ?? DateTime.now(),
         updatedAt = updatedAt ?? DateTime.now();
 
@@ -51,23 +53,24 @@ class MissingPost {
     return MissingPost(
       id: json['id'],
       type: json['type'] == 'MISSING' ? MissingPostType.missing : MissingPostType.found,
-      title: json['title'],
+      title: json['title'] as String? ?? '',
       gender: _parseGender(json['gender']),
       age: json['age'],
       weight: (json['weight'] != null) ? (json['weight'] as num).toDouble() : null,
-      furColor: json['furColor'],
-      feature: json['feature'],
-      missingDate: DateTime.parse(json['missingDate']),
-      missingLocation: json['missingLocation'],
-      description: json['description'],
+      furColor: json['furColor'] as String? ?? '',
+      feature: json['feature'] as String? ?? '',
+      missingDate: DateTime.parse(json['missingDate'] as String? ?? DateTime.now().toIso8601String()),
+      missingLocation: json['missingLocation'] as String? ?? '',
+      description: json['description'] as String? ?? '',
       isContactPublic: json['isContactPublic'] ?? false,
       viewCount: json['viewCount'] as int? ?? 0,
-      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
-      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt'] as String) : null,
+      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt'] as String) : null,
       nickname: json['nickname'] as String? ?? '',
-      imagesUrls: (json['imageUrls'] as List<dynamic>?)?.map((e) => e as String).toList() ?? [],
+      imagesUrls: (json['imageUrls'] as List<dynamic>?)?.map((e) => e as String? ?? '').toList() ?? [],
       likeCount: json['likeCount'] as int? ?? 0,
       isLiked: json['isLiked'] as bool? ?? false,
+      imageUrl: json['imageUrl'] as String? ?? '',
     );
   }
 
@@ -103,6 +106,7 @@ class MissingPost {
     List<String>? imagesUrls,
     int? likeCount,
     bool? isLiked,
+    String? imageUrl,
   }) {
     return MissingPost(
       id: id ?? this.id,
@@ -124,6 +128,7 @@ class MissingPost {
       imagesUrls: imagesUrls ?? this.imagesUrls,
       likeCount: likeCount ?? this.likeCount,
       isLiked: isLiked ?? this.isLiked,
+      imageUrl: imageUrl ?? this.imageUrl,
     );
   }
 } 
