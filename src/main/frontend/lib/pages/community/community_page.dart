@@ -46,7 +46,7 @@ class BoardPost {
       viewCount: post.viewCount,
       email: post.email,
       nickname: post.nickname,
-      createdAt: post.createdAt,
+      createdAt: post.createdAt ?? '', // null safe
       imagesUrls: post.imagesUrls,  // 이미지 URL 목록 추가
     );
   }
@@ -60,8 +60,8 @@ class BoardPost {
       viewCount: post.viewCount,
       email: '',
       nickname: post.nickname,
-      createdAt: post.createdAt.toIso8601String(),
-      imagesUrls: post.imagesUrls,
+      createdAt: post.createdAt != null ? post.createdAt.toIso8601String() : '', // null safe
+      imagesUrls: post.imageUrl != null && post.imageUrl!.isNotEmpty ? [post.imageUrl!] : [],
       extraType: post.type == MissingPostType.found ? 'found' : 'missing',
     );
   }
@@ -75,7 +75,7 @@ class BoardPost {
       viewCount: post.viewCount,
       email: post.email,
       nickname: post.nickname,
-      createdAt: post.createdAt,
+      createdAt: post.createdAt ?? '', // null safe
       imagesUrls: post.imageUrls,
       extraType: post.type, // 'ADOPTION' 또는 'WALK'
     );
@@ -116,8 +116,8 @@ class _CommunityPageState extends State<CommunityPage> {
       final allPosts = <BoardPost>[];
       allPosts.addAll(freePosts.map((e) => BoardPost.fromFreePost(e)));
       allPosts.addAll(missingPosts.map((e) => BoardPost.fromMissingPost(e)));
-      // 최신순 정렬 (createdAt이 ISO8601 문자열이거나 날짜 객체)
-      allPosts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      // 최신순 정렬 (createdAt이 null이면 빈 문자열로 처리)
+      allPosts.sort((a, b) => (b.createdAt ?? '').compareTo(a.createdAt ?? ''));
       setState(() {
         boardPosts = allPosts;
         isLoading = false;
@@ -187,8 +187,8 @@ class _CommunityPageState extends State<CommunityPage> {
     try {
       final reviewPosts = await ReviewPostApi.fetchReviewPosts();
       final boardList = reviewPosts.map((e) => BoardPost.fromReviewPost(e)).toList();
-      // createdAt 기준 오름차순 정렬 (최신순)
-      boardList.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+      // 최신순(내림차순) 정렬
+      boardList.sort((a, b) => (b.createdAt ?? '').compareTo(a.createdAt ?? ''));
       setState(() {
         boardPosts = boardList;
         isLoading = false;
@@ -463,7 +463,7 @@ class _CommunityPageState extends State<CommunityPage> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: Image.network(
-                        'http://192.168.10.128:8080${post.imagesUrls[0]}',
+                        '${AppConstants.baseUrl.replaceAll('/api', '')}${post.imagesUrls[0]}',
                         width: 80,
                         height: 80,
                         fit: BoxFit.cover,

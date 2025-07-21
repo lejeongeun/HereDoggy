@@ -6,6 +6,49 @@ import '../../utils/constants.dart';
 import '../../providers/dog_provider.dart';
 import '../../components/common/cards/dog_card.dart';
 
+// 예시: MaterialApp(
+//   routes: {
+//     '/walk-reservation': (_) => WalkReservationPage(),
+//     '/volunteer-reservation': (_) => VolunteerReservationPage(),
+//   },
+// )
+// 위와 같이 main.dart 등에서 라우트 등록 필요
+
+enum ReservationType { walk, volunteer }
+
+class _ReservationDropdown extends StatelessWidget {
+  final ReservationType selected;
+  final ValueChanged<ReservationType> onChanged;
+  const _ReservationDropdown({Key? key, required this.selected, required this.onChanged}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonHideUnderline(
+      child: DropdownButton<ReservationType>(
+        value: selected,
+        icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
+        dropdownColor: AppConstants.brandGreen,
+        style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+        items: const [
+          DropdownMenuItem(
+            value: ReservationType.walk,
+            child: Text('산책 & 체험 예약', style: TextStyle(color: Colors.white)),
+          ),
+          DropdownMenuItem(
+            value: ReservationType.volunteer,
+            child: Text('봉사 예약', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+        onChanged: (value) {
+          if (value != null && value != selected) {
+            onChanged(value);
+          }
+        },
+      ),
+    );
+  }
+}
+
 class WalkReservationPage extends StatefulWidget {
   const WalkReservationPage({Key? key}) : super(key: key);
 
@@ -50,7 +93,20 @@ class _WalkReservationPageState extends State<WalkReservationPage> {
       return const SizedBox.shrink();
     }
     return Scaffold(
-      appBar: AppBar(title: const Text('산책 예약')),
+      backgroundColor: const Color(0xFFF5F6FA),
+      appBar: AppBar(
+        title: _ReservationDropdown(
+          selected: ReservationType.walk,
+          onChanged: (type) {
+            if (type == ReservationType.volunteer) {
+              Navigator.pushReplacementNamed(context, '/volunteer-reservation');
+            }
+          },
+        ),
+        backgroundColor: AppConstants.brandGreen,
+        elevation: 0,
+        foregroundColor: Colors.white,
+      ),
       body: Consumer<DogProvider>(
         builder: (context, dogProvider, _) {
           if (dogProvider.isLoading) {

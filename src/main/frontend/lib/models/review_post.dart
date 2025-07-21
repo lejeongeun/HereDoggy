@@ -29,17 +29,17 @@ class ReviewPost {
 
   factory ReviewPost.fromJson(Map<String, dynamic> json) {
     return ReviewPost(
-      id: json['id'] as int,
-      title: json['title'] as String,
-      content: json['content'] as String,
-      type: json['type'] as String,
-      rank: json['rank'] as int,
-      viewCount: json['viewCount'] is int ? json['viewCount'] : int.tryParse(json['viewCount'].toString()) ?? 0,
-      email: json['email'] as String,
-      nickname: json['nickname'] as String,
+      id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '') ?? 0,
+      title: json['title'] as String? ?? '',
+      content: json['content'] as String? ?? '',
+      type: json['type'] as String? ?? '',
+      rank: json['rank'] is int ? json['rank'] : int.tryParse(json['rank']?.toString() ?? '') ?? 0,
+      viewCount: json['viewCount'] is int ? json['viewCount'] : int.tryParse(json['viewCount']?.toString() ?? '') ?? 0,
+      email: json['email'] as String? ?? '',
+      nickname: json['nickname'] as String? ?? '',
       createdAt: json['createdAt']?.toString() ?? '',
-      imageUrls: json['imageUrls'] != null ? List<String>.from(json['imageUrls']) : [],
-      likeCount: json['likeCount'] as int? ?? 0,
+      imageUrls: json['imageUrls'] != null ? List<String>.from(json['imageUrls'].map((e) => e as String? ?? '')) : [],
+      likeCount: json['likeCount'] is int ? json['likeCount'] : int.tryParse(json['likeCount']?.toString() ?? '') ?? 0,
       isLiked: json['isLiked'] as bool? ?? false,
     );
   }

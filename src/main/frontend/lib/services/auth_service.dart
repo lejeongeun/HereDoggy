@@ -2,6 +2,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../utils/constants.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:kakao_flutter_sdk_auth/kakao_flutter_sdk_auth.dart';
 
 class AuthService {
   final _storage = const FlutterSecureStorage();
@@ -165,66 +167,95 @@ class AuthService {
     }
   }
 
-  // 카카오 로그인 - 임시로 비활성화 (flutter_web_auth 패키지 제거로 인해)
+  // 카카오 인가 코드 방식 로그인
   Future<Map<String, dynamic>> loginWithKakao() async {
-    return {
-      'success': false,
-      'message': '카카오 로그인은 현재 사용할 수 없습니다. flutter_web_auth 패키지가 필요합니다.',
-    };
-  }
-
-  // 구글 로그인 - 임시로 비활성화 (flutter_web_auth 패키지 제거로 인해)
-  Future<Map<String, dynamic>> loginWithGoogle() async {
-    return {
-      'success': false,
-      'message': '구글 로그인은 현재 사용할 수 없습니다. flutter_web_auth 패키지가 필요합니다.',
-    };
-  }
-
-  // 기존 방식 (호환성을 위해 유지, 나중에 삭제 예정)
-  @Deprecated('Use loginWithKakao() instead')
-  Future<Map<String, dynamic>> loginWithKakaoToken(String kakaoToken) async {
     try {
-      print('카카오 로그인 시도 (기존 방식): $_baseUrl/auth/oauth/kakao');
-      
+      print('카카오 인가 코드 요청 시작');
+      //1코드 받기
+      String? code = await AuthCodeClient.instance.authorize(
+        clientId: 'f672fc97c767b2220faed59a97064398', // REST API 키 사용
+        redirectUri: 'http://192.168.10.128:8080/login/oauth2/code/kakao', // 카카오 콘솔에 등록된 URI
+      );
+      print('인가 코드 획득: $code');
+
+      if (code == null) {
+        return {'success': false, 'message': '인가 코드 획득 실패'};
+      }
+
+      //2엔드로 인가 코드 전송
       final response = await http.post(
         Uri.parse('$_baseUrl/auth/oauth/kakao'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'token': kakaoToken,
-        }),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'code': code}),
       );
 
-      print('카카오 로그인 응답 상태: ${response.statusCode}');
-      print('카카오 로그인 응답 내용: ${response.body}');
+      print('백엔드 응답: ${response.statusCode} / ${response.body}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         await saveTokens(data['accessToken'], data['refreshToken']);
         return {'success': true};
+      } else {
+        String errorMessage;
+        try {
+          final data = jsonDecode(response.body);
+          errorMessage = data['message'] ?? '카카오 로그인에 실패했습니다.';
+        } catch (e) {
+          errorMessage = response.body;
+        }
+        
+        if (response.statusCode == 44 || errorMessage.contains('회원가입이 필요합니다')) {
+          return {
+            'success': false,
+            'message': '회원가입이 필요합니다',
+            'isNewUser': true
+          };
+        }
+        
+        return {
+          'success': false,
+          'message': errorMessage,
+        };
       }
-
-      return {
-        'success': false,
-        'message': '카카오 로그인에 실패했습니다.',
-      };
     } catch (e) {
       print('카카오 로그인 에러: $e');
-      return {
-        'success': false,
-        'message': '서버 연결에 실패했습니다.',
-      };
+      return {'success': false, 'message': '카카오 로그인에 실패했습니다: $e'};
     }
   }
 
-  @Deprecated('Use loginWithGoogle() instead')
-  Future<Map<String, dynamic>> loginWithGoogleToken(String idToken) async {
+  // 구글 로그인 - 인가 코드 방식
+  Future<Map<String, dynamic>> loginWithGoogle() async {
     try {
-      print('구글 로그인 시도 (기존 방식): $_baseUrl/auth/oauth/google');
+      print('구글 로그인 시작 (인가 코드 방식)');
+      
+      // Google Sign In 초기화
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        scopes: ['email', 'profile'],
+      );
+      
+      // 구글 로그인 시도
+      final GoogleSignInAccount? account = await googleSignIn.signIn();
+      if (account == null) {
+        return {
+          'success': false,
+          'message': '구글 로그인이 취소되었습니다.',
+        };
+      }
+      
+      // ID 토큰 획득
+      final GoogleSignInAuthentication auth = await account.authentication;
+      final String? idToken = auth.idToken;
+      
+      if (idToken == null) {
+        return {
+          'success': false,
+          'message': '구글 ID 토큰을 가져올 수 없습니다.',
+        };
+      }
+      
       print('구글 idToken: $idToken');
       
+      // 백엔드로 토큰 전송
       final response = await http.post(
         Uri.parse('$_baseUrl/auth/oauth/google'),
         headers: {'Content-Type': 'application/json'},
@@ -264,7 +295,7 @@ class AuthService {
       print('구글 로그인 에러: $e');
       return {
         'success': false,
-        'message': '서버 연결에 실패했습니다.',
+        'message': '구글 로그인에 실패했습니다: ${e.toString()}',
       };
     }
   }
