@@ -24,9 +24,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PropensityMatchService {
+
     private final SurveyAnswerRepository surveyRepository;
     private final DogBreedRepository dogBreedRepository;
-    private final MemberRepository memberRepository;
 
     public void submitSurvey(CustomUserDetails userDetails, SurveyAnswerRequestDTO requestDTO) {
         Member member = userDetails.getMember();
