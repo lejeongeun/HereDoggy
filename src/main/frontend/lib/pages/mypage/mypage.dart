@@ -17,6 +17,11 @@ import '../../models/member_reservation_response_dto.dart';
 import '../../services/reservation_service.dart';
 import '../../models/walk_simple_statistic_dto.dart';
 import '../../services/walk_record_service.dart';
+import 'setting_page.dart';
+import 'adoption_history_page.dart';
+import 'inquiry_history_page.dart';
+import '../volunteer/volunteer_history_page.dart';
+import 'inquiry_report_history_page.dart';
 
 
 class MyPage extends StatefulWidget {
@@ -77,7 +82,14 @@ class _MyPageState extends State<MyPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.black),
-            onPressed: () {}, // 세팅기능 추후 구현
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const SettingPage(),
+                ),
+              );
+            },
           ),
         ],
         iconTheme: const IconThemeData(color: Colors.black),
@@ -178,7 +190,26 @@ class _MyPageState extends State<MyPage> {
                 ListTile(
                   title: Text('입양신청 내역', style: TextStyle(fontSize: 16)),
                   trailing: Icon(Icons.chevron_right),
-                  onTap: null,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const AdoptionHistoryPage(),
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  title: Text('봉사 내역', style: TextStyle(fontSize: 16)),
+                  trailing: Icon(Icons.chevron_right),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const VolunteerHistoryPage(),
+                      ),
+                    );
+                  },
                 ),
                 ListTile(
                   title: Text('후원내역', style: TextStyle(fontSize: 16)),
@@ -186,9 +217,16 @@ class _MyPageState extends State<MyPage> {
                   onTap: null,
                 ),
                 ListTile(
-                  title: Text('문의내역', style: TextStyle(fontSize: 16)),
+                  title: Text('문의 & 신고내역', style: TextStyle(fontSize: 16)),
                   trailing: Icon(Icons.chevron_right),
-                  onTap: null,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const InquiryReportHistoryPage(),
+                      ),
+                    );
+                  },
                 ),
                 const Expanded(child: SizedBox()),
               ],
@@ -577,7 +615,7 @@ class _WalkReservationHistoryPageState extends State<WalkReservationHistoryPage>
                                   }
                                   return DogCardReservation(
                                     imageUrl: dog.imagesUrls.isNotEmpty
-                                        ? 'http://192.168.10.128:8080${dog.imagesUrls.first}'
+                                        ? '${AppConstants.baseUrl.replaceAll('/api', '')}${dog.imagesUrls.first}'
                                         : '',
                                     name: dog.name,
                                     age: dog.age,

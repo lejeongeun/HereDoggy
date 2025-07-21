@@ -128,11 +128,11 @@ class _MissingPostListPageState extends State<MissingPostListPage> {
                                           color: Colors.grey[300],
                                           borderRadius: BorderRadius.circular(8),
                                         ),
-                                        child: post.imagesUrls.isNotEmpty
+                                        child: post.imageUrl != null && post.imageUrl!.isNotEmpty
                                             ? ClipRRect(
                                                 borderRadius: BorderRadius.circular(8),
                                                 child: Image.network(
-                                                  post.imagesUrls[0],
+                                                  post.imageUrl!,
                                                   width: 64,
                                                   height: 64,
                                                   fit: BoxFit.cover,

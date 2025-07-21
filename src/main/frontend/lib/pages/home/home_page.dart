@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../providers/dog_provider.dart';
 import '../../pages/shelter/adoption_dog_detail_page.dart';
 import '../notification/notification_page.dart';
+import '../recommendation/recommendation_survey_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -61,20 +62,23 @@ class _HomePageState extends State<HomePage> {
                 Row(
                   children: [
                     Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black12),
-                          borderRadius: BorderRadius.circular(8),
-                          color: Colors.white,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text('유기동물 간식주기', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                            SizedBox(height: 4),
-                            Text('보호소 동물들의 간식을 챙겨주세요', style: TextStyle(fontSize: 12, color: Colors.black54)),
-                          ],
+                      child: GestureDetector(
+                        onTap: () => Navigator.pushNamed(context, AppConstants.donationRoute),
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black12),
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.white,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text('유기동물 간식주기', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                              SizedBox(height: 4),
+                              Text('보호소 동물들의 간식을 챙겨주세요', style: TextStyle(fontSize: 12, color: Colors.black54)),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -114,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: const [
-                                    Text('산책 & 체험 예약', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                                    Text('체험 & 봉사 예약', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                                     SizedBox(height: 4),
                                     Text('동물과의 활동을 예약해요', style: TextStyle(fontSize: 13, color: Colors.black54)),
                                   ],
@@ -122,8 +126,8 @@ class _HomePageState extends State<HomePage> {
                               ),
                               // 강아지 아이콘 오른쪽 하단
                               Positioned(
-                                right: 16,
-                                bottom: 16,
+                                right: 8,
+                                bottom: 8,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
                                   child: Image.asset(
@@ -173,8 +177,8 @@ class _HomePageState extends State<HomePage> {
                               ),
                               // 손+하트 아이콘 오른쪽 하단
                               Positioned(
-                                right: 16,
-                                bottom: 16,
+                                right: 8,
+                                bottom: 8,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
                                   child: Image.asset(
@@ -230,8 +234,8 @@ class _HomePageState extends State<HomePage> {
                               ),
                               // 아이콘 오른쪽 하단
                               Positioned(
-                                right: 12,
-                                bottom: 12,
+                                right: 8,
+                                bottom: 6,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(6),
                                   child: Image.asset(
@@ -299,50 +303,60 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Expanded(
-                      child: Container(
-                        height: 100,
-                        margin: const EdgeInsets.only(left: 6),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(18),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              offset: Offset(0, 4),
-                              blurRadius: 16,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RecommendationSurveyPage(),
                             ),
-                          ],
-                        ),
-                        child: Stack(
-                          children: [
-                            // 텍스트 왼쪽 상단
-                            Positioned(
-                              left: 12,
-                              top: 12,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
-                                  Text('맞춤동물 추천', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                                  SizedBox(height: 2),
-                                  Text('', style: TextStyle(fontSize: 12)),
-                                ],
+                          );
+                        },
+                        child: Container(
+                          height: 100,
+                          margin: const EdgeInsets.only(left: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(18),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                offset: Offset(0, 4),
+                                blurRadius: 16,
                               ),
-                            ),
-                            // 아이콘 오른쪽 하단
-                            Positioned(
-                              right: 12,
-                              bottom: 12,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.asset(
-                                  'assets/images/recommend.jpg',
-                                  width: 50,
-                                  height: 50,
-                                  fit: BoxFit.cover,
+                            ],
+                          ),
+                          child: Stack(
+                            children: [
+                              // 텍스트 왼쪽 상단
+                              Positioned(
+                                left: 12,
+                                top: 12,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    Text('맞춤동물 추천', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                                    SizedBox(height: 2),
+                                    Text('', style: TextStyle(fontSize: 12)),
+                                  ],
                                 ),
                               ),
-                            ),
-                          ],
+                              // 아이콘 오른쪽 하단
+                              Positioned(
+                                right: 12,
+                                bottom: 12,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.asset(
+                                    'assets/images/recommend.jpg',
+                                    width: 50,
+                                    height: 50,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -391,10 +405,27 @@ class _HomePageState extends State<HomePage> {
                 
                 // 5. 귀여운 보호소 아이들 제목
                 Row(
-                  children: const [
-                    Text('귀여운 보호소 아이들', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                    SizedBox(width: 4),
-                    Text('🐶', style: TextStyle(fontSize: 16)),
+                  children: [
+                    ShaderMask(
+                      shaderCallback: (bounds) => LinearGradient(
+                        colors: [
+                          Color(0xFFFF6B9D), // 핑크
+                          Color(0xFFFF8E53), // 오렌지
+                        ],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ).createShader(bounds),
+                      child: const Text(
+                        '심장을 저격할 댕댕이들',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.white, // 그라데이션을 위해 흰색으로 설정
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    const Text('♥️', style: TextStyle(fontSize: 18)),
                   ],
                 ),
                 const SizedBox(height: 12),

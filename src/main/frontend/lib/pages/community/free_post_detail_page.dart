@@ -8,6 +8,7 @@ import '../../models/comment.dart';
 import '../../utils/constants.dart';
 import '../../models/like_status.dart';
 import '../../api/like_api.dart';
+import '../mypage/report_page.dart';
 
 class FreePostDetailPage extends StatefulWidget {
   final int postId;
@@ -337,7 +338,7 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
                                       child: Image.network(
-                                        'http://192.168.10.128:8080$imageUrl',
+                                        '${AppConstants.baseUrl.replaceAll('/api', '')}$imageUrl',
                                         fit: BoxFit.cover,
                                         loadingBuilder: (context, child, loadingProgress) {
                                           if (loadingProgress == null) return child;
@@ -392,11 +393,34 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
                               ],
                             ),
                             const SizedBox(height: 8),
-                            // 수정/삭제 버튼 (본인 글일 때만)
-                            if (isMine)
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
+                            // 수정/삭제/신고 버튼
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                // 신고 버튼 (모든 사용자에게 표시)
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red[50],
+                                    foregroundColor: Colors.red[600],
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                    padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      '/report',
+                                      arguments: {
+                                        'targetType': 'free',
+                                        'targetId': post!.id,
+                                        'targetTitle': post!.title,
+                                      },
+                                    );
+                                  },
+                                  child: const Text('신고', style: TextStyle(fontSize: 15)),
+                                ),
+                                if (isMine) ...[
+                                  const SizedBox(width: 12),
                                   ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.grey[200],
@@ -433,7 +457,8 @@ class _FreePostDetailPageState extends State<FreePostDetailPage> {
                                     child: const Text('삭제', style: TextStyle(fontSize: 15)),
                                   ),
                                 ],
-                              ),
+                              ],
+                            ),
                             const SizedBox(height: 32),
                             // 댓글 섹션
                             const Divider(height: 1),

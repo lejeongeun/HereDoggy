@@ -5,8 +5,6 @@ import 'register_form.dart';
 import 'package:provider/provider.dart';
 import '../../providers/user_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginForm extends StatefulWidget {
   final VoidCallback? onLoginSuccess;
@@ -90,16 +88,11 @@ class _LoginFormState extends State<LoginForm> {
 
   Future<void> _handleKakaoLogin() async {
     try {
-      print('카카오 로그인 시작 (인가 코드 방식)');
-      
-      // 새로운 인가 코드 방식 사용
+      print('카카오 인가 코드 방식 로그인 시작');
       final response = await _authService.loginWithKakao();
       print('백엔드 응답: $response');
-      
       if (response['success']) {
-        // 프로필 정보 가져오기
         final profile = await _authService.getProfile();
-        print('프로필 정보: $profile');
         if (profile != null && mounted) {
           Provider.of<UserProvider>(context, listen: false).login(profile);
           if (widget.onLoginSuccess != null) {
@@ -109,7 +102,6 @@ class _LoginFormState extends State<LoginForm> {
           }
         }
       } else if (response['isNewUser'] == true) {
-        // 신규 사용자 - 회원가입 폼으로 이동
         if (mounted) {
           Navigator.push(
             context,
@@ -193,23 +185,26 @@ class _LoginFormState extends State<LoginForm> {
               return null;
             },
             decoration: InputDecoration(
-              labelText: '이메일',
-              labelStyle: const TextStyle(color: Color(0xFF388E3C), fontWeight: FontWeight.bold),
-              prefixIcon: const Icon(Icons.email, color: Color(0xFF388E3C)),
+              hintText: '가입한 이메일 주소 입력',
+              hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
               filled: true,
               fillColor: Colors.white,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Color(0xFF81C784), width: 1.5),
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.grey, width: 1),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Color(0xFF388E3C), width: 2),
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.black, width: 1),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.red, width: 1),
               ),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.grey, width: 1),
               ),
             ),
           ),
@@ -224,23 +219,26 @@ class _LoginFormState extends State<LoginForm> {
               return null;
             },
             decoration: InputDecoration(
-              labelText: '비밀번호',
-              labelStyle: const TextStyle(color: Color(0xFF388E3C), fontWeight: FontWeight.bold),
-              prefixIcon: const Icon(Icons.lock, color: Color(0xFF388E3C)),
+              hintText: '비밀번호 입력',
+              hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
               filled: true,
               fillColor: Colors.white,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Color(0xFF81C784), width: 1.5),
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.grey, width: 1),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Color(0xFF388E3C), width: 2),
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.black, width: 1),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.red, width: 1),
               ),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.grey, width: 1),
               ),
             ),
           ),
@@ -249,17 +247,17 @@ class _LoginFormState extends State<LoginForm> {
             height: 56,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF4CAF50),
-                foregroundColor: Colors.white,
-                elevation: 3,
+                backgroundColor: const Color(0xFFF5F5F5), // 연한 회색 배경
+                foregroundColor: Colors.black, // 검정색 텍스트
+                elevation: 0,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
               onPressed: _isLoading ? null : _handleLogin,
               child: _isLoading
-                  ? const CircularProgressIndicator(color: Colors.white)
-                  : const Text('로그인', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  ? const CircularProgressIndicator(color: Colors.black)
+                  : const Text('로그인하기', style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal)),
             ),
           ),
         ],
@@ -305,7 +303,7 @@ class _LoginFullScreenPageState extends State<LoginFullScreenPage> {
           children: [
             const SizedBox(height: 16),
             IconButton(
-              icon: const Icon(Icons.arrow_back, size: 32, color: Color(0xFF388E3C)),
+              icon: const Icon(Icons.arrow_back, size: 24, color: Colors.black),
               onPressed: () => Navigator.pop(context),
             ),
             const SizedBox(height: 16),
@@ -313,7 +311,7 @@ class _LoginFullScreenPageState extends State<LoginFullScreenPage> {
               padding: EdgeInsets.symmetric(horizontal: 24.0),
               child: Text(
                 '로그인',
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF388E3C)),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
               ),
             ),
             const SizedBox(height: 32),
@@ -330,29 +328,55 @@ class _LoginFullScreenPageState extends State<LoginFullScreenPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CircleAvatar(
-                          backgroundColor: Colors.white,
-                          radius: 28,
-                          child: IconButton(
-                            icon: SvgPicture.asset(
-                              'assets/icons/google.svg',
-                              width: 32,
-                              height: 32,
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                spreadRadius: 1,
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 28,
+                            child: IconButton(
+                              icon: SvgPicture.asset(
+                                'assets/icons/google.svg',
+                                width: 32,
+                                height: 32,
+                              ),
+                              onPressed: () => _loginFormKey.currentState?._handleGoogleLogin(),
                             ),
-                            onPressed: () => _loginFormKey.currentState?._handleGoogleLogin(),
                           ),
                         ),
                         const SizedBox(width: 32),
-                        CircleAvatar(
-                          backgroundColor: const Color(0xFFFFEB3B),
-                          radius: 28,
-                          child: IconButton(
-                            icon: SvgPicture.asset(
-                              'assets/icons/kakao.svg',
-                              width: 32,
-                              height: 32,
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                spreadRadius: 1,
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: CircleAvatar(
+                            backgroundColor: const Color(0xFFFFEB3B),
+                            radius: 28,
+                            child: IconButton(
+                              icon: SvgPicture.asset(
+                                'assets/icons/kakao.svg',
+                                width: 32,
+                                height: 32,
+                              ),
+                              onPressed: () => _loginFormKey.currentState?._handleKakaoLogin(),
                             ),
-                            onPressed: () => _loginFormKey.currentState?._handleKakaoLogin(),
                           ),
                         ),
                       ],
@@ -365,9 +389,9 @@ class _LoginFullScreenPageState extends State<LoginFullScreenPage> {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Center(
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: 8,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     TextButton(
                       onPressed: () {

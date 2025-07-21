@@ -29,7 +29,7 @@ public class DonationController {
     // 성공 처리
     @GetMapping("/success")
     public ResponseEntity<Map<String, String>> successDonation(@ModelAttribute DonationSuccessRequestDTO successRequest){
-        donationService.handelSuccessDonation(successRequest);
+        donationService.handleSuccessDonation(successRequest);
         return ResponseEntity.ok(Map.of("message", "결제가 성공적으로 처리되었습니다."));
     }
 
