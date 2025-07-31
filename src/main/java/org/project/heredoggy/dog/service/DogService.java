@@ -2,6 +2,7 @@ package org.project.heredoggy.dog.service;
 
 import lombok.RequiredArgsConstructor;
 import org.project.heredoggy.dog.dto.*;
+import org.project.heredoggy.dog.mapper.DogMapper;
 import org.project.heredoggy.domain.postgresql.shelter.shelter.ShelterRepository;
 import org.project.heredoggy.global.error.ErrorMessages;
 import org.project.heredoggy.domain.postgresql.dog.Dog;
@@ -28,6 +29,7 @@ public class DogService {
     private final DogRepository dogRepository;
     private final ImageService imageService;
     private final ShelterRepository shelterRepository;
+    private final DogMapper dogMapper;
 
     @Transactional
     public void create(Long sheltersId, CustomUserDetails userDetails, DogRequestDTO request, List<MultipartFile> imageFiles) throws IOException {
@@ -51,21 +53,23 @@ public class DogService {
         saveImages(imageFiles, dog, shelter);
     }
 
+    @Transactional(readOnly = true)
     public List<DogResponseDTO> getDogsByShelter(CustomUserDetails userDetails, Long sheltersId) {
         Shelter shelter = SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
 
         return dogRepository.findByShelterId(shelter.getId()).stream()
-                .map(this::toDto)
+                .map(dogMapper::toDto)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public DogResponseDTO getDetailsDog(CustomUserDetails userDetails, Long sheltersId, Long dogsId) {
         Shelter shelter = SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
 
         Dog dog = dogRepository.findById(dogsId).orElseThrow(
                 ()-> new NotFoundException(ErrorMessages.DOG_NOT_FOUND)
         );
-        return toDto(dog);
+        return dogMapper.toDto(dog);
     }
     @Transactional
     public void edit(Long sheltersId, CustomUserDetails userDetails,Long dogsId, DogEditRequestDTO request, List<MultipartFile> newImages, List<Long> deleteImageIds) throws IOException{
@@ -105,7 +109,6 @@ public class DogService {
         }
         saveImages(newImages, dog, shelter);
 
-
         dogRepository.save(dog);
 
     }
@@ -126,54 +129,20 @@ public class DogService {
         dogRepository.delete(dog);
     }
 
+    @Transactional(readOnly = true)
     public List<MainDogResponseDTO> getAllDogs() {
         return dogRepository.findAll().stream()
-                .map(this::toMainDog)
+                .map(dogMapper::toMainDog)
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public MainDogResponseDTO getDetailsDogMain(Long dogsId) {
         Dog dog = dogRepository.findById(dogsId)
                 .orElseThrow(()-> new NotFoundException(ErrorMessages.DOG_NOT_FOUND));
-        return toMainDog(dog);
-    }
+        dog.increaseViewCount();
 
-    // 빌더 메소드 분리
-    private DogResponseDTO toDto(Dog dog) {
-        return DogResponseDTO.builder()
-                .id(dog.getId())
-                .name(dog.getName())
-                .age(dog.getAge())
-                .gender(dog.getGender())
-                .personality(dog.getPersonality())
-                .weight(dog.getWeight())
-                .isNeutered(dog.getIsNeutered())
-                .status(dog.getStatus())
-                .foundLocation(dog.getFoundLocation())
-                .images(dog.getImages().stream()
-                        .map(img -> DogImageResponseDTO.builder()
-                                .id(img.getId())
-                                .imageUrl(img.getImageUrl())
-                                .build())
-                        .collect(Collectors.toList()))
-                .build();
-    }
-
-    public MainDogResponseDTO toMainDog(Dog dog){
-        return MainDogResponseDTO.builder()
-                .id(dog.getId())
-                .name(dog.getName())
-                .age(dog.getAge())
-                .gender(dog.getGender())
-                .weight(dog.getWeight())
-                .isNeutered(dog.getIsNeutered())
-                .foundLocation(dog.getFoundLocation())
-                .status(dog.getStatus())
-                .imagesUrls(dog.getImages().stream()
-                        .map(DogImage::getImageUrl)
-                        .collect(Collectors.toList()))
-                .shelterName(dog.getShelter().getName())
-                .build();
+        return dogMapper.toMainDog(dog);
     }
 
     private void saveImages (List<MultipartFile> imageFiles, Dog dog, Shelter shelter) throws IOException{
@@ -193,7 +162,7 @@ public class DogService {
                 .orElseThrow(()-> new NotFoundException(ErrorMessages.SHELTERS_NOT_FOUND));
 
         return dogRepository.findByShelterId(shelter.getId()).stream()
-                .map(this::toDto)
+                .map(dogMapper::toDto)
                 .collect(Collectors.toList());
 
     }

@@ -22,4 +22,5 @@ public class MainDogResponseDTO {
     private String foundLocation;
     private List<String> imagesUrls;
     private String shelterName;
+    private Long viewCount;
 }

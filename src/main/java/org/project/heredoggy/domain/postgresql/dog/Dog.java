@@ -54,6 +54,9 @@ public class Dog {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt; // 수정 일자
 
+    @Column(name = "view_count", nullable = false)
+    private Long viewCount = 0L;
+
     @Builder.Default
     @OneToMany(mappedBy = "dog", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DogImage> images = new ArrayList<>();
@@ -62,11 +65,16 @@ public class Dog {
     @JoinColumn(name = "shelter_id", nullable = false)
     private Shelter shelter;
 
+    @OneToMany(mappedBy = "dog", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UnavailableDate> unavailableDates = new ArrayList<>();
+
+    @OneToMany(mappedBy = "dog", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DogComment> comments = new ArrayList<>();
     public void addImage(DogImage image){
         images.add(image); // dog + dogImage 연관관계 설정
         image.setDog(this); // dogimage + dog 연관 설정 (양방향 설정)
     }
-
-    @OneToMany(mappedBy = "dog", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UnavailableDate> unavailableDates = new ArrayList<>();
+    public void increaseViewCount(){
+        this.viewCount++;
+    }
 }

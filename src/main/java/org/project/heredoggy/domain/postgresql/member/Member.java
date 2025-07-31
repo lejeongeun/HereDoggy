@@ -2,6 +2,7 @@ package org.project.heredoggy.domain.postgresql.member;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.project.heredoggy.domain.postgresql.dog.DogComment;
 import org.project.heredoggy.domain.postgresql.fcm.FcmToken;
 import org.project.heredoggy.domain.postgresql.match.propensity.SurveyAnswer;
 import org.project.heredoggy.domain.postgresql.notice.NoticePost;
@@ -125,5 +126,8 @@ public class Member {
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private SurveyAnswer surveyAnswer;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DogComment> comments = new ArrayList<>();
 
 }

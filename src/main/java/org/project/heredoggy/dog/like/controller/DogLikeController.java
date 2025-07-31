@@ -21,10 +21,9 @@ public class DogLikeController {
     @PostMapping("/{dogs_id}")
     public ResponseEntity<?> toggleDogLike(@PathVariable("dogs_id") Long dogId,
                                            @AuthenticationPrincipal CustomUserDetails userDetails){
-        boolean dogLiked = dogLikeService.toggleDogLike(dogId, userDetails);
-        return ResponseEntity.ok(Map.of("message", dogLiked ? "좋아요 등록 " : "좋아요 취소"));
+        boolean liked = dogLikeService.toggleDogLike(dogId, userDetails);
+        long likeCount = dogLikeService.getLikeCount(dogId);
+        return ResponseEntity.ok(Map.of("message", liked ? "좋아요 등록 " : "좋아요 취소",
+                "likedCount", likeCount));
     }
-
-
-
 }

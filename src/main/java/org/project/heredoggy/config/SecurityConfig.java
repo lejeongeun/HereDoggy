@@ -58,7 +58,6 @@ public class SecurityConfig {
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/api/reservations/**", "/api/shelters/volunteer/unavailable").permitAll()
                         .requestMatchers("/error").permitAll()
-
                         .requestMatchers(HttpMethod.GET, "/api/shelters").permitAll() //보호소리스트 조회
                         .requestMatchers(HttpMethod.GET, "/api/shelters/*").permitAll() //보호소 상세 정보 조회
                         .requestMatchers("/api/members/**").hasRole("USER")
