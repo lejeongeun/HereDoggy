@@ -30,6 +30,7 @@ public class DogService {
     private final ImageService imageService;
     private final ShelterRepository shelterRepository;
     private final DogMapper dogMapper;
+    private final DogCacheService dogCacheService;
 
     @Transactional
     public void create(Long sheltersId, CustomUserDetails userDetails, DogRequestDTO request, List<MultipartFile> imageFiles) throws IOException {
@@ -71,6 +72,7 @@ public class DogService {
         );
         return dogMapper.toDto(dog);
     }
+
     @Transactional
     public void edit(Long sheltersId, CustomUserDetails userDetails,Long dogsId, DogEditRequestDTO request, List<MultipartFile> newImages, List<Long> deleteImageIds) throws IOException{
         // shelterId 검증
@@ -110,8 +112,8 @@ public class DogService {
         saveImages(newImages, dog, shelter);
 
         dogRepository.save(dog);
-
     }
+
     @Transactional
     public void delete(CustomUserDetails userDetails, Long sheltersId, Long dogsId) {
         Shelter shelter = SheltersAuthUtils.validateShelterAccess(userDetails, sheltersId);
@@ -138,11 +140,22 @@ public class DogService {
 
     @Transactional
     public MainDogResponseDTO getDetailsDogMain(Long dogsId) {
+        MainDogResponseDTO cached = dogCacheService.getDogDetailFromCache(dogsId);
+
+        if (cached != null){
+            return cached;
+        }
+
         Dog dog = dogRepository.findById(dogsId)
                 .orElseThrow(()-> new NotFoundException(ErrorMessages.DOG_NOT_FOUND));
+
         dog.increaseViewCount();
 
-        return dogMapper.toMainDog(dog);
+        MainDogResponseDTO dto = dogMapper.toMainDog(dog);
+
+        dogCacheService.setDogDetailToCache(dogsId, dto);
+
+        return dto;
     }
 
     private void saveImages (List<MultipartFile> imageFiles, Dog dog, Shelter shelter) throws IOException{
@@ -156,6 +169,7 @@ public class DogService {
             }
         }
     }
+
     // 유저) 보호소 인증 없이 해당 보호소의 강아지 목록 조회
     public List<DogResponseDTO> getAnotherShelterDogs(Long sheltersId) {
         Shelter shelter = shelterRepository.findById(sheltersId)
@@ -164,6 +178,5 @@ public class DogService {
         return dogRepository.findByShelterId(shelter.getId()).stream()
                 .map(dogMapper::toDto)
                 .collect(Collectors.toList());
-
     }
 }
