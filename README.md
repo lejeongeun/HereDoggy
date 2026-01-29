@@ -13,7 +13,7 @@
 
 |   [이정은(팀장)](https://github.com/lejeongeun)   |                                                      [양제훈](https://github.com/Ssassin-01)                                                       |      [유예성](https://github.com/tytgame)       |     [조규훈](https://github.com/JoKyuHoon)      |
 |:--------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------:|:--------------------------------------------:|
-| <img src="./docs/team/이정은.jpg" width="100"/> |                                                  <img src="./docs/team/양제훈.jpg" width="100"/>                                                   | <img src="./docs/team/유예성.jpg" width="100"/> | <img src="./docs/team/조규훈.jpg" width="100"/> |
+| <img src="/" width="100"/> |                                                  <img src="./docs/team/양제훈.jpg" width="100"/>                                                   | <img src="./docs/team/유예성.jpg" width="100"/> | <img src="./docs/team/조규훈.jpg" width="100"/> |
 |                   Backend                    |                                                                     Backend                                                                     |                 웹/앱 Frontend                 |                  웹 Frontend                  |
 
 
